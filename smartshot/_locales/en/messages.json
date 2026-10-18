@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "SmartShot - Screenshot & Annotate",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Capture the visible area, a full page or a selection, then annotate with pen, arrows, text and pixelate. 100% on-device.",
+    "description": "Extension description"
+  }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Case Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="cc-app">
+    <header class="cc-header">
+      <div class="cc-header__brand">
+        <img class="cc-header__logo" src="../icons/icon48.png" alt="" />
+        <div>
+          <p class="cc-header__title" data-i18n="appName">Case Converter</p>
+          <p class="cc-header__tagline" data-i18n="tagline">Transform text anywhere, instantly</p>
+        </div>
+      </div>
+      <button class="cc-icon-btn" id="settingsBtn" data-i18n-aria="openSettings" aria-label="Open settings">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M19.14 12.94a7.14 7.14 0 0 0 .06-.94 7.14 7.14 0 0 0-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.14.56-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.7 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.14 7.14 0 0 0-.06.94c0 .32.02.63.06.94L2.82 14.5a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.42.32.6.22l2.39-.96c.49.38 1.04.7 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.59-.24 1.14-.56 1.63-.94l2.39.96c.24.1.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.6A3.6 3.6 0 1 1 15.6 12 3.6 3.6 0 0 1 12 15.6Z"/></svg>
+      </button>
+    </header>
+
+    <main class="cc-main">
+      <section class="cc-field">
+        <textarea id="inputText" class="cc-textarea" rows="4" data-i18n-placeholder="inputPlaceholder" placeholder="Type or paste text here…"></textarea>
+        <div class="cc-field__meta">
+          <span id="inputCount">0 <span data-i18n="charCount">characters</span></span>
+          <div class="cc-field__actions">
+            <button class="cc-text-btn" id="pasteBtn" data-i18n="paste">Paste</button>
+            <button class="cc-text-btn" id="clearBtn" data-i18n="clear">Clear</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="cc-tools" data-i18n-group="tools">
+        <p class="cc-section-label" data-i18n="tools">Tools</p>
+        <div class="cc-chip-grid" id="toolGrid"></div>
+      </section>
+
+      <section class="cc-field">
+        <textarea id="outputText" class="cc-textarea cc-textarea--output" rows="4" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Result will appear here…"></textarea>
+        <div class="cc-field__meta">
+          <span id="outputCount">0 <span data-i18n="charCount">characters</span></span>
+          <div class="cc-field__actions">
+            <button class="cc-text-btn" id="useAsInputBtn" data-i18n="swap">Use as input</button>
+            <button class="cc-filled-btn" id="copyBtn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="cc-settings-view" id="settingsView" hidden aria-labelledby="settingsViewTitle">
+      <div class="cc-settings-view__topbar">
+        <button class="cc-back-btn" id="backBtn" type="button" data-i18n="back">← Back</button>
+        <h1 id="settingsViewTitle" data-i18n="settingsTitle">Settings</h1>
+      </div>
+      <div class="cc-settings-card">
+        <div class="cc-settings-row"><span data-i18n="theme">Theme</span><div class="cc-mini-segmented" id="popupThemeSegmented"><button data-value="light" data-i18n="themeLight">Light</button><button data-value="dark" data-i18n="themeDark">Dark</button><button data-value="system" data-i18n="themeSystem">System</button></div></div>
+        <div class="cc-settings-row"><span data-i18n="language">Language</span><div class="cc-mini-segmented" id="popupLanguageSegmented"><button data-value="en" data-i18n="languageEn">English</button><button data-value="vi" data-i18n="languageVi">Tiếng Việt</button></div></div>
+        <div class="cc-settings-row"><span data-i18n="font">Font</span><div class="cc-mini-segmented" id="popupFontSegmented"><button data-value="roboto" data-i18n="fontRoboto">Roboto</button><button data-value="beVietnamPro" data-i18n="fontBeVietnamPro">Be Vietnam Pro</button><button data-value="inter" data-i18n="fontInter">Inter</button></div></div>
+        <div class="cc-settings-row"><span data-i18n="color">Accent color</span><div class="cc-color-grid" id="popupColorSegmented"><button class="cc-color-dot" data-value="purple" aria-label="Purple" style="--swatch:#6750A4"></button><button class="cc-color-dot" data-value="blue" aria-label="Blue" style="--swatch:#0061A4"></button><button class="cc-color-dot" data-value="green" aria-label="Green" style="--swatch:#386A20"></button><button class="cc-color-dot" data-value="orange" aria-label="Orange" style="--swatch:#8D4E00"></button><button class="cc-color-dot" data-value="pink" aria-label="Pink" style="--swatch:#984061"></button><button class="cc-color-dot" data-value="teal" aria-label="Teal" style="--swatch:#006A6A"></button></div></div>
+      </div>
+      <button class="cc-landing-btn" id="popupLandingBtn" type="button" data-i18n="viewLanding">View landing page ↗</button>
+      <p class="cc-settings-note" data-i18n="settingsInExtension">Settings are kept inside the extension popup.</p>
+    </section>
+    <footer class="cc-footer">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M11 17h2v-6h-2Zm1-8a1 1 0 1 0-1-1 1 1 0 0 0 1 1Zm0 13A10 10 0 1 1 22 12 10 10 0 0 1 12 22Zm0-18a8 8 0 1 0 8 8 8 8 0 0 0-8-8Z"/></svg>
+      <span data-i18n="shortcutsHint">Shortcuts work in any text field on any website</span>
+    </footer>
+  </div>
+
+  <script src="../js/case-utils.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

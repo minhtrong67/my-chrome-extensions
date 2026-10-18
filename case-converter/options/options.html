@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Case Converter — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="cc-shell">
+    <aside class="cc-nav">
+      <div class="cc-nav__brand">
+        <img src="../icons/icon48.png" alt="" width="36" height="36" />
+        <div>
+          <p class="cc-nav__title" data-i18n="appName">Case Converter</p>
+          <p class="cc-nav__sub" data-i18n="settingsTitle">Settings</p>
+        </div>
+      </div>
+      <nav class="cc-nav__links">
+        <a href="#appearance" class="cc-nav__link cc-nav__link--active" data-i18n="appearance">Appearance</a>
+        <a href="#shortcuts" class="cc-nav__link" data-i18n="shortcuts">Keyboard Shortcuts</a>
+        <a href="#sites" class="cc-nav__link" data-i18n="excludedSites">Disabled on these sites</a>
+        <a href="#about" class="cc-nav__link" data-i18n="about">About</a>
+      </nav>
+    </aside>
+
+    <main class="cc-content">
+      <section id="appearance" class="cc-card">
+        <h2 class="cc-card__title" data-i18n="appearance">Appearance</h2>
+
+        <div class="cc-setting-row">
+          <div>
+            <p class="cc-setting-row__label" data-i18n="theme">Theme</p>
+          </div>
+          <div class="cc-segmented" id="themeSegmented">
+            <button data-value="light" class="cc-segmented__btn" data-i18n="themeLight">Light</button>
+            <button data-value="dark" class="cc-segmented__btn" data-i18n="themeDark">Dark</button>
+            <button data-value="system" class="cc-segmented__btn" data-i18n="themeSystem">System</button>
+          </div>
+        </div>
+
+        <div class="cc-setting-row">
+          <div>
+            <p class="cc-setting-row__label" data-i18n="language">Language</p>
+          </div>
+          <div class="cc-segmented" id="languageSegmented">
+            <button data-value="en" class="cc-segmented__btn" data-i18n="languageEn">English</button>
+            <button data-value="vi" class="cc-segmented__btn" data-i18n="languageVi">Tiếng Việt</button>
+          </div>
+        </div>
+
+        <div class="cc-setting-row">
+          <div>
+            <p class="cc-setting-row__label" data-i18n="font">Font</p>
+          </div>
+          <div class="cc-segmented" id="fontSegmented">
+            <button data-value="roboto" class="cc-segmented__btn" style="font-family:Roboto" data-i18n="fontRoboto">Roboto</button>
+            <button data-value="beVietnamPro" class="cc-segmented__btn" style="font-family:'Be Vietnam Pro'" data-i18n="fontBeVietnamPro">Be Vietnam Pro</button>
+            <button data-value="inter" class="cc-segmented__btn" style="font-family:'Inter'" data-i18n="fontInter">Inter</button>
+          </div>
+        </div>
+      <div class="cc-setting-row">
+        <div><p class="cc-setting-row__label" data-i18n="color">Accent color</p></div>
+        <div class="cc-color-grid" id="colorSegmented">
+          <button class="cc-color-dot" data-value="purple" data-i18n-aria="colorPurple" aria-label="Purple" style="--swatch:#6750A4"></button>
+          <button class="cc-color-dot" data-value="blue" data-i18n-aria="colorBlue" aria-label="Blue" style="--swatch:#0061A4"></button>
+          <button class="cc-color-dot" data-value="green" data-i18n-aria="colorGreen" aria-label="Green" style="--swatch:#386A20"></button>
+          <button class="cc-color-dot" data-value="orange" data-i18n-aria="colorOrange" aria-label="Orange" style="--swatch:#8D4E00"></button>
+          <button class="cc-color-dot" data-value="pink" data-i18n-aria="colorPink" aria-label="Pink" style="--swatch:#984061"></button>
+          <button class="cc-color-dot" data-value="teal" data-i18n-aria="colorTeal" aria-label="Teal" style="--swatch:#006A6A"></button>
+        </div>
+      </div>
+      </section>
+
+      <section id="shortcuts" class="cc-card">
+        <h2 class="cc-card__title" data-i18n="shortcuts">Keyboard Shortcuts</h2>
+        <p class="cc-card__desc" data-i18n="shortcutsDesc">Apply a transformation directly inside any input, textarea, or editable field on the web.</p>
+
+        <div class="cc-setting-row cc-setting-row--switch">
+          <p class="cc-setting-row__label" data-i18n="shortcutsEnabled">Enable in-page shortcuts</p>
+          <label class="cc-switch">
+            <input type="checkbox" id="shortcutsEnabledToggle" />
+            <span class="cc-switch__track"><span class="cc-switch__thumb"></span></span>
+          </label>
+        </div>
+
+        <div id="shortcutList" class="cc-shortcut-list"></div>
+      </section>
+
+      <section id="sites" class="cc-card">
+        <h2 class="cc-card__title" data-i18n="excludedSites">Disabled on these sites</h2>
+        <p class="cc-card__desc" data-i18n="excludedSitesDesc">Add one domain per line (e.g. example.com) where in-page shortcuts should be turned off.</p>
+        <textarea id="excludedSites" class="cc-textarea" rows="4" data-i18n-placeholder="excludedSitesPlaceholder" placeholder="example.com"></textarea>
+        <button class="cc-filled-btn" id="saveSitesBtn" data-i18n="save">Save</button>
+      </section>
+
+      <section id="about" class="cc-card">
+        <h2 class="cc-card__title" data-i18n="about">About</h2>
+        <p class="cc-card__desc" data-i18n="aboutText">Case Converter is a free, open, privacy-friendly extension. All text is processed locally on your device.</p>
+        <dl class="cc-about-list">
+          <div><dt data-i18n="version">Version</dt><dd>1.0.0</dd></div>
+          <div><dt data-i18n="sourceCode">Source code</dt><dd><a href="https://github.com/minhtrong67/case-converter-extension" target="_blank" rel="noopener" data-i18n="sourceCode">Source code</a></dd></div>
+          <div><dt data-i18n="reportIssue">Report an issue</dt><dd><a href="https://github.com/minhtrong67/case-converter-extension/issues" target="_blank" rel="noopener" data-i18n="reportIssue">Report an issue</a></dd></div>
+          <div><dt data-i18n="privacyPolicy">Privacy policy</dt><dd><a href="https://github.com/minhtrong67/case-converter-extension/blob/main/PRIVACY.md" target="_blank" rel="noopener" data-i18n="privacyPolicy">Privacy policy</a></dd></div>
+        </dl>
+        <div class="cc-about-actions"><button class="cc-tonal-btn" id="landingBtn" data-i18n="viewLanding">View landing page</button><button class="cc-text-btn cc-text-btn--danger" id="resetAllBtn" data-i18n="resetAll">Reset all settings</button></div>
+        <p class="cc-author-note"><span data-i18n="author">Author</span> <strong>minhtrong67</strong><span> · </span><span data-i18n="aiSupport">AI support: Claude</span></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="cc-landing-dialog" id="landingDialog" hidden role="dialog" aria-modal="true" aria-labelledby="landingDialogTitle">
+    <div class="cc-landing-dialog__backdrop" data-close-landing></div>
+    <section class="cc-landing-dialog__panel">
+      <header class="cc-landing-dialog__header">
+        <div>
+          <p class="cc-landing-dialog__eyebrow">Case Converter</p>
+          <h2 id="landingDialogTitle" data-i18n="viewLanding">View landing page</h2>
+        </div>
+        <button class="cc-icon-close" id="closeLandingBtn" type="button" data-i18n-aria="closeLanding" aria-label="Close landing page">×</button>
+      </header>
+      <iframe id="landingFrame" class="cc-landing-dialog__frame" src="../index.html" title="Case Converter landing page"></iframe>
+    </section>
+  </div>
+
+  <div class="cc-snackbar" id="snackbar"></div>
+
+  <script src="../js/case-utils.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

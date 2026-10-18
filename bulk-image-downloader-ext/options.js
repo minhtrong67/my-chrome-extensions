@@ -62,6 +62,8 @@ function applyTranslations() {
   document.getElementById('convertWebpHint').textContent     = t.convertWebpHint;
   document.getElementById('convertPngLabel').textContent     = t.convertPng;
   document.getElementById('convertPngHint').textContent      = t.convertPngHint;
+  document.getElementById('excludeLogosLabel').textContent   = t.excludeLogos;
+  document.getElementById('excludeLogosHint').textContent    = t.excludeLogosHint;
   document.getElementById('formatSupportNote').textContent   = t.formatSupportNote;
   document.getElementById('minSizeLabel').textContent        = t.minSize.toUpperCase();
   document.getElementById('minSizeHint').textContent         = t.minSizeHint;
@@ -92,6 +94,7 @@ function loadValues() {
   document.getElementById('showNotification').checked = s.showNotification;
   document.getElementById('convertWebp').checked      = s.convertWebp;
   document.getElementById('convertPng').checked       = s.convertPng;
+  document.getElementById('excludeLogos').checked     = s.excludeLogos !== false;
 
   const minSize = Number.isFinite(s.minImageSize) ? s.minImageSize : 32;
   document.getElementById('minImageSize').value = minSize;
@@ -255,6 +258,7 @@ async function saveSettings() {
     showNotification: document.getElementById('showNotification').checked,
     convertWebp:      document.getElementById('convertWebp').checked,
     convertPng:       document.getElementById('convertPng').checked,
+    excludeLogos:     document.getElementById('excludeLogos').checked,
     minImageSize:     parseInt(document.getElementById('minImageSize').value, 10),
   };
 

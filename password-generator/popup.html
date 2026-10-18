@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Password Generator</title>
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/popup.css" />
+<link rel="stylesheet" href="css/popup-overrides.css" />
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <div class="brand">
+      <img src="icons/icon48.png" alt="Password Generator" class="brand-icon" />
+      <div class="brand-text">
+        <span class="brand-title">Password Generator</span>
+        <span class="brand-subtitle" data-i18n="tagline">Password Generator</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="langToggleBtn" title="Change language" aria-label="Change language">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.987 7.987 0 0 1 5.08 16zm2.95-8H5.08a7.987 7.987 0 0 1 4.33-3.56A15.65 15.65 0 0 0 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+        <span class="lang-code" id="langCode">EN</span>
+      </button>
+      <button class="icon-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24" width="20" height="20" id="themeIcon"><path fill="currentColor" d="M12 4.5a1 1 0 0 1 1 1V7a1 1 0 1 1-2 0V5.5a1 1 0 0 1 1-1zm0 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm0 2a1 1 0 0 1 1 1v1.5a1 1 0 1 1-2 0V18.5a1 1 0 0 1 1-1zm7.5-6.5a1 1 0 0 1-1 1H17a1 1 0 1 1 0-2h1.5a1 1 0 0 1 1 1zm-13 0a1 1 0 0 1-1 1H4a1 1 0 0 1 0-2h1.5a1 1 0 0 1 1 1zm11.03-6.03a1 1 0 0 1 0 1.42l-1.06 1.06a1 1 0 1 1-1.42-1.42l1.06-1.06a1 1 0 0 1 1.42 0zM7.55 17.55a1 1 0 0 1 0 1.42l-1.06 1.06a1 1 0 0 1-1.42-1.42l1.06-1.06a1 1 0 0 1 1.42 0zm9.9 1.42a1 1 0 0 1-1.42 0l-1.06-1.06a1 1 0 1 1 1.42-1.42l1.06 1.06a1 1 0 0 1 0 1.42zM6.49 6.49a1 1 0 0 1-1.42 0L4.01 5.43A1 1 0 1 1 5.43 4.01l1.06 1.06a1 1 0 0 1 0 1.42z"/></svg>
+      </button>
+      <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.62.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 0 0-.6.22L1.86 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.05.3-.08.63-.08.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.4.32.6.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .46-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.48 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.01-1.58zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Generator View ===== -->
+  <main class="view" id="view-generator">
+
+    <div class="mode-tabs" role="tablist">
+      <button class="mode-tab active" data-mode="password" data-i18n="modePassword">Password</button>
+      <button class="mode-tab" data-mode="passphrase" data-i18n="modePassphrase">Passphrase</button>
+      <button class="mode-tab" data-mode="pin" data-i18n="modePin">PIN</button>
+    </div>
+
+    <section class="result-card">
+      <div class="result-display" id="resultDisplay">
+        <span class="result-text" id="resultText">••••••••••••</span>
+      </div>
+      <div class="result-actions">
+        <button class="icon-btn ghost" id="copyBtn" data-i18n-title="copy" title="Copy">
+          <svg class="icon-copy" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>
+          <svg class="icon-check" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+        </button>
+        <button class="icon-btn ghost" id="regenBtn" data-i18n-title="regenerate" title="Regenerate">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <div class="strength-wrap" id="strengthWrap">
+      <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+      <div class="strength-meta-row">
+        <span class="strength-label" id="strengthLabel" data-i18n="strengthWeak">Weak</span>
+        <span class="crack-time"><span data-i18n="crackTimeLabel">Time to crack:</span> <span id="crackTimeText">—</span></span>
+      </div>
+    </div>
+
+    <!-- Password mode options -->
+    <section class="options-card" id="passwordOptions">
+      <div class="option-row">
+        <label class="option-label" data-i18n="length">Length</label>
+        <span class="option-value" id="lengthValue">16</span>
+      </div>
+      <input type="range" min="4" max="64" value="16" id="lengthSlider" class="slider" />
+
+      <div class="switch-grid">
+        <label class="switch-item">
+          <input type="checkbox" id="optUpper" checked />
+          <span class="switch-track"></span>
+          <span class="switch-text" data-i18n="uppercase">Uppercase A-Z</span>
+        </label>
+        <label class="switch-item">
+          <input type="checkbox" id="optLower" checked />
+          <span class="switch-track"></span>
+          <span class="switch-text" data-i18n="lowercase">Lowercase a-z</span>
+        </label>
+        <label class="switch-item">
+          <input type="checkbox" id="optNumbers" checked />
+          <span class="switch-track"></span>
+          <span class="switch-text" data-i18n="numbers">Numbers 0-9</span>
+        </label>
+        <label class="switch-item">
+          <input type="checkbox" id="optSymbols" checked />
+          <span class="switch-track"></span>
+          <span class="switch-text" data-i18n="symbols">Symbols !@#$</span>
+        </label>
+      </div>
+
+      <button class="collapse-toggle" id="advancedToggle">
+        <span data-i18n="advanced">Advanced options</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" class="chev"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+      </button>
+
+      <div class="advanced-panel" id="advancedPanel">
+        <label class="switch-item">
+          <input type="checkbox" id="optExcludeAmbiguous" />
+          <span class="switch-track"></span>
+          <span class="switch-text" data-i18n="excludeAmbiguous">Exclude ambiguous characters (l, 1, I, O, 0)</span>
+        </label>
+        <label class="switch-item">
+          <input type="checkbox" id="optNoDuplicate" />
+          <span class="switch-track"></span>
+          <span class="switch-text" data-i18n="noDuplicate">Avoid repeating characters</span>
+        </label>
+        <div class="field-row">
+          <label class="field-label" data-i18n="customExclude">Custom characters to exclude</label>
+          <input type="text" id="customExclude" class="text-input" placeholder="e.g. { } ; &quot;" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Passphrase mode options -->
+    <section class="options-card hidden" id="passphraseOptions">
+      <div class="option-row">
+        <label class="option-label" data-i18n="wordCount">Number of words</label>
+        <span class="option-value" id="wordCountValue">4</span>
+      </div>
+      <input type="range" min="3" max="10" value="4" id="wordCountSlider" class="slider" />
+
+      <div class="field-row">
+        <label class="field-label" data-i18n="separator">Separator</label>
+        <select id="separatorSelect" class="select-input">
+          <option value="-">-  (hyphen)</option>
+          <option value="_">_  (underscore)</option>
+          <option value=".">.  (dot)</option>
+          <option value=" "> (space)</option>
+        </select>
+      </div>
+
+      <label class="switch-item">
+        <input type="checkbox" id="optCapitalize" checked />
+        <span class="switch-track"></span>
+        <span class="switch-text" data-i18n="capitalize">Capitalize each word</span>
+      </label>
+      <label class="switch-item">
+        <input type="checkbox" id="optAddNumber" checked />
+        <span class="switch-track"></span>
+        <span class="switch-text" data-i18n="addNumber">Add a random number</span>
+      </label>
+    </section>
+
+    <!-- PIN mode options -->
+    <section class="options-card hidden" id="pinOptions">
+      <div class="option-row">
+        <label class="option-label" data-i18n="pinLength">Number of digits</label>
+        <span class="option-value" id="pinLengthValue">6</span>
+      </div>
+      <input type="range" min="4" max="12" value="6" id="pinLengthSlider" class="slider" />
+    </section>
+
+    <button class="btn-primary" id="generateBtn" data-i18n="generate">Generate Password</button>
+
+    <section class="history-card" id="historyCard">
+      <div class="history-header">
+        <span data-i18n="history">Recent history</span>
+        <div class="history-actions">
+          <button class="text-btn" id="exportHistoryBtn" data-i18n="exportTxt">Export .txt</button>
+          <button class="text-btn danger" id="clearHistoryBtn" data-i18n="clear">Clear</button>
+        </div>
+      </div>
+      <ul class="history-list" id="historyList"></ul>
+      <p class="hint-text" data-i18n="historyPrivacyHint">History is stored only on this device, in plain text, so anyone with access to your computer could read it. Keep it off for anything highly sensitive.</p>
+    </section>
+
+    <footer class="app-footer">
+      <span data-i18n="madeBy">Made by</span> <strong>gnort67</strong> · <span id="versionLabel">v2.1.0</span>
+    </footer>
+  </main>
+
+  <!-- ===== Settings View ===== -->
+  <div class="view hidden" id="view-settings">
+    <div class="settings-header">
+      <button class="icon-btn" id="backBtn" aria-label="Back">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg>
+      </button>
+      <h2 data-i18n="settings">Settings</h2>
+    </div>
+
+    <section class="settings-section">
+      <h3 data-i18n="appearance">Appearance</h3>
+      <div class="field-row">
+        <label class="field-label" data-i18n="theme">Theme</label>
+        <select id="themeSelect" class="select-input">
+          <option value="system" data-i18n="themeSystem">System</option>
+          <option value="light" data-i18n="themeLight">Light</option>
+          <option value="dark" data-i18n="themeDark">Dark</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="field-label" data-i18n="colorTheme">Theme color</label>
+        <select id="colorSelect" class="select-input">
+          <option value="teal">Teal</option><option value="blue">Blue</option><option value="green">Green</option><option value="purple">Purple</option><option value="orange">Orange</option><option value="pink">Pink</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="field-label" data-i18n="fontSize">Font size</label>
+        <select id="fontSizeSelect" class="select-input">
+          <option value="small" data-i18n="fontSmall">Small</option>
+          <option value="medium" data-i18n="fontMedium">Medium</option>
+          <option value="large" data-i18n="fontLarge">Large</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="field-label" data-i18n="language">Language</label>
+        <select id="languageSelect" class="select-input">
+          <option value="auto" data-i18n="languageAuto">Auto (device)</option>
+          <option value="en">English</option>
+          <option value="vi">Tiếng Việt</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 data-i18n="displayOptions">Display</h3>
+      <label class="switch-item full">
+        <input type="checkbox" id="optShowStrength" checked />
+        <span class="switch-track"></span>
+        <span class="switch-text" data-i18n="showStrength">Show strength meter</span>
+      </label>
+      <label class="switch-item full">
+        <input type="checkbox" id="optShowHistory" checked />
+        <span class="switch-track"></span>
+        <span class="switch-text" data-i18n="showHistory">Save recent history</span>
+      </label>
+      <p class="hint-text" data-i18n="showHistoryHint">When off, generated values are shown once and never saved anywhere — nothing to clear later.</p>
+      <div class="field-row">
+        <label class="field-label" data-i18n="historyLimit">History items to keep</label>
+        <select id="historyLimitSelect" class="select-input">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 data-i18n="dataManagement">Data</h3>
+      <div class="settings-btn-row">
+        <button class="btn-secondary" id="exportBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          <span data-i18n="exportSettings">Export settings</span>
+        </button>
+        <button class="btn-secondary" id="importBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z" transform="rotate(180 12 11)"/></svg>
+          <span data-i18n="importSettings">Import settings</span>
+        </button>
+        <input type="file" id="importFile" accept="application/json" hidden />
+      </div>
+      <button class="btn-text-danger" id="resetBtn" data-i18n="resetDefault">Reset to default</button>
+    </section>
+
+    <section class="settings-section about-section">
+      <h3 data-i18n="about">About</h3>
+      <div class="about-actions">
+        <button class="btn-secondary" id="aboutBtn" type="button"><span class="material-icon">info</span><span data-i18n="credits">Credits</span></button>
+        <button class="btn-secondary" id="landingBtn" type="button"><span class="material-icon">open_in_new</span><span data-i18n="openLanding">Open landing page</span></button>
+      </div>
+    </section>
+  </div>
+
+  <dialog class="credits-dialog" id="creditsDialog">
+    <div class="credits-content">
+      <button class="icon-btn dialog-close" id="closeCreditsBtn" aria-label="Close">×</button>
+      <img src="icons/icon48.png" alt="Password Generator" class="credits-logo" />
+      <span class="eyebrow">Password Generator v2.1.0</span>
+      <h2 data-i18n="creditsTitle">Built with care</h2>
+      <p data-i18n="creditsBody">An open-source password toolkit crafted by</p>
+      <div class="credit-name">minhtrong67</div>
+      <div class="credit-ai"><span class="material-icon">auto_awesome</span> <span data-i18n="withClaude">with support from Claude AI</span></div>
+      <button class="btn-primary dialog-ok" id="closeCreditsBtn2" data-i18n="close">Close</button>
+    </div>
+  </dialog>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/wordlist.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>SmartShot — Screenshot &amp; Annotate Chrome Extension | Free &amp; Open Source</title>
+<meta name="description" content="SmartShot is a free, open-source Chrome extension to capture the visible area, a full page or a selection, then annotate with pen, arrows, text and pixelate. 100% on-device, English &amp; Tiếng Việt." />
+<meta name="keywords" content="screenshot extension, chrome extension, full page screenshot, annotate screenshot, screen capture, pixelate, open source, SmartShot, chụp màn hình, tiện ích chrome, minhtrong67" />
+<meta name="author" content="minhtrong67" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#9C27B0" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1D1B1F" media="(prefers-color-scheme: dark)" />
+<meta name="color-scheme" content="light dark" />
+<meta name="application-name" content="SmartShot" />
+<meta name="generator" content="Hand-written HTML — minhtrong67 with AI support from Claude" />
+<link rel="canonical" href="https://minhtrong67.github.io/web-screenshot-ext/" />
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
+<link rel="apple-touch-icon" href="icons/icon128.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="SmartShot" />
+<meta property="og:title" content="SmartShot — Screenshot &amp; Annotate for Chrome" />
+<meta property="og:description" content="Capture, annotate and redact screenshots in seconds. Free, open source, 100% on-device." />
+<meta property="og:url" content="https://minhtrong67.github.io/web-screenshot-ext/" />
+<meta property="og:image" content="https://minhtrong67.github.io/web-screenshot-ext/screenshots/image01.png" />
+<meta property="og:image:alt" content="SmartShot annotation editor with arrow, box and pixelate redaction" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="vi_VN" />
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="SmartShot — Screenshot &amp; Annotate for Chrome" />
+<meta name="twitter:description" content="Capture, annotate and redact screenshots in seconds. Free, open source, 100% on-device." />
+<meta name="twitter:image" content="https://minhtrong67.github.io/web-screenshot-ext/screenshots/image01.png" />
+<meta name="twitter:creator" content="@minhtrong67" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SmartShot",
+  "applicationCategory": "BrowserApplication",
+  "operatingSystem": "Windows, macOS, Linux, ChromeOS (Chrome 109+)",
+  "description": "Free open-source Chrome extension to capture, annotate and redact screenshots.",
+  "softwareVersion": "1.1.0",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "minhtrong67", "url": "https://github.com/minhtrong67" },
+  "image": "https://minhtrong67.github.io/web-screenshot-ext/screenshots/image01.png",
+  "inLanguage": ["en", "vi"],
+  "downloadUrl": "https://minhtrong67.github.io/web-screenshot-ext/download/SmartShot-Setup.zip"
+}
+</script>
+
+<style>
+/* ===== Material Design 3 tokens (seed #9C27B0) ===== */
+:root, [data-theme="light"] {
+  --md-primary: #9a25ae;
+    --md-on-primary: #ffffff;
+    --md-primary-container: #ffd6fe;
+    --md-on-primary-container: #35003f;
+    --md-secondary: #6b586b;
+    --md-on-secondary: #ffffff;
+    --md-secondary-container: #f4dbf1;
+    --md-on-secondary-container: #251626;
+    --md-tertiary: #82524a;
+    --md-on-tertiary: #ffffff;
+    --md-tertiary-container: #ffdad4;
+    --md-on-tertiary-container: #33110c;
+    --md-error: #ba1a1a;
+    --md-on-error: #ffffff;
+    --md-error-container: #ffdad6;
+    --md-on-error-container: #410002;
+    --md-background: #fffbff;
+    --md-on-background: #1e1a1d;
+    --md-surface: #fffbff;
+    --md-on-surface: #1e1a1d;
+    --md-surface-variant: #ecdfe8;
+    --md-on-surface-variant: #4d444c;
+    --md-outline: #7f747d;
+    --md-outline-variant: #d0c3cc;
+    --md-inverse-surface: #332f32;
+    --md-inverse-on-surface: #f7eef3;
+    --md-inverse-primary: #f9abff;
+    --md-surface-dim: #e0d8dc;
+    --md-surface-bright: #fff7fa;
+    --md-surface-container-lowest: #ffffff;
+    --md-surface-container-low: #faf1f5;
+    --md-surface-container: #f4ecf0;
+    --md-surface-container-high: #eee6ea;
+    --md-surface-container-highest: #e9e0e4;
+  --elev1: 0 1px 2px rgb(0 0 0/.3), 0 1px 3px 1px rgb(0 0 0/.15);
+  --elev2: 0 1px 2px rgb(0 0 0/.3), 0 2px 6px 2px rgb(0 0 0/.15);
+  --elev3: 0 4px 8px 3px rgb(0 0 0/.15), 0 1px 3px rgb(0 0 0/.3);
+}
+[data-theme="dark"] {
+  --md-primary: #f9abff;
+    --md-on-primary: #570066;
+    --md-primary-container: #7b008f;
+    --md-on-primary-container: #ffd6fe;
+    --md-secondary: #d7bfd5;
+    --md-on-secondary: #3b2b3c;
+    --md-secondary-container: #534153;
+    --md-on-secondary-container: #f4dbf1;
+    --md-tertiary: #f6b8ad;
+    --md-on-tertiary: #4c251f;
+    --md-tertiary-container: #673b34;
+    --md-on-tertiary-container: #ffdad4;
+    --md-error: #ffb4ab;
+    --md-on-error: #690005;
+    --md-error-container: #93000a;
+    --md-on-error-container: #ffb4ab;
+    --md-background: #1e1a1d;
+    --md-on-background: #e9e0e4;
+    --md-surface: #1e1a1d;
+    --md-on-surface: #e9e0e4;
+    --md-surface-variant: #4d444c;
+    --md-on-surface-variant: #d0c3cc;
+    --md-outline: #998d96;
+    --md-outline-variant: #4d444c;
+    --md-inverse-surface: #e9e0e4;
+    --md-inverse-on-surface: #332f32;
+    --md-inverse-primary: #9a25ae;
+    --md-surface-dim: #161215;
+    --md-surface-bright: #3c383b;
+    --md-surface-container-lowest: #100d10;
+    --md-surface-container-low: #1e1a1d;
+    --md-surface-container: #221e22;
+    --md-surface-container-high: #2d292c;
+    --md-surface-container-highest: #383337;
+}
+:root {
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --ease: cubic-bezier(.2,0,0,1); --ease-emph: cubic-bezier(.05,.7,.1,1);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.6; color: var(--md-on-surface); background: var(--md-surface); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1,h2,h3,p { margin: 0; }
+.lucide { flex: none; }
+.container { width: min(1160px, 100% - 40px); margin-inline: auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 3px; border-radius: 8px; }
+
+/* ===== Buttons ===== */
+.btn { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 28px; border-radius: 999px; border: 0; font: 600 1rem/1 var(--font); text-decoration: none; cursor: pointer; white-space: nowrap; transition: box-shadow .25s var(--ease), transform .2s var(--ease), background-color .25s var(--ease); }
+.btn::before { content: ""; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity .2s; z-index: -1; }
+.btn:hover::before { opacity: .08; } .btn:active::before { opacity: .12; }
+.btn:active { transform: scale(.97); }
+.btn.filled { background: var(--md-primary); color: var(--md-on-primary); }
+.btn.filled:hover { box-shadow: var(--elev2); }
+.btn.tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.btn.outlined { color: var(--md-primary); box-shadow: inset 0 0 0 1.5px var(--md-outline); background: transparent; }
+.btn.lg { height: 56px; padding: 0 34px; font-size: 1.0625rem; }
+.icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: 50%; border: 0; background: transparent; color: var(--md-on-surface-variant); cursor: pointer; position: relative; overflow: hidden; transition: background-color .2s, transform .2s var(--ease); }
+.icon-btn:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.icon-btn:active { transform: scale(.9); }
+.ripple-dot { position: absolute; border-radius: 50%; background: currentColor; opacity: .18; pointer-events: none; transform: scale(0); animation: ripple .6s var(--ease) forwards; }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+
+/* ===== Header ===== */
+header.bar { position: sticky; top: 0; z-index: 50; transition: background-color .3s, box-shadow .3s, backdrop-filter .3s; }
+header.bar.scrolled { background: color-mix(in srgb, var(--md-surface) 82%, transparent); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); box-shadow: 0 1px 0 var(--md-outline-variant); }
+.bar-inner { display: flex; align-items: center; gap: 8px; height: 68px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 700; font-size: 1.25rem; margin-right: auto; }
+.brand img { width: 38px; height: 38px; border-radius: 11px; }
+nav.links { display: flex; gap: 4px; margin-right: 8px; }
+nav.links a { padding: 8px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; color: var(--md-on-surface-variant); transition: background-color .2s, color .2s; }
+nav.links a:hover { background: color-mix(in srgb, var(--md-primary) 10%, transparent); color: var(--md-primary); }
+.lang-btn { width: auto; padding: 0 14px; border-radius: 999px; font: 700 .85rem var(--font); letter-spacing: .06em; gap: 6px; display: inline-flex; align-items: center; }
+.bar .btn { height: 42px; padding: 0 20px; font-size: .95rem; }
+
+/* ===== Hero ===== */
+.hero { position: relative; padding: 56px 0 96px; overflow: clip; }
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; z-index: -1; animation: float 14s ease-in-out infinite; }
+.hero::before { width: 520px; height: 520px; background: var(--md-primary-container); top: -120px; right: -120px; }
+.hero::after { width: 420px; height: 420px; background: var(--md-tertiary-container); bottom: -80px; left: -140px; animation-delay: -6s; }
+@keyframes float { 50% { transform: translate(-30px, 40px) scale(1.08); } }
+.hero-grid > * { min-width: 0; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px; border-radius: 10px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-weight: 600; font-size: .875rem; }
+.hero h1 { font-size: clamp(2.4rem, 5.4vw, 4rem); line-height: 1.06; letter-spacing: -.025em; font-weight: 700; margin: 22px 0 20px; }
+.hero h1 em { font-style: normal; background: linear-gradient(100deg, var(--md-primary), var(--md-tertiary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p.lead { font-size: 1.2rem; color: var(--md-on-surface-variant); max-width: 36em; }
+.cta { display: flex; flex-wrap: wrap; gap: 14px; margin: 34px 0 26px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--md-on-surface-variant); font-size: .92rem; }
+.meta span { display: inline-flex; align-items: center; gap: 8px; }
+.meta .lucide { color: var(--md-primary); }
+
+.window { border-radius: 18px; background: var(--md-surface-container-lowest); box-shadow: 0 30px 60px -20px rgb(0 0 0/.35), 0 0 0 1px var(--md-outline-variant); overflow: hidden; transform: perspective(1400px) rotateY(-7deg) rotateX(3deg); transition: transform .6s var(--ease-emph); animation: rise-in 1s var(--ease-emph) .15s both; }
+.window:hover { transform: perspective(1400px) rotateY(0) rotateX(0); }
+.window-bar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; background: var(--md-surface-container-high); }
+.window-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--md-outline-variant); }
+.window-bar i:first-child { background: #ff5f57; } .window-bar i:nth-child(2) { background: #febc2e; } .window-bar i:nth-child(3) { background: #28c840; }
+.window img { width: 100%; height: auto; aspect-ratio: 16/10; object-fit: cover; background: var(--md-surface-container); }
+@keyframes rise-in { from { opacity: 0; transform: translateY(40px) scale(.96); } }
+
+/* ===== Sections ===== */
+section { padding: 88px 0; }
+.eyebrow { color: var(--md-primary); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: .8rem; margin-bottom: 12px; }
+.sec-head { max-width: 680px; margin-bottom: 48px; }
+.sec-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.75rem); line-height: 1.15; letter-spacing: -.02em; font-weight: 700; margin-bottom: 14px; }
+.sec-head p { color: var(--md-on-surface-variant); font-size: 1.1rem; }
+.center { text-align: center; margin-inline: auto; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.card { padding: 28px; border-radius: 28px; background: var(--md-surface-container); transition: transform .35s var(--ease-emph), box-shadow .35s var(--ease), background-color .3s; }
+.card:hover { transform: translateY(-6px); box-shadow: var(--elev2); background: var(--md-surface-container-high); }
+.card .ico { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: var(--md-primary-container); color: var(--md-on-primary-container); margin-bottom: 20px; transition: border-radius .4s var(--ease-emph), background-color .3s, color .3s; }
+.card:hover .ico { border-radius: 50%; background: var(--md-primary); color: var(--md-on-primary); }
+.card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+.card p { color: var(--md-on-surface-variant); }
+
+.band { background: var(--md-surface-container-low); }
+
+/* gallery */
+.gallery { display: flex; gap: 24px; overflow-x: auto; padding: 8px 20px 28px; scroll-snap-type: x mandatory; scrollbar-width: thin; margin-inline: calc(50% - 50vw); padding-inline: max(20px, calc(50vw - 580px)); }
+.shot { flex: none; scroll-snap-align: center; border-radius: 28px; padding: 10px; background: var(--md-surface-container-high); box-shadow: var(--elev1); transition: transform .4s var(--ease-emph), box-shadow .3s; }
+.shot:hover { transform: translateY(-8px) scale(1.02); box-shadow: var(--elev3); }
+.shot img { border-radius: 20px; height: 520px; width: auto; background: var(--md-surface-container); }
+.shot.wide img { height: 520px; aspect-ratio: 16/10; object-fit: cover; }
+.shot figcaption { text-align: center; padding: 12px 6px 4px; font-weight: 600; font-size: .95rem; color: var(--md-on-surface-variant); }
+
+/* steps */
+.steps { counter-reset: s; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+.step { position: relative; padding: 28px 24px 24px; border-radius: 28px; background: var(--md-surface-container); counter-increment: s; }
+.step::before { content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--md-primary); color: var(--md-on-primary); font-weight: 700; margin-bottom: 16px; }
+.step h3 { font-size: 1.1rem; margin-bottom: 6px; }
+.step p { color: var(--md-on-surface-variant); font-size: .95rem; }
+code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .9em; padding: 2px 8px; border-radius: 8px; background: var(--md-surface-container-highest); }
+
+.cta-card { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; padding: 56px; border-radius: 40px; background: var(--md-primary); color: var(--md-on-primary); position: relative; overflow: hidden; }
+.cta-card::after { content: ""; position: absolute; width: 360px; height: 360px; right: -80px; top: -120px; border-radius: 50%; background: rgb(255 255 255 / .12); }
+.cta-card h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); line-height: 1.15; margin-bottom: 10px; }
+.cta-card p { opacity: .9; max-width: 34em; }
+.cta-card .btn { background: var(--md-on-primary); color: var(--md-primary); position: relative; z-index: 1; }
+
+.author { display: flex; align-items: center; gap: 24px; padding: 32px; border-radius: 32px; background: var(--md-surface-container); flex-wrap: wrap; }
+.author img { width: 76px; height: 76px; border-radius: 22px; }
+.author h3 { font-size: 1.3rem; }
+.author p { color: var(--md-on-surface-variant); }
+.author .btn { margin-left: auto; }
+
+footer { padding: 36px 0 48px; color: var(--md-on-surface-variant); font-size: .93rem; border-top: 1px solid var(--md-outline-variant); }
+.foot { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; align-items: center; }
+.foot a { text-decoration: none; color: var(--md-primary); font-weight: 600; }
+
+/* reveal on scroll */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity .8s var(--ease-emph), transform .8s var(--ease-emph); transition-delay: var(--d, 0ms); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* responsive */
+@media (max-width: 920px) {
+  nav.links { display: none; }
+  .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+  .window { transform: none; }
+  .cta-card { grid-template-columns: 1fr; padding: 36px 28px; border-radius: 32px; }
+  .author .btn { margin-left: 0; }
+  section { padding: 64px 0; }
+}
+@media (max-width: 560px) {
+  .bar .btn { display: none; }
+  .cta .btn { width: 100%; }
+  .shot img, .shot.wide img { height: 420px; }
+  .hero { padding-top: 32px; }
+  .author { padding: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar" id="bar">
+  <div class="container bar-inner">
+    <a class="brand" href="#top" aria-label="SmartShot"><img src="icons/icon128.png" alt="" width="38" height="38" />SmartShot</a>
+    <nav class="links" aria-label="Primary">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#screenshots" data-i18n="navShots">Screenshots</a>
+      <a href="#install" data-i18n="navInstall">Install</a>
+      <a href="#about" data-i18n="navAbout">About</a>
+    </nav>
+    <button class="icon-btn lang-btn" id="langBtn" type="button" aria-label="Language"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg><span id="langLabel">EN</span></button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Theme"></button>
+    <a class="btn filled" href="download/SmartShot-Setup.zip" download><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg><span data-i18n="download">Download</span></a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="chip reveal"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg><span data-i18n="chip">Free · Open source · Chrome 109+</span></span>
+        <h1 class="reveal" style="--d:80ms"><span data-i18n="h1a">Capture it.</span> <em data-i18n="h1b">Annotate it.</em> <span data-i18n="h1c">Share it.</span></h1>
+        <p class="lead reveal" style="--d:160ms" data-i18n="lead">SmartShot captures the visible area, an entire scrolling page or any region you drag — then lets you draw, add text and pixelate sensitive info. Everything stays on your device.</p>
+        <div class="cta reveal" style="--d:240ms">
+          <a class="btn filled lg" href="download/SmartShot-Setup.zip" download><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg><span data-i18n="downloadFree">Download for Chrome</span></a>
+          <a class="btn outlined lg" href="https://github.com/minhtrong67/web-screenshot-ext" target="_blank" rel="noopener"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg><span>GitHub</span></a>
+        </div>
+        <div class="meta reveal" style="--d:320ms">
+          <span><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg><span data-i18n="m1">No tracking, no uploads</span></span>
+          <span><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg><span data-i18n="m2">English &amp; Tiếng Việt</span></span>
+          <span><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg><span data-i18n="m3">19 Material colors</span></span>
+        </div>
+      </div>
+      <figure class="window" style="margin:0" aria-label="SmartShot editor">
+        <div class="window-bar"><i></i><i></i><i></i></div>
+        <img src="screenshots/image01.png" alt="SmartShot annotation editor showing a box, arrow, text and pixelated private data" width="1280" height="800" fetchpriority="high" />
+      </figure>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="container">
+      <div class="sec-head reveal"><p class="eyebrow" data-i18n="fEyebrow">Features</p><h2 data-i18n="fTitle">Everything you need, nothing you don't</h2><p data-i18n="fSub">Three capture modes, a fast annotation editor and a polished Material Design 3 interface.</p></div>
+      <div class="grid">
+        <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /></svg></div><h3 data-i18n="f1t">Visible area</h3><p data-i18n="f1d">One click grabs exactly what's on screen — instantly, in PNG or JPEG.</p></article>
+        <article class="card reveal" style="--d:70ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" /><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></svg></div><h3 data-i18n="f2t">Full page</h3><p data-i18n="f2d">Scrolls automatically and stitches a seamless tall image. Sticky headers appear only once.</p></article>
+        <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14" /><path d="M18 22V8a2 2 0 0 0-2-2H2" /></svg></div><h3 data-i18n="f3t">Selected area</h3><p data-i18n="f3d">Drag a rectangle with a live size label to capture just the part you need.</p></article>
+        <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg></div><h3 data-i18n="f4t">Powerful editor</h3><p data-i18n="f4d">Pen, arrows, shapes, text and highlighter. Select, move, resize and recolor any annotation.</p></article>
+        <article class="card reveal" style="--d:70ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M3 9h18" /><path d="M3 15h18" /><path d="M9 3v18" /><path d="M15 3v18" /></svg></div><h3 data-i18n="f5t">Irreversible redaction</h3><p data-i18n="f5d">Pixelate passwords and personal data. The exported pixels are truly gone.</p></article>
+        <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg></div><h3 data-i18n="f6t">Make it yours</h3><p data-i18n="f6d">Light, dark or system theme, 19 Material colors, popular fonts and four text sizes.</p></article>
+        <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg></div><h3 data-i18n="f7t">Auto language</h3><p data-i18n="f7d">Detects your device language and switches to English or Tiếng Việt automatically.</p></article>
+        <article class="card reveal" style="--d:70ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 8h.01" /><path d="M12 12h.01" /><path d="M14 8h.01" /><path d="M16 12h.01" /><path d="M18 8h.01" /><path d="M6 8h.01" /><path d="M7 16h10" /><path d="M8 12h.01" /><rect width="20" height="16" x="2" y="4" rx="2" /></svg></div><h3 data-i18n="f8t">Keyboard friendly</h3><p data-i18n="f8d">Tool hotkeys, Ctrl+Z / Y, Ctrl+S to save and Ctrl+C to copy. Paste or drop any image to edit.</p></article>
+        <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></div><h3 data-i18n="f9t">Private by design</h3><p data-i18n="f9d">Works fully offline with minimal permissions. Nothing is ever sent to a server.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots" class="band">
+    <div class="container"><div class="sec-head reveal"><p class="eyebrow" data-i18n="sEyebrow">Screenshots</p><h2 data-i18n="sTitle">A calm, modern interface</h2><p data-i18n="sSub">Material Design 3 with smooth motion — in light, dark and any accent color.</p></div></div>
+    <div class="gallery reveal" tabindex="0" aria-label="Screenshots">
+      <figure class="shot wide" style="margin:0"><img src="screenshots/image01.png" alt="Annotation editor" loading="lazy" width="832" height="520" /><figcaption data-i18n="c1">Annotation editor</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="screenshots/image02.png" alt="Capture popup" loading="lazy" width="354" height="520" /><figcaption data-i18n="c2">Capture popup</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="screenshots/image03.png" alt="Settings" loading="lazy" width="354" height="520" /><figcaption data-i18n="c3">Settings</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="screenshots/image04.png" alt="Dark theme in Vietnamese" loading="lazy" width="354" height="520" /><figcaption data-i18n="c4">Dark theme · Tiếng Việt</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="screenshots/image05.png" alt="Teal accent color" loading="lazy" width="354" height="520" /><figcaption data-i18n="c5">Teal accent</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="container">
+      <div class="sec-head reveal"><p class="eyebrow" data-i18n="iEyebrow">Install</p><h2 data-i18n="iTitle">Up and running in a minute</h2><p data-i18n="iSub">Load SmartShot as an unpacked extension in Chrome, Edge, Brave or any Chromium browser.</p></div>
+      <div class="steps">
+        <div class="step reveal"><h3 data-i18n="i1t">Download &amp; unzip</h3><p data-i18n="i1d">Download the package and extract it to a permanent folder.</p></div>
+        <div class="step reveal" style="--d:70ms"><h3 data-i18n="i2t">Open extensions</h3><p><span data-i18n="i2d">Go to</span> <code>chrome://extensions</code> <span data-i18n="i2e">and switch on Developer mode.</span></p></div>
+        <div class="step reveal" style="--d:140ms"><h3 data-i18n="i3t">Load unpacked</h3><p data-i18n="i3d">Click “Load unpacked” and choose the extracted SmartShot folder.</p></div>
+        <div class="step reveal" style="--d:210ms"><h3 data-i18n="i4t">Pin &amp; capture</h3><p data-i18n="i4d">Pin the purple icon to your toolbar and start capturing.</p></div>
+      </div>
+      <div class="cta-card reveal" style="margin-top:48px">
+        <div><h2 data-i18n="ctaT">Ready to capture smarter?</h2><p data-i18n="ctaD">Free forever and open source under the MIT License.</p></div>
+        <a class="btn lg" href="download/SmartShot-Setup.zip" download><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg><span data-i18n="downloadFree">Download for Chrome</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="band">
+    <div class="container">
+      <div class="sec-head reveal"><p class="eyebrow" data-i18n="aEyebrow">About</p><h2 data-i18n="aTitle">Built in the open</h2><p data-i18n="aSub">SmartShot is public and open source — contributions and ideas are welcome.</p></div>
+      <div class="author reveal">
+        <img src="icons/icon128.png" alt="" width="76" height="76" />
+        <div>
+          <h3><span data-i18n="by">Created by</span> minhtrong67</h3>
+          <p data-i18n="ai">with AI support from Claude (Anthropic)</p>
+          <p data-i18n="lic">MIT License · free to use, modify and share</p>
+        </div>
+        <a class="btn tonal" href="https://github.com/minhtrong67/web-screenshot-ext" target="_blank" rel="noopener"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg><span data-i18n="source">View source</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container foot">
+    <span>© <span id="year">2026</span> <a href="https://github.com/minhtrong67" target="_blank" rel="noopener">minhtrong67</a> · <span data-i18n="ai">with AI support from Claude (Anthropic)</span></span>
+    <span data-i18n="foot">Open source · MIT License · Made with Material Design 3</span>
+  </div>
+</footer>
+
+<script>
+const ICON = { sun: '<circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />', moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />', monitor: '<rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" x2="16" y1="21" y2="21" /><line x1="12" x2="12" y1="17" y2="21" />' };
+const svg = (n) => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[n] + '</svg>';
+
+const T = {
+  en: {
+    navFeatures:"Features", navShots:"Screenshots", navInstall:"Install", navAbout:"About", download:"Download", downloadFree:"Download for Chrome",
+    chip:"Free · Open source · Chrome 109+", h1a:"Capture it.", h1b:"Annotate it.", h1c:"Share it.",
+    lead:"SmartShot captures the visible area, an entire scrolling page or any region you drag — then lets you draw, add text and pixelate sensitive info. Everything stays on your device.",
+    m1:"No tracking, no uploads", m2:"English & Tiếng Việt", m3:"19 Material colors",
+    fEyebrow:"Features", fTitle:"Everything you need, nothing you don't", fSub:"Three capture modes, a fast annotation editor and a polished Material Design 3 interface.",
+    f1t:"Visible area", f1d:"One click grabs exactly what's on screen — instantly, in PNG or JPEG.",
+    f2t:"Full page", f2d:"Scrolls automatically and stitches a seamless tall image. Sticky headers appear only once.",
+    f3t:"Selected area", f3d:"Drag a rectangle with a live size label to capture just the part you need.",
+    f4t:"Powerful editor", f4d:"Pen, arrows, shapes, text and highlighter. Select, move, resize and recolor any annotation.",
+    f5t:"Irreversible redaction", f5d:"Pixelate passwords and personal data. The exported pixels are truly gone.",
+    f6t:"Make it yours", f6d:"Light, dark or system theme, 19 Material colors, popular fonts and four text sizes.",
+    f7t:"Auto language", f7d:"Detects your device language and switches to English or Tiếng Việt automatically.",
+    f8t:"Keyboard friendly", f8d:"Tool hotkeys, Ctrl+Z / Y, Ctrl+S to save and Ctrl+C to copy. Paste or drop any image to edit.",
+    f9t:"Private by design", f9d:"Works fully offline with minimal permissions. Nothing is ever sent to a server.",
+    sEyebrow:"Screenshots", sTitle:"A calm, modern interface", sSub:"Material Design 3 with smooth motion — in light, dark and any accent color.",
+    c1:"Annotation editor", c2:"Capture popup", c3:"Settings", c4:"Dark theme · Tiếng Việt", c5:"Teal accent",
+    iEyebrow:"Install", iTitle:"Up and running in a minute", iSub:"Load SmartShot as an unpacked extension in Chrome, Edge, Brave or any Chromium browser.",
+    i1t:"Download & unzip", i1d:"Download the package and extract it to a permanent folder.",
+    i2t:"Open extensions", i2d:"Go to", i2e:"and switch on Developer mode.",
+    i3t:"Load unpacked", i3d:"Click “Load unpacked” and choose the extracted SmartShot folder.",
+    i4t:"Pin & capture", i4d:"Pin the purple icon to your toolbar and start capturing.",
+    ctaT:"Ready to capture smarter?", ctaD:"Free forever and open source under the MIT License.",
+    aEyebrow:"About", aTitle:"Built in the open", aSub:"SmartShot is public and open source — contributions and ideas are welcome.",
+    by:"Created by", ai:"with AI support from Claude (Anthropic)", lic:"MIT License · free to use, modify and share", source:"View source",
+    foot:"Open source · MIT License · Made with Material Design 3",
+    title:"SmartShot — Screenshot & Annotate Chrome Extension | Free & Open Source"
+  },
+  vi: {
+    navFeatures:"Tính năng", navShots:"Ảnh minh hoạ", navInstall:"Cài đặt", navAbout:"Giới thiệu", download:"Tải xuống", downloadFree:"Tải cho Chrome",
+    chip:"Miễn phí · Mã nguồn mở · Chrome 109+", h1a:"Chụp nhanh.", h1b:"Chú thích gọn.", h1c:"Chia sẻ ngay.",
+    lead:"SmartShot chụp vùng hiển thị, cả trang cuộn dài hoặc bất kỳ vùng nào bạn kéo chọn — rồi cho phép vẽ, thêm chữ và che điểm ảnh thông tin nhạy cảm. Mọi thứ nằm trên thiết bị của bạn.",
+    m1:"Không theo dõi, không tải lên", m2:"English & Tiếng Việt", m3:"19 màu Material",
+    fEyebrow:"Tính năng", fTitle:"Đủ dùng, không rườm rà", fSub:"Ba chế độ chụp, trình chú thích nhanh và giao diện Material Design 3 tinh tế.",
+    f1t:"Vùng hiển thị", f1d:"Một chạm là chụp đúng phần đang hiện trên màn hình — PNG hoặc JPEG.",
+    f2t:"Toàn trang", f2d:"Tự động cuộn và ghép thành một ảnh dài liền mạch. Header dính chỉ xuất hiện một lần.",
+    f3t:"Vùng chọn", f3d:"Kéo hình chữ nhật có hiển thị kích thước trực tiếp để chụp đúng phần cần.",
+    f4t:"Trình chỉnh sửa mạnh", f4d:"Bút, mũi tên, hình khối, chữ và bút dạ quang. Chọn, di chuyển, đổi cỡ và đổi màu mọi chú thích.",
+    f5t:"Che thông tin triệt để", f5d:"Làm mờ mật khẩu, dữ liệu cá nhân. Điểm ảnh khi xuất ra không thể khôi phục.",
+    f6t:"Tuỳ biến theo ý bạn", f6d:"Giao diện sáng, tối hoặc theo hệ thống, 19 màu Material, phông chữ phổ biến và bốn cỡ chữ.",
+    f7t:"Tự nhận diện ngôn ngữ", f7d:"Nhận ngôn ngữ thiết bị và tự chuyển sang Tiếng Việt hoặc English.",
+    f8t:"Thao tác bàn phím", f8d:"Phím tắt công cụ, Ctrl+Z / Y, Ctrl+S để lưu, Ctrl+C để sao chép. Dán hoặc kéo thả ảnh bất kỳ để chỉnh sửa.",
+    f9t:"Riêng tư từ thiết kế", f9d:"Hoạt động hoàn toàn ngoại tuyến với quyền tối thiểu. Không gửi gì tới máy chủ.",
+    sEyebrow:"Ảnh minh hoạ", sTitle:"Giao diện dịu mắt, hiện đại", sSub:"Material Design 3 với chuyển động mượt — sáng, tối và mọi màu chủ đề.",
+    c1:"Trình chú thích", c2:"Cửa sổ chụp", c3:"Cài đặt", c4:"Giao diện tối · Tiếng Việt", c5:"Màu chủ đề xanh mòng két",
+    iEyebrow:"Cài đặt", iTitle:"Sẵn sàng sau một phút", iSub:"Nạp SmartShot dưới dạng tiện ích giải nén trên Chrome, Edge, Brave hoặc trình duyệt Chromium bất kỳ.",
+    i1t:"Tải về & giải nén", i1d:"Tải gói cài đặt và giải nén vào một thư mục cố định.",
+    i2t:"Mở trang tiện ích", i2d:"Truy cập", i2e:"và bật Chế độ nhà phát triển.",
+    i3t:"Tải tiện ích đã giải nén", i3d:"Nhấn “Tải tiện ích đã giải nén” rồi chọn thư mục SmartShot vừa giải nén.",
+    i4t:"Ghim & chụp", i4d:"Ghim biểu tượng màu tím lên thanh công cụ và bắt đầu chụp.",
+    ctaT:"Sẵn sàng chụp thông minh hơn?", ctaD:"Miễn phí mãi mãi và mã nguồn mở theo Giấy phép MIT.",
+    aEyebrow:"Giới thiệu", aTitle:"Xây dựng công khai", aSub:"SmartShot là dự án công khai, mã nguồn mở — đóng góp và ý tưởng luôn được chào đón.",
+    by:"Tác giả", ai:"với sự hỗ trợ của AI Claude (Anthropic)", lic:"Giấy phép MIT · tự do sử dụng, chỉnh sửa và chia sẻ", source:"Xem mã nguồn",
+    foot:"Mã nguồn mở · Giấy phép MIT · Thiết kế theo Material Design 3",
+    title:"SmartShot — Tiện ích Chrome chụp & chú thích màn hình | Miễn phí, mã nguồn mở"
+  }
+};
+
+const root = document.documentElement;
+const deviceLang = ((navigator.languages && navigator.languages[0]) || navigator.language || "en").toLowerCase().startsWith("vi") ? "vi" : "en";
+let lang = localStorage.getItem("ss_lang") || deviceLang;
+let theme = localStorage.getItem("ss_theme") || "system";
+
+function applyLang() {
+  root.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach((n) => { const v = T[lang][n.dataset.i18n]; if (v) n.textContent = v; });
+  document.title = T[lang].title;
+  document.getElementById("langLabel").textContent = lang.toUpperCase();
+  document.querySelector('meta[property="og:locale"]').content = lang === "vi" ? "vi_VN" : "en_US";
+}
+function applyTheme() {
+  const dark = theme === "dark" || (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  root.dataset.theme = dark ? "dark" : "light";
+  document.getElementById("themeBtn").innerHTML = svg(theme === "system" ? "monitor" : dark ? "moon" : "sun");
+}
+document.getElementById("langBtn").onclick = () => { lang = lang === "en" ? "vi" : "en"; localStorage.setItem("ss_lang", lang); applyLang(); };
+document.getElementById("themeBtn").onclick = () => { theme = { system: "light", light: "dark", dark: "system" }[theme]; localStorage.setItem("ss_theme", theme); applyTheme(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => theme === "system" && applyTheme());
+applyLang(); applyTheme();
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// sticky header glass
+const bar = document.getElementById("bar");
+const onScroll = () => bar.classList.toggle("scrolled", scrollY > 8);
+addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+// reveal on scroll
+const io = "IntersectionObserver" in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12, rootMargin: "0px 0px -40px 0px" }) : null;
+document.querySelectorAll(".reveal").forEach((n) => io ? io.observe(n) : n.classList.add("in"));
+
+// ripple
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.addEventListener("pointerdown", (e) => {
+  const h = e.target.closest(".btn, .icon-btn"); if (!h) return;
+  const r = h.getBoundingClientRect(), s = Math.hypot(r.width, r.height) * 2;
+  const d = document.createElement("span"); d.className = "ripple-dot";
+  d.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  h.appendChild(d); d.addEventListener("animationend", () => d.remove());
+}, { passive: true });
+
+// hide broken screenshots gracefully until the files are added
+document.querySelectorAll(".shot img, .window img").forEach((img) => img.addEventListener("error", () => { img.style.visibility = "hidden"; }));
+</script>
+</body>
+</html>

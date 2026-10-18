@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickNote — Ghi chú nhanh theo phong cách Material You</title>
+
+  <link rel="icon" href="icons/icon48.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="shared/theme.css" />
+  <link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <img src="icons/icon48.png" width="28" height="28" alt="QuickNote" />
+        <span>QuickNote</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#features" data-i18n="landingNavFeatures"></a>
+        <a href="#privacy" data-i18n="landingNavPrivacy"></a>
+        <a href="#about" data-i18n="landingNavAbout"></a>
+      </nav>
+      <div class="nav-actions">
+        <button class="segment-btn md-ripple-host" id="langToggle">VI / EN</button>
+        <button class="filled-btn md-ripple-host" id="btnOpenApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span data-i18n="landingOpenApp"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow" data-i18n="heroEyebrow"></span>
+        <h1 data-i18n="heroTitle"></h1>
+        <p data-i18n="heroSubtitle"></p>
+        <div class="hero-actions">
+          <button class="filled-btn lg md-ripple-host" id="btnHeroPrimary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span data-i18n="heroCtaPrimary"></span>
+          </button>
+          <button class="outlined-btn lg md-ripple-host" id="btnHeroSecondary">
+            <span data-i18n="heroCtaSecondary"></span>
+          </button>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><strong>∞</strong><span data-i18n="statNotes"></span></div>
+          <div class="stat"><strong>100%</strong><span data-i18n="statPrivate"></span></div>
+          <div class="stat"><strong>VI / EN</strong><span data-i18n="statLang"></span></div>
+          <div class="stat"><strong>0đ</strong><span data-i18n="statFree"></span></div>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="mock-window">
+          <div class="mock-topbar">
+            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-sidebar">
+              <div class="mock-search"></div>
+              <div class="mock-card mock-card-active"></div>
+              <div class="mock-card"></div>
+              <div class="mock-card"></div>
+              <div class="mock-card short"></div>
+            </div>
+            <div class="mock-editor">
+              <div class="mock-title"></div>
+              <div class="mock-line"></div>
+              <div class="mock-line"></div>
+              <div class="mock-line short"></div>
+            </div>
+          </div>
+        </div>
+        <img class="hero-logo-float" src="icons/icon128.png" width="72" height="72" alt="" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FEATURES
+       ============================================================ -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <h2 data-i18n="featuresHeading"></h2>
+      <p class="section-sub" data-i18n="featuresSubheading"></p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h3 data-i18n="feat1Title"></h3><p data-i18n="feat1Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.6-4.5-8.4-10-8.4z"/></svg></div>
+          <h3 data-i18n="feat2Title"></h3><p data-i18n="feat2Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></div>
+          <h3 data-i18n="feat3Title"></h3><p data-i18n="feat3Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></div>
+          <h3 data-i18n="feat4Title"></h3><p data-i18n="feat4Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+          <h3 data-i18n="feat5Title"></h3><p data-i18n="feat5Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+          <h3 data-i18n="feat6Title"></h3><p data-i18n="feat6Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h3 data-i18n="feat7Title"></h3><p data-i18n="feat7Desc"></p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <h3 data-i18n="feat8Title"></h3><p data-i18n="feat8Desc"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       INSTALL GUIDE (manual / load-unpacked — honest for a source
+       distribution that isn't on the Web Store yet)
+       ============================================================ -->
+  <section class="install" id="install">
+    <div class="section-inner">
+      <h2 data-i18n="installHeading"></h2>
+      <ol class="install-steps" id="installSteps">
+        <li><span>1</span><div><strong data-i18n="installStep1Title"></strong><p data-i18n="installStep1Desc"></p></div></li>
+        <li><span>2</span><div><strong data-i18n="installStep2Title"></strong><p data-i18n="installStep2Desc"></p></div></li>
+        <li><span>3</span><div><strong data-i18n="installStep3Title"></strong><p data-i18n="installStep3Desc"></p></div></li>
+        <li><span>4</span><div><strong data-i18n="installStep4Title"></strong><p data-i18n="installStep4Desc"></p></div></li>
+        <li><span>5</span><div><strong data-i18n="installStep5Title"></strong><p data-i18n="installStep5Desc"></p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRIVACY
+       ============================================================ -->
+  <section class="privacy" id="privacy">
+    <div class="section-inner narrow">
+      <div class="privacy-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h2 data-i18n="privacyHeading"></h2>
+      <p data-i18n="privacyBody"></p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section class="about" id="about">
+    <div class="section-inner narrow">
+      <img src="icons/icon128.png" width="56" height="56" alt="QuickNote" />
+      <h2 data-i18n="aboutHeading"></h2>
+      <p data-i18n="aboutBody"></p>
+      <div class="credit-pill">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>gnort67</span>
+        <span class="credit-dot">·</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.6-6.3 4.6 2.3-7.2-6-4.6h7.6z"/></svg>
+        <span>Claude AI (Anthropic)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="section-inner footer-inner">
+      <div class="brand">
+        <img src="icons/icon48.png" width="22" height="22" alt="QuickNote" />
+        <span>QuickNote</span>
+      </div>
+      <p data-i18n="footerTagline"></p>
+      <p class="footer-rights" data-i18n="footerRights"></p>
+    </div>
+  </footer>
+
+  <div class="snackbar" id="snackbar"><span id="snackbarText"></span></div>
+
+  <script src="shared/i18n.js"></script>
+  <script src="shared/settings.js"></script>
+  <script src="shared/ripple.js"></script>
+  <script src="landing.js"></script>
+</body>
+</html>

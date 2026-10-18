@@ -6,6 +6,7 @@ let images = [];          // full collected list for the current tab
 let selected = new Set(); // indices into `images`
 let activeFilter = "all";
 let activeTabId = null;
+let hiddenLogos = 0;     // logos auto-excluded from the current scan
 
 async function init() {
   // Apply the last-known theme instantly from cache, before storage.sync
@@ -47,16 +48,20 @@ async function loadImages() {
     const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: collectPageImages,
-      args: [settings.minImageSize ?? 32]
+      args: [settings.minImageSize ?? 32, settings.excludeLogos !== false]
     });
     // Only PNG/JPG/WebP are downloadable — drop anything else (GIF, SVG,
     // AVIF, BMP, or a URL with no recognizable image extension) right here
     // so the popup never lists an image the user can't actually save.
-    images = (results?.[0]?.result || [])
+    const payload = results?.[0]?.result || { list: [], hiddenLogos: 0 };
+    hiddenLogos = payload.hiddenLogos || 0;
+    images = (payload.list || [])
       .filter(i => i?.src)
       .filter(i => isAllowedExt(getExtFromUrl(i.src)));
     sortImagesBySize(images);
     updateBadge(tab.id, images.length);
+    document.getElementById('sectionTitle').textContent =
+      t.pageImages.toUpperCase() + (hiddenLogos > 0 ? ` · ${t.logosHidden(hiddenLogos)}` : '');
     images.length === 0 ? showEmpty() : showImages();
   } catch (_) { showEmpty(); }
 }
@@ -76,11 +81,75 @@ function updateBadge(tabId, count) {
 }
 
 // Injected into the page. `minSize` comes from settings so the "skip small
-// images" threshold configured in Settings → Behaviour is actually honored
-// (previously hardcoded to 32 with no way to change it).
-function collectPageImages(minSize) {
-  const seen = new Set(), results = [];
+// images" threshold configured in Settings → Behaviour is actually honored.
+// `excludeLogos` drops anything that looks like a logo / brand mark / site
+// icon BEFORE the 120-image cap is applied, so a page with a dozen header,
+// footer and partner logos can't crowd real content images out of the list.
+//
+// Must stay self-contained (executeScript serializes it into the page), so
+// the logo heuristics live inside this function rather than in shared.js.
+// Returns { list, hiddenLogos }.
+function collectPageImages(minSize, excludeLogos) {
+  const seen = new Map(), results = [];
   const floor = Number.isFinite(minSize) ? minSize : 32;
+
+  // ── Logo detection ─────────────────────────────────────────
+  // "logo" as a whole word/token: site_logo.png, logo-2x.webp, Company Logo,
+  // client-logos … but NOT catalog.jpg, technology.png or logout.png.
+  const LOGO_RE = /(^|[^a-z])(logo|logos|logotype|logomark|wordmark|brandmark|site-?icon|favicon)([^a-z]|$)/i;
+  const LOGO_CAMEL_RE = /[a-z0-9](Logo|Logos|Logotype|Wordmark|Favicon)(?![a-z])/; // siteLogo.png
+  const BRAND_RE = /(^|[^a-z])(navbar-brand|site-brand|brand-logo|site-title|site-name)([^a-z]|$)/i;
+  const hasLogoText = s => !!s && (LOGO_RE.test(s) || LOGO_CAMEL_RE.test(s));
+  const classOf = el => typeof el.className === 'string' ? el.className : (el.className?.baseVal || '');
+  const attr = (el, n) => (el.getAttribute && el.getAttribute(n)) || '';
+
+  function isHomeLink(a) {
+    try {
+      const u = new URL(a.getAttribute('href') || '', location.href);
+      if (u.origin !== location.origin) return false;
+      return /^\/(index\.(html?|php))?$/i.test(u.pathname) || /^\/[a-z]{2}(-[a-z]{2})?\/?$/i.test(u.pathname);
+    } catch (_) { return false; }
+  }
+
+  function looksLikeLogo(el, src) {
+    // 1) File name / path
+    let path = src;
+    try { path = decodeURIComponent(new URL(src, location.href).pathname); } catch (_) {}
+    if (hasLogoText(path)) return true;
+    if (!el || el.nodeType !== 1) return false;
+
+    // 2) The element itself: alt, class, id, itemprop, aria-label…
+    if (attr(el, 'itemprop').toLowerCase() === 'logo') return true;
+    const own = [el.alt, classOf(el), el.id, attr(el, 'name'), attr(el, 'aria-label'),
+                 attr(el, 'title'), attr(el, 'data-testid'), attr(el, 'data-name')];
+    if (own.some(v => hasLogoText(v) || BRAND_RE.test(v || ''))) return true;
+
+    // 3) A few ancestors (header/brand/logo wrappers, "client-logos" strips…)
+    let p = el.parentElement, depth = 0;
+    while (p && depth < 4 && p !== document.body && p !== document.documentElement) {
+      const hints = [classOf(p), p.id, attr(p, 'aria-label'), attr(p, 'itemprop')];
+      if (attr(p, 'itemprop').toLowerCase() === 'logo') return true;
+      if (hints.some(v => hasLogoText(v) || BRAND_RE.test(v || ''))) return true;
+      p = p.parentElement; depth++;
+    }
+
+    // 4) Size on screen. Unknown size (hidden / not laid out) → skip the
+    //    position-based rules rather than guess.
+    const rect = el.getBoundingClientRect ? el.getBoundingClientRect() : { width: 0, height: 0 };
+    const side = Math.max(rect.width || 0, rect.height || 0);
+    if (!side) return false;
+
+    // Small image wrapped in a link back to the site's home page → brand logo.
+    const a = el.closest && el.closest('a[href]');
+    if (a && side <= 400 && isHomeLink(a)) return true;
+
+    // Small image living in the page chrome (header / nav / footer / banner).
+    if (side <= 240 && el.closest &&
+        el.closest('header, nav, footer, [role="banner"], [role="contentinfo"], [role="navigation"]')) return true;
+
+    return false;
+  }
+
   // allowUnknown: skip the min-size check when we genuinely don't know the
   // image's real dimensions yet (e.g. <img> not finished loading). For
   // background-images we DO know the size (the element's own box), so we
@@ -88,29 +157,40 @@ function collectPageImages(minSize) {
   // icon, and tracking pixel on the page (which report w=0,h=0) sails
   // through the old "w === 0" bypass and pollutes "Save all" with dozens of
   // tiny, low-quality images.
-  function add(src, w, h, alt, allowUnknown) {
-    if (!src || src.startsWith('data:') || seen.has(src)) return;
+  function add(src, w, h, alt, allowUnknown, el) {
+    if (!src || src.startsWith('data:')) return;
+    const logo = looksLikeLogo(el, src);
+    if (seen.has(src)) {
+      // Same file used several times (e.g. header + footer logo): it's only
+      // a logo if EVERY use looks like one — otherwise keep it.
+      const prev = seen.get(src);
+      prev.isLogo = prev.isLogo && logo;
+      return;
+    }
     if (!allowUnknown && (w < floor || h < floor)) return;
-    seen.add(src);
-    results.push({ src, w: w || 0, h: h || 0, alt: alt || '' });
+    const item = { src, w: w || 0, h: h || 0, alt: alt || '', isLogo: logo };
+    seen.set(src, item);
+    results.push(item);
   }
   document.querySelectorAll('img').forEach(img =>
-    add(img.src, img.naturalWidth, img.naturalHeight, img.alt, true));
+    add(img.currentSrc || img.src, img.naturalWidth, img.naturalHeight, img.alt, true, img));
   document.querySelectorAll('*').forEach(el => {
     const bg = window.getComputedStyle(el).backgroundImage;
     if (bg && bg !== 'none') {
       const m = bg.match(/url\(["']?([^"')]+)["']?\)/);
       if (m) {
         const rect = el.getBoundingClientRect();
-        add(m[1], Math.round(rect.width), Math.round(rect.height), '', false);
+        add(m[1], Math.round(rect.width), Math.round(rect.height), '', false, el);
       }
     }
   });
   document.querySelectorAll('picture source').forEach(s => {
     const first = (s.srcset || '').split(',')[0].trim().split(' ')[0];
-    if (first) add(first, 0, 0, '', true);
+    if (first) add(first, 0, 0, '', true, s.closest('picture')?.querySelector('img') || s.parentElement);
   });
-  return results.slice(0, 120);
+
+  const kept = excludeLogos ? results.filter(r => !r.isLogo) : results;
+  return { list: kept.slice(0, 120), hiddenLogos: results.length - kept.length };
 }
 
 function showLoading() {

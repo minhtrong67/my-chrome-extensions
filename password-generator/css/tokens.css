@@ -1,0 +1,204 @@
+/*
+ * tokens.css — Material Design 3 tokens for LockSmith.
+ *
+ * Seeded from #356D86 via Material Theme Builder export.
+ * Includes complete Material 3 tonal palettes, surface-container tier system,
+ * elevation tints, and state layer variables for both Light and Dark themes.
+ */
+
+:root {
+  --font: 'Roboto', system-ui, -apple-system, sans-serif;
+
+  /* ---- Light Scheme (Material 3 Seed #356D86) ---- */
+  --md-primary: #156683;
+  --md-surface-tint: #156683;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #C0E8FF;
+  --md-on-primary-container: #004D66;
+
+  --md-secondary: #4D616C;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #D0E6F3;
+  --md-on-secondary-container: #364954;
+
+  --md-tertiary: #5E5A7D;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #E4DFFF;
+  --md-on-tertiary-container: #464364;
+
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+
+  --md-success: #126E38;
+  --md-on-success: #FFFFFF;
+  --md-success-container: #B9F2C5;
+  --md-on-success-container: #00210B;
+
+  --md-warning: #7A5900;
+  --md-on-warning: #FFFFFF;
+  --md-warning-container: #FFE08C;
+  --md-on-warning-container: #261900;
+
+  --md-background: #F6FAFE;
+  --md-on-background: #171C1F;
+  --md-surface: #F6FAFE;
+  --md-on-surface: #171C1F;
+  --md-surface-variant: #DCE3E9;
+  --md-on-surface-variant: #40484C;
+  --md-outline: #70787D;
+  --md-outline-variant: #C0C7CD;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+
+  --md-inverse-surface: #2C3134;
+  --md-inverse-on-surface: #EDF1F5;
+  --md-inverse-primary: #8CCFF1;
+
+  --md-primary-fixed: #C0E8FF;
+  --md-on-primary-fixed: #001F2B;
+  --md-primary-fixed-dim: #8CCFF1;
+  --md-on-primary-fixed-variant: #004D66;
+
+  --md-secondary-fixed: #D0E6F3;
+  --md-on-secondary-fixed: #081E27;
+  --md-secondary-fixed-dim: #B4CAD6;
+  --md-on-secondary-fixed-variant: #364954;
+
+  --md-tertiary-fixed: #E4DFFF;
+  --md-on-tertiary-fixed: #1B1736;
+  --md-tertiary-fixed-dim: #C7C2EA;
+  --md-on-tertiary-fixed-variant: #464364;
+
+  --md-surface-dim: #D6DADE;
+  --md-surface-bright: #F6FAFE;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F0F4F8;
+  --md-surface-container: #EAEEF2;
+  --md-surface-container-high: #E4E9EC;
+  --md-surface-container-highest: #DFE3E7;
+
+  /* Elevations with tinted shadows (M3 elevation model) */
+  --md-elevation-1: 0 1px 3px 1px rgba(21, 102, 131, 0.08), 0 1px 2px rgba(21, 102, 131, 0.12);
+  --md-elevation-2: 0 2px 6px 2px rgba(21, 102, 131, 0.10), 0 1px 2px rgba(21, 102, 131, 0.14);
+  --md-elevation-3: 0 4px 12px 3px rgba(21, 102, 131, 0.12), 0 1px 3px rgba(21, 102, 131, 0.15);
+
+  /* Corner radii (M3 shape scale) */
+  --md-radius-xs: 6px;
+  --md-radius-sm: 10px;
+  --md-radius-md: 16px;
+  --md-radius-lg: 20px;
+  --md-radius-xl: 28px;
+  --md-radius-full: 9999px;
+
+  /* State layers */
+  --md-state-hover: rgba(23, 28, 31, 0.08);
+  --md-state-pressed: rgba(23, 28, 31, 0.12);
+  --md-primary-state-hover: rgba(21, 102, 131, 0.10);
+
+  --transition: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --font-scale: 1;
+}
+
+/* ---- Dark Scheme (Material 3 Seed #356D86) ---- */
+[data-theme="dark"] {
+  --md-primary: #8CCFF1;
+  --md-surface-tint: #8CCFF1;
+  --md-on-primary: #003547;
+  --md-primary-container: #004D66;
+  --md-on-primary-container: #C0E8FF;
+
+  --md-secondary: #B4CAD6;
+  --md-on-secondary: #1F333D;
+  --md-secondary-container: #364954;
+  --md-on-secondary-container: #D0E6F3;
+
+  --md-tertiary: #C7C2EA;
+  --md-on-tertiary: #302D4C;
+  --md-tertiary-container: #464364;
+  --md-on-tertiary-container: #E4DFFF;
+
+  --md-error: #FFB4AB;
+  --md-on-error: #690005;
+  --md-error-container: #93000A;
+  --md-on-error-container: #FFDAD6;
+
+  --md-success: #9ED5A9;
+  --md-on-success: #003916;
+  --md-success-container: #005325;
+  --md-on-success-container: #B9F2C5;
+
+  --md-warning: #F5C34D;
+  --md-on-warning: #402D00;
+  --md-warning-container: #5C4400;
+  --md-on-warning-container: #FFE08C;
+
+  --md-background: #0F1417;
+  --md-on-background: #DFE3E7;
+  --md-surface: #0F1417;
+  --md-on-surface: #DFE3E7;
+  --md-surface-variant: #40484C;
+  --md-on-surface-variant: #C0C7CD;
+  --md-outline: #8A9297;
+  --md-outline-variant: #40484C;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+
+  --md-inverse-surface: #DFE3E7;
+  --md-inverse-on-surface: #2C3134;
+  --md-inverse-primary: #156683;
+
+  --md-primary-fixed: #C0E8FF;
+  --md-on-primary-fixed: #001F2B;
+  --md-primary-fixed-dim: #8CCFF1;
+  --md-on-primary-fixed-variant: #004D66;
+
+  --md-secondary-fixed: #D0E6F3;
+  --md-on-secondary-fixed: #081E27;
+  --md-secondary-fixed-dim: #B4CAD6;
+  --md-on-secondary-fixed-variant: #364954;
+
+  --md-tertiary-fixed: #E4DFFF;
+  --md-on-tertiary-fixed: #1B1736;
+  --md-tertiary-fixed-dim: #C7C2EA;
+  --md-on-tertiary-fixed-variant: #464364;
+
+  --md-surface-dim: #0F1417;
+  --md-surface-bright: #353A3D;
+  --md-surface-container-lowest: #0A0F12;
+  --md-surface-container-low: #171C1F;
+  --md-surface-container: #1B2023;
+  --md-surface-container-high: #262B2E;
+  --md-surface-container-highest: #303539;
+
+  --md-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --md-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
+  --md-elevation-3: 0 4px 14px 4px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+
+  --md-state-hover: rgba(223, 227, 231, 0.08);
+  --md-state-pressed: rgba(223, 227, 231, 0.12);
+  --md-primary-state-hover: rgba(140, 207, 241, 0.12);
+}
+
+[data-fontsize="small"]  { --font-scale: 0.92; }
+[data-fontsize="medium"] { --font-scale: 1; }
+[data-fontsize="large"]  { --font-scale: 1.1; }
+
+/* User-selectable Material accent palettes. The base scheme remains M3-compatible
+   while the accent is intentionally limited to high-contrast primary roles. */
+[data-color="blue"] { --md-primary: #1565C0; --md-primary-container: #D6E3FF; --md-on-primary-container: #001B3F; --md-surface-tint: #1565C0; }
+[data-color="green"] { --md-primary: #2E7D32; --md-primary-container: #B8F5B0; --md-on-primary-container: #002204; --md-surface-tint: #2E7D32; }
+[data-color="purple"] { --md-primary: #6750A4; --md-primary-container: #EADDFF; --md-on-primary-container: #21005D; --md-surface-tint: #6750A4; }
+[data-color="orange"] { --md-primary: #A83E00; --md-primary-container: #FFDBCA; --md-on-primary-container: #381400; --md-surface-tint: #A83E00; }
+[data-color="pink"] { --md-primary: #A90063; --md-primary-container: #FFD8E8; --md-on-primary-container: #3E001F; --md-surface-tint: #A90063; }
+
+[data-theme="dark"][data-color="blue"] { --md-primary: #A8C7FA; --md-primary-container: #004A77; --md-on-primary-container: #D6E3FF; }
+[data-theme="dark"][data-color="green"] { --md-primary: #9CD89A; --md-primary-container: #14531A; --md-on-primary-container: #B8F5B0; }
+[data-theme="dark"][data-color="purple"] { --md-primary: #D0BCFF; --md-primary-container: #4F378B; --md-on-primary-container: #EADDFF; }
+[data-theme="dark"][data-color="orange"] { --md-primary: #FFB596; --md-primary-container: #7D2C00; --md-on-primary-container: #FFDBCA; }
+[data-theme="dark"][data-color="pink"] { --md-primary: #FFB0D1; --md-primary-container: #7D1A4D; --md-on-primary-container: #FFD8E8; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --transition: 0ms; }
+}

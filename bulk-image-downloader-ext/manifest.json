@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "PixGrab – Bulk Image Downloader",
   "short_name": "PixGrab",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Scan any webpage and download PNG, JPG, or WebP images at once, auto-cropped/resized to at least 512\u00d7512 with an aspect ratio up to 3:1. Filter by format or size, convert to JPG, and save exactly where you want.",
   "permissions": [
     "contextMenus",

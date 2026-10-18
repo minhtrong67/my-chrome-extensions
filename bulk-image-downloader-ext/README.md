@@ -32,6 +32,12 @@
 - **Language** — English, Tiếng Việt, or follow System default
 - **Settings that stick** — Every preference is saved via Chrome's synced storage and remembered next time
 
+### What changed in v2.3.0
+
+- **Auto-exclude logos:** bulk saving (Save all / Save selected) now automatically leaves out logos, brand marks and site icons. A logo is detected from its file name (`logo`, `wordmark`, `favicon`…), `alt` text, CSS class / id / `itemprop="logo"`, wrappers such as `navbar-brand` or `client-logos`, small images that link back to the site's home page, and small images inside `header` / `nav` / `footer`. The same file used both as a logo and as content is kept.
+- The popup shows how many logos were hidden (e.g. "PAGE IMAGES · 6 logos hidden"). Logos are removed before the 120-image cap, so they can't push real images out of the list.
+- New **Auto-exclude logos** switch in Settings → Behaviour (on by default). The right-click "Save Image with PixGrab" action is unaffected — it always saves exactly the image you clicked.
+
 ### What changed in v2.2.0
 
 - **Auto-fix instead of skip:** images that don't meet the 512×512 minimum or the 3:1 max aspect ratio are no longer skipped — PixGrab now automatically center-crops overly elongated images down to a 3:1 ratio and/or upscales undersized images so the shorter side reaches 512px, then saves the result. A save is only skipped now if it truly can't be processed (unreadable dimensions, or a cross-origin image that blocks canvas access).
@@ -127,6 +133,12 @@
 - **Xử lý trùng tên** — Tự đổi tên, ghi đè, hoặc hỏi khi tệp đã tồn tại
 - **Giao diện** — Sáng, Tối, hoặc theo hệ thống
 - **Ngôn ngữ** — English, Tiếng Việt, hoặc theo mặc định hệ thống
+
+### Thay đổi trong v2.3.0
+
+- **Tự động loại bỏ logo:** khi tải hàng loạt (Lưu tất cả / Lưu đã chọn), PixGrab tự bỏ qua logo, biểu tượng thương hiệu và icon trang web. Logo được nhận diện qua tên tệp (`logo`, `wordmark`, `favicon`…), văn bản `alt`, class / id CSS / `itemprop="logo"`, các khung bao như `navbar-brand` hay `client-logos`, ảnh nhỏ có liên kết về trang chủ, và ảnh nhỏ nằm trong `header` / `nav` / `footer`. Cùng một tệp vừa dùng làm logo vừa làm ảnh nội dung sẽ được giữ lại.
+- Popup hiển thị số logo đã ẩn (vd: "ẢNH TRÊN TRANG NÀY · đã ẩn 6 logo"). Logo bị loại trước giới hạn 120 ảnh nên không chiếm chỗ của ảnh nội dung.
+- Thêm công tắc **Tự động loại bỏ logo** trong Cài đặt → Hành vi (mặc định bật). Menu chuột phải "Save Image with PixGrab" không bị ảnh hưởng — luôn lưu đúng ảnh bạn bấm.
 
 ### Thay đổi trong v2.0.0
 

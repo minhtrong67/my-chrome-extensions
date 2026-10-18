@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-accent="purple">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>SmartShot Editor</title>
+<link rel="icon" href="icons/icon32.png" />
+<script src="js/boot.js"></script>
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="css/themes.css" />
+<link rel="stylesheet" href="css/material.css" />
+<link rel="stylesheet" href="css/editor.css" />
+</head>
+<body>
+<div class="editor">
+
+  <header class="top-bar">
+    <img src="icons/icon48.png" alt="" class="logo" width="32" height="32" />
+    <h1 class="t-title-md" data-i18n="editorTitle">SmartShot Editor</h1>
+    <span class="chip" id="dims">0 × 0</span>
+    <span class="spacer"></span>
+    <button class="icon-btn sl" id="themeBtn" data-i18n-title="toggleTheme" type="button"></button>
+    <button class="icon-btn sl" id="closeBtn" data-i18n-title="discard" type="button"><i data-lucide="x"></i></button>
+  </header>
+
+  <!-- ============ Toolbar ============ -->
+  <div class="toolbar" role="toolbar">
+    <div class="tools" id="tools" role="radiogroup">
+      <button class="tool sl active" data-tool="select" data-i18n-title="toolSelect" type="button" role="radio" aria-checked="true"><i data-lucide="mouse-pointer-2" data-size="20"></i></button>
+      <button class="tool sl" data-tool="pen" data-i18n-title="toolPen" type="button" role="radio"><i data-lucide="pencil" data-size="20"></i></button>
+      <button class="tool sl" data-tool="arrow" data-i18n-title="toolArrow" type="button" role="radio"><i data-lucide="move-up-right" data-size="20"></i></button>
+      <button class="tool sl" data-tool="rect" data-i18n-title="toolRect" type="button" role="radio"><i data-lucide="square" data-size="20"></i></button>
+      <button class="tool sl" data-tool="ellipse" data-i18n-title="toolEllipse" type="button" role="radio"><i data-lucide="circle" data-size="20"></i></button>
+      <button class="tool sl" data-tool="text" data-i18n-title="toolText" type="button" role="radio"><i data-lucide="type" data-size="20"></i></button>
+      <button class="tool sl" data-tool="highlight" data-i18n-title="toolHighlight" type="button" role="radio"><i data-lucide="highlighter" data-size="20"></i></button>
+      <button class="tool sl" data-tool="blur" data-i18n-title="toolBlur" type="button" role="radio"><i data-lucide="grid-3x3" data-size="20"></i></button>
+      <button class="tool sl" data-tool="crop" data-i18n-title="toolCrop" type="button" role="radio"><i data-lucide="crop" data-size="20"></i></button>
+    </div>
+
+    <span class="divider"></span>
+
+    <div class="colors" id="colors" role="radiogroup" data-i18n-title="color"></div>
+
+    <span class="divider"></span>
+
+    <label class="size-ctl">
+      <span class="t-label-md muted" data-i18n="strokeSize">Size</span>
+      <input type="range" class="slider" id="sizeSlider" min="2" max="30" value="4" />
+    </label>
+
+    <span class="divider"></span>
+
+    <div class="actions">
+      <button class="icon-btn sm sl" id="undoBtn" data-i18n-title="undo" type="button"><i data-lucide="undo-2" data-size="20"></i></button>
+      <button class="icon-btn sm sl" id="redoBtn" data-i18n-title="redo" type="button"><i data-lucide="redo-2" data-size="20"></i></button>
+      <button class="icon-btn sm sl" id="deleteBtn" data-i18n-title="deleteSel" type="button"><i data-lucide="trash-2" data-size="20"></i></button>
+      <button class="icon-btn sm sl" id="clearBtn" data-i18n-title="clearAll" type="button"><i data-lucide="eraser" data-size="20"></i></button>
+    </div>
+
+    <span class="spacer"></span>
+
+    <div class="zoom">
+      <button class="icon-btn sm sl" id="zoomOutBtn" data-i18n-title="zoomOut" type="button"><i data-lucide="zoom-out" data-size="18"></i></button>
+      <button class="zoom-value sl" id="zoomValue" data-i18n-title="zoomFit" type="button">100%</button>
+      <button class="icon-btn sm sl" id="zoomInBtn" data-i18n-title="zoomIn" type="button"><i data-lucide="zoom-in" data-size="18"></i></button>
+    </div>
+  </div>
+
+  <!-- ============ Canvas stage ============ -->
+  <main class="stage" id="stage">
+    <div class="canvas-wrap" id="wrap">
+      <canvas id="canvas"></canvas>
+      <canvas id="overlay"></canvas>
+      <textarea id="textEditor" class="text-editor hidden" rows="1" spellcheck="false" data-i18n-placeholder="textPlaceholder"></textarea>
+    </div>
+
+    <div class="crop-bar hidden" id="cropBar">
+      <span class="t-label-lg" id="cropDims">0 × 0</span>
+      <span class="t-body-sm muted" data-i18n="cropHint">Enter to apply · Esc to cancel</span>
+      <button class="btn text sm sl" id="cropCancel" type="button" data-i18n="cropCancel">Cancel</button>
+      <button class="btn filled sm sl" id="cropApply" type="button"><i data-lucide="check" data-size="18"></i><span data-i18n="cropApply">Apply crop</span></button>
+    </div>
+
+    <div class="loading" id="loading"><span class="spinner"></span></div>
+  </main>
+
+  <!-- ============ Bottom bar ============ -->
+  <footer class="bottom-bar">
+    <label class="name-field">
+      <span class="t-label-md muted" data-i18n="filename">File name</span>
+      <input type="text" class="field" id="filename" spellcheck="false" autocomplete="off" />
+    </label>
+
+    <div class="segmented fmt" id="formatSeg" role="radiogroup">
+      <label class="seg"><input type="radio" name="format" value="png" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>PNG</span></label>
+      <label class="seg"><input type="radio" name="format" value="jpeg" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>JPEG</span></label>
+    </div>
+
+    <label class="quality collapsible-h is-collapsed" id="qualityBox">
+      <span class="quality-inner">
+        <span class="t-label-md muted" data-i18n="quality">JPEG quality</span>
+        <span class="quality-row"><input type="range" class="slider" id="qualitySlider" min="1" max="100" value="90" /><span class="value" id="qualityValue">90%</span></span>
+      </span>
+    </label>
+
+    <span class="spacer"></span>
+
+    <button class="btn tonal sl" id="copyBtn" type="button"><i data-lucide="copy" data-size="18"></i><span data-i18n="copyClipboard">Copy</span></button>
+    <button class="btn filled sl" id="downloadBtn" type="button"><i data-lucide="download" data-size="18"></i><span data-i18n="downloadImage">Download</span></button>
+  </footer>
+
+  <div class="snackbar" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog class="md-dialog" id="unsavedDialog" aria-labelledby="unsavedTitle">
+    <h2 id="unsavedTitle" data-i18n="unsavedTitle">Discard changes?</h2>
+    <p data-i18n="unsavedBody">You have edits that haven't been downloaded or copied.</p>
+    <div class="actions">
+      <button class="btn text sl" id="keepBtn" type="button" data-i18n="keepEditing">Keep editing</button>
+      <button class="btn text danger sl" id="discardBtn" type="button" data-i18n="discardClose">Discard &amp; close</button>
+    </div>
+  </dialog>
+</div>
+
+<script src="js/lucide.js"></script>
+<script src="js/accents.js"></script>
+<script src="js/fonts.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/ripple.js"></script>
+<script src="js/editor.js"></script>
+</body>
+</html>

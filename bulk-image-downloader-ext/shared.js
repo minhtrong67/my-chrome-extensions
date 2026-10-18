@@ -47,6 +47,9 @@ const I18N = {
     convertWebpHint: "When off, WebP images download in their original format",
     convertPng: "Convert PNG images",
     convertPngHint: "When off, PNG images download in their original format",
+    excludeLogos: "Auto-exclude logos",
+    excludeLogosHint: "Logos, brand marks and site icons (detected from file name, alt text, CSS class and page position) are left out of the list and of Save all / Save selected",
+    logosHidden: (n) => `${n} logo${n !== 1 ? "s" : ""} hidden`,
     formatSupportNote: "PixGrab only downloads PNG, JPG, and WebP images (at least 512×512, aspect ratio up to 3:1). Other formats are skipped automatically.",
     save: "Save settings",
     saved: "Settings saved",
@@ -130,6 +133,9 @@ const I18N = {
     convertWebpHint: "Khi tắt, ảnh WebP sẽ tải về đúng định dạng gốc",
     convertPng: "Chuyển đổi ảnh PNG",
     convertPngHint: "Khi tắt, ảnh PNG sẽ tải về đúng định dạng gốc",
+    excludeLogos: "Tự động loại bỏ logo",
+    excludeLogosHint: "Logo, biểu tượng thương hiệu và icon trang web (nhận diện qua tên tệp, alt, class CSS và vị trí trên trang) sẽ không xuất hiện trong danh sách và không bị tải khi Lưu tất cả / Lưu đã chọn",
+    logosHidden: (n) => `đã ẩn ${n} logo`,
     formatSupportNote: "PixGrab chỉ tải ảnh định dạng PNG, JPG và WebP (tối thiểu 512×512, tỷ lệ khung hình tối đa 3:1). Các định dạng khác sẽ tự động bị bỏ qua.",
     save: "Lưu cài đặt",
     saved: "Đã lưu cài đặt",
@@ -183,7 +189,8 @@ const DEFAULT_SETTINGS = {
   showNotification: true,
   convertWebp: true,
   convertPng: true,
-  minImageSize: 32
+  minImageSize: 32,
+  excludeLogos: true
 };
 
 // ── Download requirement: format + min resolution + max aspect ratio ──
