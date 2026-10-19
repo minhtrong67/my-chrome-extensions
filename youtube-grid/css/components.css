@@ -1,0 +1,261 @@
+/*
+ * components.css — Material Design 3 components shared by popup and options:
+ * top app bar, icon button, buttons, switch, slider, segmented button, chips,
+ * cards, list items, dialog, snackbar, ripple, collapse.
+ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: var(--yg-fs);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--yg-font);
+  font-size: 1rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+[hidden] { display: none !important; }
+
+.icon { width: 1.5rem; height: 1.5rem; flex: none; }
+.icon-sm { width: 1.15rem; height: 1.15rem; }
+
+/* Accessible focus ring, only for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Ripple + state layer ---------- */
+[data-ripple] { position: relative; overflow: hidden; isolation: isolate; }
+[data-ripple]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-dur-short) linear;
+  pointer-events: none;
+}
+[data-ripple]:hover::before { opacity: 0.08; }
+[data-ripple]:focus-visible::before { opacity: 0.1; }
+.ripple-ink {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ---------- Icon button ---------- */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: transform var(--md-dur-short) var(--md-ease-standard);
+}
+.icon-btn:active { transform: scale(0.92); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0 1.25rem 0 1rem;
+  border: 0;
+  border-radius: var(--md-shape-full);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: box-shadow var(--md-dur-medium) var(--md-ease-standard),
+    transform var(--md-dur-short) var(--md-ease-standard);
+}
+.btn:active { transform: scale(0.97); }
+.btn-filled { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.btn-filled:hover { box-shadow: var(--md-elev-1); }
+.btn-tonal { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.btn-outlined { background: transparent; color: var(--md-sys-color-primary); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline); }
+.btn-text { background: transparent; color: var(--md-sys-color-primary); padding: 0 0.75rem; }
+.btn-danger { background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
+
+/* ---------- Switch (M3) ---------- */
+.switch { position: relative; display: inline-block; flex: none; width: 3.25rem; height: 2rem; }
+.switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 2; }
+.switch .track {
+  position: absolute; inset: 0;
+  border-radius: var(--md-shape-full);
+  background: var(--md-sys-color-surface-container-highest);
+  box-shadow: inset 0 0 0 2px var(--md-sys-color-outline);
+  transition: background var(--md-dur-medium) var(--md-ease-standard), box-shadow var(--md-dur-medium) var(--md-ease-standard);
+}
+.switch .thumb {
+  position: absolute; top: 50%; left: 0.5rem;
+  width: 1rem; height: 1rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--md-sys-color-outline);
+  color: var(--md-sys-color-primary);
+  transform: translateY(-50%);
+  transition: left var(--md-dur-medium) var(--md-ease-standard), width var(--md-dur-short) var(--md-ease-standard),
+    height var(--md-dur-short) var(--md-ease-standard), background var(--md-dur-medium) var(--md-ease-standard);
+}
+.switch .thumb .icon { width: 0.9rem; height: 0.9rem; opacity: 0; transition: opacity var(--md-dur-short) linear; stroke-width: 3; }
+.switch input:hover ~ .thumb { background: var(--md-sys-color-on-surface-variant); }
+.switch input:active ~ .thumb { width: 1.75rem; height: 1.75rem; }
+.switch input:checked ~ .track { background: var(--md-sys-color-primary); box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); }
+.switch input:checked ~ .thumb { left: 1.5rem; width: 1.5rem; height: 1.5rem; background: var(--md-sys-color-on-primary); }
+.switch input:checked ~ .thumb .icon { opacity: 1; }
+.switch input:checked:active ~ .thumb { width: 1.75rem; height: 1.75rem; left: 1.375rem; }
+.switch input:focus-visible ~ .track { outline: 2px solid var(--md-sys-color-primary); outline-offset: 2px; }
+
+/* ---------- Slider (native range, M3 look) ---------- */
+.slider {
+  --pct: 50%;
+  -webkit-appearance: none; appearance: none;
+  display: block; width: 100%; height: 2.75rem; margin: 0;
+  background: transparent; cursor: pointer;
+}
+.slider::-webkit-slider-runnable-track {
+  height: 1rem; border-radius: var(--md-shape-full);
+  background: linear-gradient(to right, var(--md-sys-color-primary) var(--pct), var(--md-sys-color-secondary-container) var(--pct));
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 0.25rem; height: 2.75rem; margin-top: -0.875rem;
+  border-radius: var(--md-shape-full);
+  background: var(--md-sys-color-primary);
+  border: 0;
+  box-shadow: 0 0 0 0.375rem var(--md-sys-color-surface-container-low);
+  transition: width var(--md-dur-short) var(--md-ease-standard);
+}
+.slider:active::-webkit-slider-thumb { width: 0.125rem; }
+.slider:focus-visible { outline: none; }
+.slider:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--md-sys-color-primary); outline-offset: 4px; }
+.slider-ticks { display: flex; justify-content: space-between; padding: 0 0.1rem; font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant); }
+.slider-ticks span { width: 1.2em; text-align: center; transition: color var(--md-dur-short) linear, font-weight var(--md-dur-short) linear; }
+.slider-ticks span.on { color: var(--md-sys-color-primary); font-weight: 700; }
+
+/* ---------- Segmented button ---------- */
+.segmented { display: flex; width: 100%; border-radius: var(--md-shape-full); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline); overflow: hidden; }
+.segmented > button {
+  flex: 1 1 0; min-height: 2.5rem; min-width: 0;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+  padding: 0 0.5rem; border: 0; background: transparent;
+  color: var(--md-sys-color-on-surface); font-weight: 500; white-space: nowrap;
+  transition: background var(--md-dur-medium) var(--md-ease-standard), color var(--md-dur-medium) var(--md-ease-standard);
+}
+.segmented > button + button { box-shadow: inset 1px 0 0 var(--md-sys-color-outline); }
+.segmented > button[aria-checked="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.segmented > button .check { display: none; }
+.segmented > button[aria-checked="true"] .check { display: block; }
+.segmented > button .lead { display: block; }
+.segmented > button[aria-checked="true"] .lead { display: none; }
+
+/* ---------- Chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 2rem; padding: 0 0.85rem;
+  border: 0; border-radius: var(--md-shape-sm);
+  background: transparent; color: var(--md-sys-color-on-surface-variant);
+  box-shadow: inset 0 0 0 1px var(--md-sys-color-outline);
+  transition: background var(--md-dur-medium) var(--md-ease-standard), box-shadow var(--md-dur-medium) var(--md-ease-standard);
+}
+.chip[aria-checked="true"] {
+  background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);
+  box-shadow: none;
+}
+.chip .icon { width: 1.1rem; height: 1.1rem; display: none; }
+.chip[aria-checked="true"] .icon { display: block; }
+
+/* ---------- Cards ---------- */
+.card {
+  border-radius: var(--md-shape-lg);
+  background: var(--md-sys-color-surface-container-low);
+  padding: 1rem;
+}
+.card-outlined { background: var(--md-sys-color-surface); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant); }
+.card-title { font-size: 1.15rem; font-weight: 500; line-height: 1.3; }
+.card-sub { margin-top: 0.15rem; color: var(--md-sys-color-on-surface-variant); font-size: 0.9rem; }
+.label { font-size: 0.9rem; font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
+
+/* ---------- List item (title + supporting text + trailing control) ---------- */
+.row {
+  display: flex; align-items: center; gap: 1rem;
+  min-height: 3.5rem; padding: 0.5rem 0;
+}
+.row .lead-icon { color: var(--md-sys-color-on-surface-variant); }
+.row .text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.row .title { font-weight: 500; }
+.row .sub { font-size: 0.9rem; color: var(--md-sys-color-on-surface-variant); }
+.divider { height: 1px; margin: 0.25rem 0; background: var(--md-sys-color-outline-variant); border: 0; }
+
+/* ---------- Collapse (smooth height without measuring) ---------- */
+.collapse { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--md-dur-long) var(--md-ease-decel); }
+.collapse > .collapse-inner { overflow: hidden; min-height: 0; opacity: 0; transition: opacity var(--md-dur-medium) linear; }
+.collapse.open { grid-template-rows: 1fr; }
+.collapse.open > .collapse-inner { opacity: 1; transition-delay: 60ms; }
+
+/* ---------- Mini grid preview ---------- */
+.preview {
+  --cols: 5;
+  display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 0.35rem;
+}
+.preview-cell {
+  aspect-ratio: 16 / 10; border-radius: 0.3rem;
+  background: var(--md-sys-color-primary-container);
+  animation: cell-in var(--md-dur-medium) var(--md-ease-decel) both;
+}
+@keyframes cell-in { from { transform: scale(0.6); opacity: 0; } }
+
+/* ---------- Dialog ---------- */
+.dialog {
+  width: min(92vw, 22.5rem); padding: 1.5rem; border: 0; border-radius: var(--md-shape-xl);
+  background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-elev-3);
+}
+.dialog::backdrop { background: rgb(0 0 0 / 0.4); animation: fade-in var(--md-dur-medium) linear; }
+.dialog[open] { animation: dialog-in var(--md-dur-long) var(--md-ease-decel); }
+.dialog h2 { font-size: 1.5rem; font-weight: 400; line-height: 1.3; margin-bottom: 1rem; }
+.dialog p { color: var(--md-sys-color-on-surface-variant); }
+.dialog .actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
+@keyframes dialog-in { from { transform: translateY(1.25rem) scale(0.96); opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* ---------- Snackbar ---------- */
+.snackbar {
+  position: fixed; left: 50%; bottom: 1rem; z-index: 50;
+  max-width: calc(100vw - 2rem); padding: 0.85rem 1rem; border-radius: var(--md-shape-sm);
+  background: var(--md-sys-color-inverse-surface); color: var(--md-sys-color-inverse-on-surface);
+  box-shadow: var(--md-elev-3);
+  transform: translate(-50%, 150%); opacity: 0; pointer-events: none;
+  transition: transform var(--md-dur-medium) var(--md-ease-decel), opacity var(--md-dur-medium) linear;
+}
+.snackbar.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* Muted until the first render (see boot.js); removing it triggers no transitions. */
+.no-anim *, .no-anim *::before, .no-anim *::after { transition: none !important; }
+
+/* ---------- Entrance + reduced motion ---------- */
+.enter { animation: enter var(--md-dur-long) var(--md-ease-decel) both; }
+@keyframes enter { from { opacity: 0; transform: translateY(0.75rem); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

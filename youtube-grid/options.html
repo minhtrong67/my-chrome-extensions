@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YouTube Grid — Settings</title>
+  <link rel="icon" href="icons/icon32.png" />
+  <script src="js/boot.js"></script>
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/palettes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/options.css" />
+</head>
+<body>
+<div class="shell" id="shell">
+
+  <header class="topbar">
+    <img class="logo" src="icons/icon48.png" alt="" width="40" height="40" />
+    <div class="topbar-title">
+      <h1 data-i18n="appName">YouTube Grid</h1>
+      <p data-i18n="settings">Settings</p>
+    </div>
+    <label class="master" data-ripple>
+      <span class="master-label" data-i18n="enableExtension">Enable extension</span>
+      <span class="switch">
+        <input type="checkbox" role="switch" id="optEnabled" />
+        <span class="track"></span>
+        <span class="thumb"><i data-icon="check"></i></span>
+      </span>
+    </label>
+  </header>
+
+  <nav class="nav" id="nav" role="tablist" aria-orientation="vertical">
+    <button class="nav-item" role="tab" data-tab="layout" data-ripple>
+      <span class="pill"><i data-icon="layout-grid"></i></span><span data-i18n="navLayout">Layout</span>
+    </button>
+    <button class="nav-item" role="tab" data-tab="appearance" data-ripple>
+      <span class="pill"><i data-icon="palette"></i></span><span data-i18n="navAppearance">Appearance</span>
+    </button>
+    <button class="nav-item" role="tab" data-tab="backup" data-ripple>
+      <span class="pill"><i data-icon="database"></i></span><span data-i18n="navBackup">Backup</span>
+    </button>
+    <button class="nav-item" role="tab" data-tab="about" data-ripple>
+      <span class="pill"><i data-icon="info"></i></span><span data-i18n="navAbout">About</span>
+    </button>
+  </nav>
+
+  <main class="content" id="content">
+
+    <!-- ================= Layout ================= -->
+    <section class="panel" id="panel-layout" role="tabpanel" data-panel="layout">
+      <div class="card">
+        <label class="row" data-ripple>
+          <i class="lead-icon" data-icon="layout-grid"></i>
+          <span class="text">
+            <span class="title" data-i18n="customColumns">Custom column count</span>
+            <span class="sub" id="defaultNote" data-i18n="defaultLayoutNote">Using YouTube's default layout.</span>
+          </span>
+          <span class="switch"><input type="checkbox" role="switch" id="optUseCustom" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+        </label>
+
+        <div class="collapse" id="columnsCollapse">
+          <div class="collapse-inner">
+            <hr class="divider" />
+
+            <label class="row" data-ripple>
+              <i class="lead-icon" data-icon="sliders-horizontal"></i>
+              <span class="text">
+                <span class="title" data-i18n="perPageColumns">Different count per page</span>
+                <span class="sub" data-i18n="perPageColumnsDesc">Set Home, Subscriptions and Channel separately</span>
+              </span>
+              <span class="switch"><input type="checkbox" role="switch" id="optPerPage" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+            </label>
+
+            <div class="columns-body" id="simpleBlock">
+              <div class="big-value">
+                <span class="num" id="columnsValue">5</span>
+                <span class="unit" data-i18n="columnsPerRow">columns per row</span>
+              </div>
+              <input class="slider" type="range" id="columnsSlider" step="1" data-i18n-aria="gridColumns" />
+              <div class="slider-ticks" id="ticks" aria-hidden="true"></div>
+            </div>
+
+            <div class="per-page" id="perPageBlock" hidden>
+              <div class="per-page-row">
+                <span class="label" data-i18n="columnsHome">Home</span>
+                <span class="value" id="valueHome">5</span>
+                <input class="slider" type="range" id="sliderHome" step="1" />
+              </div>
+              <div class="per-page-row">
+                <span class="label" data-i18n="columnsSubscriptions">Subscriptions</span>
+                <span class="value" id="valueSubs">4</span>
+                <input class="slider" type="range" id="sliderSubs" step="1" />
+              </div>
+              <div class="per-page-row">
+                <span class="label" data-i18n="columnsChannel">Channel</span>
+                <span class="value" id="valueChannel">4</span>
+                <input class="slider" type="range" id="sliderChannel" step="1" />
+              </div>
+            </div>
+
+            <div class="preview" id="preview" aria-hidden="true"></div>
+
+            <hr class="divider" />
+            <label class="row" data-ripple>
+              <i class="lead-icon" data-icon="monitor"></i>
+              <span class="text"><span class="title" data-i18n="showPreview">Show grid preview</span></span>
+              <span class="switch"><input type="checkbox" role="switch" id="optShowPreview" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="declutter">Declutter</h2>
+
+        <label class="row" data-ripple>
+          <i class="lead-icon" data-icon="square-play"></i>
+          <span class="text"><span class="title" data-i18n="hideShorts">Hide Shorts</span><span class="sub" data-i18n="hideShortsDesc"></span></span>
+          <span class="switch"><input type="checkbox" role="switch" id="optHideShorts" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+        </label>
+        <label class="row" data-ripple>
+          <i class="lead-icon" data-icon="minimize-2"></i>
+          <span class="text"><span class="title" data-i18n="compactCards">Compact cards</span><span class="sub" data-i18n="compactCardsDesc"></span></span>
+          <span class="switch"><input type="checkbox" role="switch" id="optCompactCards" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+        </label>
+        <label class="row" data-ripple>
+          <i class="lead-icon" data-icon="message-square-off"></i>
+          <span class="text"><span class="title" data-i18n="hideComments">Hide comments</span><span class="sub" data-i18n="hideCommentsDesc"></span></span>
+          <span class="switch"><input type="checkbox" role="switch" id="optHideComments" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+        </label>
+        <label class="row" data-ripple>
+          <i class="lead-icon" data-icon="eye-off"></i>
+          <span class="text"><span class="title" data-i18n="hideEndCards">Hide end-screen cards</span><span class="sub" data-i18n="hideEndCardsDesc"></span></span>
+          <span class="switch"><input type="checkbox" role="switch" id="optHideEndCards" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+        </label>
+        <label class="row" data-ripple>
+          <i class="lead-icon" data-icon="focus"></i>
+          <span class="text"><span class="title" data-i18n="focusMode">Focus mode</span><span class="sub" data-i18n="focusModeDesc"></span></span>
+          <span class="switch"><input type="checkbox" role="switch" id="optFocusMode" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ================= Appearance ================= -->
+    <section class="panel" id="panel-appearance" role="tabpanel" data-panel="appearance" hidden>
+      <div class="card">
+        <h2 class="card-title" data-i18n="themeSection">Theme</h2>
+
+        <p class="label field" data-i18n="mode">Mode</p>
+        <div class="segmented" id="modeGroup" role="radiogroup" data-i18n-aria="mode">
+          <button role="radio" data-value="system" data-ripple><i class="lead" data-icon="monitor"></i><i class="check" data-icon="check"></i><span data-i18n="modeSystem">System</span></button>
+          <button role="radio" data-value="light" data-ripple><i class="lead" data-icon="sun"></i><i class="check" data-icon="check"></i><span data-i18n="modeLight">Light</span></button>
+          <button role="radio" data-value="dark" data-ripple><i class="lead" data-icon="moon"></i><i class="check" data-icon="check"></i><span data-i18n="modeDark">Dark</span></button>
+        </div>
+
+        <p class="label field" data-i18n="themeColor">Theme color</p>
+        <div class="swatches" id="swatches" role="radiogroup" data-i18n-aria="themeColor"></div>
+        <p class="color-name" id="colorName" aria-live="polite"></p>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="typography">Typography</h2>
+
+        <p class="label field" data-i18n="font">Font</p>
+        <div class="chips" id="fontChips" role="radiogroup" data-i18n-aria="font"></div>
+
+        <p class="label field" data-i18n="fontSize">Font size</p>
+        <div class="segmented" id="sizeGroup" role="radiogroup" data-i18n-aria="fontSize">
+          <button role="radio" data-value="small" data-ripple><i class="check" data-icon="check"></i><span data-i18n="sizeSmall">Small</span></button>
+          <button role="radio" data-value="medium" data-ripple><i class="check" data-icon="check"></i><span data-i18n="sizeMedium">Medium</span></button>
+          <button role="radio" data-value="large" data-ripple><i class="check" data-icon="check"></i><span data-i18n="sizeLarge">Large</span></button>
+          <button role="radio" data-value="xlarge" data-ripple><i class="check" data-icon="check"></i><span data-i18n="sizeXLarge">Extra large</span></button>
+        </div>
+
+        <p class="sample" id="fontSample" data-i18n="fontSample"></p>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="language">Language</h2>
+        <div class="segmented field" id="langGroup" role="radiogroup" data-i18n-aria="language">
+          <button role="radio" data-value="auto" data-ripple><i class="lead" data-icon="globe"></i><i class="check" data-icon="check"></i><span data-i18n="langAuto">Auto</span></button>
+          <button role="radio" data-value="en" data-ripple><i class="check" data-icon="check"></i><span data-i18n="langEn">English</span></button>
+          <button role="radio" data-value="vi" data-ripple><i class="check" data-icon="check"></i><span data-i18n="langVi">Tiếng Việt</span></button>
+        </div>
+        <p class="card-sub" data-i18n="langAutoDesc">Follows your device language</p>
+      </div>
+    </section>
+
+    <!-- ================= Backup ================= -->
+    <section class="panel" id="panel-backup" role="tabpanel" data-panel="backup" hidden>
+      <div class="card">
+        <h2 class="card-title" data-i18n="backupTitle">Backup &amp; restore</h2>
+        <p class="card-sub" data-i18n="backupDesc"></p>
+        <div class="btn-row">
+          <button class="btn btn-tonal" id="exportBtn" data-ripple><i data-icon="download"></i><span data-i18n="exportSettings">Export</span></button>
+          <button class="btn btn-outlined" id="importBtn" data-ripple><i data-icon="upload"></i><span data-i18n="importSettings">Import</span></button>
+          <input type="file" id="importFile" accept="application/json,.json" hidden />
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="card-title" data-i18n="resetTitle">Reset</h2>
+        <p class="card-sub" data-i18n="resetDesc"></p>
+        <div class="btn-row">
+          <button class="btn btn-danger" id="resetBtn" data-ripple><i data-icon="rotate-ccw"></i><span data-i18n="resetSettings">Reset settings</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= About ================= -->
+    <section class="panel" id="panel-about" role="tabpanel" data-panel="about" hidden>
+      <div class="card about">
+        <img class="about-logo" src="icons/icon128.png" alt="" width="72" height="72" />
+        <h2 class="card-title">YouTube Grid</h2>
+        <p class="card-sub"><span data-i18n="version">Version</span> <span id="versionLabel">3.0.0</span></p>
+        <p class="about-by"><span data-i18n="developedBy">Developed by</span> <strong>minhtrong67</strong></p>
+        <p class="card-sub" data-i18n="aiCredit"></p>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <i class="lead-icon" data-icon="keyboard"></i>
+          <span class="text">
+            <span class="title" data-i18n="shortcutTitle">Keyboard shortcut</span>
+            <span class="sub" data-i18n="shortcutDesc"></span>
+          </span>
+          <span class="keys"><kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd></span>
+        </div>
+        <button class="btn btn-text" id="shortcutsBtn" data-ripple><span data-i18n="manageShortcuts">Manage shortcuts</span><i data-icon="external-link"></i></button>
+        <hr class="divider" />
+        <div class="row">
+          <i class="lead-icon" data-icon="shield-check"></i>
+          <span class="text"><span class="sub" data-i18n="privacyLine"></span></span>
+        </div>
+        <div class="row">
+          <i class="lead-icon" data-icon="scale"></i>
+          <span class="text"><span class="sub" data-i18n="licenseLine"></span></span>
+        </div>
+        <button class="btn btn-tonal" id="landingBtn" data-ripple><i data-icon="globe"></i><span data-i18n="landingPage">Landing page</span><i data-icon="external-link"></i></button>
+        <a class="btn btn-outlined" id="sourceLink" data-ripple target="_blank" rel="noopener noreferrer"
+           href="https://github.com/minhtrong67/youtube-grid"><i data-icon="code-xml"></i><span data-i18n="sourceCode">Source code</span></a>
+      </div>
+    </section>
+  </main>
+
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+
+  <dialog class="dialog" id="confirmDialog" aria-labelledby="dialogTitle">
+    <form method="dialog">
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogBody"></p>
+      <div class="actions">
+        <button class="btn btn-text" id="dialogCancel" value="cancel" data-ripple></button>
+        <button class="btn btn-text" id="dialogConfirm" value="confirm" data-ripple></button>
+      </div>
+    </form>
+  </dialog>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/options.js"></script>
+</body>
+</html>

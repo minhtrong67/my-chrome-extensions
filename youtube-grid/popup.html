@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YouTube Grid</title>
+  <script src="js/boot.js"></script>
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/palettes.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/popup.css" />
+</head>
+<body>
+  <div class="popup" id="app">
+
+    <header class="appbar">
+      <button class="icon-btn back-btn" id="backBtn" data-ripple hidden
+              data-i18n-title="back" data-i18n-aria="back"><i data-icon="arrow-left"></i></button>
+      <img class="logo" id="logo" src="icons/icon48.png" alt="" width="36" height="36" />
+      <div class="appbar-title">
+        <h1 id="viewTitle" data-i18n="appName">YouTube Grid</h1>
+        <p id="viewTagline" data-i18n="tagline">Your grid, your rules</p>
+      </div>
+      <button class="icon-btn" id="fullBtn" data-ripple hidden
+              data-i18n-title="openFull" data-i18n-aria="openFull"><i data-icon="external-link"></i></button>
+      <button class="icon-btn" id="themeBtn" data-ripple data-mode="system"
+              data-i18n-title="changeTheme" data-i18n-aria="changeTheme">
+        <i class="mode-system" data-icon="monitor"></i>
+        <i class="mode-light" data-icon="sun"></i>
+        <i class="mode-dark" data-icon="moon"></i>
+      </button>
+      <button class="icon-btn" id="settingsBtn" data-ripple
+              data-i18n-title="openSettings" data-i18n-aria="openSettings">
+        <i data-icon="settings"></i>
+      </button>
+    </header>
+
+    <main class="popup-body" id="mainView">
+
+      <label class="master" id="masterCard" data-ripple>
+        <i data-icon="power"></i>
+        <span class="text">
+          <span class="title" data-i18n="enableExtension">Enable extension</span>
+          <span class="sub" id="pausedHint" data-i18n="pausedHint" hidden>All effects are paused</span>
+        </span>
+        <span class="switch">
+          <input type="checkbox" role="switch" id="optEnabled" />
+          <span class="track"></span>
+          <span class="thumb"><i data-icon="check"></i></span>
+        </span>
+      </label>
+
+      <div class="controls" id="controls">
+
+        <section class="card" id="columnsCard">
+          <label class="row" data-ripple>
+            <i class="lead-icon" data-icon="layout-grid"></i>
+            <span class="text">
+              <span class="title" data-i18n="customColumns">Custom column count</span>
+              <span class="sub" id="defaultNote" data-i18n="defaultLayoutNote">Using YouTube's default layout.</span>
+            </span>
+            <span class="switch">
+              <input type="checkbox" role="switch" id="optUseCustom" />
+              <span class="track"></span>
+              <span class="thumb"><i data-icon="check"></i></span>
+            </span>
+          </label>
+
+          <div class="collapse" id="columnsCollapse">
+            <div class="collapse-inner">
+              <div class="columns-body" id="simpleBlock">
+                <div class="big-value">
+                  <span class="num" id="columnsValue">5</span>
+                  <span class="unit" data-i18n="columnsPerRow">columns per row</span>
+                </div>
+                <input class="slider" type="range" id="columnsSlider" step="1" aria-live="off"
+                       data-i18n-aria="gridColumns" />
+                <div class="slider-ticks" id="ticks" aria-hidden="true"></div>
+                <div class="preview" id="preview" aria-hidden="true"></div>
+              </div>
+
+              <div class="notice" id="perPageNotice" hidden>
+                <i data-icon="sliders-horizontal"></i>
+                <span class="text">
+                  <span class="title" data-i18n="perPageActive">Different count per page</span>
+                  <span class="sub" data-i18n="perPageActiveHint">Fine-tune each page in Settings</span>
+                </span>
+                <button class="btn btn-tonal" id="noticeBtn" data-ripple data-i18n="settings">Settings</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2 class="section-title" data-i18n="declutter">Declutter</h2>
+
+          <label class="row" data-ripple>
+            <i class="lead-icon" data-icon="square-play"></i>
+            <span class="text"><span class="title" data-i18n="hideShorts">Hide Shorts</span></span>
+            <span class="switch"><input type="checkbox" role="switch" id="optHideShorts" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+          </label>
+          <label class="row" data-ripple>
+            <i class="lead-icon" data-icon="minimize-2"></i>
+            <span class="text"><span class="title" data-i18n="compactCards">Compact cards</span></span>
+            <span class="switch"><input type="checkbox" role="switch" id="optCompactCards" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+          </label>
+          <label class="row" data-ripple>
+            <i class="lead-icon" data-icon="message-square-off"></i>
+            <span class="text"><span class="title" data-i18n="hideComments">Hide comments</span></span>
+            <span class="switch"><input type="checkbox" role="switch" id="optHideComments" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+          </label>
+          <label class="row" data-ripple>
+            <i class="lead-icon" data-icon="eye-off"></i>
+            <span class="text"><span class="title" data-i18n="hideEndCards">Hide end-screen cards</span></span>
+            <span class="switch"><input type="checkbox" role="switch" id="optHideEndCards" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+          </label>
+          <label class="row" data-ripple>
+            <i class="lead-icon" data-icon="focus"></i>
+            <span class="text"><span class="title" data-i18n="focusMode">Focus mode</span></span>
+            <span class="switch"><input type="checkbox" role="switch" id="optFocusMode" /><span class="track"></span><span class="thumb"><i data-icon="check"></i></span></span>
+          </label>
+        </section>
+      </div>
+
+      <button class="btn btn-outlined landing-link" id="landingBtn" data-ripple>
+        <i data-icon="globe"></i><span data-i18n="landingPage">Landing page</span><i data-icon="external-link"></i>
+      </button>
+
+      <footer class="popup-footer">
+        <span>minhtrong67</span>
+        <span aria-hidden="true">•</span>
+        <span id="versionLabel">v3.0.0</span>
+      </footer>
+    </main>
+
+    <iframe class="settings-frame" id="settingsFrame" title="Settings" hidden></iframe>
+
+    <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="js/icons.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html>

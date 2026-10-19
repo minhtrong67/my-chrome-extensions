@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "YouTube Grid",
+    "description": "Extension name shown in the Chrome Web Store and chrome://extensions"
+  },
+  "extDescription": {
+    "message": "Choose how many video columns YouTube shows and declutter Shorts, comments and end cards. Material Design 3, English & Vietnamese.",
+    "description": "Extension description (max 132 characters)"
+  },
+  "cmdToggle": {
+    "message": "Toggle custom column count on/off",
+    "description": "Keyboard shortcut description"
+  }
+}

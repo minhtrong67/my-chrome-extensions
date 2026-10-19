@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>YouTube Grid – Choose how many video columns YouTube shows</title>
+<meta name="description" content="YouTube Grid is a free, open-source Chrome extension: pick 2–8 video columns on YouTube, hide Shorts, comments and end cards in one tap. Material Design 3, English &amp; Vietnamese." />
+<meta name="keywords" content="YouTube Grid, YouTube columns, YouTube grid layout, YouTube extension, Chrome extension, hide Shorts, hide YouTube comments, Material Design, Vietnamese, minhtrong67" />
+<meta name="author" content="minhtrong67" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#fff8f7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1e100e" media="(prefers-color-scheme: dark)" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="canonical" href="https://minhtrong67.github.io/youtube-grid/" />
+
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="icon" href="icons/icon32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="icons/icon128.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="YouTube Grid" />
+<meta property="og:title" content="YouTube Grid – Your YouTube grid, your rules" />
+<meta property="og:description" content="Choose how many video columns YouTube shows and declutter Shorts, comments and end cards. Free, private and open source." />
+<meta property="og:url" content="https://minhtrong67.github.io/youtube-grid/" />
+<meta property="og:image" content="https://minhtrong67.github.io/youtube-grid/assets/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="YouTube Grid logo and a grid of video thumbnails" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="vi_VN" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="YouTube Grid – Your YouTube grid, your rules" />
+<meta name="twitter:description" content="Choose how many video columns YouTube shows and declutter Shorts, comments and end cards. Free, private and open source." />
+<meta name="twitter:image" content="https://minhtrong67.github.io/youtube-grid/assets/og-cover.png" />
+<meta name="twitter:image:alt" content="YouTube Grid logo and a grid of video thumbnails" />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"YouTube Grid","alternateName":"youtube-column-ajuster-ext","description":"A free, open-source Chrome extension to choose how many video columns YouTube shows and to hide Shorts, comments and end-screen cards.","applicationCategory":"BrowserApplication","operatingSystem":"Windows, macOS, Linux, ChromeOS","softwareVersion":"3.0.0","inLanguage":["en","vi"],"license":"https://opensource.org/licenses/MIT","isAccessibleForFree":true,"url":"https://minhtrong67.github.io/youtube-grid/","downloadUrl":"https://minhtrong67.github.io/youtube-grid/download/youtube-grid.zip","image":"https://minhtrong67.github.io/youtube-grid/assets/og-cover.png","author":{"@type":"Person","name":"minhtrong67","url":"https://github.com/minhtrong67"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is YouTube Grid free?","acceptedAnswer":{"@type":"Answer","text":"Yes. It is free and open source under the MIT license."}},
+{"@type":"Question","name":"Which browsers does it support?","acceptedAnswer":{"@type":"Answer","text":"Chrome, Edge, Brave and other Chromium-based browsers version 111 or newer."}},
+{"@type":"Question","name":"Does YouTube Grid collect my data?","acceptedAnswer":{"@type":"Answer","text":"No. There are no accounts, no analytics and no network requests. Settings stay on your device."}},
+{"@type":"Question","name":"Why do I install it with Load unpacked?","acceptedAnswer":{"@type":"Answer","text":"The download is the extension itself. Chrome can load it directly when Developer mode is on, with no store account needed."}},
+{"@type":"Question","name":"A toggle stopped working after a YouTube update. What now?","acceptedAnswer":{"@type":"Answer","text":"YouTube changes its page markup from time to time. Please open an issue on GitHub and it will be looked at."}},
+{"@type":"Question","name":"Is it affiliated with YouTube?","acceptedAnswer":{"@type":"Answer","text":"No. YouTube Grid is an independent project. YouTube is a trademark of Google LLC."}}
+]}
+</script>
+
+<script>
+/* Apply saved theme before first paint (no flash). */
+(function () {
+  var r = document.documentElement;
+  r.className = "js";
+  if (location.protocol === "chrome-extension:") r.className += " in-ext";
+  try { var t = localStorage.getItem("yg_site_theme"); if (t === "light" || t === "dark") r.setAttribute("data-theme", t); } catch (e) {}
+})();
+</script>
+
+<style>
+/* ===== Material Design 3 colour roles — generated from seed #F44336 (Vibrant) ===== */
+:root, :root[data-theme="light"] { --md-sys-color-primary:#c0000a; --md-sys-color-on-primary:#ffffff; --md-sys-color-primary-container:#ffdad5; --md-sys-color-on-primary-container:#930005; --md-sys-color-secondary:#80543e; --md-sys-color-on-secondary-container:#653d29; --md-sys-color-secondary-container:#ffdbcc; --md-sys-color-error:#ba1a1a; --md-sys-color-on-error:#ffffff; --md-sys-color-error-container:#ffdad6; --md-sys-color-on-error-container:#93000a; --md-sys-color-surface:#fff8f7; --md-sys-color-on-surface:#271816; --md-sys-color-on-surface-variant:#58413e; --md-sys-color-outline:#8c716d; --md-sys-color-outline-variant:#dfbfbb; --md-sys-color-surface-container-lowest:#ffffff; --md-sys-color-surface-container-low:#fff0ee; --md-sys-color-surface-container:#ffe9e6; --md-sys-color-surface-container-high:#ffe2de; --md-sys-color-surface-container-highest:#f9dcd8; --md-sys-color-inverse-surface:#3d2c2a; --md-sys-color-inverse-on-surface:#ffedea; --md-sys-color-inverse-primary:#ffb4a9; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --md-sys-color-primary:#ffb4a9; --md-sys-color-on-primary:#690002; --md-sys-color-primary-container:#930005; --md-sys-color-on-primary-container:#ffdad5; --md-sys-color-secondary:#f4ba9f; --md-sys-color-on-secondary-container:#ffdbcc; --md-sys-color-secondary-container:#653d29; --md-sys-color-error:#ffb4ab; --md-sys-color-on-error:#690005; --md-sys-color-error-container:#93000a; --md-sys-color-on-error-container:#ffdad6; --md-sys-color-surface:#1e100e; --md-sys-color-on-surface:#f9dcd8; --md-sys-color-on-surface-variant:#dfbfbb; --md-sys-color-outline:#a78a86; --md-sys-color-outline-variant:#58413e; --md-sys-color-surface-container-lowest:#180b09; --md-sys-color-surface-container-low:#271816; --md-sys-color-surface-container:#2b1c1a; --md-sys-color-surface-container-high:#372624; --md-sys-color-surface-container-highest:#42302e; --md-sys-color-inverse-surface:#f9dcd8; --md-sys-color-inverse-on-surface:#3d2c2a; --md-sys-color-inverse-primary:#c0000a; color-scheme: dark; } }
+:root[data-theme="dark"] { --md-sys-color-primary:#ffb4a9; --md-sys-color-on-primary:#690002; --md-sys-color-primary-container:#930005; --md-sys-color-on-primary-container:#ffdad5; --md-sys-color-secondary:#f4ba9f; --md-sys-color-on-secondary-container:#ffdbcc; --md-sys-color-secondary-container:#653d29; --md-sys-color-error:#ffb4ab; --md-sys-color-on-error:#690005; --md-sys-color-error-container:#93000a; --md-sys-color-on-error-container:#ffdad6; --md-sys-color-surface:#1e100e; --md-sys-color-on-surface:#f9dcd8; --md-sys-color-on-surface-variant:#dfbfbb; --md-sys-color-outline:#a78a86; --md-sys-color-outline-variant:#58413e; --md-sys-color-surface-container-lowest:#180b09; --md-sys-color-surface-container-low:#271816; --md-sys-color-surface-container:#2b1c1a; --md-sys-color-surface-container-high:#372624; --md-sys-color-surface-container-highest:#42302e; --md-sys-color-inverse-surface:#f9dcd8; --md-sys-color-inverse-on-surface:#3d2c2a; --md-sys-color-inverse-primary:#c0000a; color-scheme: dark; }
+
+:root {
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  --ease: cubic-bezier(.2, 0, 0, 1);
+  --decel: cubic-bezier(.05, .7, .1, 1);
+  --elev1: 0 1px 2px rgb(0 0 0 / .3), 0 1px 3px 1px rgb(0 0 0 / .15);
+  --elev2: 0 2px 6px 2px rgb(0 0 0 / .15), 0 1px 2px rgb(0 0 0 / .3);
+  --wrap: 72rem;
+  --pad: clamp(1rem, 4vw, 2rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; font-family: var(--font); font-size: 1rem; line-height: 1.6; letter-spacing: .01em;
+  background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--md-sys-color-primary); outline-offset: 3px; border-radius: 6px; }
+.icon { width: 1.5rem; height: 1.5rem; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.wrap { width: min(100% - 2 * var(--pad), var(--wrap)); margin-inline: auto; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ===== Ripple / state layer ===== */
+[data-ripple] { position: relative; overflow: hidden; isolation: isolate; -webkit-tap-highlight-color: transparent; }
+[data-ripple]::before { content: ""; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity .15s linear; pointer-events: none; }
+[data-ripple]:hover::before { opacity: .08; }
+[data-ripple]:focus-visible::before { opacity: .1; }
+.ink { position: absolute; border-radius: 50%; background: currentColor; pointer-events: none; z-index: -1; }
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 3rem; padding: 0 1.5rem 0 1.25rem;
+  border: 0; border-radius: 999px; font-weight: 500; font-size: 1rem; letter-spacing: .02em; text-decoration: none; white-space: nowrap;
+  transition: box-shadow .25s var(--ease), transform .15s var(--ease);
+}
+.btn:active { transform: scale(.97); }
+.btn-filled { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.btn-filled:hover { box-shadow: var(--elev2); }
+.btn-tonal { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.btn-outlined { color: var(--md-sys-color-primary); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline); }
+.btn-lg { min-height: 3.5rem; padding: 0 2rem 0 1.5rem; font-size: 1.1rem; }
+.icon-btn { display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--md-sys-color-on-surface-variant); transition: transform .15s var(--ease); }
+.icon-btn:active { transform: scale(.9); }
+
+/* ===== Top app bar ===== */
+.appbar { position: sticky; top: 0; z-index: 50; background: var(--md-sys-color-surface); transition: background .25s linear, box-shadow .25s linear; }
+.appbar.scrolled { background: var(--md-sys-color-surface-container); box-shadow: 0 1px 0 var(--md-sys-color-outline-variant); }
+.appbar .wrap { display: flex; align-items: center; gap: .5rem; min-height: 4rem; }
+.brand { white-space: nowrap; display: flex; align-items: center; gap: .75rem; margin-right: auto; text-decoration: none; font-size: 1.25rem; font-weight: 500; }
+.brand img { width: 2.25rem; height: 2.25rem; border-radius: .55rem; }
+.nav { display: flex; gap: .25rem; margin-right: .5rem; }
+.nav a { padding: .5rem 1rem; border-radius: 999px; text-decoration: none; font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
+.lang { display: inline-flex; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--md-sys-color-outline); overflow: hidden; }
+.lang button { border: 0; background: transparent; padding: .35rem .8rem; font-weight: 600; font-size: .85rem; transition: background .25s var(--ease), color .25s var(--ease); }
+.lang button[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+#themeBtn .icon { display: none; }
+#themeBtn[data-mode="system"] .i-system, #themeBtn[data-mode="light"] .i-light, #themeBtn[data-mode="dark"] .i-dark { display: block; }
+.appbar .btn { min-height: 2.5rem; padding: 0 1.1rem 0 .9rem; margin-left: .25rem; }
+
+/* ===== Hero ===== */
+.hero { position: relative; overflow: hidden; padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(3rem, 7vw, 5.5rem); }
+.hero-grid { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+@media (min-width: 62rem) { .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); } }
+.chip { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .9rem .35rem .7rem; border-radius: 8px; background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font-size: .9rem; font-weight: 500; }
+.chip .icon { width: 1.1rem; height: 1.1rem; }
+h1 { margin-top: 1.25rem; font-size: clamp(2.5rem, 6.4vw, 4.25rem); font-weight: 500; line-height: 1.06; letter-spacing: -.02em; text-wrap: balance; }
+.lead { margin-top: 1.5rem; max-width: 34rem; font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--md-sys-color-on-surface-variant); text-wrap: pretty; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: .85rem; margin-top: 2rem; }
+.meta { margin-top: 1rem; font-size: .9rem; color: var(--md-sys-color-on-surface-variant); }
+
+.hero-bg { position: absolute; inset: 0 0 auto auto; width: min(60vw, 46rem); aspect-ratio: 1; z-index: -1; transform: translate(25%, -25%); border-radius: 50%; background: var(--md-sys-color-primary-container); opacity: .55; filter: blur(2px); }
+
+/* ===== Interactive grid demo ===== */
+.demo { border-radius: 28px; background: var(--md-sys-color-surface-container-low); padding: .75rem; box-shadow: var(--elev1); }
+.browser { border-radius: 18px; overflow: hidden; background: var(--md-sys-color-surface); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant); }
+.browser-bar { display: flex; align-items: center; gap: .75rem; padding: .6rem .85rem; background: var(--md-sys-color-surface-container-high); }
+.dots { display: flex; gap: .35rem; }
+.dots i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--md-sys-color-outline-variant); }
+.url { flex: 1; padding: .2rem .8rem; border-radius: 999px; background: var(--md-sys-color-surface); font-size: .8rem; color: var(--md-sys-color-on-surface-variant); }
+.grid { --cols: 5; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: .75rem .6rem; height: clamp(15rem, 36vw, 21rem); overflow: hidden; padding: .85rem; align-content: start; }
+.tile[hidden] { display: none; }
+.tile { min-width: 0; will-change: transform; }
+.thumb { aspect-ratio: 16 / 9; border-radius: 8px; background: linear-gradient(135deg, hsl(var(--h) 75% var(--l)), hsl(calc(var(--h) + 45) 70% calc(var(--l) - 14%))); position: relative; overflow: hidden; }
+.thumb::after { content: ""; position: absolute; right: 6%; bottom: 8%; width: 18%; height: 11%; border-radius: 3px; background: rgb(0 0 0 / .55); }
+.lines { display: grid; gap: .3rem; margin-top: .45rem; }
+.lines i { height: .42rem; border-radius: 99px; background: var(--md-sys-color-on-surface); opacity: .22; }
+.lines i + i { width: 62%; opacity: .12; }
+:root { --l: 62%; }
+:root[data-theme="dark"] { --l: 40%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --l: 40%; } }
+.demo-ctl { display: flex; align-items: center; gap: 1rem; padding: .85rem .75rem .5rem 1rem; }
+.demo-count { min-width: 6.5rem; font-weight: 500; }
+.demo-count b { display: inline-block; min-width: 1ch; font-size: 1.9rem; font-weight: 500; line-height: 1; color: var(--md-sys-color-primary); margin-right: .25rem; }
+.slider { --pct: 50%; -webkit-appearance: none; appearance: none; flex: 1; height: 2.75rem; margin: 0; background: transparent; cursor: pointer; }
+.slider::-webkit-slider-runnable-track { height: 1rem; border-radius: 999px; background: linear-gradient(to right, var(--md-sys-color-primary) var(--pct), var(--md-sys-color-secondary-container) var(--pct)); }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; width: .25rem; height: 2.75rem; margin-top: -.875rem; border: 0; border-radius: 999px; background: var(--md-sys-color-primary); box-shadow: 0 0 0 .375rem var(--md-sys-color-surface-container-low); }
+.slider::-moz-range-track { height: 1rem; border-radius: 999px; background: var(--md-sys-color-secondary-container); }
+.slider::-moz-range-progress { height: 1rem; border-radius: 999px; background: var(--md-sys-color-primary); }
+.slider::-moz-range-thumb { width: .25rem; height: 2.75rem; border: 0; border-radius: 999px; background: var(--md-sys-color-primary); box-shadow: 0 0 0 .375rem var(--md-sys-color-surface-container-low); }
+
+/* ===== Sections ===== */
+section { padding: clamp(2.5rem, 6vw, 4.5rem) 0; }
+.sec-title { font-size: clamp(1.9rem, 4vw, 2.75rem); font-weight: 500; line-height: 1.15; letter-spacing: -.01em; max-width: 36rem; text-wrap: balance; }
+.sec-sub { margin-top: .75rem; max-width: 38rem; color: var(--md-sys-color-on-surface-variant); }
+.cards { display: grid; gap: 1rem; margin-top: 2.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18.5rem), 1fr)); }
+.card { padding: 1.5rem; border-radius: 20px; background: var(--md-sys-color-surface-container-low); transition: transform .3s var(--decel), box-shadow .3s var(--ease), background .3s linear; }
+.card:hover { transform: translateY(-4px); box-shadow: var(--elev1); background: var(--md-sys-color-surface-container); }
+.card .ico { display: grid; place-items: center; width: 3.25rem; height: 3.25rem; border-radius: 16px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.card h3 { margin-top: 1.1rem; font-size: 1.25rem; font-weight: 500; }
+.card p { margin-top: .5rem; color: var(--md-sys-color-on-surface-variant); }
+
+.band { border-radius: 28px; background: var(--md-sys-color-surface-container); padding: clamp(1.5rem, 4vw, 3rem); display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 52rem) { .band { grid-template-columns: 1fr 1fr; } }
+.swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: .6rem; }
+.swatches i { aspect-ratio: 1; border-radius: 50%; background: var(--c); transition: transform .3s var(--decel), border-radius .3s var(--ease); }
+.swatches i:hover { transform: scale(1.12); border-radius: 32%; }
+.opts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+.opts span { padding: .3rem .8rem; border-radius: 8px; font-size: .9rem; box-shadow: inset 0 0 0 1px var(--md-sys-color-outline); }
+
+.steps { display: grid; gap: 1rem; margin-top: 2.5rem; counter-reset: s; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.step { position: relative; padding: 1.5rem 1.5rem 1.5rem 1.5rem; border-radius: 20px; box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant); counter-increment: s; }
+.step::before { content: counter(s); display: grid; place-items: center; width: 2.25rem; height: 2.25rem; margin-bottom: 1rem; border-radius: 50%; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-weight: 600; }
+.step h3 { font-size: 1.2rem; font-weight: 500; }
+.step p { margin-top: .4rem; color: var(--md-sys-color-on-surface-variant); }
+.copy { display: inline-flex; align-items: center; gap: .5rem; margin-top: .9rem; padding: .4rem .5rem .4rem .85rem; border: 0; border-radius: 10px; background: var(--md-sys-color-surface-container-highest); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9rem; }
+.copy .icon { width: 1.1rem; height: 1.1rem; }
+.copy .done { display: none; color: var(--md-sys-color-primary); }
+.copy.ok .done { display: block; } .copy.ok .do { display: none; }
+
+.download { border-radius: 32px; padding: clamp(2rem, 6vw, 4rem); text-align: center; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.download .sec-title { margin-inline: auto; }
+.download p { margin: .75rem auto 0; max-width: 34rem; opacity: .9; }
+.download .btn { margin-top: 2rem; }
+.download small { display: block; margin-top: 1rem; opacity: .8; }
+
+.faq { margin-top: 2rem; max-width: 50rem; }
+details { border-bottom: 1px solid var(--md-sys-color-outline-variant); }
+summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem .25rem; font-size: 1.1rem; font-weight: 500; cursor: pointer; list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary .icon { transition: transform .3s var(--ease); color: var(--md-sys-color-on-surface-variant); }
+details[open] summary .icon { transform: rotate(180deg); }
+details .ans { padding: 0 .25rem 1.25rem; color: var(--md-sys-color-on-surface-variant); max-width: 42rem; animation: ans .35s var(--decel); }
+@keyframes ans { from { opacity: 0; transform: translateY(-6px); } }
+
+footer { margin-top: 2rem; padding: 2.5rem 0 3rem; background: var(--md-sys-color-surface-container); }
+.foot { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; justify-content: space-between; align-items: flex-start; }
+.foot .brand { margin: 0; }
+.foot p { margin-top: .75rem; color: var(--md-sys-color-on-surface-variant); font-size: .95rem; }
+.foot ul { display: grid; gap: .5rem; }
+.foot a { text-decoration: none; color: var(--md-sys-color-on-surface-variant); }
+.foot a:hover { color: var(--md-sys-color-primary); text-decoration: underline; }
+.legal { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--md-sys-color-outline-variant); font-size: .85rem; color: var(--md-sys-color-on-surface-variant); }
+
+/* Opened from inside the installed extension: nothing left to download or install. */
+.in-ext a[download], .in-ext #get, .in-ext #install, .in-ext .nav a[href="#install"] { display: none; }
+
+/* ===== Motion ===== */
+.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--decel), transform .6s var(--decel); transition-delay: var(--d, 0s); }
+.js .reveal.in { opacity: 1; transform: none; }
+.hero .enter { animation: up .8s var(--decel) both; animation-delay: var(--d, 0s); }
+@keyframes up { from { opacity: 0; transform: translateY(24px); } }
+.hero-bg { animation: bg 1.2s var(--decel) both; }
+@keyframes bg { from { opacity: 0; transform: translate(40%, -40%) scale(.8); } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .js .reveal { opacity: 1; transform: none; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 52rem) { .nav { display: none; } }
+@media (max-width: 34rem) {
+  .appbar .btn span { display: none; } .appbar .btn { padding: 0; width: 2.5rem; }
+  .brand span { font-size: 1.05rem; }
+  .appbar .wrap { gap: .25rem; }
+  .lang button { padding: .3rem .6rem; }
+  .btn-lg { width: 100%; }
+  .cta .btn { width: 100%; }
+  .demo-ctl { gap: .5rem; padding-left: .5rem; }
+  .swatches { grid-template-columns: repeat(6, 1fr); gap: .45rem; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" x2="16" y1="21" y2="21" /><line x1="12" x2="12" y1="17" y2="21" /></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></symbol>
+<symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" /></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M10 5H3" /><path d="M12 19H3" /><path d="M14 3v4" /><path d="M16 17v4" /><path d="M21 12h-9" /><path d="M21 19h-5" /><path d="M21 5h-7" /><path d="M8 10v4" /><path d="M8 12H3" /></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z" /></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" /><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+</svg>
+
+<header class="appbar" id="appbar">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="YouTube Grid"><img src="icons/icon128.png" alt="" width="36" height="36" /><span>YouTube Grid</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#features" data-ripple data-i18n="navFeatures">Features</a>
+      <a href="#install" data-ripple data-i18n="navInstall">Install</a>
+      <a href="#faq" data-ripple data-i18n="navFaq">FAQ</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="vi" aria-pressed="false">VI</button>
+    </div>
+    <button class="icon-btn" id="themeBtn" type="button" data-ripple data-mode="system" data-i18n-aria="themeLabel" aria-label="Change theme">
+      <svg class="icon i-system"><use href="#i-monitor"/></svg>
+      <svg class="icon i-light"><use href="#i-sun"/></svg>
+      <svg class="icon i-dark"><use href="#i-moon"/></svg>
+    </button>
+    <a class="btn btn-filled" href="download/youtube-grid.zip" download data-ripple><svg class="icon"><use href="#i-download"/></svg><span data-i18n="download">Download</span></a>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="chip enter"><svg class="icon"><use href="#i-puzzle"/></svg><span data-i18n="chip">Free Chrome extension</span></span>
+      <h1 class="enter" style="--d:.08s" data-i18n="heroTitle">Your YouTube grid, exactly the way you like it.</h1>
+      <p class="lead enter" style="--d:.16s" data-i18n="heroLead">Choose how many video columns YouTube shows, and clear away Shorts, comments and end cards in one tap. Free, private and open source.</p>
+      <div class="cta enter" style="--d:.24s">
+        <a class="btn btn-filled btn-lg" href="download/youtube-grid.zip" download data-ripple><svg class="icon"><use href="#i-download"/></svg><span data-i18n="downloadFree">Download for Chrome</span></a>
+        <a class="btn btn-outlined btn-lg" href="https://github.com/minhtrong67/youtube-grid" target="_blank" rel="noopener noreferrer" data-ripple><svg class="icon"><use href="#i-code"/></svg><span data-i18n="source">Source code</span></a>
+      </div>
+      <p class="meta enter" style="--d:.3s" data-i18n="heroMeta">Version 3.0.0 · Chrome, Edge, Brave · MIT license</p>
+    </div>
+
+    <div class="demo enter" style="--d:.2s" role="group" aria-labelledby="demoTitle">
+      <div class="browser">
+        <div class="browser-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url">youtube.com</span></div>
+        <div class="grid" id="demoGrid" aria-hidden="true"></div>
+      </div>
+      <div class="demo-ctl">
+        <span class="demo-count" id="demoTitle"><b id="demoNum">5</b><span data-i18n="columns">columns</span></span>
+        <input class="slider" id="demoSlider" type="range" min="2" max="8" step="1" value="5" data-i18n-aria="demoLabel" aria-label="Number of columns" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="featTitle">Everything about the grid, in your hands</h2>
+    <p class="sec-sub reveal" data-i18n="featSub">Small, fast and built with Material Design 3.</p>
+    <div class="cards">
+      <article class="card reveal"><div class="ico"><svg class="icon"><use href="#i-grid"/></svg></div><h3 data-i18n="f1t">Columns you choose</h3><p data-i18n="f1d">Show 2 to 8 video columns on Home, Subscriptions and Channel pages. Changes apply instantly on every open tab.</p></article>
+      <article class="card reveal" style="--d:.06s"><div class="ico"><svg class="icon"><use href="#i-sliders"/></svg></div><h3 data-i18n="f2t">A count for each page</h3><p data-i18n="f2d">Give Home, Subscriptions and Channel their own number, so every page looks right. Press Alt+Shift+Y to toggle.</p></article>
+      <article class="card reveal" style="--d:.12s"><div class="ico"><svg class="icon"><use href="#i-play"/></svg></div><h3 data-i18n="f3t">Declutter in one tap</h3><p data-i18n="f3d">Hide Shorts, comments, end-screen cards and the related sidebar, or switch to compact video cards.</p></article>
+      <article class="card reveal"><div class="ico"><svg class="icon"><use href="#i-palette"/></svg></div><h3 data-i18n="f4t">18 Material colors</h3><p data-i18n="f4d">Pick any Material Design theme color, go light, dark or follow your system, and choose your own font and size.</p></article>
+      <article class="card reveal" style="--d:.06s"><div class="ico"><svg class="icon"><use href="#i-globe"/></svg></div><h3 data-i18n="f5t">English and Vietnamese</h3><p data-i18n="f5d">YouTube Grid detects your device language the first time it opens. Switch whenever you like.</p></article>
+      <article class="card reveal" style="--d:.12s"><div class="ico"><svg class="icon"><use href="#i-shield"/></svg></div><h3 data-i18n="f6t">Private by design</h3><p data-i18n="f6d">No accounts, no analytics, no network requests. Your settings never leave your device.</p></article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="band reveal">
+      <div>
+        <h2 class="sec-title" data-i18n="bandTitle">Make it yours</h2>
+        <p class="sec-sub" data-i18n="bandSub">The whole interface follows the color, mode and font you pick, with a live preview as you change them.</p>
+        <div class="opts" aria-hidden="true"><span data-i18n="optLight">Light</span><span data-i18n="optDark">Dark</span><span data-i18n="optSystem">System</span><span>Roboto</span><span>Inter</span><span>Be Vietnam Pro</span><span>Nunito</span></div>
+      </div>
+      <div class="swatches" aria-hidden="true"><i style="--c:#F44336"></i><i style="--c:#E91E63"></i><i style="--c:#9C27B0"></i><i style="--c:#673AB7"></i><i style="--c:#3F51B5"></i><i style="--c:#2196F3"></i><i style="--c:#03A9F4"></i><i style="--c:#00BCD4"></i><i style="--c:#009688"></i><i style="--c:#4CAF50"></i><i style="--c:#8BC34A"></i><i style="--c:#CDDC39"></i><i style="--c:#FFEB3B"></i><i style="--c:#FFC107"></i><i style="--c:#FF9800"></i><i style="--c:#FF5722"></i><i style="--c:#795548"></i><i style="--c:#607D8B"></i></div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="howTitle">Up and running in three steps</h2>
+    <div class="steps">
+      <div class="step reveal"><h3 data-i18n="s1t">Download</h3><p data-i18n="s1d">Get the ZIP file and unzip it into a folder you will keep.</p></div>
+      <div class="step reveal" style="--d:.08s"><h3 data-i18n="s2t">Load it in Chrome</h3><p data-i18n="s2d">Open the extensions page, turn on Developer mode, then choose Load unpacked and pick the folder.</p>
+        <button class="copy" type="button" id="copyBtn" data-ripple aria-label="Copy chrome://extensions"><span>chrome://extensions</span><svg class="icon do"><use href="#i-copy"/></svg><svg class="icon done"><use href="#i-check"/></svg></button></div>
+      <div class="step reveal" style="--d:.16s"><h3 data-i18n="s3t">Pick your columns</h3><p data-i18n="s3d">Open YouTube Grid from the toolbar, switch on custom columns and drag the slider.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="get">
+  <div class="wrap">
+    <div class="download reveal">
+      <h2 class="sec-title" data-i18n="dlTitle">Get YouTube Grid</h2>
+      <p data-i18n="dlSub">Free forever. Works on Chrome, Edge, Brave and other Chromium browsers 111 or newer.</p>
+      <a class="btn btn-filled btn-lg" href="download/youtube-grid.zip" download data-ripple><svg class="icon"><use href="#i-download"/></svg><span data-i18n="dlBtn">Download ZIP</span></a>
+      <small data-i18n="dlNote">Version 3.0.0 · MIT license</small>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="faqTitle">Questions, answered</h2>
+    <div class="faq reveal">
+      <details><summary><span data-i18n="q1">Is YouTube Grid free?</span><svg class="icon"><use href="#i-down"/></svg></summary><div class="ans" data-i18n="a1">Yes. It is free and open source under the MIT license.</div></details>
+      <details><summary><span data-i18n="q2">Which browsers does it support?</span><svg class="icon"><use href="#i-down"/></svg></summary><div class="ans" data-i18n="a2">Chrome, Edge, Brave and other Chromium-based browsers, version 111 or newer.</div></details>
+      <details><summary><span data-i18n="q3">Does it collect my data?</span><svg class="icon"><use href="#i-down"/></svg></summary><div class="ans" data-i18n="a3">No. There are no accounts, no analytics and no network requests. Settings stay on your device.</div></details>
+      <details><summary><span data-i18n="q4">Why install it with Load unpacked?</span><svg class="icon"><use href="#i-down"/></svg></summary><div class="ans" data-i18n="a4">The download is the extension itself. Chrome can load it directly when Developer mode is on, with no store account needed.</div></details>
+      <details><summary><span data-i18n="q5">A toggle stopped working after a YouTube update. What now?</span><svg class="icon"><use href="#i-down"/></svg></summary><div class="ans" data-i18n="a5">YouTube changes its page markup from time to time. Please open an issue on GitHub and it will be looked at.</div></details>
+      <details><summary><span data-i18n="q6">Is it affiliated with YouTube?</span><svg class="icon"><use href="#i-down"/></svg></summary><div class="ans" data-i18n="a6">No. YouTube Grid is an independent project. YouTube is a trademark of Google LLC.</div></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top"><img src="icons/icon128.png" alt="" width="36" height="36" /><span>YouTube Grid</span></a>
+        <p><span data-i18n="madeBy">Made by</span> <strong>minhtrong67</strong></p>
+        <p data-i18n="aiBy">Built with the help of Claude (AI)</p>
+      </div>
+      <ul>
+        <li><a href="https://github.com/minhtrong67/youtube-grid" target="_blank" rel="noopener noreferrer" data-i18n="source">Source code</a></li>
+        <li><a href="https://github.com/minhtrong67/youtube-grid/issues" target="_blank" rel="noopener noreferrer" data-i18n="issues">Report an issue</a></li>
+        <li><a href="https://github.com/minhtrong67/youtube-grid/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-i18n="license">MIT License</a></li>
+      </ul>
+    </div>
+    <p class="legal" data-i18n="legal">© 2026 minhtrong67. Open source under the MIT license. YouTube is a trademark of Google LLC; this project is not affiliated with or endorsed by YouTube or Google.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var root = document.documentElement;
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- i18n: English lives in the HTML (good for SEO); Vietnamese is here ---------- */
+  var VI = {
+    navFeatures: "Tính năng", navInstall: "Cài đặt", navFaq: "Hỏi đáp", download: "Tải về", themeLabel: "Đổi giao diện",
+    chip: "Tiện ích Chrome miễn phí",
+    heroTitle: "Lưới YouTube đúng như bạn muốn.",
+    heroLead: "Chọn số cột video YouTube hiển thị, và dọn Shorts, bình luận, thẻ cuối video chỉ với một chạm. Miễn phí, riêng tư và mã nguồn mở.",
+    downloadFree: "Tải cho Chrome", source: "Mã nguồn",
+    heroMeta: "Phiên bản 3.0.0 · Chrome, Edge, Brave · Giấy phép MIT",
+    columns: "cột", demoLabel: "Số cột",
+    featTitle: "Mọi thứ về lưới video, nằm trong tay bạn", featSub: "Nhỏ gọn, nhanh và xây dựng bằng Material Design 3.",
+    f1t: "Số cột tuỳ ý", f1d: "Hiện từ 2 đến 8 cột video ở Trang chủ, Kênh đăng ký và trang Kênh. Thay đổi áp dụng ngay trên mọi tab đang mở.",
+    f2t: "Mỗi trang một số cột", f2d: "Đặt riêng cho Trang chủ, Kênh đăng ký và Kênh để trang nào cũng đẹp. Nhấn Alt+Shift+Y để bật/tắt nhanh.",
+    f3t: "Dọn giao diện một chạm", f3d: "Ẩn Shorts, bình luận, thẻ cuối video và cột đề xuất, hoặc chuyển sang thẻ video gọn.",
+    f4t: "18 màu Material", f4d: "Chọn bất kỳ màu chủ đề Material Design, giao diện sáng, tối hoặc theo hệ thống, cùng phông chữ và cỡ chữ riêng.",
+    f5t: "Tiếng Anh và tiếng Việt", f5d: "YouTube Grid tự nhận diện ngôn ngữ thiết bị ngay lần đầu mở. Đổi bất cứ lúc nào.",
+    f6t: "Riêng tư từ thiết kế", f6d: "Không tài khoản, không theo dõi, không gửi dữ liệu. Cài đặt không rời khỏi máy bạn.",
+    bandTitle: "Biến nó thành của bạn", bandSub: "Toàn bộ giao diện đổi theo màu, chế độ và phông chữ bạn chọn, kèm xem trước trực tiếp.",
+    optLight: "Sáng", optDark: "Tối", optSystem: "Hệ thống",
+    howTitle: "Sẵn sàng chỉ với ba bước",
+    s1t: "Tải về", s1d: "Tải tệp ZIP và giải nén vào một thư mục bạn sẽ giữ lại.",
+    s2t: "Nạp vào Chrome", s2d: "Mở trang tiện ích, bật Chế độ nhà phát triển, chọn Tải tiện ích đã giải nén rồi chọn thư mục.",
+    s3t: "Chọn số cột", s3d: "Mở YouTube Grid trên thanh công cụ, bật tuỳ chỉnh số cột và kéo thanh trượt.",
+    dlTitle: "Tải YouTube Grid", dlSub: "Miễn phí mãi mãi. Chạy trên Chrome, Edge, Brave và các trình duyệt Chromium phiên bản 111 trở lên.",
+    dlBtn: "Tải tệp ZIP", dlNote: "Phiên bản 3.0.0 · Giấy phép MIT",
+    faqTitle: "Giải đáp thắc mắc",
+    q1: "YouTube Grid có miễn phí không?", a1: "Có. Miễn phí và mã nguồn mở theo giấy phép MIT.",
+    q2: "Hỗ trợ những trình duyệt nào?", a2: "Chrome, Edge, Brave và các trình duyệt nền Chromium khác, phiên bản 111 trở lên.",
+    q3: "Có thu thập dữ liệu của tôi không?", a3: "Không. Không có tài khoản, không theo dõi và không gửi dữ liệu. Cài đặt chỉ nằm trên máy bạn.",
+    q4: "Vì sao cài bằng “Tải tiện ích đã giải nén”?", a4: "Tệp tải về chính là tiện ích. Khi bật Chế độ nhà phát triển, Chrome nạp trực tiếp được mà không cần tài khoản cửa hàng.",
+    q5: "Một tuỳ chọn ngừng hoạt động sau khi YouTube cập nhật, phải làm sao?", a5: "YouTube thỉnh thoảng thay đổi cấu trúc trang. Hãy mở một issue trên GitHub để được xem xét.",
+    q6: "Có liên kết với YouTube không?", a6: "Không. YouTube Grid là dự án độc lập. YouTube là nhãn hiệu của Google LLC.",
+    madeBy: "Thực hiện bởi", aiBy: "Được xây dựng với sự hỗ trợ của Claude (AI)", issues: "Báo lỗi", license: "Giấy phép MIT",
+    legal: "© 2026 minhtrong67. Mã nguồn mở theo giấy phép MIT. YouTube là nhãn hiệu của Google LLC; dự án này không liên kết hay được YouTube hoặc Google bảo trợ."
+  };
+  var VI_META = {
+    title: "YouTube Grid – Chọn số cột video hiển thị trên YouTube",
+    desc: "YouTube Grid là tiện ích Chrome miễn phí, mã nguồn mở: chọn 2–8 cột video trên YouTube, ẩn Shorts, bình luận và thẻ cuối video chỉ một chạm. Material Design 3, tiếng Việt & tiếng Anh."
+  };
+  var nodes = [].slice.call(document.querySelectorAll("[data-i18n]"));
+  var ariaNodes = [].slice.call(document.querySelectorAll("[data-i18n-aria]"));
+  var EN = {}, EN_META = { title: document.title, desc: $('meta[name="description"]').content };
+  nodes.forEach(function (n) { EN[n.dataset.i18n] = n.textContent; });
+  ariaNodes.forEach(function (n) { EN[n.dataset.i18nAria] = n.getAttribute("aria-label"); });
+
+  function setLang(l, save) {
+    var d = l === "vi" ? VI : EN, m = l === "vi" ? VI_META : EN_META;
+    nodes.forEach(function (n) { n.textContent = d[n.dataset.i18n] || EN[n.dataset.i18n]; });
+    ariaNodes.forEach(function (n) { n.setAttribute("aria-label", d[n.dataset.i18nAria] || EN[n.dataset.i18nAria]); });
+    root.lang = l; document.title = m.title; $('meta[name="description"]').content = m.desc;
+    [].forEach.call(document.querySelectorAll(".lang button"), function (b) { b.setAttribute("aria-pressed", String(b.dataset.lang === l)); });
+    if (save) try { localStorage.setItem("yg_site_lang", l); } catch (e) {}
+  }
+  function detect() {
+    try { var s = localStorage.getItem("yg_site_lang"); if (s === "vi" || s === "en") return s; } catch (e) {}
+    var c = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""]);
+    return c.some(function (x) { return /^vi\b/i.test(x); }) ? "vi" : "en";
+  }
+  document.querySelector(".lang").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) setLang(b.dataset.lang, true); });
+  if (detect() === "vi") setLang("vi", false);
+
+  /* ---------- Theme: system -> light -> dark ---------- */
+  var tb = $("#themeBtn");
+  function mode() { try { return localStorage.getItem("yg_site_theme") || "system"; } catch (e) { return "system"; } }
+  function applyMode(m) { tb.dataset.mode = m; if (m === "system") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", m); }
+  applyMode(mode());
+  tb.addEventListener("click", function () {
+    var n = { system: "light", light: "dark", dark: "system" }[mode()];
+    try { localStorage.setItem("yg_site_theme", n); } catch (e) {}
+    applyMode(n);
+  });
+
+  /* ---------- App bar elevation ---------- */
+  var bar = $("#appbar");
+  function onScroll() { bar.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+  /* ---------- Reveal on scroll ---------- */
+  var rv = [].slice.call(document.querySelectorAll(".reveal"));
+  if ("IntersectionObserver" in window && !reduce) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+    rv.forEach(function (n) { io.observe(n); });
+  } else rv.forEach(function (n) { n.classList.add("in"); });
+
+  /* ---------- Interactive grid demo (FLIP animation) ---------- */
+  var grid = $("#demoGrid"), slider = $("#demoSlider"), num = $("#demoNum");
+  var MAX = 8, ROWS = 3, tiles = [];
+  for (var i = 0; i < MAX * ROWS; i++) {
+    var t = document.createElement("div");
+    t.className = "tile";
+    t.style.setProperty("--h", (i * 47 + 8) % 360);
+    t.innerHTML = '<div class="thumb"></div><div class="lines"><i></i><i></i></div>';
+    grid.appendChild(t); tiles.push(t);
+  }
+  var cur = 0;
+  function setCols(n, animate) {
+    n = Math.max(2, Math.min(MAX, n)); if (n === cur) return;
+    var first = animate ? tiles.map(function (t) { return t.hidden ? null : t.getBoundingClientRect(); }) : null;
+    cur = n;
+    grid.style.setProperty("--cols", n);
+    tiles.forEach(function (t, i) { t.hidden = i >= n * ROWS; });
+    num.textContent = n; slider.value = n;
+    slider.style.setProperty("--pct", ((n - 2) / (MAX - 2)) * 100 + "%");
+    if (!animate || reduce || !grid.animate) return;
+    tiles.forEach(function (t, i) {
+      if (t.hidden) return;
+      var f = first[i], l = t.getBoundingClientRect();
+      var kf = f ? [{ transform: "translate(" + (f.left - l.left) + "px," + (f.top - l.top) + "px) scale(" + (f.width / l.width) + ")" }, { transform: "none" }]
+                 : [{ transform: "scale(.6)", opacity: 0 }, { transform: "none", opacity: 1 }];
+      t.animate(kf, { duration: 420, easing: "cubic-bezier(.05,.7,.1,1)" });
+    });
+  }
+  setCols(5, false);
+  slider.addEventListener("input", function () { stop(); setCols(+slider.value, true); });
+  var seq = [3, 6, 4, 8, 5, 2], si = 0, timer = null;
+  function stop() { clearInterval(timer); timer = null; }
+  function play() { if (reduce || timer) return; timer = setInterval(function () { setCols(seq[si++ % seq.length], true); }, 2300); }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { es[0].isIntersecting && !userTouched ? play() : stop(); }, { threshold: .4 }).observe(grid);
+  }
+  var userTouched = false;
+  slider.addEventListener("pointerdown", function () { userTouched = true; stop(); });
+  slider.addEventListener("keydown", function () { userTouched = true; stop(); });
+
+  /* ---------- Copy chrome://extensions ---------- */
+  var cb = $("#copyBtn");
+  cb.addEventListener("click", function () {
+    var done = function () { cb.classList.add("ok"); setTimeout(function () { cb.classList.remove("ok"); }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText("chrome://extensions").then(done, function () {}); else done();
+  });
+
+  /* ---------- Ripple ---------- */
+  document.addEventListener("pointerdown", function (e) {
+    var h = e.target.closest && e.target.closest("[data-ripple]");
+    if (!h || reduce || !h.animate) return;
+    var r = h.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2, k = document.createElement("span");
+    k.className = "ink"; k.style.cssText = "width:" + s + "px;height:" + s + "px;left:" + (e.clientX - r.left - s / 2) + "px;top:" + (e.clientY - r.top - s / 2) + "px";
+    h.appendChild(k);
+    k.animate([{ transform: "scale(0)", opacity: .18 }, { transform: "scale(1)", opacity: .12, offset: .6 }, { transform: "scale(1)", opacity: 0 }], { duration: 550, easing: "cubic-bezier(.2,0,0,1)" }).onfinish = function () { k.remove(); };
+  });
+})();
+</script>
+</body>
+</html>

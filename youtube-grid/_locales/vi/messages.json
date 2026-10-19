@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "YouTube Grid",
+    "description": "Tên tiện ích hiển thị trên Chrome Web Store và chrome://extensions"
+  },
+  "extDescription": {
+    "message": "Tuỳ chỉnh số cột video trên YouTube và dọn Shorts, bình luận, thẻ cuối video chỉ với một chạm. Material Design 3, Anh & Việt.",
+    "description": "Mô tả tiện ích (tối đa 132 ký tự)"
+  },
+  "cmdToggle": {
+    "message": "Bật/tắt số cột tuỳ chỉnh",
+    "description": "Mô tả phím tắt"
+  }
+}

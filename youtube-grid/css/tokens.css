@@ -1,0 +1,51 @@
+/*
+ * tokens.css — Material Design 3 non-colour tokens.
+ * Colour roles (--md-sys-color-*) come from palettes.css, which is generated
+ * for every theme colour in light and dark. Components only ever read roles,
+ * so changing data-theme / data-color on <html> restyles the whole UI.
+ */
+:root {
+  --yg-system-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  --yg-font: var(--yg-system-font);
+  --yg-fs: 14px;
+
+  /* Shape */
+  --md-shape-xs: 4px;
+  --md-shape-sm: 8px;
+  --md-shape-md: 12px;
+  --md-shape-lg: 16px;
+  --md-shape-xl: 28px;
+  --md-shape-full: 999px;
+
+  /* Motion */
+  --md-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-ease-decel: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-ease-accel: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-dur-short: 150ms;
+  --md-dur-medium: 250ms;
+  --md-dur-long: 400ms;
+
+  /* Elevation (shadow colour follows the theme) */
+  --md-elev-1: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --md-elev-2: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --md-elev-3: 0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.3);
+}
+
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Font size (scales every rem-based dimension, including controls) */
+[data-fontsize="small"] { --yg-fs: 13px; }
+[data-fontsize="medium"] { --yg-fs: 14px; }
+[data-fontsize="large"] { --yg-fs: 16px; }
+[data-fontsize="xlarge"] { --yg-fs: 18px; }
+
+/* Font family. "system" (the default) is the OS UI font. */
+[data-font="roboto"] { --yg-font: "Roboto", var(--yg-system-font); }
+[data-font="inter"] { --yg-font: "Inter", var(--yg-system-font); }
+[data-font="open-sans"] { --yg-font: "Open Sans", var(--yg-system-font); }
+[data-font="noto-sans"] { --yg-font: "Noto Sans", var(--yg-system-font); }
+[data-font="be-vietnam-pro"] { --yg-font: "Be Vietnam Pro", var(--yg-system-font); }
+[data-font="montserrat"] { --yg-font: "Montserrat", var(--yg-system-font); }
+[data-font="nunito"] { --yg-font: "Nunito", var(--yg-system-font); }

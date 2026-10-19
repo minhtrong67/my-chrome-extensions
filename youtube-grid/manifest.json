@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "short_name": "YouTube Grid",
+  "description": "__MSG_extDescription__",
+  "version": "3.0.0",
+  "author": "minhtrong67",
+  "homepage_url": "https://github.com/minhtrong67/youtube-grid",
+  "default_locale": "en",
+  "minimum_chrome_version": "111",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extName__",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.youtube.com/*"
+      ],
+      "js": [
+        "js/storage.js",
+        "js/content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "commands": {
+    "toggle-custom-columns": {
+      "suggested_key": {
+        "default": "Alt+Shift+Y"
+      },
+      "description": "__MSG_cmdToggle__"
+    }
+  },
+  "permissions": [
+    "storage"
+  ],
+  "sandbox": {
+    "pages": [
+      "index.html"
+    ]
+  },
+  "content_security_policy": {
+    "sandbox": "sandbox allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads; script-src 'self' 'unsafe-inline'; child-src 'self';"
+  }
+}

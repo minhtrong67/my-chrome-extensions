@@ -1,0 +1,17 @@
+{
+  "name": "youtube-grid",
+  "version": "3.0.0",
+  "description": "Take control of the YouTube grid: custom column count, declutter toggles, Material Design 3 UI, English & Vietnamese.",
+  "author": "minhtrong67",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-palettes.mjs && node scripts/generate-icons.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "lucide-static": "^1.59.0"
+  }
+}

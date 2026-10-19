@@ -1,0 +1,97 @@
+/* popup.css — the toolbar popup. Width scales with the chosen font size. */
+/* Chrome sizes a popup from its content, and the viewport starts tiny, so the
+   width must be absolute: never use vw / % / max-width:100vw here. */
+html, body { margin: 0; width: 26rem; min-width: 26rem; }
+.popup {
+  width: 26rem;
+  min-width: 26rem;
+  height: 600px; /* constant: a popup that changes height visibly jumps when views switch */
+  display: flex;
+  flex-direction: column;
+  background: var(--md-sys-color-surface);
+}
+
+/* Top app bar */
+.appbar {
+  display: flex; align-items: center; gap: 0.25rem;
+  padding: 0.75rem 0.5rem 0.5rem 1rem;
+}
+.logo { width: 2.25rem; height: 2.25rem; margin-right: 0.5rem; border-radius: 0.55rem; }
+.appbar-title { flex: 1; min-width: 0; }
+.appbar-title h1 { font-size: 1.35rem; font-weight: 500; line-height: 1.2; }
+.appbar-title p { font-size: 0.85rem; color: var(--md-sys-color-on-surface-variant); }
+
+/* Theme-mode icon: only the icon of the current mode is shown */
+#themeBtn .icon { display: none; }
+#themeBtn[data-mode="system"] .mode-system,
+#themeBtn[data-mode="light"] .mode-light,
+#themeBtn[data-mode="dark"] .mode-dark { display: block; animation: spin-in var(--md-dur-medium) var(--md-ease-decel); }
+@keyframes spin-in { from { transform: rotate(-60deg) scale(0.5); opacity: 0; } }
+
+.popup-body {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: 0.25rem 1rem 0.75rem;
+  display: flex; flex-direction: column; gap: 0.75rem;
+  scrollbar-width: thin;
+}
+/* Children must keep their natural height; the body scrolls instead of squashing them. */
+.popup-body > *, .controls > * { flex: none; }
+
+/* Master switch: a filled container that "turns on" with the theme colour */
+.master {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.75rem 1rem; border-radius: var(--md-shape-xl);
+  background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);
+  min-height: 4rem; cursor: pointer;
+  transition: background var(--md-dur-medium) var(--md-ease-standard), color var(--md-dur-medium) var(--md-ease-standard);
+}
+.master .text { flex: 1; display: flex; flex-direction: column; }
+.master .title { font-weight: 500; font-size: 1.1rem; }
+.master .sub { font-size: 0.85rem; opacity: 0.85; }
+.is-off .master { background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface-variant); }
+
+.controls { display: flex; flex-direction: column; gap: 0.75rem; transition: opacity var(--md-dur-medium) linear, filter var(--md-dur-medium) linear; }
+.is-off .controls { opacity: 0.38; filter: saturate(0.4); pointer-events: none; }
+
+.section-title { font-size: 0.9rem; font-weight: 500; color: var(--md-sys-color-primary); padding: 0.1rem 0 0.25rem; }
+
+/* Rows inside cards get rounded hover areas that bleed to the card edge */
+.card .row { margin: 0 -0.5rem; padding: 0.4rem 0.5rem; border-radius: var(--md-shape-md); cursor: pointer; }
+
+.columns-body { padding: 0.5rem 0 0.25rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.big-value { display: flex; align-items: baseline; gap: 0.5rem; }
+.big-value .num { display: inline-block; font-size: 3rem; font-weight: 500; line-height: 1; color: var(--md-sys-color-primary); min-width: 1ch; }
+.big-value .unit { color: var(--md-sys-color-on-surface-variant); }
+.columns-body .preview { margin-top: 0.6rem; }
+
+.notice {
+  display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem; padding: 0.75rem;
+  border-radius: var(--md-shape-md); background: var(--md-sys-color-surface-container-highest);
+}
+.notice .text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.notice .title { font-weight: 500; }
+.notice .sub { font-size: 0.85rem; color: var(--md-sys-color-on-surface-variant); }
+.notice .btn { padding: 0 1rem; }
+
+.popup-footer {
+  display: flex; justify-content: center; gap: 0.5rem;
+  padding: 0.1rem 0 0.25rem; font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant);
+}
+.snackbar { bottom: 0.75rem; }
+
+/* ---------- In-popup settings view ---------- */
+.back-btn { margin-right: 0.15rem; }
+.back-btn:not([hidden]) { animation: spin-in var(--md-dur-medium) var(--md-ease-decel); }
+.settings-frame {
+  flex: 1 1 auto; width: 100%; min-height: 0; border: 0; display: block;
+  background: var(--md-sys-color-surface);
+  animation: pane-in var(--md-dur-medium) linear;
+}
+.settings-frame[hidden] { display: none; }
+@keyframes pane-in { from { opacity: 0; } }
+.popup.view-settings .popup-body { display: none; }
+.popup.view-settings #logo, .popup.view-settings #viewTagline, .popup.view-settings #themeBtn, .popup.view-settings #settingsBtn { display: none; }
+.popup:not(.view-settings) .back-btn { display: none; }
+
+.landing-link { align-self: center; }
