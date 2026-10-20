@@ -1,4 +1,4 @@
-// LockSmith — word list used for Passphrase mode.
+// Password Generator — word list used for Passphrase mode.
 //
 // This is the standard BIP-39 English wordlist (2048 words), the same list
 // used by hardware crypto wallets to encode secure seed phrases. It was

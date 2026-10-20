@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "short_name": "Photo Converter",
+  "description": "__MSG_extDescription__",
+  "version": "3.0.0",
+  "author": "minhtrong67",
+  "minimum_chrome_version": "116",
+  "default_locale": "en",
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Photo Converter",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "background": { "service_worker": "js/background.js" },
+  "permissions": ["contextMenus", "downloads", "storage", "offscreen", "notifications"],
+  "host_permissions": ["<all_urls>"],
+  "sandbox": { "pages": ["index.html"] }
+}

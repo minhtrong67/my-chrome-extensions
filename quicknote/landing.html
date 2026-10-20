@@ -1,206 +1,495 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuickNote — Ghi chú nhanh theo phong cách Material You</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>QuickNote — Ghi chú nhanh, riêng tư, chuẩn Material Design 3</title>
+<meta name="description" content="QuickNote là tiện ích ghi chú cho Chrome & Edge: tự lưu khi gõ, ghim, nhãn màu, thùng rác an toàn, 18 màu Material Design, giao diện sáng/tối, tiếng Việt & English. Dữ liệu chỉ nằm trên máy bạn." />
+<meta name="keywords" content="QuickNote, ghi chú, note taking, browser extension, tiện ích Chrome, Material Design 3, Material You, ghi chú nhanh, chế độ tối, minhtrong67" />
+<meta name="author" content="minhtrong67" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#F5FAFC" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0E1415" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="QuickNote" />
+<meta name="format-detection" content="telephone=no" />
+<!-- Social sharing. Social crawlers need ABSOLUTE URLs: after you deploy this page, replace og:image / twitter:image
+     with the full address (e.g. https://your-domain/screenshots/og-cover.png) and add <link rel="canonical"> + og:url. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="QuickNote" />
+<meta property="og:title" content="QuickNote — Ghi chú nhanh, riêng tư, chuẩn Material Design 3" />
+<meta property="og:description" content="Tiện ích ghi chú cho trình duyệt: tự lưu, ghim, nhãn màu, 18 màu Material, sáng/tối, Việt/Anh. Dữ liệu ở lại trên máy bạn." />
+<meta property="og:image" content="screenshots/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Giao diện QuickNote với danh sách ghi chú và trình soạn thảo" />
+<meta property="og:locale" content="vi_VN" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="QuickNote — Quick, private notes in Material Design 3" />
+<meta name="twitter:description" content="A fast, private note-taking extension: autosave, pins, colour labels, 18 Material colours, light/dark, Vietnamese & English." />
+<meta name="twitter:image" content="screenshots/og-cover.png" />
+<meta name="twitter:image:alt" content="QuickNote popup showing the notes list and editor" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='30' fill='%2300BCD4'/%3E%3Cpath d='M38 24h35.5a8 8 0 0 1 5.7 2.4l17.4 17.4a8 8 0 0 1 2.4 5.7V92a12 12 0 0 1-12 12H38a12 12 0 0 1-12-12V36a12 12 0 0 1 12-12z' fill='%23fff'/%3E%3Cpath d='M74 24v18a8 8 0 0 0 8 8h18z' fill='%23B2EBF2'/%3E%3Crect x='40' y='62' width='48' height='8' rx='4' fill='%2300BCD4'/%3E%3Crect x='40' y='80' width='30' height='8' rx='4' fill='%2300BCD4' opacity='.55'/%3E%3C/svg%3E" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"QuickNote","applicationCategory":"ProductivityApplication","operatingSystem":"Chrome, Microsoft Edge","description":"A fast, private note-taking browser extension with a Material Design 3 interface.","softwareVersion":"3.0.0","inLanguage":["vi","en"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"minhtrong67"},"license":"https://opensource.org/licenses/MIT"}
+</script>
+<style>
+:root, [data-theme='light'] {
+  --md-primary: #006876;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #a1efff;
+  --md-on-primary-container: #004e59;
+  --md-secondary: #4a6268;
+  --md-on-secondary: #ffffff;
+  --md-secondary-container: #cde7ed;
+  --md-on-secondary-container: #334a50;
+  --md-tertiary: #545d7e;
+  --md-on-tertiary: #ffffff;
+  --md-tertiary-container: #dbe1ff;
+  --md-on-tertiary-container: #3c4665;
+  --md-error: #ba1a1a;
+  --md-on-error: #ffffff;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #93000a;
+  --md-surface: #f5fafc;
+  --md-on-surface: #171d1e;
+  --md-surface-variant: #dbe4e6;
+  --md-on-surface-variant: #3f484a;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #eff5f6;
+  --md-surface-container: #e9eff0;
+  --md-surface-container-high: #e3e9eb;
+  --md-surface-container-highest: #dee3e5;
+  --md-outline: #6f797b;
+  --md-outline-variant: #bfc8ca;
+  --md-inverse-surface: #2b3133;
+  --md-inverse-on-surface: #ecf2f3;
+  --md-inverse-primary: #83d3e3;
+  --md-tag-blue:#1565c0;--md-tag-green:#2e7d32;--md-tag-orange:#ef6c00;
+  --md-surface: #f5fafc;
+}
+[data-theme='dark'] {
+  --md-primary: #83d3e3;
+  --md-on-primary: #00363e;
+  --md-primary-container: #004e59;
+  --md-on-primary-container: #a1efff;
+  --md-secondary: #b1cbd1;
+  --md-on-secondary: #1c3439;
+  --md-secondary-container: #334a50;
+  --md-on-secondary-container: #cde7ed;
+  --md-tertiary: #bcc5eb;
+  --md-on-tertiary: #262f4d;
+  --md-tertiary-container: #3c4665;
+  --md-on-tertiary-container: #dbe1ff;
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+  --md-surface: #0e1416;
+  --md-on-surface: #dee3e5;
+  --md-surface-variant: #3f484a;
+  --md-on-surface-variant: #bfc8ca;
+  --md-surface-container-lowest: #090f10;
+  --md-surface-container-low: #171d1e;
+  --md-surface-container: #1b2122;
+  --md-surface-container-high: #252b2c;
+  --md-surface-container-highest: #303637;
+  --md-outline: #899295;
+  --md-outline-variant: #3f484a;
+  --md-inverse-surface: #dee3e5;
+  --md-inverse-on-surface: #2b3133;
+  --md-inverse-primary: #006876;
+  --md-tag-blue:#90caf9;--md-tag-green:#81c784;--md-tag-orange:#ffb68f;
+}
 
-  <link rel="icon" href="icons/icon48.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+:root {
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ease: cubic-bezier(.2, 0, 0, 1); --ease-out: cubic-bezier(.05, .7, .1, 1);
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 28px; --r-full: 999px;
+  --elev-1: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+  --elev-3: 0 1px 3px rgba(0,0,0,.3), 0 4px 8px 3px rgba(0,0,0,.15);
+  --wrap: 1120px;
+  scroll-behavior: smooth; scroll-padding-top: 84px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; color-scheme: light dark; }
+body { margin: 0; font: 400 16px/1.6 var(--font); background: var(--md-surface); color: var(--md-on-surface); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; padding: 0; }
+img, svg { max-width: 100%; }
+.lucide { flex: none; display: block; }
+:focus-visible { outline: 2px solid var(--md-primary); outline-offset: 3px; border-radius: 6px; }
+::selection { background: color-mix(in srgb, var(--md-primary) 28%, transparent); }
+.wrap { width: min(var(--wrap), 100% - 40px); margin-inline: auto; }
+.themed, .themed * { transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); }
 
-  <link rel="stylesheet" href="shared/theme.css" />
-  <link rel="stylesheet" href="landing.css" />
+/* ---------- buttons ---------- */
+.btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 28px; border-radius: var(--r-full); font-weight: 500; text-decoration: none; letter-spacing: .1px; transition: box-shadow .2s var(--ease), transform .2s var(--ease); }
+.btn::after { content: ''; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity .15s; }
+.btn:hover::after { opacity: .08; } .btn:active::after { opacity: .14; } .btn:active { transform: scale(.98); }
+.btn-filled { background: var(--md-primary); color: var(--md-on-primary); } .btn-filled:hover { box-shadow: var(--elev-1); }
+.btn-tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.btn-outline { border: 1px solid var(--md-outline); color: var(--md-primary); }
+.icon-btn { position: relative; width: 40px; height: 40px; display: inline-grid; place-items: center; border-radius: 50%; color: var(--md-on-surface-variant); transition: background-color .15s; }
+.icon-btn:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.pill { height: 40px; padding: 0 14px; border-radius: var(--r-full); font-weight: 500; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; color: var(--md-on-surface-variant); border: 1px solid var(--md-outline-variant); }
+.pill:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+
+/* ---------- nav ---------- */
+.nav { position: fixed; inset: 0 0 auto 0; z-index: 50; padding-top: env(safe-area-inset-top, 0px); transition: background-color .25s var(--ease), box-shadow .25s var(--ease); }
+.nav.scrolled { background: color-mix(in srgb, var(--md-surface-container) 88%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--md-outline-variant); }
+.nav-in { height: 68px; display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 19px; text-decoration: none; letter-spacing: -.2px; }
+.brand svg { border-radius: 9px; }
+.links { display: flex; gap: 4px; margin-left: 24px; }
+.links a { padding: 8px 14px; border-radius: var(--r-full); text-decoration: none; font-weight: 500; font-size: 14px; color: var(--md-on-surface-variant); transition: background-color .15s, color .15s; }
+.links a:hover, .links a.active { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.nav-tools { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+#menuBtn { display: none; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; padding: 148px 0 96px; overflow: hidden; isolation: isolate; }
+.blob { position: absolute; z-index: -1; border-radius: 50%; filter: blur(70px); opacity: .45; will-change: transform; }
+.blob.b1 { width: 520px; height: 520px; background: var(--md-primary-container); top: -120px; right: -120px; animation: drift 18s ease-in-out infinite alternate; }
+.blob.b2 { width: 420px; height: 420px; background: var(--md-tertiary-container); bottom: -140px; left: -120px; animation: drift 22s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate3d(-60px, 50px, 0) scale(1.12); } }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px; border-radius: var(--r-full); background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 13px; font-weight: 500; margin-bottom: 20px; }
+h1 { font-size: clamp(36px, 5.6vw, 64px); line-height: 1.07; letter-spacing: -.03em; font-weight: 600; }
+h1 em { font-style: normal; color: var(--md-primary); }
+.lead { font-size: clamp(16px, 2vw, 19px); color: var(--md-on-surface-variant); max-width: 540px; margin-top: 20px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 40px; }
+.stat b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -.02em; color: var(--md-primary); line-height: 1.1; }
+.stat span { font-size: 13px; color: var(--md-on-surface-variant); }
+
+/* ---------- popup mock ---------- */
+.mock-wrap { perspective: 1400px; container-type: inline-size; }
+.mock { font-size: calc(100cqw / 65); width: 100%; aspect-ratio: 780 / 580; border-radius: 2.2em; overflow: hidden; display: grid; grid-template-columns: 38% 1fr; background: var(--md-surface); border: 1px solid var(--md-outline-variant); box-shadow: 0 30px 70px -20px rgba(0,0,0,.35), var(--elev-3); animation: float 7s ease-in-out infinite; transform: rotateY(-8deg) rotateX(3deg); transform-origin: 60% 50%; }
+@keyframes float { 50% { transform: rotateY(-8deg) rotateX(3deg) translateY(-12px); } }
+.m-side { background: var(--md-surface-container-low); border-right: 1px solid var(--md-outline-variant); padding: 1.6em 1.3em; display: flex; flex-direction: column; gap: 1.1em; }
+.m-brand { display: flex; align-items: center; gap: .8em; font-weight: 600; font-size: 1.6em; }
+.m-search { height: 3.6em; border-radius: 99px; background: var(--md-surface-container-high); display: flex; align-items: center; gap: .8em; padding: 0 1.2em; color: var(--md-on-surface-variant); font-size: 1.15em; }
+.m-chips { display: flex; gap: .6em; font-size: 1.05em; }
+.m-chips span { padding: .5em .9em; border-radius: .8em; border: 1px solid var(--md-outline); color: var(--md-on-surface-variant); }
+.m-chips span.on { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; }
+.m-card { display: flex; gap: .9em; padding: .9em 1em; border-radius: 1.1em; opacity: 0; animation: cardIn .7s var(--ease-out) forwards; }
+.m-card:nth-of-type(1) { animation-delay: .5s; } .m-card:nth-of-type(2) { animation-delay: .7s; } .m-card:nth-of-type(3) { animation-delay: .9s; }
+@keyframes cardIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+.m-card.active { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.m-card i { width: .35em; border-radius: 4px; flex: none; }
+.m-card b { display: block; font-weight: 500; font-size: 1.25em; line-height: 1.3; }
+.m-card small { font-size: 1em; opacity: .75; }
+.m-fab { margin-top: auto; height: 4.4em; border-radius: 1.3em; background: var(--md-primary-container); color: var(--md-on-primary-container); display: flex; align-items: center; justify-content: center; gap: .8em; font-weight: 500; font-size: 1.25em; box-shadow: var(--elev-1); }
+.m-main { padding: 1.6em 2.2em; display: flex; flex-direction: column; gap: 1em; }
+.m-bar { display: flex; justify-content: flex-end; gap: 1.4em; color: var(--md-on-surface-variant); }
+.m-title { font-size: 2.5em; font-weight: 500; letter-spacing: -.02em; line-height: 1.2; }
+.m-line { height: .9em; border-radius: 99px; background: var(--md-surface-container-highest); }
+.m-text { font-size: 1.3em; line-height: 1.7; color: var(--md-on-surface-variant); border-top: 1px solid var(--md-outline-variant); padding-top: 1em; }
+.caret { display: inline-block; width: 2px; height: 1.1em; background: var(--md-primary); vertical-align: -.2em; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.m-saved { align-self: flex-start; padding: .35em 1em; border-radius: 99px; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); font-size: 1.05em; font-weight: 500; animation: savedPulse 4s ease-in-out infinite; }
+@keyframes savedPulse { 0%, 55% { opacity: 0; transform: translateY(-4px); } 62%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+
+/* ---------- sections ---------- */
+section { padding: 88px 0; }
+.sec-head { max-width: 640px; margin: 0 auto 52px; text-align: center; }
+.kicker { color: var(--md-primary); font-weight: 600; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+h2 { font-size: clamp(28px, 4vw, 42px); line-height: 1.15; letter-spacing: -.025em; font-weight: 600; margin-top: 10px; }
+.sec-head p { margin-top: 14px; color: var(--md-on-surface-variant); font-size: 17px; }
+.alt { background: var(--md-surface-container-low); }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card { background: var(--md-surface-container); border: 1px solid var(--md-outline-variant); border-radius: var(--r-xl); padding: 28px; transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), background-color .3s; }
+.card:hover { transform: translateY(-6px); box-shadow: var(--elev-3); }
+.ico { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: var(--md-primary-container); color: var(--md-on-primary-container); margin-bottom: 18px; transition: transform .35s var(--ease-out); }
+.card:hover .ico { transform: rotate(-6deg) scale(1.08); }
+.card h3 { font-size: 19px; font-weight: 600; letter-spacing: -.01em; }
+.card p { margin-top: 8px; color: var(--md-on-surface-variant); font-size: 15px; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
+.step { position: relative; background: var(--md-surface); border: 1px solid var(--md-outline-variant); border-radius: var(--r-xl); padding: 28px; }
+.step::before { counter-increment: s; content: counter(s); position: absolute; top: 24px; right: 26px; font-size: 56px; font-weight: 700; line-height: 1; color: var(--md-primary-container); }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; padding: 2px 8px; border-radius: 6px; background: var(--md-surface-container-highest); }
+.install-note { text-align: center; margin-top: 28px; color: var(--md-on-surface-variant); font-size: 14px; }
+
+.privacy { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.checks { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
+.checks li { display: flex; gap: 14px; align-items: flex-start; }
+.checks .tick { width: 28px; height: 28px; border-radius: 50%; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); display: grid; place-items: center; flex: none; margin-top: 1px; }
+.shield { aspect-ratio: 1; max-width: 360px; width: 100%; margin-inline: auto; border-radius: 42% 58% 55% 45% / 48% 42% 58% 52%; background: linear-gradient(135deg, var(--md-primary-container), var(--md-tertiary-container)); display: grid; place-items: center; color: var(--md-on-primary-container); animation: morph 12s ease-in-out infinite alternate; }
+@keyframes morph { to { border-radius: 58% 42% 45% 55% / 55% 58% 42% 45%; transform: rotate(4deg); } }
+
+.keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.key { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-radius: var(--r-lg); background: var(--md-surface-container); border: 1px solid var(--md-outline-variant); font-size: 15px; }
+kbd { font: 500 13px var(--font); padding: 4px 10px; border-radius: 8px; background: var(--md-surface-container-highest); border: 1px solid var(--md-outline-variant); border-bottom-width: 2px; white-space: nowrap; }
+
+.cta-band { text-align: center; border-radius: 40px; padding: 64px 24px; background: var(--md-primary-container); color: var(--md-on-primary-container); }
+.cta-band p { margin: 14px auto 28px; max-width: 520px; opacity: .85; }
+.cta-band .btn-filled { background: var(--md-primary); }
+
+footer { padding: 36px 0 calc(36px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--md-outline-variant); color: var(--md-on-surface-variant); font-size: 14px; }
+.foot { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+.foot b { color: var(--md-on-surface); font-weight: 600; }
+
+/* ---------- reveal ---------- */
+.rv { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); transition-delay: var(--d, 0ms); }
+.rv.in { opacity: 1; transform: none; }
+.no-js .rv { opacity: 1; transform: none; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .hero { padding-top: 120px; }
+  .hero-grid, .privacy { grid-template-columns: 1fr; gap: 44px; }
+  .mock { transform: none; animation: none; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .keys { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  #menuBtn { display: inline-grid; }
+  .links { position: absolute; top: calc(68px + env(safe-area-inset-top, 0px)); left: 12px; right: 12px; margin: 0; flex-direction: column; padding: 8px; border-radius: var(--r-lg); background: var(--md-surface-container-high); box-shadow: var(--elev-3); opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.98); transition: all .25s var(--ease-out); }
+  .links.open { opacity: 1; visibility: visible; transform: none; }
+  .links a { padding: 12px 16px; font-size: 16px; }
+  section { padding: 64px 0; }
+}
+@media (max-width: 560px) {
+  .grid, .keys { grid-template-columns: 1fr; }
+  .stats { gap: 20px; }
+  .cta .btn { flex: 1 1 100%; }
+  .pill span { display: none; }
+  .cta-band { border-radius: 28px; padding: 44px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .rv { opacity: 1; transform: none; }
+}
+</style>
 </head>
 <body>
 
-  <!-- ============================================================
-       NAV
-       ============================================================ -->
-  <header class="nav">
-    <div class="nav-inner">
-      <div class="brand">
-        <img src="icons/icon48.png" width="28" height="28" alt="QuickNote" />
-        <span>QuickNote</span>
-      </div>
-      <nav class="nav-links">
-        <a href="#features" data-i18n="landingNavFeatures"></a>
-        <a href="#privacy" data-i18n="landingNavPrivacy"></a>
-        <a href="#about" data-i18n="landingNavAbout"></a>
-      </nav>
-      <div class="nav-actions">
-        <button class="segment-btn md-ripple-host" id="langToggle">VI / EN</button>
-        <button class="filled-btn md-ripple-host" id="btnOpenApp">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span data-i18n="landingOpenApp"></span>
-        </button>
-      </div>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="QuickNote">
+      <svg width="34" height="34" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="30" fill="#00BCD4"/><path d="M38 24h35.5a8 8 0 0 1 5.7 2.4l17.4 17.4a8 8 0 0 1 2.4 5.7V92a12 12 0 0 1-12 12H38a12 12 0 0 1-12-12V36a12 12 0 0 1 12-12z" fill="#fff"/><path d="M74 24v18a8 8 0 0 0 8 8h18z" fill="#B2EBF2"/><rect x="40" y="62" width="48" height="8" rx="4" fill="#00BCD4"/><rect x="40" y="80" width="30" height="8" rx="4" fill="#00BCD4" opacity=".55"/></svg>
+      QuickNote
+    </a>
+    <nav class="links" id="links" aria-label="Main">
+      <a href="#features" data-i18n="navFeatures">Tính năng</a>
+      <a href="#install" data-i18n="navInstall">Cài đặt</a>
+      <a href="#privacy" data-i18n="navPrivacy">Riêng tư</a>
+      <a href="#shortcuts" data-i18n="navShortcuts">Phím tắt</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="pill" id="langBtn" data-i18n-title="langTitle" title="Đổi ngôn ngữ" aria-label="Đổi ngôn ngữ"><i data-icon="languages" data-size="18"></i><span id="langLabel">VI</span></button>
+      <button class="icon-btn" id="themeBtn" data-i18n-title="themeTitle" title="Đổi giao diện (hệ thống / sáng / tối)" aria-label="Đổi giao diện (hệ thống / sáng / tối)"><i data-icon="monitor" data-size="20"></i></button>
+      <button class="icon-btn" id="menuBtn" aria-label="Menu" aria-expanded="false"><i data-icon="menu" data-size="22"></i></button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-copy">
-        <span class="eyebrow" data-i18n="heroEyebrow"></span>
-        <h1 data-i18n="heroTitle"></h1>
-        <p data-i18n="heroSubtitle"></p>
-        <div class="hero-actions">
-          <button class="filled-btn lg md-ripple-host" id="btnHeroPrimary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-            <span data-i18n="heroCtaPrimary"></span>
-          </button>
-          <button class="outlined-btn lg md-ripple-host" id="btnHeroSecondary">
-            <span data-i18n="heroCtaSecondary"></span>
-          </button>
+<main id="top">
+  <!-- HERO -->
+  <section class="hero" style="padding-bottom:88px">
+    <span class="blob b1"></span><span class="blob b2"></span>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow rv"><i data-icon="badge-check" data-size="18"></i><span data-i18n="eyebrow">Tiện ích cho Chrome, Edge & Brave</span></span>
+        <h1 class="rv" style="--d:60ms" data-i18n-html="heroTitle">Ghi chú nhanh,<br /><em>ngay trên thanh công cụ.</em></h1>
+        <p class="lead rv" style="--d:120ms" data-i18n="heroLead">QuickNote là tiện ích ghi chú riêng tư với giao diện Material Design 3: tự lưu khi gõ, ghim, nhãn màu, thùng rác an toàn — và mọi dữ liệu ở lại trên máy của bạn.</p>
+        <div class="cta rv" style="--d:180ms">
+          <a class="btn btn-filled" href="#install"><i data-icon="download" data-size="20"></i><span data-i18n="ctaInstall">Cài đặt ngay</span></a>
+          <a class="btn btn-tonal" href="#features"><i data-icon="sparkles" data-size="20"></i><span data-i18n="ctaFeatures">Khám phá tính năng</span></a>
         </div>
-        <div class="stat-row">
-          <div class="stat"><strong>∞</strong><span data-i18n="statNotes"></span></div>
-          <div class="stat"><strong>100%</strong><span data-i18n="statPrivate"></span></div>
-          <div class="stat"><strong>VI / EN</strong><span data-i18n="statLang"></span></div>
-          <div class="stat"><strong>0đ</strong><span data-i18n="statFree"></span></div>
+        <div class="stats rv" style="--d:240ms">
+          <div class="stat"><b>18</b><span data-i18n="stat1">màu Material Design</span></div>
+          <div class="stat"><b>3</b><span data-i18n="stat2">chế độ giao diện</span></div>
+          <div class="stat"><b>0</b><span data-i18n="stat3">dữ liệu gửi đi</span></div>
         </div>
       </div>
 
-      <div class="hero-art" aria-hidden="true">
-        <div class="mock-window">
-          <div class="mock-topbar">
-            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+      <div class="mock-wrap rv" style="--d:200ms" aria-hidden="true">
+        <div class="mock">
+          <div class="m-side">
+            <div class="m-brand"><svg width="26" height="26" viewBox="0 0 128 128"><rect width="128" height="128" rx="30" fill="#00BCD4"/><path d="M38 24h35.5a8 8 0 0 1 5.7 2.4l17.4 17.4a8 8 0 0 1 2.4 5.7V92a12 12 0 0 1-12 12H38a12 12 0 0 1-12-12V36a12 12 0 0 1 12-12z" fill="#fff"/><rect x="40" y="62" width="48" height="8" rx="4" fill="#00BCD4"/><rect x="40" y="80" width="30" height="8" rx="4" fill="#00BCD4" opacity=".55"/></svg>QuickNote</div>
+            <div class="m-search"><i data-icon="search" data-size="16"></i><span data-i18n="mSearch">Tìm kiếm ghi chú…</span></div>
+            <div class="m-chips"><span class="on" data-i18n="mAll">Tất cả</span><span data-i18n="mPinned">Đã ghim</span><span data-i18n="mTrash">Thùng rác</span></div>
+            <div class="m-card active"><i style="background:var(--md-tag-blue)"></i><div><b data-i18n="mNote1">Ý tưởng dự án</b><small data-i18n="mTime1">5 phút trước</small></div></div>
+            <div class="m-card"><i style="background:var(--md-tag-green)"></i><div><b data-i18n="mNote2">Danh sách mua sắm</b><small data-i18n="mTime2">3 giờ trước</small></div></div>
+            <div class="m-card"><i style="background:var(--md-tag-orange)"></i><div><b data-i18n="mNote3">Họp sprint 24</b><small data-i18n="mTime3">17 thg 10</small></div></div>
+            <div class="m-fab"><i data-icon="plus" data-size="18"></i><span data-i18n="mNew">Ghi chú mới</span></div>
           </div>
-          <div class="mock-body">
-            <div class="mock-sidebar">
-              <div class="mock-search"></div>
-              <div class="mock-card mock-card-active"></div>
-              <div class="mock-card"></div>
-              <div class="mock-card"></div>
-              <div class="mock-card short"></div>
-            </div>
-            <div class="mock-editor">
-              <div class="mock-title"></div>
-              <div class="mock-line"></div>
-              <div class="mock-line"></div>
-              <div class="mock-line short"></div>
-            </div>
+          <div class="m-main">
+            <div class="m-bar"><i data-icon="pin" data-size="18"></i><i data-icon="tag" data-size="18"></i><i data-icon="copy" data-size="18"></i><i data-icon="settings" data-size="18"></i></div>
+            <span class="m-saved" data-i18n="mSaved">✓ Đã lưu</span>
+            <div class="m-title" data-i18n="mNote1">Ý tưởng dự án</div>
+            <div class="m-text"><span data-i18n="mBody">Thêm chế độ tối tự động, đồng bộ màu Material, xuất nhập CSV. Ưu tiên hiệu năng và quyền riêng tư</span><span class="caret"></span></div>
+            <div class="m-line" style="width:72%"></div><div class="m-line" style="width:54%"></div>
           </div>
         </div>
-        <img class="hero-logo-float" src="icons/icon128.png" width="72" height="72" alt="" />
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       FEATURES
-       ============================================================ -->
-  <section class="features" id="features">
-    <div class="section-inner">
-      <h2 data-i18n="featuresHeading"></h2>
-      <p class="section-sub" data-i18n="featuresSubheading"></p>
-
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          <h3 data-i18n="feat1Title"></h3><p data-i18n="feat1Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.6-4.5-8.4-10-8.4z"/></svg></div>
-          <h3 data-i18n="feat2Title"></h3><p data-i18n="feat2Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></div>
-          <h3 data-i18n="feat3Title"></h3><p data-i18n="feat3Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg></div>
-          <h3 data-i18n="feat4Title"></h3><p data-i18n="feat4Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
-          <h3 data-i18n="feat5Title"></h3><p data-i18n="feat5Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-          <h3 data-i18n="feat6Title"></h3><p data-i18n="feat6Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-          <h3 data-i18n="feat7Title"></h3><p data-i18n="feat7Desc"></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-          <h3 data-i18n="feat8Title"></h3><p data-i18n="feat8Desc"></p>
-        </div>
+  <!-- FEATURES -->
+  <section id="features" class="alt">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="kicker" data-i18n="featKicker">Tính năng</span><h2 data-i18n="featTitle">Mọi thứ bạn cần, không thừa thứ nào</h2><p data-i18n="featLead">Gọn nhẹ như một tờ giấy nhớ, nhưng đủ sức quản lý hàng trăm ghi chú.</p></div>
+      <div class="grid">
+                <article class="card rv"><div class="ico"><i data-icon="zap" data-size="26"></i></div><h3 data-i18n="f1t">Mở tức thì, tự động lưu</h3><p data-i18n="f1d">Bấm biểu tượng hoặc Alt+Shift+N. Mọi thay đổi được lưu ngay khi gõ — kể cả khi popup đóng đột ngột.</p></article>
+        <article class="card rv" style="--d:80ms"><div class="ico"><i data-icon="palette" data-size="26"></i></div><h3 data-i18n="f2t">18 màu Material Design</h3><p data-i18n="f2d">Chọn màu chủ đạo, toàn bộ giao diện tự sinh bảng màu Material 3 hài hoà cho cả sáng và tối.</p></article>
+        <article class="card rv" style="--d:160ms"><div class="ico"><i data-icon="sun" data-size="26"></i></div><h3 data-i18n="f3t">Sáng · Tối · Theo hệ thống</h3><p data-i18n="f3d">Tự động theo giao diện của hệ điều hành, hoặc cố định theo ý bạn với chuyển màu mượt mà.</p></article>
+        <article class="card rv"><div class="ico"><i data-icon="languages" data-size="26"></i></div><h3 data-i18n="f4t">Tiếng Việt & English</h3><p data-i18n="f4d">Tự nhận diện ngôn ngữ trình duyệt và đổi qua lại chỉ với một cú nhấp.</p></article>
+        <article class="card rv" style="--d:80ms"><div class="ico"><i data-icon="pin" data-size="26"></i></div><h3 data-i18n="f5t">Ghim & nhãn màu</h3><p data-i18n="f5d">Ghim ghi chú quan trọng lên đầu danh sách và gắn 6 nhãn màu để phân loại trực quan.</p></article>
+        <article class="card rv" style="--d:160ms"><div class="ico"><i data-icon="archive-restore" data-size="26"></i></div><h3 data-i18n="f6t">Thùng rác an toàn</h3><p data-i18n="f6d">Ghi chú bị xoá được giữ 30 ngày, có nút Hoàn tác ngay sau khi xoá và khôi phục bất cứ lúc nào.</p></article>
+        <article class="card rv"><div class="ico"><i data-icon="arrow-up-down" data-size="26"></i></div><h3 data-i18n="f7t">Nhập / xuất linh hoạt</h3><p data-i18n="f7d">Sao lưu và chuyển ghi chú qua các định dạng JSON, CSV, Markdown và văn bản thuần.</p></article>
+        <article class="card rv" style="--d:80ms"><div class="ico"><i data-icon="shield-check" data-size="26"></i></div><h3 data-i18n="f8t">Riêng tư tuyệt đối</h3><p data-i18n="f8d">Không tài khoản, không máy chủ, không theo dõi. Ghi chú chỉ nằm trên máy bạn.</p></article>
+        <article class="card rv" style="--d:160ms"><div class="ico"><i data-icon="search" data-size="26"></i></div><h3 data-i18n="f9t">Tìm kiếm thông minh</h3><p data-i18n="f9d">Gõ không dấu vẫn tìm ra “cà phê”. Sắp xếp theo ngày sửa, ngày tạo hoặc A–Z.</p></article>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       INSTALL GUIDE (manual / load-unpacked — honest for a source
-       distribution that isn't on the Web Store yet)
-       ============================================================ -->
-  <section class="install" id="install">
-    <div class="section-inner">
-      <h2 data-i18n="installHeading"></h2>
-      <ol class="install-steps" id="installSteps">
-        <li><span>1</span><div><strong data-i18n="installStep1Title"></strong><p data-i18n="installStep1Desc"></p></div></li>
-        <li><span>2</span><div><strong data-i18n="installStep2Title"></strong><p data-i18n="installStep2Desc"></p></div></li>
-        <li><span>3</span><div><strong data-i18n="installStep3Title"></strong><p data-i18n="installStep3Desc"></p></div></li>
-        <li><span>4</span><div><strong data-i18n="installStep4Title"></strong><p data-i18n="installStep4Desc"></p></div></li>
-        <li><span>5</span><div><strong data-i18n="installStep5Title"></strong><p data-i18n="installStep5Desc"></p></div></li>
-      </ol>
+  <!-- INSTALL -->
+  <section id="install">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="kicker" data-i18n="insKicker">Cài đặt</span><h2 data-i18n="insTitle">Sẵn sàng trong chưa đầy một phút</h2><p data-i18n="insLead">Cài thủ công từ mã nguồn qua chế độ nhà phát triển.</p></div>
+      <div class="steps">
+        <div class="step rv"><div class="ico"><i data-icon="package" data-size="26"></i></div><h3 data-i18n="s1t">Tải mã nguồn</h3><p data-i18n-html="s1d">Tải và giải nén thư mục <code>quicknote</code> về máy.</p></div>
+        <div class="step rv" style="--d:90ms"><div class="ico"><i data-icon="settings" data-size="26"></i></div><h3 data-i18n="s2t">Mở trang tiện ích</h3><p data-i18n-html="s2d">Vào <code>chrome://extensions</code> (hoặc <code>edge://extensions</code>) và bật <b>Developer mode</b>.</p></div>
+        <div class="step rv" style="--d:180ms"><div class="ico"><i data-icon="mouse-pointer-click" data-size="26"></i></div><h3 data-i18n="s3t">Nạp thư mục</h3><p data-i18n-html="s3d">Nhấn <b>Load unpacked</b>, chọn thư mục QuickNote rồi ghim biểu tượng lên thanh công cụ.</p></div>
+      </div>
+      <p class="install-note rv" data-i18n="insNote">Dùng được trên Chrome, Edge, Brave và các trình duyệt Chromium hỗ trợ Manifest V3.</p>
     </div>
   </section>
 
-  <!-- ============================================================
-       PRIVACY
-       ============================================================ -->
-  <section class="privacy" id="privacy">
-    <div class="section-inner narrow">
-      <div class="privacy-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      <h2 data-i18n="privacyHeading"></h2>
-      <p data-i18n="privacyBody"></p>
+  <!-- PRIVACY -->
+  <section id="privacy" class="alt">
+    <div class="wrap privacy">
+      <div class="rv">
+        <span class="kicker" data-i18n="prvKicker">Quyền riêng tư</span><h2 data-i18n="prvTitle">Ghi chú của bạn, chỉ của bạn</h2>
+        <p style="margin-top:14px;color:var(--md-on-surface-variant);font-size:17px" data-i18n="prvLead">QuickNote được thiết kế để không bao giờ cần đến internet.</p>
+        <ul class="checks">
+          <li><span class="tick"><i data-icon="check" data-size="16" data-stroke="3"></i></span><span data-i18n-html="p1">Ghi chú được lưu bằng <code>chrome.storage.local</code> ngay trên máy bạn.</span></li>
+          <li><span class="tick"><i data-icon="check" data-size="16" data-stroke="3"></i></span><span data-i18n-html="p2">Chỉ xin hai quyền: <code>storage</code> và <code>unlimitedStorage</code>.</span></li>
+          <li><span class="tick"><i data-icon="check" data-size="16" data-stroke="3"></i></span><span data-i18n="p3">Không tải font, script hay tài nguyên nào từ internet — chạy hoàn toàn offline.</span></li>
+          <li><span class="tick"><i data-icon="check" data-size="16" data-stroke="3"></i></span><span data-i18n="p4">Không tài khoản, không quảng cáo, không theo dõi.</span></li>
+        </ul>
+      </div>
+      <div class="rv" style="--d:120ms" aria-hidden="true"><div class="shield"><i data-icon="shield-check" data-size="120" data-stroke="1.25"></i></div></div>
     </div>
   </section>
 
-  <!-- ============================================================
-       ABOUT
-       ============================================================ -->
-  <section class="about" id="about">
-    <div class="section-inner narrow">
-      <img src="icons/icon128.png" width="56" height="56" alt="QuickNote" />
-      <h2 data-i18n="aboutHeading"></h2>
-      <p data-i18n="aboutBody"></p>
-      <div class="credit-pill">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>gnort67</span>
-        <span class="credit-dot">·</span>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2-6.3-4.6-6.3 4.6 2.3-7.2-6-4.6h7.6z"/></svg>
-        <span>Claude AI (Anthropic)</span>
+  <!-- SHORTCUTS -->
+  <section id="shortcuts">
+    <div class="wrap">
+      <div class="sec-head rv"><span class="kicker" data-i18n="keyKicker">Phím tắt</span><h2 data-i18n="keyTitle">Làm việc nhanh hơn với bàn phím</h2></div>
+      <div class="keys">
+        <div class="key rv"><span data-i18n="k1">Mở QuickNote</span><kbd>Alt + Shift + N</kbd></div>
+        <div class="key rv" style="--d:60ms"><span data-i18n="k2">Ghi chú mới</span><kbd>Alt + N</kbd></div>
+        <div class="key rv" style="--d:120ms"><span data-i18n="k3">Tìm kiếm</span><kbd>Alt + F</kbd></div>
+        <div class="key rv"><span data-i18n="k4">Ghim / bỏ ghim</span><kbd>Alt + P</kbd></div>
+        <div class="key rv" style="--d:60ms"><span data-i18n="k5">Lưu ngay</span><kbd>Ctrl + S</kbd></div>
+        <div class="key rv" style="--d:120ms"><span data-i18n="k6">Đóng hộp thoại</span><kbd>Esc</kbd></div>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       FOOTER
-       ============================================================ -->
-  <footer class="footer">
-    <div class="section-inner footer-inner">
-      <div class="brand">
-        <img src="icons/icon48.png" width="22" height="22" alt="QuickNote" />
-        <span>QuickNote</span>
-      </div>
-      <p data-i18n="footerTagline"></p>
-      <p class="footer-rights" data-i18n="footerRights"></p>
-    </div>
-  </footer>
+  <!-- CTA -->
+  <section style="padding-top:0">
+    <div class="wrap"><div class="cta-band rv">
+      <h2 data-i18n="bandTitle">Bắt đầu ghi chú ngay hôm nay</h2><p data-i18n="bandLead">Miễn phí, mã nguồn mở, nhẹ như một tờ giấy nhớ.</p>
+      <a class="btn btn-filled" href="#install"><i data-icon="download" data-size="20"></i><span data-i18n="ctaInstall">Cài đặt ngay</span></a>
+    </div></div>
+  </section>
+</main>
 
-  <div class="snackbar" id="snackbar"><span id="snackbarText"></span></div>
+<footer>
+  <div class="wrap foot">
+    <span><b>QuickNote</b> v3.0.0 · MIT License</span>
+    <span data-i18n-html="credit">Làm bởi <b>minhtrong67</b> · hỗ trợ bởi AI <b>Claude</b> (Anthropic)</span>
+  </div>
+</footer>
 
-  <script src="shared/i18n.js"></script>
-  <script src="shared/settings.js"></script>
-  <script src="shared/ripple.js"></script>
-  <script src="landing.js"></script>
+<script>
+(function () {
+  'use strict';
+  var I18N = {"vi": {"navFeatures": "Tính năng", "navInstall": "Cài đặt", "navPrivacy": "Riêng tư", "navShortcuts": "Phím tắt", "langTitle": "Đổi ngôn ngữ", "themeTitle": "Đổi giao diện (hệ thống / sáng / tối)", "eyebrow": "Tiện ích cho Chrome, Edge & Brave", "heroTitle": "Ghi chú nhanh,<br /><em>ngay trên thanh công cụ.</em>", "heroLead": "QuickNote là tiện ích ghi chú riêng tư với giao diện Material Design 3: tự lưu khi gõ, ghim, nhãn màu, thùng rác an toàn — và mọi dữ liệu ở lại trên máy của bạn.", "ctaInstall": "Cài đặt ngay", "ctaFeatures": "Khám phá tính năng", "stat1": "màu Material Design", "stat2": "chế độ giao diện", "stat3": "dữ liệu gửi đi", "mSearch": "Tìm kiếm ghi chú…", "mAll": "Tất cả", "mPinned": "Đã ghim", "mTrash": "Thùng rác", "mNote1": "Ý tưởng dự án", "mTime1": "5 phút trước", "mNote2": "Danh sách mua sắm", "mTime2": "3 giờ trước", "mNote3": "Họp sprint 24", "mTime3": "17 thg 10", "mNew": "Ghi chú mới", "mSaved": "✓ Đã lưu", "mBody": "Thêm chế độ tối tự động, đồng bộ màu Material, xuất nhập CSV. Ưu tiên hiệu năng và quyền riêng tư", "featKicker": "Tính năng", "featTitle": "Mọi thứ bạn cần, không thừa thứ nào", "featLead": "Gọn nhẹ như một tờ giấy nhớ, nhưng đủ sức quản lý hàng trăm ghi chú.", "f1t": "Mở tức thì, tự động lưu", "f1d": "Bấm biểu tượng hoặc Alt+Shift+N. Mọi thay đổi được lưu ngay khi gõ — kể cả khi popup đóng đột ngột.", "f2t": "18 màu Material Design", "f2d": "Chọn màu chủ đạo, toàn bộ giao diện tự sinh bảng màu Material 3 hài hoà cho cả sáng và tối.", "f3t": "Sáng · Tối · Theo hệ thống", "f3d": "Tự động theo giao diện của hệ điều hành, hoặc cố định theo ý bạn với chuyển màu mượt mà.", "f4t": "Tiếng Việt & English", "f4d": "Tự nhận diện ngôn ngữ trình duyệt và đổi qua lại chỉ với một cú nhấp.", "f5t": "Ghim & nhãn màu", "f5d": "Ghim ghi chú quan trọng lên đầu danh sách và gắn 6 nhãn màu để phân loại trực quan.", "f6t": "Thùng rác an toàn", "f6d": "Ghi chú bị xoá được giữ 30 ngày, có nút Hoàn tác ngay sau khi xoá và khôi phục bất cứ lúc nào.", "f7t": "Nhập / xuất linh hoạt", "f7d": "Sao lưu và chuyển ghi chú qua các định dạng JSON, CSV, Markdown và văn bản thuần.", "f8t": "Riêng tư tuyệt đối", "f8d": "Không tài khoản, không máy chủ, không theo dõi. Ghi chú chỉ nằm trên máy bạn.", "f9t": "Tìm kiếm thông minh", "f9d": "Gõ không dấu vẫn tìm ra “cà phê”. Sắp xếp theo ngày sửa, ngày tạo hoặc A–Z.", "insKicker": "Cài đặt", "insTitle": "Sẵn sàng trong chưa đầy một phút", "insLead": "Cài thủ công từ mã nguồn qua chế độ nhà phát triển.", "s1t": "Tải mã nguồn", "s1d": "Tải và giải nén thư mục <code>quicknote</code> về máy.", "s2t": "Mở trang tiện ích", "s2d": "Vào <code>chrome://extensions</code> (hoặc <code>edge://extensions</code>) và bật <b>Developer mode</b>.", "s3t": "Nạp thư mục", "s3d": "Nhấn <b>Load unpacked</b>, chọn thư mục QuickNote rồi ghim biểu tượng lên thanh công cụ.", "insNote": "Dùng được trên Chrome, Edge, Brave và các trình duyệt Chromium hỗ trợ Manifest V3.", "prvKicker": "Quyền riêng tư", "prvTitle": "Ghi chú của bạn, chỉ của bạn", "prvLead": "QuickNote được thiết kế để không bao giờ cần đến internet.", "p1": "Ghi chú được lưu bằng <code>chrome.storage.local</code> ngay trên máy bạn.", "p2": "Chỉ xin hai quyền: <code>storage</code> và <code>unlimitedStorage</code>.", "p3": "Không tải font, script hay tài nguyên nào từ internet — chạy hoàn toàn offline.", "p4": "Không tài khoản, không quảng cáo, không theo dõi.", "keyKicker": "Phím tắt", "keyTitle": "Làm việc nhanh hơn với bàn phím", "k1": "Mở QuickNote", "k2": "Ghi chú mới", "k3": "Tìm kiếm", "k4": "Ghim / bỏ ghim", "k5": "Lưu ngay", "k6": "Đóng hộp thoại", "bandTitle": "Bắt đầu ghi chú ngay hôm nay", "bandLead": "Miễn phí, mã nguồn mở, nhẹ như một tờ giấy nhớ.", "credit": "Làm bởi <b>minhtrong67</b> · hỗ trợ bởi AI <b>Claude</b> (Anthropic)", "docTitle": "QuickNote — Ghi chú nhanh, riêng tư, chuẩn Material Design 3", "docDesc": "QuickNote là tiện ích ghi chú cho Chrome & Edge: tự lưu khi gõ, ghim, nhãn màu, thùng rác an toàn, 18 màu Material Design, giao diện sáng/tối, tiếng Việt & English. Dữ liệu chỉ nằm trên máy bạn."}, "en": {"navFeatures": "Features", "navInstall": "Install", "navPrivacy": "Privacy", "navShortcuts": "Shortcuts", "langTitle": "Switch language", "themeTitle": "Switch theme (system / light / dark)", "eyebrow": "Extension for Chrome, Edge & Brave", "heroTitle": "Quick notes,<br /><em>one click away.</em>", "heroLead": "QuickNote is a private note-taking extension with a Material Design 3 interface: autosave, pins, colour labels and a safe trash — and everything stays on your device.", "ctaInstall": "Install now", "ctaFeatures": "Explore features", "stat1": "Material colours", "stat2": "appearance modes", "stat3": "bytes sent anywhere", "mSearch": "Search notes…", "mAll": "All", "mPinned": "Pinned", "mTrash": "Trash", "mNote1": "Project ideas", "mTime1": "5m ago", "mNote2": "Shopping list", "mTime2": "3h ago", "mNote3": "Sprint 24 meeting", "mTime3": "17 Oct", "mNew": "New note", "mSaved": "✓ Saved", "mBody": "Add automatic dark mode, sync Material colours, CSV import/export. Prioritise performance and privacy", "featKicker": "Features", "featTitle": "Everything you need, nothing you don’t", "featLead": "As light as a sticky note, yet ready to manage hundreds of notes.", "f1t": "Instant open, autosave", "f1d": "Click the icon or press Alt+Shift+N. Every change is saved as you type — even if the popup closes abruptly.", "f2t": "18 Material Design colours", "f2d": "Pick an accent and the whole UI generates a harmonious Material 3 palette for light and dark.", "f3t": "Light · Dark · System", "f3d": "Follow your operating system automatically or lock your choice, with smooth colour transitions.", "f4t": "Vietnamese & English", "f4d": "Detects your browser language and switches back and forth in one click.", "f5t": "Pins & colour labels", "f5d": "Pin important notes to the top and tag them with six colour labels for quick scanning.", "f6t": "Safe trash", "f6d": "Deleted notes are kept for 30 days, with an Undo action right after deleting and restore any time.", "f7t": "Flexible import / export", "f7d": "Back up and move notes with JSON, CSV, Markdown and plain-text files.", "f8t": "Truly private", "f8d": "No account, no server, no tracking. Your notes live only on your device.", "f9t": "Smart search", "f9d": "Type without accents and still find “cà phê”. Sort by last edited, created, or A–Z.", "insKicker": "Install", "insTitle": "Ready in under a minute", "insLead": "Install from source using developer mode.", "s1t": "Get the source", "s1d": "Download and unzip the <code>quicknote</code> folder.", "s2t": "Open the extensions page", "s2d": "Go to <code>chrome://extensions</code> (or <code>edge://extensions</code>) and turn on <b>Developer mode</b>.", "s3t": "Load the folder", "s3d": "Click <b>Load unpacked</b>, choose the QuickNote folder, then pin the icon to your toolbar.", "insNote": "Works on Chrome, Edge, Brave and other Chromium browsers that support Manifest V3.", "prvKicker": "Privacy", "prvTitle": "Your notes, only yours", "prvLead": "QuickNote is designed to never need the internet.", "p1": "Notes are stored with <code>chrome.storage.local</code> on your own device.", "p2": "Only two permissions are requested: <code>storage</code> and <code>unlimitedStorage</code>.", "p3": "No fonts, scripts or resources are fetched from the internet — it works fully offline.", "p4": "No accounts, no ads, no tracking.", "keyKicker": "Shortcuts", "keyTitle": "Move faster with your keyboard", "k1": "Open QuickNote", "k2": "New note", "k3": "Search", "k4": "Pin / unpin", "k5": "Save now", "k6": "Close dialogs", "bandTitle": "Start taking notes today", "bandLead": "Free, open source and as light as a sticky note.", "credit": "Made by <b>minhtrong67</b> · AI support: <b>Claude</b> (Anthropic)", "docTitle": "QuickNote — Quick, private notes in Material Design 3", "docDesc": "QuickNote is a note-taking extension for Chrome & Edge: autosave, pins, colour labels, safe trash, 18 Material Design colours, light/dark theme, Vietnamese & English. Your data stays on your device."}};
+  var ICONS = {"archive-restore": "<rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\"/> <path d=\"M4 8v11a2 2 0 0 0 2 2h2\"/> <path d=\"M20 8v11a2 2 0 0 1-2 2h-2\"/> <path d=\"m9 15 3-3 3 3\"/> <path d=\"M12 12v9\"/>", "arrow-up-down": "<path d=\"m21 16-4 4-4-4\"/> <path d=\"M17 20V4\"/> <path d=\"m3 8 4-4 4 4\"/> <path d=\"M7 4v16\"/>", "badge-check": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\"/> <path d=\"m16 9-5.5 5.5L8 12\"/>", "check": "<path d=\"M20 6 9 17l-5-5\"/>", "copy": "<rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\"/> <path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"/>", "download": "<path d=\"M12 15V3\"/> <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/> <path d=\"m7 10 5 5 5-5\"/>", "languages": "<path d=\"m5 8 6 6\"/> <path d=\"m4 14 6-6 2-3\"/> <path d=\"M2 5h12\"/> <path d=\"M7 2h1\"/> <path d=\"m22 22-5-10-5 10\"/> <path d=\"M14 18h6\"/>", "menu": "<path d=\"M4 5h16\"/> <path d=\"M4 12h16\"/> <path d=\"M4 19h16\"/>", "monitor": "<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\"/> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\"/> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\"/>", "moon": "<path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\"/>", "mouse-pointer-click": "<path d=\"M14 4.1 12 6\"/> <path d=\"m5.1 8-2.9-.8\"/> <path d=\"m6 12-1.9 2\"/> <path d=\"M7.2 2.2 8 5.1\"/> <path d=\"M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z\"/>", "package": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\"/> <path d=\"M12 22V12\"/> <polyline points=\"3.29 7 12 12 20.71 7\"/> <path d=\"m7.5 4.27 9 5.15\"/>", "palette": "<path d=\"M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z\"/> <circle cx=\"13.5\" cy=\"6.5\" r=\".5\" fill=\"currentColor\"/> <circle cx=\"17.5\" cy=\"10.5\" r=\".5\" fill=\"currentColor\"/> <circle cx=\"6.5\" cy=\"12.5\" r=\".5\" fill=\"currentColor\"/> <circle cx=\"8.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\"/>", "pin": "<path d=\"M12 17v5\"/> <path d=\"M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z\"/>", "plus": "<path d=\"M5 12h14\"/> <path d=\"M12 5v14\"/>", "search": "<path d=\"m21 21-4.34-4.34\"/> <circle cx=\"11\" cy=\"11\" r=\"8\"/>", "settings": "<path d=\"M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915\"/> <circle cx=\"12\" cy=\"12\" r=\"3\"/>", "shield-check": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/> <path d=\"m9 12 2 2 4-4\"/>", "sparkles": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\"/> <path d=\"M20 2v4\"/> <path d=\"M22 4h-4\"/> <circle cx=\"4\" cy=\"20\" r=\"2\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/> <path d=\"M12 2v2\"/> <path d=\"M12 20v2\"/> <path d=\"m4.93 4.93 1.41 1.41\"/> <path d=\"m17.66 17.66 1.41 1.41\"/> <path d=\"M2 12h2\"/> <path d=\"M20 12h2\"/> <path d=\"m6.34 17.66-1.41 1.41\"/> <path d=\"m19.07 4.93-1.41 1.41\"/>", "tag": "<path d=\"M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z\"/> <circle cx=\"7.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\"/>", "zap": "<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\"/>"};
+  var root = document.documentElement;
+
+  /* sandboxed extension pages have no storage — every access is guarded */
+  function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function write(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var hash = {};
+  location.hash.slice(1).split('&').forEach(function (p) { var kv = p.split('='); if (kv[0]) hash[kv[0]] = decodeURIComponent(kv[1] || ''); });
+  var lang = ['vi', 'en'].indexOf(hash.lang) > -1 ? hash.lang : (['vi', 'en'].indexOf(read('qn-lang')) > -1 ? read('qn-lang') : (/^vi/i.test(navigator.language || '') ? 'vi' : 'en'));
+  var theme = ['system', 'light', 'dark'].indexOf(hash.theme) > -1 ? hash.theme : (['system', 'light', 'dark'].indexOf(read('qn-theme')) > -1 ? read('qn-theme') : 'system');
+
+  function icon(name, size, stroke) {
+    var body = ICONS[name]; if (!body) return null;
+    var t = document.createElement('template');
+    t.innerHTML = '<svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + stroke + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
+    return t.content.firstChild;
+  }
+  function mountIcons(scope) {
+    (scope || document).querySelectorAll('i[data-icon]').forEach(function (el) {
+      var n = icon(el.dataset.icon, el.dataset.size || 18, el.dataset.stroke || 2);
+      if (n) el.replaceWith(n);
+    });
+  }
+  mountIcons();
+
+  var themeBtn = document.getElementById('themeBtn');
+  var mq = matchMedia('(prefers-color-scheme: dark)');
+  function applyTheme(animate) {
+    if (animate) { root.classList.add('themed'); setTimeout(function () { root.classList.remove('themed'); }, 400); }
+    root.setAttribute('data-theme', theme === 'dark' || (theme === 'system' && mq.matches) ? 'dark' : 'light');
+    var n = icon(theme === 'system' ? 'monitor' : theme === 'dark' ? 'moon' : 'sun', 20, 2);
+    themeBtn.replaceChildren(n);
+  }
+  function applyLang() {
+    var d = I18N[lang];
+    root.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = d[el.dataset.i18n]; });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (el) { el.innerHTML = d[el.dataset.i18nHtml]; });
+    document.querySelectorAll('[data-i18n-title]').forEach(function (el) { el.title = d[el.dataset.i18nTitle]; el.setAttribute('aria-label', d[el.dataset.i18nTitle]); });
+    document.title = d.docTitle;
+    var m = document.querySelector('meta[name="description"]'); if (m) m.content = d.docDesc;
+    document.getElementById('langLabel').textContent = lang.toUpperCase();
+  }
+  document.getElementById('langBtn').addEventListener('click', function () { lang = lang === 'vi' ? 'en' : 'vi'; write('qn-lang', lang); applyLang(); });
+  themeBtn.addEventListener('click', function () { theme = { system: 'light', light: 'dark', dark: 'system' }[theme]; write('qn-theme', theme); applyTheme(true); });
+  mq.addEventListener('change', function () { if (theme === 'system') applyTheme(true); });
+  applyTheme(false); applyLang();
+
+  /* nav: elevation on scroll, mobile menu, active link */
+  var nav = document.getElementById('nav'), links = document.getElementById('links'), menuBtn = document.getElementById('menuBtn');
+  var ticking = false;
+  addEventListener('scroll', function () {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () { nav.classList.toggle('scrolled', scrollY > 8); ticking = false; });
+  }, { passive: true });
+  function setMenu(open) { links.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); }
+  menuBtn.addEventListener('click', function () { setMenu(!links.classList.contains('open')); });
+  links.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+
+  var sections = Array.prototype.map.call(links.querySelectorAll('a'), function (a) { return [a, document.querySelector(a.getAttribute('href'))]; });
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) sections.forEach(function (p) { p[0].classList.toggle('active', p[1] === e.target); }); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(function (p) { if (p[1]) spy.observe(p[1]); });
+
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  } else document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <title>QuickNote</title>
+  <rect width="128" height="128" rx="30" fill="#00BCD4"/>
+  <path d="M38 24h35.5a8 8 0 0 1 5.7 2.4l17.4 17.4a8 8 0 0 1 2.4 5.7V92a12 12 0 0 1-12 12H38a12 12 0 0 1-12-12V36a12 12 0 0 1 12-12z" fill="#fff"/>
+  <path d="M74 24v18a8 8 0 0 0 8 8h18z" fill="#B2EBF2"/>
+  <rect x="40" y="62" width="48" height="8" rx="4" fill="#00BCD4"/>
+  <rect x="40" y="80" width="30" height="8" rx="4" fill="#00BCD4" opacity=".55"/>
+</svg>

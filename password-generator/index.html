@@ -1,14 +1,823 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en" data-theme="light" data-color="teal">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=landing/index.html" />
-  <title>LockSmith — Redirecting...</title>
-  <script>
-    window.location.href = "landing/index.html";
-  </script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Password Generator — Secure, offline password, passphrase &amp; PIN generator</title>
+<meta name="description" content="Password Generator is a free, open-source browser extension that creates strong passwords, passphrases and PINs offline with a cryptographically secure source. Material Design, light/dark themes, English &amp; Vietnamese." />
+<meta name="keywords" content="password generator, passphrase generator, PIN generator, secure password, random password, offline password generator, Chrome extension, Edge extension, Brave, Chromium, Material Design, open source, minhtrong67" />
+<meta name="author" content="minhtrong67" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#f6fafa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e1514" media="(prefers-color-scheme: dark)" />
+<meta name="application-name" content="Password Generator" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="canonical" href="https://minhtrong67.github.io/password-generator/" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%23009688'/%3E%3Cg transform='translate(24 24) scale(3.333)' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3Ccircle cx='12' cy='16.5' r='1' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="icons/icon128.png" />
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Password Generator" />
+<meta property="og:title" content="Password Generator — Secure, offline password, passphrase &amp; PIN generator" />
+<meta property="og:description" content="Strong passwords, memorable passphrases and PINs generated privately on your device. Free, open source, Material Design." />
+<meta property="og:url" content="https://minhtrong67.github.io/password-generator/" />
+<meta property="og:image" content="https://minhtrong67.github.io/password-generator/screenshots/image08.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Password Generator extension popup showing a generated password and strength meter" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="vi_VN" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Password Generator — Secure, offline password, passphrase &amp; PIN generator" />
+<meta name="twitter:description" content="Strong passwords, memorable passphrases and PINs generated privately on your device. Free, open source, Material Design." />
+<meta name="twitter:image" content="https://minhtrong67.github.io/password-generator/screenshots/image08.png" />
+<meta name="twitter:creator" content="@minhtrong67" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Password Generator",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Chrome, Microsoft Edge, Brave, Opera, Chromium",
+  "description": "Free, open-source browser extension that generates strong passwords, passphrases and PINs offline.",
+  "softwareVersion": "3.0.0",
+  "inLanguage": ["en", "vi"],
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "minhtrong67" },
+  "url": "https://minhtrong67.github.io/password-generator/"
+}
+</script>
+
+<script>
+/* Apply theme + color before first paint. Priority: URL hash (from the extension) > localStorage > defaults. */
+const MD_TOKENS = {"red":{"seed":"#F44336","light":["#bb1614","#ffffff","#ffdad5","#410001","#775652","#ffdad5","#2c1512","#705c2e","#fcdfa6","#261a00","#fffbff","#201a19","#f5ddda","#534341","#857370","#d8c2be","#362f2e","#fbeeec","#ba1a1a","#ffffff","#fef1ef","#f8ebe9","#f3e5e3","#ede0de"],"dark":["#ffb4a9","#690002","#930005","#ffdad5","#e7bdb7","#5d3f3b","#ffdad5","#dfc38c","#574419","#fcdfa6","#201a19","#ede0de","#534341","#d8c2be","#a08c89","#534341","#ede0de","#362f2e","#ffb4ab","#120d0c","#201a19","#251e1d","#2f2827","#3b3332"]},"pink":{"seed":"#E91E63","light":["#bc004b","#ffffff","#ffd9de","#400014","#75565b","#ffd9de","#2c1519","#795831","#ffddba","#2b1700","#fffbff","#201a1b","#f3dddf","#524345","#847375","#d6c2c3","#362f2f","#fbeeee","#ba1a1a","#ffffff","#fdf1f1","#f8ebeb","#f2e5e6","#ece0e0"],"dark":["#ffb2be","#660025","#900038","#ffd9de","#e5bdc2","#5c3f43","#ffd9de","#ebbf90","#5f411c","#ffddba","#201a1b","#ece0e0","#524345","#d6c2c3","#9f8c8e","#524345","#ece0e0","#362f2f","#ffb4ab","#120d0d","#201a1b","#241e1f","#2f2829","#3a3334"]},"purple":{"seed":"#9C27B0","light":["#9a25ae","#ffffff","#ffd6fe","#35003f","#6b586b","#f4dbf1","#251626","#82524a","#ffdad4","#33110c","#fffbff","#1e1a1d","#ecdfe8","#4d444c","#7f747d","#d0c3cc","#332f32","#f7eef3","#ba1a1a","#ffffff","#faf1f5","#f4ecf0","#eee6ea","#e9e0e4"],"dark":["#f9abff","#570066","#7b008f","#ffd6fe","#d7bfd5","#534153","#f4dbf1","#f6b8ad","#673b34","#ffdad4","#1e1a1d","#e9e0e4","#4d444c","#d0c3cc","#998d96","#4d444c","#e9e0e4","#332f32","#ffb4ab","#100d10","#1e1a1d","#221e22","#2d292c","#383337"]},"deepPurple":{"seed":"#673AB7","light":["#6f43c0","#ffffff","#ebddff","#250059","#635b70","#e9def8","#1f182b","#7e525d","#ffd9e1","#31101b","#fffbff","#1d1b1e","#e7e0eb","#49454e","#7a757f","#cbc4cf","#323033","#f5eff4","#ba1a1a","#ffffff","#f8f2f7","#f2ecf1","#ece6eb","#e6e1e6"],"dark":["#d3bbff","#3f008d","#5727a6","#ebddff","#cdc2db","#4b4358","#e9def8","#f0b7c5","#643b46","#ffd9e1","#1d1b1e","#e6e1e6","#49454e","#cbc4cf","#948f99","#49454e","#e6e1e6","#323033","#ffb4ab","#0f0e11","#1d1b1e","#211f22","#2b292d","#363438"]},"indigo":{"seed":"#3F51B5","light":["#4355b9","#ffffff","#dee0ff","#00105c","#5b5d72","#e0e1f9","#181a2c","#77536d","#ffd7f1","#2d1228","#fefbff","#1b1b1f","#e3e1ec","#46464f","#767680","#c7c5d0","#303034","#f3f0f4","#ba1a1a","#ffffff","#f6f2f7","#f0edf1","#eae7ec","#e4e1e6"],"dark":["#bac3ff","#08218a","#293ca0","#dee0ff","#c3c5dd","#434659","#e0e1f9","#e6bad7","#5d3c55","#ffd7f1","#1b1b1f","#e4e1e6","#46464f","#c7c5d0","#90909a","#46464f","#e4e1e6","#303034","#ffb4ab","#0e0e11","#1b1b1f","#1f1f23","#2a2a2d","#353438"]},"blue":{"seed":"#2196F3","light":["#0061a4","#ffffff","#d1e4ff","#001d36","#535f70","#d7e3f7","#101c2b","#6b5778","#f2daff","#251431","#fdfcff","#1a1c1e","#dfe2eb","#43474e","#73777f","#c3c7cf","#2f3033","#f1f0f4","#ba1a1a","#ffffff","#f4f3f7","#eeedf1","#e8e8eb","#e2e2e6"],"dark":["#9ecaff","#003258","#00497d","#d1e4ff","#bbc7db","#3b4858","#d7e3f7","#d6bee4","#523f5f","#f2daff","#1a1c1e","#e2e2e6","#43474e","#c3c7cf","#8d9199","#43474e","#e2e2e6","#2f3033","#ffb4ab","#0d0e11","#1a1c1e","#1e2022","#282a2d","#333538"]},"lightBlue":{"seed":"#03A9F4","light":["#006493","#ffffff","#cae6ff","#001e30","#50606e","#d3e5f5","#0c1d29","#65587b","#ebddff","#201634","#fcfcff","#1a1c1e","#dde3ea","#41474d","#72787e","#c1c7ce","#2e3133","#f0f0f3","#ba1a1a","#ffffff","#f3f3f6","#edeef1","#e8e8eb","#e2e2e5"],"dark":["#8dcdff","#00344f","#004b70","#cae6ff","#b7c9d9","#384956","#d3e5f5","#cfc0e8","#4d4162","#ebddff","#1a1c1e","#e2e2e5","#41474d","#c1c7ce","#8b9198","#41474d","#e2e2e5","#2e3133","#ffb4ab","#0c0e11","#1a1c1e","#1e2022","#282a2d","#333537"]},"cyan":{"seed":"#00BCD4","light":["#006876","#ffffff","#a1efff","#001f25","#4a6268","#cde7ed","#051f23","#545d7e","#dbe1ff","#101a37","#fbfcfd","#191c1d","#dbe4e6","#3f484a","#6f797b","#bfc8ca","#2e3132","#eff1f2","#ba1a1a","#ffffff","#f2f4f4","#eceeef","#e6e8e9","#e1e3e3"],"dark":["#44d8f1","#00363e","#004e59","#a1efff","#b1cbd1","#334a50","#cde7ed","#bcc5eb","#3c4665","#dbe1ff","#191c1d","#e1e3e3","#3f484a","#bfc8ca","#899295","#3f484a","#e1e3e3","#2e3132","#ffb4ab","#0b0f10","#191c1d","#1d2021","#272b2b","#323536"]},"teal":{"seed":"#009688","light":["#006a60","#ffffff","#74f8e5","#00201c","#4a635f","#cce8e2","#05201c","#456179","#cce5ff","#001e31","#fafdfb","#191c1b","#dae5e1","#3f4947","#6f7977","#bec9c6","#2d3130","#eff1ef","#ba1a1a","#ffffff","#f2f4f2","#eceeec","#e6e9e7","#e0e3e1"],"dark":["#53dbc9","#003731","#005048","#74f8e5","#b1ccc6","#334b47","#cce8e2","#adcae6","#2d4961","#cce5ff","#191c1b","#e0e3e1","#3f4947","#bec9c6","#899390","#3f4947","#e0e3e1","#2d3130","#ffb4ab","#0b0f0e","#191c1b","#1d201f","#272b2a","#323534"]},"green":{"seed":"#4CAF50","light":["#006e1c","#ffffff","#94f990","#002204","#52634f","#d5e8cf","#111f0f","#38656a","#bcebf0","#002023","#fcfdf6","#1a1c19","#dee5d8","#424940","#72796f","#c2c9bd","#2f312d","#f0f1eb","#ba1a1a","#ffffff","#f3f4ee","#eeeee8","#e8e9e2","#e2e3dd"],"dark":["#78dc77","#00390a","#005313","#94f990","#baccb3","#3b4b38","#d5e8cf","#a0cfd4","#1f4d52","#bcebf0","#1a1c19","#e2e3dd","#424940","#c2c9bd","#8c9388","#424940","#e2e3dd","#2f312d","#ffb4ab","#0c0f0c","#1a1c19","#1e201d","#282b27","#333531"]},"lightGreen":{"seed":"#8BC34A","light":["#3e6a00","#ffffff","#b9f474","#0f2000","#576249","#dbe7c8","#151e0b","#386663","#bbece8","#00201e","#fdfcf5","#1b1c18","#e1e4d5","#44483d","#75796c","#c5c8ba","#30312c","#f2f1e9","#ba1a1a","#ffffff","#f5f4ec","#efeee7","#e9e8e1","#e3e3db"],"dark":["#9ed75b","#1e3700","#2e4f00","#b9f474","#bfcbad","#404a33","#dbe7c8","#a0d0cc","#1f4e4b","#bbece8","#1b1c18","#e3e3db","#44483d","#c5c8ba","#8e9285","#44483d","#e3e3db","#30312c","#ffb4ab","#0d0f0b","#1b1c18","#1f201c","#292a26","#343530"]},"lime":{"seed":"#CDDC39","light":["#5b6300","#ffffff","#dded49","#1a1d00","#5e6044","#e4e5c1","#1b1d07","#3c665a","#beecdc","#002019","#feffd8","#1c1c17","#e5e3d2","#47483b","#787869","#c8c7b7","#31312b","#f3f1e8","#ba1a1a","#ffffff","#f6f3eb","#f1eee5","#ebe8df","#e5e2da"],"dark":["#c1d02c","#2f3300","#444b00","#dded49","#c7c9a6","#46492e","#e4e5c1","#a2d0c1","#234e43","#beecdc","#1c1c17","#e5e2da","#47483b","#c8c7b7","#929282","#47483b","#e5e2da","#31312b","#ffb4ab","#0e0e0a","#1c1c17","#20201b","#2a2a25","#35352f"]},"yellow":{"seed":"#FFEB3B","light":["#695f00","#ffffff","#f9e534","#201c00","#645f41","#ebe3bd","#1f1c05","#406652","#c2ecd3","#002113","#fffbff","#1d1c16","#e8e2d0","#4a473a","#7b7768","#cbc6b5","#32302a","#f5f0e7","#ba1a1a","#ffffff","#f8f3ea","#f2ede4","#ece8df","#e7e2d9"],"dark":["#dbc90a","#363100","#4f4800","#f9e534","#cec7a3","#4b472b","#ebe3bd","#a7d0b7","#294e3b","#c2ecd3","#1d1c16","#e7e2d9","#4a473a","#cbc6b5","#959181","#4a473a","#e7e2d9","#32302a","#ffb4ab","#0f0e09","#1d1c16","#21201a","#2b2a24","#36352f"]},"amber":{"seed":"#FFC107","light":["#785900","#ffffff","#ffdf9e","#261a00","#6b5d3f","#f5e0bb","#241a04","#4a6547","#ccebc4","#072109","#fffbff","#1e1b16","#ede1cf","#4d4639","#7f7667","#d0c5b4","#33302a","#f7efe7","#ba1a1a","#ffffff","#faf2e9","#f5ede4","#efe7de","#e9e1d8"],"dark":["#fabd00","#3f2e00","#5b4300","#ffdf9e","#d8c4a0","#52452a","#f5e0bb","#b0cfaa","#334d31","#ccebc4","#1e1b16","#e9e1d8","#4d4639","#d0c5b4","#998f80","#4d4639","#e9e1d8","#33302a","#ffb4ab","#100e09","#1e1b16","#221f1a","#2d2924","#38342e"]},"orange":{"seed":"#FF9800","light":["#8b5000","#ffffff","#ffdcbe","#2c1600","#725a42","#ffdcbe","#291806","#58633a","#dce8b4","#161e01","#fffbff","#201b16","#f2dfd1","#51453a","#837468","#d5c3b5","#352f2b","#faefe7","#ba1a1a","#ffffff","#fdf2ea","#f7ece4","#f1e6df","#ebe0d9"],"dark":["#ffb870","#4a2800","#693c00","#ffdcbe","#e1c1a4","#59422c","#ffdcbe","#c0cc9a","#414b24","#dce8b4","#201b16","#ebe0d9","#51453a","#d5c3b5","#9d8e81","#51453a","#ebe0d9","#352f2b","#ffb4ab","#120d0a","#201b16","#241f1a","#2e2924","#3a342f"]},"deepOrange":{"seed":"#FF5722","light":["#b02f00","#ffffff","#ffdbd1","#3b0900","#77574e","#ffdbd1","#2c150f","#6c5d2f","#f5e1a7","#231b00","#fffbff","#201a18","#f5ded8","#53433f","#85736e","#d8c2bc","#362f2d","#fbeeeb","#ba1a1a","#ffffff","#fef1ed","#f8ebe8","#f3e5e2","#ede0dc"],"dark":["#ffb5a0","#5f1500","#862200","#ffdbd1","#e7bdb2","#5d4037","#ffdbd1","#d8c58d","#534619","#f5e1a7","#201a18","#ede0dc","#53433f","#d8c2bc","#a08c87","#53433f","#ede0dc","#362f2d","#ffb4ab","#120d0b","#201a18","#251e1c","#2f2827","#3b3331"]},"brown":{"seed":"#795548","light":["#9a4522","#ffffff","#ffdbcf","#380d00","#77574c","#ffdbcf","#2c160d","#695e2f","#f2e2a8","#211b00","#fffbff","#201a18","#f5ded6","#53433e","#85736d","#d8c2bb","#362f2c","#fbeeea","#ba1a1a","#ffffff","#fef1ed","#f8ebe7","#f3e5e2","#ede0dc"],"dark":["#ffb59a","#5b1b00","#7b2e0d","#ffdbcf","#e7beaf","#5d4035","#ffdbcf","#d5c68e","#50471a","#f2e2a8","#201a18","#ede0dc","#53433e","#d8c2bb","#a08d86","#53433e","#ede0dc","#362f2c","#ffb4ab","#120d0b","#201a18","#251e1c","#2f2826","#3b3331"]},"blueGrey":{"seed":"#607D8B","light":["#006783","#ffffff","#bde9ff","#001f2a","#4d616c","#d0e6f2","#081e27","#5d5b7d","#e3dfff","#191836","#fbfcfe","#191c1e","#dce4e9","#40484c","#70787d","#c0c8cd","#2e3132","#eff1f3","#ba1a1a","#ffffff","#f2f4f6","#edeef0","#e7e8ea","#e1e2e4"],"dark":["#65d3ff","#003546","#004d64","#bde9ff","#b4cad6","#354a53","#d0e6f2","#c6c2ea","#454364","#e3dfff","#191c1e","#e1e2e4","#40484c","#c0c8cd","#8a9297","#40484c","#e1e2e4","#2e3132","#ffb4ab","#0c0f10","#191c1e","#1d2022","#272a2c","#323537"]}};
+(function () {
+  var root = document.documentElement, KEYS = ["primary","onPrimary","primaryContainer","onPrimaryContainer","secondary","secondaryContainer","onSecondaryContainer","tertiary","tertiaryContainer","onTertiaryContainer","surface","onSurface","surfaceVariant","onSurfaceVariant","outline","outlineVariant","inverseSurface","inverseOnSurface","error","surfaceContainerLowest","surfaceContainerLow","surfaceContainer","surfaceContainerHigh","surfaceContainerHighest"];
+  var mql = window.matchMedia("(prefers-color-scheme: dark)");
+  var pref = { theme: "system", color: "teal", lang: "auto" };
+  try { Object.assign(pref, JSON.parse(localStorage.getItem("pg-landing") || "{}")); } catch (e) {}
+  try {
+    var h = new URLSearchParams(location.hash.slice(1));
+    ["theme", "color", "lang"].forEach(function (k) { if (h.get(k)) pref[k] = h.get(k); });
+  } catch (e) {}
+  if (!MD_TOKENS[pref.color]) pref.color = "teal";
+  window.__pref = pref;
+  window.applyAppearance = function () {
+    var dark = pref.theme === "dark" || (pref.theme === "system" && mql.matches);
+    var t = MD_TOKENS[pref.color][dark ? "dark" : "light"];
+    KEYS.forEach(function (k, i) { root.style.setProperty("--md-" + k.replace(/[A-Z]/g, function (c) { return "-" + c.toLowerCase(); }), t[i]); });
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    root.setAttribute("data-color", pref.color);
+    var tc = document.querySelectorAll('meta[name="theme-color"]');
+    for (var i = 0; i < tc.length; i++) { tc[i].removeAttribute("media"); tc[i].setAttribute("content", t[KEYS.indexOf("surface")]); }
+  };
+  window.applyAppearance();
+  mql.addEventListener("change", function () { if (pref.theme === "system") window.applyAppearance(); });
+  root.classList.add("js");
+})();
+</script>
+
+<style>
+:root {
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emph: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --lv0: var(--md-error); --lv1: #e65100; --lv2: #b28704; --lv3: #558b2f; --lv4: #2e7d32;
+  color-scheme: light;
+}
+:root[data-theme="dark"] { --lv1: #ffa726; --lv2: #ffd54f; --lv3: #aed581; --lv4: #66bb6a; color-scheme: dark; }
+/* no-JS fallback palette (teal) */
+:root{--md-primary:#006a60; --md-on-primary:#ffffff; --md-primary-container:#74f8e5; --md-on-primary-container:#00201c; --md-secondary:#4a635f; --md-secondary-container:#cce8e2; --md-on-secondary-container:#05201c; --md-tertiary:#456179; --md-tertiary-container:#cce5ff; --md-on-tertiary-container:#001e31; --md-surface:#fafdfb; --md-on-surface:#191c1b; --md-surface-variant:#dae5e1; --md-on-surface-variant:#3f4947; --md-outline:#6f7977; --md-outline-variant:#bec9c6; --md-inverse-surface:#2d3130; --md-inverse-on-surface:#eff1ef; --md-error:#ba1a1a; --md-surface-container-lowest:#ffffff; --md-surface-container-low:#f2f4f2; --md-surface-container:#eceeec; --md-surface-container-high:#e6e9e7; --md-surface-container-highest:#e0e3e1;}
+:root[data-theme="dark"]{--md-primary:#53dbc9; --md-on-primary:#003731; --md-primary-container:#005048; --md-on-primary-container:#74f8e5; --md-secondary:#b1ccc6; --md-secondary-container:#334b47; --md-on-secondary-container:#cce8e2; --md-tertiary:#adcae6; --md-tertiary-container:#2d4961; --md-on-tertiary-container:#cce5ff; --md-surface:#191c1b; --md-on-surface:#e0e3e1; --md-surface-variant:#3f4947; --md-on-surface-variant:#bec9c6; --md-outline:#899390; --md-outline-variant:#3f4947; --md-inverse-surface:#e0e3e1; --md-inverse-on-surface:#2d3130; --md-error:#ffb4ab; --md-surface-container-lowest:#0b0f0e; --md-surface-container-low:#191c1b; --md-surface-container:#1d201f; --md-surface-container-high:#272b2a; --md-surface-container-highest:#323534;}
+
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-text-size-adjust: 100%; }
+body { font: 400 16px/1.6 var(--font); background: var(--md-surface); color: var(--md-on-surface); -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background-color 300ms var(--ease), color 300ms var(--ease); }
+a { color: var(--md-primary); text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+.icon { width: 24px; height: 24px; flex: none; }
+:focus-visible { outline: 2px solid var(--md-primary); outline-offset: 3px; border-radius: 6px; }
+.container { width: 100%; max-width: 1120px; margin-inline: auto; padding-inline: 24px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: 20px; background: var(--md-primary); color: var(--md-on-primary); transition: top 200ms var(--ease); }
+.skip:focus { top: 12px; }
+
+/* ---------- State layer ---------- */
+.btn, .icon-btn, .nav a, .seg, .chip > span, .swatch { position: relative; isolation: isolate; -webkit-tap-highlight-color: transparent; }
+.btn::before, .icon-btn::before, .nav a::before, .seg::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; z-index: -1; transition: opacity 150ms linear; }
+.btn:hover::before, .icon-btn:hover::before, .nav a:hover::before, .seg:hover::before { opacity: 0.08; }
+.btn:active::before, .icon-btn:active::before, .nav a:active::before, .seg:active::before { opacity: 0.12; }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 28px; border-radius: 24px; font-weight: 500; letter-spacing: 0.1px; transition: box-shadow 250ms var(--ease), transform 200ms var(--ease); white-space: nowrap; }
+.btn .icon { width: 20px; height: 20px; }
+.btn:active { transform: scale(0.97); }
+.btn.filled { background: var(--md-primary); color: var(--md-on-primary); }
+.btn.filled:hover { box-shadow: 0 2px 6px 2px rgb(0 0 0 / 0.15), 0 1px 2px rgb(0 0 0 / 0.3); }
+.btn.tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.btn.outlined { border: 1px solid var(--md-outline); color: var(--md-primary); }
+.icon-btn { width: 44px; height: 44px; border-radius: 50%; display: inline-grid; place-items: center; color: var(--md-on-surface-variant); transition: transform 200ms var(--ease); }
+.icon-btn:active { transform: scale(0.9); }
+.icon-btn.tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+
+/* ---------- App bar ---------- */
+.appbar { position: sticky; top: 0; z-index: 50; transition: background-color 250ms var(--ease), box-shadow 250ms var(--ease); }
+.appbar.scrolled { background: color-mix(in srgb, var(--md-surface-container) 88%, transparent); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); box-shadow: 0 1px 0 var(--md-outline-variant); }
+.appbar-in { display: flex; align-items: center; gap: 16px; height: 68px; }
+.brand { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 600; color: var(--md-on-surface); letter-spacing: -0.01em; }
+.brand svg.logo { width: 36px; height: 36px; border-radius: 10px; }
+.nav { display: flex; gap: 4px; margin-left: auto; }
+.nav a { padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; color: var(--md-on-surface-variant); }
+.nav a.active { color: var(--md-on-secondary-container); background: var(--md-secondary-container); }
+.appbar-actions { position: relative; display: flex; align-items: center; gap: 4px; }
+
+/* ---------- Settings menu ---------- */
+.menu { position: absolute; top: calc(100% + 8px); right: 0; width: min(360px, calc(100vw - 32px)); padding: 20px; border-radius: 28px; background: var(--md-surface-container); box-shadow: 0 8px 24px rgb(0 0 0 / 0.18), 0 0 0 1px var(--md-outline-variant); transform-origin: top right; transform: scale(0.9) translateY(-8px); opacity: 0; visibility: hidden; transition: transform 250ms var(--ease-emph), opacity 150ms linear, visibility 0s 250ms; display: flex; flex-direction: column; gap: 18px; }
+.menu.open { transform: none; opacity: 1; visibility: visible; transition-delay: 0s; }
+.menu h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; color: var(--md-primary); }
+.menu h3 .icon { width: 18px; height: 18px; }
+.menu h3 em { margin-left: auto; font-style: normal; font-weight: 500; color: var(--md-on-surface-variant); }
+.segmented { display: flex; height: 40px; border: 1px solid var(--md-outline); border-radius: 20px; overflow: hidden; }
+.seg { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px; font-size: 13px; font-weight: 500; transition: background-color 200ms var(--ease), color 200ms var(--ease); color: var(--md-on-surface); }
+.seg + .seg { border-left: 1px solid var(--md-outline); }
+.seg .icon { width: 18px; height: 18px; }
+.seg.is-selected { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.swatches { display: grid; grid-template-columns: repeat(9, 1fr); gap: 10px 0; justify-items: center; }
+.swatch { width: 28px; height: 28px; border-radius: 50%; background: var(--sw); color: var(--sw-on); display: grid; place-items: center; transition: transform 200ms var(--ease), box-shadow 200ms var(--ease); }
+.swatch:hover { transform: scale(1.12); }
+.swatch .icon { width: 14px; height: 14px; transform: scale(0); transition: transform 250ms var(--ease-emph); }
+.swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--md-surface-container), 0 0 0 4px var(--md-on-surface); }
+.swatch[aria-checked="true"] .icon { transform: scale(1); }
+.swatches.big { grid-template-columns: repeat(9, 1fr); gap: 14px 0; }
+.swatches.big .swatch { width: 40px; height: 40px; }
+.swatches.big .swatch .icon { width: 20px; height: 20px; }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; overflow: hidden; padding: 56px 0 96px; }
+.blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.55; z-index: -1; pointer-events: none; }
+.blob.a { width: 480px; height: 480px; top: -160px; right: -80px; background: var(--md-primary-container); animation: drift 18s ease-in-out infinite alternate; }
+.blob.b { width: 380px; height: 380px; bottom: -140px; left: -100px; background: var(--md-tertiary-container); animation: drift 22s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(-40px, 50px) scale(1.15); } }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+.chip-label { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px; border-radius: 8px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 13px; font-weight: 500; }
+.chip-label .icon { width: 16px; height: 16px; }
+h1 { margin: 20px 0 16px; font-size: clamp(2.4rem, 5.6vw, 4rem); line-height: 1.08; letter-spacing: -0.03em; font-weight: 650; }
+h1 em { font-style: normal; color: var(--md-primary); }
+.lead { max-width: 56ch; font-size: clamp(1.05rem, 1.6vw, 1.2rem); color: var(--md-on-surface-variant); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 32px; padding: 0; list-style: none; font-size: 14px; color: var(--md-on-surface-variant); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts .icon { width: 18px; height: 18px; color: var(--md-primary); }
+
+/* Hero entrance */
+.js .hero .rise { opacity: 0; transform: translateY(28px); animation: rise 800ms var(--ease-emph) forwards; animation-delay: calc(var(--i, 0) * 90ms + 80ms); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* ---------- Device demo ---------- */
+.device-wrap { display: grid; place-items: center; perspective: 1200px; }
+.device { width: min(100%, 380px); padding: 12px 16px 16px; border-radius: 28px; background: var(--md-surface); box-shadow: 0 24px 60px -12px rgb(0 0 0 / 0.28), 0 0 0 1px var(--md-outline-variant); animation: float 7s ease-in-out infinite; transform-style: preserve-3d; }
+@keyframes float { 50% { transform: translateY(-10px) rotateX(1.5deg) rotateY(-2deg); } }
+.dv-bar { display: flex; align-items: center; gap: 10px; height: 52px; font-weight: 500; font-size: 17px; }
+.dv-bar svg.logo { width: 28px; height: 28px; border-radius: 8px; }
+.dv-bar .icon { margin-left: auto; width: 20px; height: 20px; color: var(--md-on-surface-variant); }
+.dv-seg { height: 38px; }
+.dv-result { display: flex; gap: 8px; align-items: flex-start; margin-top: 12px; padding: 14px 10px 14px 16px; border-radius: 20px; background: var(--md-surface-container-high); }
+.dv-out { flex: 1; min-width: 0; min-height: 60px; display: flex; align-items: center; font-family: var(--mono); font-size: 21px; line-height: 1.4; overflow-wrap: anywhere; letter-spacing: 0.3px; }
+.dv-out[data-size="m"] { font-size: 17px; } .dv-out[data-size="s"] { font-size: 14px; }
+.dv-out .d { color: var(--md-primary); } .dv-out .s { color: var(--md-tertiary); }
+.dv-out.pop > span { animation: pop 300ms var(--ease-emph); }
+@keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.dv-actions { display: flex; flex-direction: column; gap: 6px; }
+.dv-actions .icon-btn { width: 40px; height: 40px; }
+.dv-actions .icon { width: 20px; height: 20px; }
+.ic-done { position: absolute; opacity: 0; transform: scale(0.5); }
+.ic-copy, .ic-done { transition: opacity 180ms var(--ease), transform 220ms var(--ease); }
+.is-copied .ic-copy { opacity: 0; transform: scale(0.5); }
+.is-copied .ic-done { opacity: 1; transform: none; }
+.icon-btn.is-copied { background: var(--md-primary); color: var(--md-on-primary); }
+.spin .icon { animation: spin 500ms var(--ease); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.meter { height: 6px; margin: 4px 4px 0; border-radius: 3px; background: var(--md-surface-container-highest); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; border-radius: 3px; background: var(--c); transition: width 400ms var(--ease), background-color 300ms linear; }
+.dv-meta { display: flex; justify-content: space-between; gap: 8px; margin: 6px 4px 0; font-size: 12px; color: var(--md-on-surface-variant); }
+.dv-meta b:first-child { color: var(--c); }
+.dv-meta span b { color: var(--md-on-surface); font-weight: 500; }
+.dv-opts { margin-top: 12px; padding: 14px 16px; border-radius: 20px; background: var(--md-surface-container-low); display: flex; flex-direction: column; gap: 10px; }
+.dv-row { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 14px; }
+.pill { min-width: 38px; padding: 1px 12px; border-radius: 12px; text-align: center; background: var(--md-primary-container); color: var(--md-on-primary-container); font-weight: 600; font-variant-numeric: tabular-nums; }
+.slider { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; background: transparent; cursor: pointer; --pct: 50%; }
+.slider::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(to right, var(--md-primary) var(--pct), var(--md-secondary-container) var(--pct)); }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%; background: var(--md-primary); transition: box-shadow 200ms var(--ease); }
+.slider::-moz-range-track { height: 6px; border-radius: 3px; background: var(--md-secondary-container); }
+.slider::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--md-primary); }
+.slider::-moz-range-thumb { width: 20px; height: 20px; border: 0; border-radius: 50%; background: var(--md-primary); }
+.slider:hover::-webkit-slider-thumb { box-shadow: 0 0 0 8px color-mix(in srgb, var(--md-primary) 12%, transparent); }
+.slider:active::-webkit-slider-thumb { box-shadow: 0 0 0 12px color-mix(in srgb, var(--md-primary) 16%, transparent); }
+.chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.chip { position: relative; cursor: pointer; min-width: 0; }
+.chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.chip > span { display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 6px; border: 1px solid var(--md-outline); border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--md-on-surface-variant); transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease); }
+.chip .icon { width: 0; height: 16px; opacity: 0; transition: width 200ms var(--ease), opacity 200ms var(--ease), margin 200ms var(--ease); }
+.chip input:checked + span { background: var(--md-secondary-container); border-color: transparent; color: var(--md-on-secondary-container); }
+.chip input:checked + span .icon { width: 16px; opacity: 1; margin-right: 4px; }
+.chip input:focus-visible + span { outline: 2px solid var(--md-primary); outline-offset: 2px; }
+.dv-opts[data-mode="passphrase"] .chips, .dv-opts[data-mode="pin"] .chips { display: none; }
+.dv-gen { margin-top: 14px; width: 100%; height: 48px; }
+.demo-note { margin-top: 16px; text-align: center; font-size: 13px; color: var(--md-on-surface-variant); }
+
+/* ---------- Sections ---------- */
+section { padding: 88px 0; }
+.sec-head { max-width: 640px; margin: 0 auto 56px; text-align: center; }
+.eyebrow { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--md-primary); }
+h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.15; letter-spacing: -0.02em; font-weight: 650; }
+.sec-head p { margin-top: 16px; color: var(--md-on-surface-variant); font-size: 1.05rem; }
+.alt { background: var(--md-surface-container-low); }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.card { position: relative; padding: 28px; border-radius: 28px; background: var(--md-surface-container-low); transition: transform 350ms var(--ease-emph), background-color 250ms var(--ease), box-shadow 350ms var(--ease); }
+.alt .card { background: var(--md-surface); }
+.card:hover { transform: translateY(-6px); background: var(--md-surface-container); box-shadow: 0 12px 28px -8px rgb(0 0 0 / 0.16); }
+.alt .card:hover { background: var(--md-surface-container-lowest); }
+.ico { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 16px; background: var(--md-primary-container); color: var(--md-on-primary-container); margin-bottom: 20px; transition: transform 400ms var(--ease-emph), border-radius 400ms var(--ease-emph); }
+.card:hover .ico { transform: rotate(-6deg) scale(1.08); border-radius: 50%; }
+h3 { font-size: 1.2rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
+.card p { margin-top: 8px; color: var(--md-on-surface-variant); font-size: 0.97rem; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: s; position: relative; }
+.step { position: relative; padding: 28px; border-radius: 28px; background: var(--md-surface-container-low); }
+.step .num { width: 44px; height: 44px; display: grid; place-items: center; margin-bottom: 18px; border-radius: 50%; background: var(--md-primary); color: var(--md-on-primary); font-weight: 600; font-size: 18px; }
+.step p { margin-top: 8px; color: var(--md-on-surface-variant); }
+.step .icon { position: absolute; right: 24px; top: 24px; width: 28px; height: 28px; color: var(--md-outline); opacity: 0.6; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.split h2 { margin: 8px 0 16px; }
+.split > div > p { color: var(--md-on-surface-variant); }
+.checks { list-style: none; padding: 0; margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+.checks li { display: flex; gap: 14px; align-items: flex-start; }
+.checks .tick { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--md-primary-container); color: var(--md-on-primary-container); margin-top: 1px; }
+.checks .tick .icon { width: 16px; height: 16px; }
+.spec { padding: 8px; border-radius: 28px; background: var(--md-surface-container); }
+.spec > div { display: flex; flex-direction: column; gap: 2px; padding: 16px 20px; border-radius: 20px; }
+.spec > div + div { border-top: 1px solid var(--md-outline-variant); border-radius: 0; }
+.spec > div:first-child { border-radius: 20px 20px 0 0; } .spec > div:last-child { border-radius: 0 0 20px 20px; }
+.spec dt { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--md-primary); }
+.spec dd { font-size: 0.97rem; }
+code { font-family: var(--mono); font-size: 0.88em; padding: 2px 7px; border-radius: 6px; background: var(--md-surface-container-highest); color: var(--md-on-surface); }
+
+.theme-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 48px; border-radius: 36px; background: var(--md-primary-container); color: var(--md-on-primary-container); }
+.theme-card h2 { margin-bottom: 12px; }
+.theme-card p { opacity: 0.85; }
+.theme-panel { padding: 24px; border-radius: 28px; background: var(--md-surface); color: var(--md-on-surface); display: flex; flex-direction: column; gap: 20px; }
+.theme-panel h3 { font-size: 13px; letter-spacing: 0.4px; color: var(--md-primary); display: flex; justify-content: space-between; margin-bottom: 10px; }
+.theme-panel h3 em { font-style: normal; font-weight: 500; color: var(--md-on-surface-variant); }
+.theme-panel .swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--md-surface), 0 0 0 4px var(--md-on-surface); }
+
+.install { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.install .step { background: var(--md-surface); display: flex; gap: 18px; padding: 24px; }
+.install .step .num { flex: none; margin: 0; }
+.install .step p { margin-top: 4px; }
+.note { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 20px; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); font-size: 0.95rem; }
+
+footer { padding: 56px 0 40px; background: var(--md-surface-container); border-radius: 36px 36px 0 0; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; }
+.foot p { color: var(--md-on-surface-variant); margin-top: 12px; max-width: 46ch; font-size: 0.95rem; }
+.credit { display: flex; flex-direction: column; gap: 10px; font-size: 0.95rem; }
+.credit div { display: flex; align-items: center; gap: 10px; }
+.credit .icon { width: 18px; height: 18px; color: var(--md-primary); }
+.legal { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--md-outline-variant); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--md-on-surface-variant); }
+
+/* ---------- Reveal on scroll ---------- */
+.js .reveal { opacity: 0; transform: translateY(32px); transition: opacity 700ms var(--ease-emph), transform 700ms var(--ease-emph); transition-delay: calc(var(--i, 0) * 80ms); }
+.js .reveal.in { opacity: 1; transform: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .hero-grid, .split, .theme-card { grid-template-columns: 1fr; }
+  .hero-grid { gap: 48px; } .hero { padding: 32px 0 72px; }
+  .grid3 { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: 1fr; }
+  .nav { display: none; } .appbar-actions { margin-left: auto; }
+  .theme-card { padding: 32px; }
+}
+@media (max-width: 640px) {
+  .container { padding-inline: 16px; }
+  section { padding: 64px 0; }
+  .grid3, .install { grid-template-columns: 1fr; }
+  .card, .step { padding: 24px; }
+  .cta .btn { flex: 1 1 100%; }
+  .theme-card { padding: 24px; border-radius: 28px; }
+  .swatches.big .swatch { width: 30px; height: 30px; } .swatches.big .swatch .icon { width: 16px; height: 16px; }
+  .brand span { font-size: 18px; }
+  .sec-head { margin-bottom: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; transition-delay: 0s !important; }
+  .js .reveal, .js .hero .rise { opacity: 1; transform: none; }
+}
+</style>
 </head>
+
 <body>
-  <p>Đang chuyển hướng tới <a href="landing/index.html">trang giới thiệu LockSmith</a>...</p>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+<header class="appbar" id="appbar">
+  <div class="container appbar-in">
+    <a class="brand" href="#top" aria-label="Password Generator">
+      <svg class="logo" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#009688"/><g transform="translate(24 24) scale(3.333)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16.5" r="1" fill="#fff"/></g></svg>
+      <span>Password Generator</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#how" data-i18n="navHow">How it works</a>
+      <a href="#privacy" data-i18n="navPrivacy">Privacy</a>
+      <a href="#install" data-i18n="navInstall">Install</a>
+    </nav>
+    <div class="appbar-actions">
+      <button class="icon-btn" id="menuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu" data-i18n-label="settings"><i data-icon="settings"></i></button>
+      <div class="menu" id="menu" role="dialog" aria-label="Settings">
+        <div>
+          <h3><i data-icon="palette"></i><span data-i18n="mColor">Color</span><em class="colorName"></em></h3>
+          <div class="swatches" data-swatches></div>
+        </div>
+        <div>
+          <h3><i data-icon="sun"></i><span data-i18n="mTheme">Theme</span></h3>
+          <div class="segmented" id="themeSeg" role="radiogroup">
+            <button class="seg" role="radio" data-value="system" type="button"><i data-icon="monitor"></i><span data-i18n="themeSystem">System</span></button>
+            <button class="seg" role="radio" data-value="light" type="button"><i data-icon="sun"></i><span data-i18n="themeLight">Light</span></button>
+            <button class="seg" role="radio" data-value="dark" type="button"><i data-icon="moon"></i><span data-i18n="themeDark">Dark</span></button>
+          </div>
+        </div>
+        <div>
+          <h3><i data-icon="languages"></i><span data-i18n="mLang">Language</span></h3>
+          <div class="segmented" id="langSeg" role="radiogroup">
+            <button class="seg" role="radio" data-value="auto" type="button"><span data-i18n="langAuto">Auto</span></button>
+            <button class="seg" role="radio" data-value="en" type="button"><span>English</span></button>
+            <button class="seg" role="radio" data-value="vi" type="button"><span>Tiếng Việt</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ===== Hero ===== -->
+  <div class="hero" id="top">
+    <div class="blob a"></div><div class="blob b"></div>
+    <div class="container hero-grid">
+      <div>
+        <span class="chip-label rise" style="--i:0"><i data-icon="sparkles"></i><span data-i18n="eyebrow">Free · Open source · 100% offline</span></span>
+        <h1 class="rise" style="--i:1"><span data-i18n="h1a">Strong passwords,</span> <em data-i18n="h1b">generated privately.</em></h1>
+        <p class="lead rise" style="--i:2" data-i18n="lead">Password Generator is a lightweight browser extension that creates strong passwords, memorable passphrases and PINs right on your device — no servers, no accounts, no tracking.</p>
+        <div class="cta rise" style="--i:3">
+          <a class="btn filled" href="#install"><i data-icon="download"></i><span data-i18n="ctaInstall">Get the extension</span></a>
+          <a class="btn outlined" href="#features"><span data-i18n="ctaFeatures">Explore features</span></a>
+        </div>
+        <ul class="facts rise" style="--i:4">
+          <li><i data-icon="shield-check"></i><span data-i18n="fact1">Web Crypto randomness</span></li>
+          <li><i data-icon="wifi-off"></i><span data-i18n="fact2">Works offline</span></li>
+          <li><i data-icon="code"></i><span data-i18n="fact3">MIT licensed</span></li>
+        </ul>
+      </div>
+
+      <div class="device-wrap rise" style="--i:3">
+        <div style="width:100%;display:grid;place-items:center">
+          <div class="device" id="demo" aria-label="Interactive demo">
+            <div class="dv-bar">
+              <svg class="logo" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#009688"/><g transform="translate(24 24) scale(3.333)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16.5" r="1" fill="#fff"/></g></svg>
+              <span>Password Generator</span><i data-icon="settings"></i>
+            </div>
+            <div class="segmented dv-seg" id="dMode" role="tablist">
+              <button class="seg is-selected" role="tab" data-mode="password" type="button"><i data-icon="key-round"></i><span data-i18n="modePassword">Password</span></button>
+              <button class="seg" role="tab" data-mode="passphrase" type="button"><i data-icon="type"></i><span data-i18n="modePassphrase">Passphrase</span></button>
+              <button class="seg" role="tab" data-mode="pin" type="button"><i data-icon="hash"></i><span data-i18n="modePin">PIN</span></button>
+            </div>
+            <div class="dv-result">
+              <output class="dv-out" id="dOut" aria-live="polite">—</output>
+              <div class="dv-actions">
+                <button class="icon-btn tonal" id="dCopy" type="button" data-i18n-label="copy"><i data-icon="copy" class="ic-copy"></i><i data-icon="check" class="ic-done"></i></button>
+                <button class="icon-btn tonal" id="dRegen" type="button" data-i18n-label="regen"><i data-icon="refresh-cw"></i></button>
+              </div>
+            </div>
+            <div class="meter" id="dMeter"><i id="dFill"></i></div>
+            <div class="dv-meta"><b id="dLevel">—</b><span><span data-i18n="crack">Time to crack</span>: <b id="dCrack">—</b></span></div>
+            <div class="dv-opts" id="dOpts" data-mode="password">
+              <div class="dv-row"><label for="dLen" id="dLenLabel" data-i18n="length">Length</label><output class="pill" id="dLenOut">16</output></div>
+              <input class="slider" type="range" id="dLen" min="4" max="64" value="16" />
+              <div class="chips">
+                <label class="chip"><input type="checkbox" data-set="upper" checked /><span><i data-icon="check"></i>A–Z</span></label>
+                <label class="chip"><input type="checkbox" data-set="lower" checked /><span><i data-icon="check"></i>a–z</span></label>
+                <label class="chip"><input type="checkbox" data-set="numbers" checked /><span><i data-icon="check"></i>0–9</span></label>
+                <label class="chip"><input type="checkbox" data-set="symbols" checked /><span><i data-icon="check"></i>#$%</span></label>
+              </div>
+            </div>
+            <button class="btn filled dv-gen" id="dGen" type="button"><i data-icon="refresh-cw"></i><span data-i18n="generate">Generate</span></button>
+          </div>
+          <p class="demo-note" data-i18n="demoNote">Live demo — generated with your browser’s secure random source.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Features ===== -->
+  <section id="features" class="alt">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow" data-i18n="featEyebrow">Features</span>
+        <h2 data-i18n="featTitle">Everything you need, nothing you don’t</h2>
+        <p data-i18n="featSub">A focused toolkit for creating credentials you can trust, wrapped in a clean Material Design interface.</p>
+      </div>
+      <div class="grid3">
+        <article class="card reveal" style="--i:0"><div class="ico"><i data-icon="dices"></i></div><h3 data-i18n="f1t">Three generators</h3><p data-i18n="f1d">Random passwords, BIP‑39 passphrases and numeric PINs — one tap apart.</p></article>
+        <article class="card reveal" style="--i:1"><div class="ico"><i data-icon="shield-check"></i></div><h3 data-i18n="f2t">Secure by design</h3><p data-i18n="f2d">Powered by the Web Crypto API with rejection sampling, so every character is unbiased and unpredictable.</p></article>
+        <article class="card reveal" style="--i:2"><div class="ico"><i data-icon="wifi-off"></i></div><h3 data-i18n="f3t">Private &amp; offline</h3><p data-i18n="f3d">No network requests, no analytics, no accounts. Everything happens on your device.</p></article>
+        <article class="card reveal" style="--i:3"><div class="ico"><i data-icon="gauge"></i></div><h3 data-i18n="f4t">Live strength meter</h3><p data-i18n="f4d">Entropy-based scoring and an estimated crack time update instantly as you tweak each option.</p></article>
+        <article class="card reveal" style="--i:4"><div class="ico"><i data-icon="palette"></i></div><h3 data-i18n="f5t">Make it yours</h3><p data-i18n="f5d">Choose from 18 Material Design colors with light, dark or automatic theme.</p></article>
+        <article class="card reveal" style="--i:5"><div class="ico"><i data-icon="languages"></i></div><h3 data-i18n="f6t">English &amp; Tiếng Việt</h3><p data-i18n="f6d">Detects your language automatically and lets you switch whenever you like.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section id="how">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow" data-i18n="howEyebrow">How it works</span>
+        <h2 data-i18n="howTitle">Three steps to a safer login</h2>
+        <p data-i18n="howSub">From click to clipboard in seconds.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal" style="--i:0"><div class="num">1</div><i data-icon="sliders-horizontal"></i><h3 data-i18n="s1t">Choose a type</h3><p data-i18n="s1d">Pick a password, a memorable passphrase or a numeric PIN.</p></div>
+        <div class="step reveal" style="--i:1"><div class="num">2</div><i data-icon="shuffle"></i><h3 data-i18n="s2t">Fine-tune it</h3><p data-i18n="s2d">Adjust length, character types, look-alike filters and custom exclusions.</p></div>
+        <div class="step reveal" style="--i:2"><div class="num">3</div><i data-icon="copy"></i><h3 data-i18n="s3t">Copy &amp; go</h3><p data-i18n="s3d">One click copies it. Recent values are kept only until you close the browser.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Privacy ===== -->
+  <section id="privacy" class="alt">
+    <div class="container split">
+      <div class="reveal">
+        <span class="eyebrow" data-i18n="privEyebrow">Privacy &amp; security</span>
+        <h2 data-i18n="privTitle">Private by default</h2>
+        <p data-i18n="privSub">Your passwords are yours alone. The extension is deliberately small, auditable and quiet.</p>
+        <ul class="checks">
+          <li><span class="tick"><i data-icon="check"></i></span><span data-i18n="p1">Only the <code>storage</code> permission — no access to websites or tabs.</span></li>
+          <li><span class="tick"><i data-icon="check"></i></span><span data-i18n="p2">History lives in session storage and disappears when the browser closes.</span></li>
+          <li><span class="tick"><i data-icon="check"></i></span><span data-i18n="p3">Zero network requests, zero telemetry — and open source, so you can audit every line.</span></li>
+        </ul>
+      </div>
+      <dl class="spec reveal" style="--i:1">
+        <div><dt data-i18n="sp1t">Randomness</dt><dd><code>crypto.getRandomValues()</code> <span data-i18n="sp1d">with rejection sampling — never Math.random().</span></dd></div>
+        <div><dt data-i18n="sp2t">Passphrases</dt><dd data-i18n="sp2d">BIP‑39 wordlist · 2,048 words · 11 bits per word.</dd></div>
+        <div><dt data-i18n="sp3t">Strength</dt><dd data-i18n="sp3d">Entropy from the real character pool, with the crack-time estimated at 10 billion guesses per second.</dd></div>
+        <div><dt data-i18n="sp4t">Footprint</dt><dd data-i18n="sp4d">Manifest V3 · vanilla JavaScript · no dependencies.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===== Personalize ===== -->
+  <section id="personalize">
+    <div class="container">
+      <div class="theme-card reveal">
+        <div>
+          <span class="eyebrow" style="color:inherit;opacity:.8" data-i18n="perEyebrow">Personalize</span>
+          <h2 data-i18n="perTitle">Your color, your theme</h2>
+          <p data-i18n="perSub">Pick any of 18 Material Design colors and switch between light, dark and system themes. Try it now — this page follows your choice.</p>
+        </div>
+        <div class="theme-panel">
+          <div><h3><span data-i18n="mColor">Color</span><em class="colorName"></em></h3><div class="swatches big" data-swatches></div></div>
+          <div><h3><span data-i18n="mTheme">Theme</span></h3>
+            <div class="segmented" data-themeseg role="radiogroup">
+              <button class="seg" role="radio" data-value="system" type="button"><i data-icon="monitor"></i><span data-i18n="themeSystem">System</span></button>
+              <button class="seg" role="radio" data-value="light" type="button"><i data-icon="sun"></i><span data-i18n="themeLight">Light</span></button>
+              <button class="seg" role="radio" data-value="dark" type="button"><i data-icon="moon"></i><span data-i18n="themeDark">Dark</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Install ===== -->
+  <section id="install" class="alt">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow" data-i18n="insEyebrow">Install</span>
+        <h2 data-i18n="insTitle">Up and running in a minute</h2>
+        <p data-i18n="insSub">Works on Chrome, Edge, Brave, Opera and other Chromium browsers.</p>
+      </div>
+      <div class="install">
+        <div class="step reveal" style="--i:0"><div class="num">1</div><div><h3 data-i18n="i1t">Get the source</h3><p data-i18n="i1d">Download or clone the project folder that contains <code>manifest.json</code>.</p></div></div>
+        <div class="step reveal" style="--i:1"><div class="num">2</div><div><h3 data-i18n="i2t">Open extensions</h3><p data-i18n="i2d">Go to <code>chrome://extensions</code> and turn on <b>Developer mode</b>.</p></div></div>
+        <div class="step reveal" style="--i:2"><div class="num">3</div><div><h3 data-i18n="i3t">Load unpacked</h3><p data-i18n="i3d">Click <b>Load unpacked</b> and select the project folder.</p></div></div>
+        <div class="step reveal" style="--i:3"><div class="num">4</div><div><h3 data-i18n="i4t">Pin it</h3><p data-i18n="i4d">Pin Password Generator to the toolbar for one-click access.</p></div></div>
+        <div class="note reveal"><i data-icon="puzzle"></i><span data-i18n="insNote">Tip: Edge uses <code>edge://extensions</code> and Brave uses <code>brave://extensions</code>.</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top" aria-label="Password Generator">
+          <svg class="logo" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#009688"/><g transform="translate(24 24) scale(3.333)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16.5" r="1" fill="#fff"/></g></svg>
+          <span>Password Generator</span>
+        </a>
+        <p data-i18n="footDesc">Secure, offline password, passphrase and PIN generator for Chromium browsers.</p>
+      </div>
+      <div class="credit">
+        <div><i data-icon="user"></i><span><span data-i18n="author">Author</span>: <b>minhtrong67</b></span></div>
+        <div><i data-icon="bot"></i><span data-i18n="ai">Built with support from Claude (Anthropic)</span></div>
+        <div><i data-icon="code"></i><span>MIT License · v3.0.0</span></div>
+      </div>
+    </div>
+    <div class="legal"><span>© 2026 minhtrong67</span><span data-i18n="legal">Made with care for safer logins.</span></div>
+  </div>
+</footer>
+
+<script>
+const ICONS = {"key-round":"<path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\" /> <circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />","type":"<polyline points=\"4 7 4 4 20 4 20 7\" /> <line x1=\"9\" x2=\"15\" y1=\"20\" y2=\"20\" /> <line x1=\"12\" x2=\"12\" y1=\"4\" y2=\"20\" />","hash":"<line x1=\"4\" x2=\"20\" y1=\"9\" y2=\"9\" /> <line x1=\"4\" x2=\"20\" y1=\"15\" y2=\"15\" /> <line x1=\"10\" x2=\"8\" y1=\"3\" y2=\"21\" /> <line x1=\"16\" x2=\"14\" y1=\"3\" y2=\"21\" />","copy":"<rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\" /> <path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\" />","check":"<path d=\"M20 6 9 17l-5-5\" />","refresh-cw":"<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />","settings":"<path d=\"M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" />","sun":"<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />","moon":"<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />","monitor":"<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\" /> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\" />","languages":"<path d=\"m5 8 6 6\" /> <path d=\"m4 14 6-6 2-3\" /> <path d=\"M2 5h12\" /> <path d=\"M7 2h1\" /> <path d=\"m22 22-5-10-5 10\" /> <path d=\"M14 18h6\" />","sparkles":"<path d=\"M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z\" /> <path d=\"M20 3v4\" /> <path d=\"M22 5h-4\" /> <path d=\"M4 17v2\" /> <path d=\"M5 18H3\" />","palette":"<circle cx=\"13.5\" cy=\"6.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"17.5\" cy=\"10.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"8.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"6.5\" cy=\"12.5\" r=\".5\" fill=\"currentColor\" /> <path d=\"M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z\" />","wifi-off":"<path d=\"M12 20h.01\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" /> <path d=\"M5 12.859a10 10 0 0 1 5.17-2.69\" /> <path d=\"M19 12.859a10 10 0 0 0-2.007-1.523\" /> <path d=\"M2 8.82a15 15 0 0 1 4.177-2.643\" /> <path d=\"M22 8.82a15 15 0 0 0-11.288-3.764\" /> <path d=\"m2 2 20 20\" />","gauge":"<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />","sliders-horizontal":"<line x1=\"21\" x2=\"14\" y1=\"4\" y2=\"4\" /> <line x1=\"10\" x2=\"3\" y1=\"4\" y2=\"4\" /> <line x1=\"21\" x2=\"12\" y1=\"12\" y2=\"12\" /> <line x1=\"8\" x2=\"3\" y1=\"12\" y2=\"12\" /> <line x1=\"21\" x2=\"16\" y1=\"20\" y2=\"20\" /> <line x1=\"12\" x2=\"3\" y1=\"20\" y2=\"20\" /> <line x1=\"14\" x2=\"14\" y1=\"2\" y2=\"6\" /> <line x1=\"8\" x2=\"8\" y1=\"10\" y2=\"14\" /> <line x1=\"16\" x2=\"16\" y1=\"18\" y2=\"22\" />","download":"<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\" /> <polyline points=\"7 10 12 15 17 10\" /> <line x1=\"12\" x2=\"12\" y1=\"15\" y2=\"3\" />","code":"<polyline points=\"16 18 22 12 16 6\" /> <polyline points=\"8 6 2 12 8 18\" />","shield-check":"<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />","dices":"<rect width=\"12\" height=\"12\" x=\"2\" y=\"10\" rx=\"2\" ry=\"2\" /> <path d=\"m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6\" /> <path d=\"M6 18h.01\" /> <path d=\"M10 14h.01\" /> <path d=\"M15 6h.01\" /> <path d=\"M18 9h.01\" />","shuffle":"<path d=\"m18 14 4 4-4 4\" /> <path d=\"m18 2 4 4-4 4\" /> <path d=\"M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22\" /> <path d=\"M2 6h1.972a4 4 0 0 1 3.6 2.2\" /> <path d=\"M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45\" />","puzzle":"<path d=\"M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z\" />","user":"<path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\" /> <circle cx=\"12\" cy=\"7\" r=\"4\" />","bot":"<path d=\"M12 8V4H8\" /> <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" /> <path d=\"M2 14h2\" /> <path d=\"M20 14h2\" /> <path d=\"M15 13v2\" /> <path d=\"M9 13v2\" />"};
+const WORDS = ["abandon","ability","able","about","above","absent","absorb","abstract","absurd","abuse","access","accident","account","accuse","achieve","acid","acoustic","acquire","across","act","action","actor","actress","actual","adapt","add","addict","address","adjust","admit","adult","advance","advice","aerobic","affair","afford","afraid","again","age","agent","agree","ahead","aim","air","airport","aisle","alarm","album","alcohol","alert","alien","all","alley","allow","almost","alone","alpha","already","also","alter","always","amateur","amazing","among","amount","amused","analyst","anchor","ancient","anger","angle","angry","animal","ankle","announce","annual","another","answer","antenna","antique","anxiety","any","apart","apology","appear","apple","approve","april","arch","arctic","area","arena","argue","arm","armed","armor","army","around","arrange","arrest","arrive","arrow","art","artefact","artist","artwork","ask","aspect","assault","asset","assist","assume","asthma","athlete","atom","attack","attend","attitude","attract","auction","audit","august","aunt","author","auto","autumn","average","avocado","avoid","awake","aware","away","awesome","awful","awkward","axis","baby","bachelor","bacon","badge","bag","balance","balcony","ball","bamboo","banana","banner","bar","barely","bargain","barrel","base","basic","basket","battle","beach","bean","beauty","because","become","beef","before","begin","behave","behind","believe","below","belt","bench","benefit","best","betray","better","between","beyond","bicycle","bid","bike","bind","biology","bird","birth","bitter","black","blade","blame","blanket","blast","bleak","bless","blind","blood","blossom","blouse","blue","blur","blush","board","boat","body","boil","bomb","bone","bonus","book","boost","border","boring","borrow","boss","bottom","bounce","box","boy","bracket","brain","brand","brass","brave","bread","breeze","brick","bridge","brief","bright","bring","brisk","broccoli","broken","bronze","broom","brother","brown","brush","bubble","buddy","budget","buffalo","build","bulb","bulk","bullet","bundle","bunker","burden","burger","burst","bus","business","busy","butter","buyer","buzz","cabbage","cabin","cable","cactus","cage","cake","call","calm","camera","camp","can","canal","cancel","candy","cannon","canoe","canvas","canyon","capable","capital","captain","car","carbon","card","cargo","carpet","carry","cart","case","cash","casino","castle","casual","cat","catalog","catch","category","cattle","caught","cause","caution","cave","ceiling","celery","cement","census","century","cereal","certain","chair","chalk","champion","change","chaos","chapter","charge","chase","chat","cheap","check","cheese","chef","cherry","chest","chicken","chief","child","chimney","choice","choose","chronic","chuckle","chunk","churn","cigar","cinnamon","circle","citizen","city","civil","claim","clap","clarify","claw","clay","clean","clerk","clever","click","client","cliff","climb","clinic","clip","clock","clog","close","cloth","cloud","clown","club","clump","cluster","clutch","coach","coast","coconut","code","coffee","coil","coin","collect","color","column","combine","come","comfort","comic","common","company","concert","conduct","confirm","congress","connect","consider","control","convince","cook","cool","copper","copy","coral","core","corn","correct","cost","cotton","couch","country","couple","course","cousin","cover","coyote","crack","cradle","craft","cram","crane","crash","crater","crawl","crazy","cream","credit","creek","crew","cricket","crime","crisp","critic","crop","cross","crouch","crowd","crucial","cruel","cruise","crumble","crunch","crush","cry","crystal","cube","culture","cup","cupboard","curious","current","curtain","curve","cushion","custom","cute","cycle","dad","damage","damp","dance","danger","daring","dash","daughter","dawn","day","deal","debate","debris","decade","december","decide","decline","decorate","decrease","deer","defense","define","defy","degree","delay","deliver","demand","demise","denial","dentist","deny","depart","depend","deposit","depth","deputy","derive","describe","desert","design","desk","despair","destroy","detail","detect","develop","device","devote","diagram","dial","diamond","diary","dice","diesel","diet","differ","digital","dignity","dilemma","dinner","dinosaur","direct","dirt","disagree","discover","disease","dish","dismiss","disorder","display","distance","divert","divide","divorce","dizzy","doctor","document","dog","doll","dolphin","domain","donate","donkey","donor","door","dose","double","dove","draft","dragon","drama","drastic","draw","dream","dress","drift","drill","drink","drip","drive","drop","drum","dry","duck","dumb","dune","during","dust","dutch","duty","dwarf","dynamic","eager","eagle","early","earn","earth","easily","east","easy","echo","ecology","economy","edge","edit","educate","effort","egg","eight","either","elbow","elder","electric","elegant","element","elephant","elevator","elite","else","embark","embody","embrace","emerge","emotion","employ","empower","empty","enable","enact","end","endless","endorse","enemy","energy","enforce","engage","engine","enhance","enjoy","enlist","enough","enrich","enroll","ensure","enter","entire","entry","envelope","episode","equal","equip","era","erase","erode","erosion","error","erupt","escape","essay","essence","estate","eternal","ethics","evidence","evil","evoke","evolve","exact","example","excess","exchange","excite","exclude","excuse","execute","exercise","exhaust","exhibit","exile","exist","exit","exotic","expand","expect","expire","explain","expose","express","extend","extra","eye","eyebrow","fabric","face","faculty","fade","faint","faith","fall","false","fame","family","famous","fan","fancy","fantasy","farm","fashion","fat","fatal","father","fatigue","fault","favorite","feature","february","federal","fee","feed","feel","female","fence","festival","fetch","fever","few","fiber","fiction","field","figure","file","film","filter","final","find","fine","finger","finish","fire","firm","first","fiscal","fish","fit","fitness","fix","flag","flame","flash","flat","flavor","flee","flight","flip","float","flock","floor","flower","fluid","flush","fly","foam","focus","fog","foil","fold","follow","food","foot","force","forest","forget","fork","fortune","forum","forward","fossil","foster","found","fox","fragile","frame","frequent","fresh","friend","fringe","frog","front","frost","frown","frozen","fruit","fuel","fun","funny","furnace","fury","future","gadget","gain","galaxy","gallery","game","gap","garage","garbage","garden","garlic","garment","gas","gasp","gate","gather","gauge","gaze","general","genius","genre","gentle","genuine","gesture","ghost","giant","gift","giggle","ginger","giraffe","girl","give","glad","glance","glare","glass","glide","glimpse","globe","gloom","glory","glove","glow","glue","goat","goddess","gold","good","goose","gorilla","gospel","gossip","govern","gown","grab","grace","grain","grant","grape","grass","gravity","great","green","grid","grief","grit","grocery","group","grow","grunt","guard","guess","guide","guilt","guitar","gun","gym","habit","hair","half","hammer","hamster","hand","happy","harbor","hard","harsh","harvest","hat","have","hawk","hazard","head","health","heart","heavy","hedgehog","height","hello","helmet","help","hen","hero","hidden","high","hill","hint","hip","hire","history","hobby","hockey","hold","hole","holiday","hollow","home","honey","hood","hope","horn","horror","horse","hospital","host","hotel","hour","hover","hub","huge","human","humble","humor","hundred","hungry","hunt","hurdle","hurry","hurt","husband","hybrid","ice","icon","idea","identify","idle","ignore","ill","illegal","illness","image","imitate","immense","immune","impact","impose","improve","impulse","inch","include","income","increase","index","indicate","indoor","industry","infant","inflict","inform","inhale","inherit","initial","inject","injury","inmate","inner","innocent","input","inquiry","insane","insect","inside","inspire","install","intact","interest","into","invest","invite","involve","iron","island","isolate","issue","item","ivory","jacket","jaguar","jar","jazz","jealous","jeans","jelly","jewel","job","join","joke","journey","joy","judge","juice","jump","jungle","junior","junk","just","kangaroo","keen","keep","ketchup","key","kick","kid","kidney","kind","kingdom","kiss","kit","kitchen","kite","kitten","kiwi","knee","knife","knock","know","lab","label","labor","ladder","lady","lake","lamp","language","laptop","large","later","latin","laugh","laundry","lava","law","lawn","lawsuit","layer","lazy","leader","leaf","learn","leave","lecture","left","leg","legal","legend","leisure","lemon","lend","length","lens","leopard","lesson","letter","level","liar","liberty","library","license","life","lift","light","like","limb","limit","link","lion","liquid","list","little","live","lizard","load","loan","lobster","local","lock","logic","lonely","long","loop","lottery","loud","lounge","love","loyal","lucky","luggage","lumber","lunar","lunch","luxury","lyrics","machine","mad","magic","magnet","maid","mail","main","major","make","mammal","man","manage","mandate","mango","mansion","manual","maple","marble","march","margin","marine","market","marriage","mask","mass","master","match","material","math","matrix","matter","maximum","maze","meadow","mean","measure","meat","mechanic","medal","media","melody","melt","member","memory","mention","menu","mercy","merge","merit","merry","mesh","message","metal","method","middle","midnight","milk","million","mimic","mind","minimum","minor","minute","miracle","mirror","misery","miss","mistake","mix","mixed","mixture","mobile","model","modify","mom","moment","monitor","monkey","monster","month","moon","moral","more","morning","mosquito","mother","motion","motor","mountain","mouse","move","movie","much","muffin","mule","multiply","muscle","museum","mushroom","music","must","mutual","myself","mystery","myth","naive","name","napkin","narrow","nasty","nation","nature","near","neck","need","negative","neglect","neither","nephew","nerve","nest","net","network","neutral","never","news","next","nice","night","noble","noise","nominee","noodle","normal","north","nose","notable","note","nothing","notice","novel","now","nuclear","number","nurse","nut","oak","obey","object","oblige","obscure","observe","obtain","obvious","occur","ocean","october","odor","off","offer","office","often","oil","okay","old","olive","olympic","omit","once","one","onion","online","only","open","opera","opinion","oppose","option","orange","orbit","orchard","order","ordinary","organ","orient","original","orphan","ostrich","other","outdoor","outer","output","outside","oval","oven","over","own","owner","oxygen","oyster","ozone","pact","paddle","page","pair","palace","palm","panda","panel","panic","panther","paper","parade","parent","park","parrot","party","pass","patch","path","patient","patrol","pattern","pause","pave","payment","peace","peanut","pear","peasant","pelican","pen","penalty","pencil","people","pepper","perfect","permit","person","pet","phone","photo","phrase","physical","piano","picnic","picture","piece","pig","pigeon","pill","pilot","pink","pioneer","pipe","pistol","pitch","pizza","place","planet","plastic","plate","play","please","pledge","pluck","plug","plunge","poem","poet","point","polar","pole","police","pond","pony","pool","popular","portion","position","possible","post","potato","pottery","poverty","powder","power","practice","praise","predict","prefer","prepare","present","pretty","prevent","price","pride","primary","print","priority","prison","private","prize","problem","process","produce","profit","program","project","promote","proof","property","prosper","protect","proud","provide","public","pudding","pull","pulp","pulse","pumpkin","punch","pupil","puppy","purchase","purity","purpose","purse","push","put","puzzle","pyramid","quality","quantum","quarter","question","quick","quit","quiz","quote","rabbit","raccoon","race","rack","radar","radio","rail","rain","raise","rally","ramp","ranch","random","range","rapid","rare","rate","rather","raven","raw","razor","ready","real","reason","rebel","rebuild","recall","receive","recipe","record","recycle","reduce","reflect","reform","refuse","region","regret","regular","reject","relax","release","relief","rely","remain","remember","remind","remove","render","renew","rent","reopen","repair","repeat","replace","report","require","rescue","resemble","resist","resource","response","result","retire","retreat","return","reunion","reveal","review","reward","rhythm","rib","ribbon","rice","rich","ride","ridge","rifle","right","rigid","ring","riot","ripple","risk","ritual","rival","river","road","roast","robot","robust","rocket","romance","roof","rookie","room","rose","rotate","rough","round","route","royal","rubber","rude","rug","rule","run","runway","rural","sad","saddle","sadness","safe","sail","salad","salmon","salon","salt","salute","same","sample","sand","satisfy","satoshi","sauce","sausage","save","say","scale","scan","scare","scatter","scene","scheme","school","science","scissors","scorpion","scout","scrap","screen","script","scrub","sea","search","season","seat","second","secret","section","security","seed","seek","segment","select","sell","seminar","senior","sense","sentence","series","service","session","settle","setup","seven","shadow","shaft","shallow","share","shed","shell","sheriff","shield","shift","shine","ship","shiver","shock","shoe","shoot","shop","short","shoulder","shove","shrimp","shrug","shuffle","shy","sibling","sick","side","siege","sight","sign","silent","silk","silly","silver","similar","simple","since","sing","siren","sister","situate","six","size","skate","sketch","ski","skill","skin","skirt","skull","slab","slam","sleep","slender","slice","slide","slight","slim","slogan","slot","slow","slush","small","smart","smile","smoke","smooth","snack","snake","snap","sniff","snow","soap","soccer","social","sock","soda","soft","solar","soldier","solid","solution","solve","someone","song","soon","sorry","sort","soul","sound","soup","source","south","space","spare","spatial","spawn","speak","special","speed","spell","spend","sphere","spice","spider","spike","spin","spirit","split","spoil","sponsor","spoon","sport","spot","spray","spread","spring","spy","square","squeeze","squirrel","stable","stadium","staff","stage","stairs","stamp","stand","start","state","stay","steak","steel","stem","step","stereo","stick","still","sting","stock","stomach","stone","stool","story","stove","strategy","street","strike","strong","struggle","student","stuff","stumble","style","subject","submit","subway","success","such","sudden","suffer","sugar","suggest","suit","summer","sun","sunny","sunset","super","supply","supreme","sure","surface","surge","surprise","surround","survey","suspect","sustain","swallow","swamp","swap","swarm","swear","sweet","swift","swim","swing","switch","sword","symbol","symptom","syrup","system","table","tackle","tag","tail","talent","talk","tank","tape","target","task","taste","tattoo","taxi","teach","team","tell","ten","tenant","tennis","tent","term","test","text","thank","that","theme","then","theory","there","they","thing","this","thought","three","thrive","throw","thumb","thunder","ticket","tide","tiger","tilt","timber","time","tiny","tip","tired","tissue","title","toast","tobacco","today","toddler","toe","together","toilet","token","tomato","tomorrow","tone","tongue","tonight","tool","tooth","top","topic","topple","torch","tornado","tortoise","toss","total","tourist","toward","tower","town","toy","track","trade","traffic","tragic","train","transfer","trap","trash","travel","tray","treat","tree","trend","trial","tribe","trick","trigger","trim","trip","trophy","trouble","truck","true","truly","trumpet","trust","truth","try","tube","tuition","tumble","tuna","tunnel","turkey","turn","turtle","twelve","twenty","twice","twin","twist","two","type","typical","ugly","umbrella","unable","unaware","uncle","uncover","under","undo","unfair","unfold","unhappy","uniform","unique","unit","universe","unknown","unlock","until","unusual","unveil","update","upgrade","uphold","upon","upper","upset","urban","urge","usage","use","used","useful","useless","usual","utility","vacant","vacuum","vague","valid","valley","valve","van","vanish","vapor","various","vast","vault","vehicle","velvet","vendor","venture","venue","verb","verify","version","very","vessel","veteran","viable","vibrant","vicious","victory","video","view","village","vintage","violin","virtual","virus","visa","visit","visual","vital","vivid","vocal","voice","void","volcano","volume","vote","voyage","wage","wagon","wait","walk","wall","walnut","want","warfare","warm","warrior","wash","wasp","waste","water","wave","way","wealth","weapon","wear","weasel","weather","web","wedding","weekend","weird","welcome","west","wet","whale","what","wheat","wheel","when","where","whip","whisper","wide","width","wife","wild","will","win","window","wine","wing","wink","winner","winter","wire","wisdom","wise","wish","witness","wolf","woman","wonder","wood","wool","word","work","world","worry","worth","wrap","wreck","wrestle","wrist","write","wrong","yard","year","yellow","you","young","youth","zebra","zero","zone","zoo"];
+
+/* ---------- i18n ---------- */
+const T = {
+  en: {
+    skip: "Skip to content", settings: "Settings", copy: "Copy", regen: "Generate new",
+    navFeatures: "Features", navHow: "How it works", navPrivacy: "Privacy", navInstall: "Install",
+    mColor: "Color", mTheme: "Theme", mLang: "Language", themeSystem: "System", themeLight: "Light", themeDark: "Dark", langAuto: "Auto",
+    eyebrow: "Free · Open source · 100% offline", h1a: "Strong passwords,", h1b: "generated privately.",
+    lead: "Password Generator is a lightweight browser extension that creates strong passwords, memorable passphrases and PINs right on your device — no servers, no accounts, no tracking.",
+    ctaInstall: "Get the extension", ctaFeatures: "Explore features",
+    fact1: "Web Crypto randomness", fact2: "Works offline", fact3: "MIT licensed",
+    modePassword: "Password", modePassphrase: "Passphrase", modePin: "PIN", length: "Length", words: "Words", digits: "Digits", generate: "Generate",
+    crack: "Time to crack", strength: ["Weak", "Fair", "Good", "Strong", "Very strong"],
+    demoNote: "Live demo — generated with your browser’s secure random source.",
+    featEyebrow: "Features", featTitle: "Everything you need, nothing you don’t", featSub: "A focused toolkit for creating credentials you can trust, wrapped in a clean Material Design interface.",
+    f1t: "Three generators", f1d: "Random passwords, BIP‑39 passphrases and numeric PINs — one tap apart.",
+    f2t: "Secure by design", f2d: "Powered by the Web Crypto API with rejection sampling, so every character is unbiased and unpredictable.",
+    f3t: "Private & offline", f3d: "No network requests, no analytics, no accounts. Everything happens on your device.",
+    f4t: "Live strength meter", f4d: "Entropy-based scoring and an estimated crack time update instantly as you tweak each option.",
+    f5t: "Make it yours", f5d: "Choose from 18 Material Design colors with light, dark or automatic theme.",
+    f6t: "English & Tiếng Việt", f6d: "Detects your language automatically and lets you switch whenever you like.",
+    howEyebrow: "How it works", howTitle: "Three steps to a safer login", howSub: "From click to clipboard in seconds.",
+    s1t: "Choose a type", s1d: "Pick a password, a memorable passphrase or a numeric PIN.",
+    s2t: "Fine-tune it", s2d: "Adjust length, character types, look-alike filters and custom exclusions.",
+    s3t: "Copy & go", s3d: "One click copies it. Recent values are kept only until you close the browser.",
+    privEyebrow: "Privacy & security", privTitle: "Private by default", privSub: "Your passwords are yours alone. The extension is deliberately small, auditable and quiet.",
+    p1: "Only the <code>storage</code> permission — no access to websites or tabs.",
+    p2: "History lives in session storage and disappears when the browser closes.",
+    p3: "Zero network requests, zero telemetry — and open source, so you can audit every line.",
+    sp1t: "Randomness", sp1d: "with rejection sampling — never Math.random().",
+    sp2t: "Passphrases", sp2d: "BIP‑39 wordlist · 2,048 words · 11 bits per word.",
+    sp3t: "Strength", sp3d: "Entropy from the real character pool, with the crack-time estimated at 10 billion guesses per second.",
+    sp4t: "Footprint", sp4d: "Manifest V3 · vanilla JavaScript · no dependencies.",
+    perEyebrow: "Personalize", perTitle: "Your color, your theme", perSub: "Pick any of 18 Material Design colors and switch between light, dark and system themes. Try it now — this page follows your choice.",
+    insEyebrow: "Install", insTitle: "Up and running in a minute", insSub: "Works on Chrome, Edge, Brave, Opera and other Chromium browsers.",
+    i1t: "Get the source", i1d: "Download or clone the project folder that contains <code>manifest.json</code>.",
+    i2t: "Open extensions", i2d: "Go to <code>chrome://extensions</code> and turn on <b>Developer mode</b>.",
+    i3t: "Load unpacked", i3d: "Click <b>Load unpacked</b> and select the project folder.",
+    i4t: "Pin it", i4d: "Pin Password Generator to the toolbar for one-click access.",
+    insNote: "Tip: Edge uses <code>edge://extensions</code> and Brave uses <code>brave://extensions</code>.",
+    footDesc: "Secure, offline password, passphrase and PIN generator for Chromium browsers.",
+    author: "Author", ai: "Built with support from Claude (Anthropic)", legal: "Made with care for safer logins.",
+    pageTitle: "Password Generator — Secure, offline password, passphrase & PIN generator",
+    pageDesc: "Password Generator is a free, open-source browser extension that creates strong passwords, passphrases and PINs offline with a cryptographically secure source. Material Design, light/dark themes, English & Vietnamese.",
+    colorNames: { red: "Red", pink: "Pink", purple: "Purple", deepPurple: "Deep purple", indigo: "Indigo", blue: "Blue", lightBlue: "Light blue", cyan: "Cyan", teal: "Teal", green: "Green", lightGreen: "Light green", lime: "Lime", yellow: "Yellow", amber: "Amber", orange: "Orange", deepOrange: "Deep orange", brown: "Brown", blueGrey: "Blue grey" },
+    crackT: { instant: "instantly", s: (n) => n + (n === 1 ? " second" : " seconds"), m: (n) => n + " min", h: (n) => n + " hours", d: (n) => n + " days", y: (n) => n + " years", ky: (n) => n + " thousand years", my: (n) => n + " million years", by: "billions of years" }
+  },
+  vi: {
+    skip: "Bỏ qua đến nội dung", settings: "Cài đặt", copy: "Sao chép", regen: "Tạo mới",
+    navFeatures: "Tính năng", navHow: "Cách hoạt động", navPrivacy: "Riêng tư", navInstall: "Cài đặt",
+    mColor: "Màu sắc", mTheme: "Giao diện", mLang: "Ngôn ngữ", themeSystem: "Hệ thống", themeLight: "Sáng", themeDark: "Tối", langAuto: "Tự động",
+    eyebrow: "Miễn phí · Mã nguồn mở · 100% ngoại tuyến", h1a: "Mật khẩu mạnh,", h1b: "tạo riêng tư ngay trên máy bạn.",
+    lead: "Password Generator là tiện ích mở rộng nhẹ giúp tạo mật khẩu mạnh, cụm từ dễ nhớ và mã PIN ngay trên thiết bị của bạn — không máy chủ, không tài khoản, không theo dõi.",
+    ctaInstall: "Cài đặt tiện ích", ctaFeatures: "Khám phá tính năng",
+    fact1: "Ngẫu nhiên bằng Web Crypto", fact2: "Hoạt động ngoại tuyến", fact3: "Giấy phép MIT",
+    modePassword: "Mật khẩu", modePassphrase: "Cụm từ", modePin: "PIN", length: "Độ dài", words: "Số từ", digits: "Số chữ số", generate: "Tạo",
+    crack: "Thời gian bẻ khóa", strength: ["Yếu", "Trung bình", "Khá", "Mạnh", "Rất mạnh"],
+    demoNote: "Bản demo trực tiếp — được tạo bằng nguồn ngẫu nhiên an toàn của trình duyệt.",
+    featEyebrow: "Tính năng", featTitle: "Đủ mọi thứ bạn cần, không thừa thứ nào", featSub: "Bộ công cụ gọn gàng để tạo thông tin đăng nhập đáng tin cậy, với giao diện Material Design tinh gọn.",
+    f1t: "Ba chế độ tạo", f1d: "Mật khẩu ngẫu nhiên, cụm từ BIP‑39 và mã PIN — chuyển đổi chỉ bằng một chạm.",
+    f2t: "An toàn từ thiết kế", f2d: "Dùng Web Crypto API cùng kỹ thuật rejection sampling, mỗi ký tự đều không thiên lệch và không thể đoán trước.",
+    f3t: "Riêng tư & ngoại tuyến", f3d: "Không gọi mạng, không phân tích, không tài khoản. Mọi thứ diễn ra trên thiết bị của bạn.",
+    f4t: "Đo độ mạnh trực tiếp", f4d: "Điểm entropy và thời gian bẻ khóa ước tính cập nhật tức thì khi bạn thay đổi từng tùy chọn.",
+    f5t: "Đậm chất riêng", f5d: "18 màu Material Design cùng giao diện sáng, tối hoặc tự động theo hệ thống.",
+    f6t: "English & Tiếng Việt", f6d: "Tự nhận diện ngôn ngữ của bạn và cho phép chuyển đổi bất cứ lúc nào.",
+    howEyebrow: "Cách hoạt động", howTitle: "Ba bước để đăng nhập an toàn hơn", howSub: "Từ cú nhấp chuột đến clipboard chỉ trong vài giây.",
+    s1t: "Chọn loại", s1d: "Chọn mật khẩu, cụm từ dễ nhớ hoặc mã PIN số.",
+    s2t: "Tinh chỉnh", s2d: "Điều chỉnh độ dài, loại ký tự, bộ lọc ký tự dễ nhầm và ký tự cần loại trừ.",
+    s3t: "Sao chép & dùng ngay", s3d: "Một cú nhấp để sao chép. Giá trị gần đây chỉ được giữ đến khi bạn đóng trình duyệt.",
+    privEyebrow: "Riêng tư & bảo mật", privTitle: "Riêng tư theo mặc định", privSub: "Mật khẩu chỉ thuộc về bạn. Tiện ích được giữ nhỏ gọn, dễ kiểm chứng và im lặng.",
+    p1: "Chỉ cần quyền <code>storage</code> — không truy cập trang web hay tab.",
+    p2: "Lịch sử nằm trong session storage và biến mất khi đóng trình duyệt.",
+    p3: "Không gọi mạng, không telemetry — và là mã nguồn mở nên bạn có thể kiểm tra từng dòng.",
+    sp1t: "Tính ngẫu nhiên", sp1d: "cùng rejection sampling — tuyệt đối không dùng Math.random().",
+    sp2t: "Cụm từ", sp2d: "Danh sách BIP‑39 · 2.048 từ · 11 bit mỗi từ.",
+    sp3t: "Độ mạnh", sp3d: "Entropy tính từ tập ký tự thực tế, thời gian bẻ khóa ước tính ở 10 tỷ lượt thử mỗi giây.",
+    sp4t: "Quy mô", sp4d: "Manifest V3 · JavaScript thuần · không phụ thuộc thư viện.",
+    perEyebrow: "Cá nhân hóa", perTitle: "Màu của bạn, giao diện của bạn", perSub: "Chọn một trong 18 màu Material Design và chuyển giữa giao diện sáng, tối hoặc theo hệ thống. Thử ngay — trang này sẽ đổi theo lựa chọn của bạn.",
+    insEyebrow: "Cài đặt", insTitle: "Sẵn sàng chỉ trong một phút", insSub: "Hoạt động trên Chrome, Edge, Brave, Opera và các trình duyệt Chromium khác.",
+    i1t: "Lấy mã nguồn", i1d: "Tải hoặc clone thư mục dự án chứa <code>manifest.json</code>.",
+    i2t: "Mở trang tiện ích", i2d: "Vào <code>chrome://extensions</code> và bật <b>Chế độ dành cho nhà phát triển</b>.",
+    i3t: "Tải tiện ích đã giải nén", i3d: "Nhấn <b>Tải tiện ích đã giải nén</b> rồi chọn thư mục dự án.",
+    i4t: "Ghim lên thanh công cụ", i4d: "Ghim Password Generator để truy cập chỉ với một cú nhấp.",
+    insNote: "Mẹo: Edge dùng <code>edge://extensions</code>, Brave dùng <code>brave://extensions</code>.",
+    footDesc: "Trình tạo mật khẩu, cụm từ và mã PIN an toàn, ngoại tuyến cho trình duyệt Chromium.",
+    author: "Tác giả", ai: "Phát triển với sự hỗ trợ của Claude (Anthropic)", legal: "Làm bằng sự tận tâm cho những lần đăng nhập an toàn hơn.",
+    pageTitle: "Password Generator — Trình tạo mật khẩu, cụm từ & PIN an toàn, ngoại tuyến",
+    pageDesc: "Password Generator là tiện ích mở rộng miễn phí, mã nguồn mở giúp tạo mật khẩu, cụm từ và mã PIN mạnh hoàn toàn ngoại tuyến bằng nguồn ngẫu nhiên an toàn. Material Design, giao diện sáng/tối, Tiếng Việt & English.",
+    colorNames: { red: "Đỏ", pink: "Hồng", purple: "Tím", deepPurple: "Tím đậm", indigo: "Chàm", blue: "Xanh dương", lightBlue: "Xanh da trời", cyan: "Xanh lơ", teal: "Xanh ngọc", green: "Xanh lá", lightGreen: "Xanh lá nhạt", lime: "Xanh chanh", yellow: "Vàng", amber: "Hổ phách", orange: "Cam", deepOrange: "Cam đậm", brown: "Nâu", blueGrey: "Xám xanh" },
+    crackT: { instant: "tức thì", s: (n) => n + " giây", m: (n) => n + " phút", h: (n) => n + " giờ", d: (n) => n + " ngày", y: (n) => n + " năm", ky: (n) => n + " nghìn năm", my: (n) => n + " triệu năm", by: "hàng tỷ năm" }
+  }
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const pref = window.__pref;
+let lang = "en";
+
+const resolveLang = () => (pref.lang === "en" || pref.lang === "vi") ? pref.lang : ((navigator.language || "en").toLowerCase().startsWith("vi") ? "vi" : "en");
+const savePref = () => { try { localStorage.setItem("pg-landing", JSON.stringify(pref)); } catch (e) {} };
+
+/* ---------- icons ---------- */
+function hydrateIcons(root = document) {
+  $$("i[data-icon]", root).forEach((n) => {
+    const body = ICONS[n.dataset.icon];
+    if (!body) return;
+    n.outerHTML = '<svg class="icon ' + n.className + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + "</svg>";
+  });
+}
+const iconSvg = (name) => '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + "</svg>";
+
+/* ---------- apply language ---------- */
+function applyLang() {
+  lang = resolveLang();
+  const d = T[lang];
+  document.documentElement.lang = lang;
+  document.title = d.pageTitle;
+  $('meta[name="description"]').setAttribute("content", d.pageDesc);
+  $$("[data-i18n]").forEach((n) => { if (d[n.dataset.i18n] !== undefined) n.innerHTML = d[n.dataset.i18n]; });
+  $$("[data-i18n-label]").forEach((n) => { const v = d[n.dataset.i18nLabel]; n.setAttribute("aria-label", v); n.title = v; });
+  $$(".swatch").forEach((b) => { b.title = b.ariaLabel = d.colorNames[b.dataset.color]; });
+  syncControls();
+  demo.relabel();
+}
+
+function syncControls() {
+  $$(".segmented[id=themeSeg] .seg, [data-themeseg] .seg").forEach((b) => { const on = b.dataset.value === pref.theme; b.classList.toggle("is-selected", on); b.setAttribute("aria-checked", on); });
+  $$("#langSeg .seg").forEach((b) => { const on = b.dataset.value === pref.lang; b.classList.toggle("is-selected", on); b.setAttribute("aria-checked", on); });
+  $$(".swatch").forEach((b) => b.setAttribute("aria-checked", b.dataset.color === pref.color));
+  $$(".colorName").forEach((n) => { n.textContent = T[lang].colorNames[pref.color]; });
+}
+
+/* ---------- swatches ---------- */
+function buildSwatches() {
+  $$("[data-swatches]").forEach((wrap) => {
+    Object.keys(MD_TOKENS).forEach((name) => {
+      const hex = MD_TOKENS[name].seed;
+      const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "swatch"; btn.dataset.color = name;
+      btn.setAttribute("role", "radio");
+      btn.style.setProperty("--sw", hex);
+      btn.style.setProperty("--sw-on", 0.299 * r + 0.587 * g + 0.114 * b > 160 ? "#1b1b1b" : "#fff");
+      btn.innerHTML = iconSvg("check");
+      btn.addEventListener("click", () => { pref.color = name; window.applyAppearance(); savePref(); syncControls(); });
+      wrap.appendChild(btn);
+    });
+  });
+}
+
+function bindControls() {
+  $$("#themeSeg .seg, [data-themeseg] .seg").forEach((b) => b.addEventListener("click", () => { pref.theme = b.dataset.value; window.applyAppearance(); savePref(); syncControls(); }));
+  $$("#langSeg .seg").forEach((b) => b.addEventListener("click", () => { pref.lang = b.dataset.value; savePref(); applyLang(); }));
+
+  const btn = $("#menuBtn"), menu = $("#menu");
+  const setMenu = (open) => { menu.classList.toggle("open", open); btn.setAttribute("aria-expanded", open); };
+  btn.addEventListener("click", (e) => { e.stopPropagation(); setMenu(!menu.classList.contains("open")); });
+  document.addEventListener("click", (e) => { if (!menu.contains(e.target)) setMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { setMenu(false); } });
+
+  const bar = $("#appbar");
+  const onScroll = () => bar.classList.toggle("scrolled", window.scrollY > 8);
+  onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+
+  // active nav link
+  const links = $$(".nav a");
+  const secs = links.map((a) => $(a.getAttribute("href")));
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+    }), { rootMargin: "-45% 0px -50% 0px" });
+    secs.forEach((s) => s && io.observe(s));
+
+    const rv = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); rv.unobserve(e.target); } }), { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    $$(".reveal").forEach((n) => rv.observe(n));
+  } else { $$(".reveal").forEach((n) => n.classList.add("in")); }
+}
+
+/* ---------- live demo (same algorithm as the extension) ---------- */
+const demo = (function () {
+  const SETS = { upper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", lower: "abcdefghijklmnopqrstuvwxyz", numbers: "0123456789", symbols: "!@#$%^&*()_+-=[]{}|;:,.<>?/~" };
+  const cfg = { password: { min: 4, max: 64, val: 16, key: "length" }, passphrase: { min: 3, max: 10, val: 4, key: "words" }, pin: { min: 4, max: 12, val: 6, key: "digits" } };
+  let mode = "password", value = "", bits = 0, copiedT;
+  const out = $("#dOut"), len = $("#dLen");
+
+  function rnd(max) {
+    if (max <= 1) return 0;
+    const b = new Uint32Array(1), lim = Math.floor(4294967296 / max) * max;
+    let v; do { crypto.getRandomValues(b); v = b[0]; } while (v >= lim);
+    return v % max;
+  }
+  function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  function make() {
+    const n = parseInt(len.value, 10);
+    if (mode === "passphrase") {
+      const w = Array.from({ length: n }, () => { const x = WORDS[rnd(WORDS.length)]; return x[0].toUpperCase() + x.slice(1); });
+      w.push(String(rnd(90) + 10));
+      bits = n * Math.log2(WORDS.length) + Math.log2(90);
+      return w.join("-");
+    }
+    if (mode === "pin") { bits = n * Math.log2(10); return Array.from({ length: n }, () => rnd(10)).join(""); }
+    const sets = $$("#dOpts [data-set]").filter((c) => c.checked).map((c) => SETS[c.dataset.set]);
+    if (!sets.length) { bits = 0; return ""; }
+    const pool = sets.join("");
+    const r = sets.map((s) => s[rnd(s.length)]);
+    while (r.length < n) r.push(pool[rnd(pool.length)]);
+    bits = r.length * Math.log2(pool.length);
+    return shuffle(r).join("");
+  }
+
+  function crack() {
+    const c = T[lang].crackT, s = Math.pow(2, bits) / 1e10 / 2, Y = 31557600;
+    if (s < 1) return c.instant; if (s < 60) return c.s(Math.round(s)); if (s < 3600) return c.m(Math.round(s / 60));
+    if (s < 86400) return c.h(Math.round(s / 3600)); if (s < Y) return c.d(Math.round(s / 86400));
+    const y = s / Y; if (y < 1e3) return c.y(Math.round(y)); if (y < 1e6) return c.ky(Math.round(y / 1e3)); if (y < 1e9) return c.my(Math.round(y / 1e6)); return c.by;
+  }
+  const level = () => bits <= 0 ? -1 : bits < 36 ? 0 : bits < 60 ? 1 : bits < 80 ? 2 : bits < 100 ? 3 : 4;
+
+  function paint(animate) {
+    out.textContent = "";
+    out.dataset.size = value.length <= 18 ? "l" : value.length <= 30 ? "m" : "s";
+    const wrap = document.createElement("span");
+    for (const ch of value || "—") {
+      const s = document.createElement("span"); s.textContent = ch;
+      if (/[0-9]/.test(ch) && value) s.className = "d"; else if (value && !/\p{L}/u.test(ch)) s.className = "s";
+      wrap.appendChild(s);
+    }
+    out.appendChild(wrap);
+    if (animate) { out.classList.remove("pop"); void out.offsetWidth; out.classList.add("pop"); }
+    const lv = level();
+    $("#dMeter").style.setProperty("--c", lv < 0 ? "var(--md-outline)" : "var(--lv" + lv + ")");
+    $("#dMeter").parentElement.querySelector(".dv-meta").style.setProperty("--c", lv < 0 ? "var(--md-outline)" : "var(--lv" + lv + ")");
+    $("#dFill").style.width = (lv + 1) * 20 + "%";
+    $("#dLevel").textContent = lv < 0 ? "—" : T[lang].strength[lv];
+    $("#dCrack").textContent = lv < 0 ? "—" : crack();
+  }
+  function gen(animate) { value = make(); paint(animate); }
+  function pct() { len.style.setProperty("--pct", ((len.value - len.min) / (len.max - len.min)) * 100 + "%"); }
+  function spin(el) { el.classList.remove("spin"); void el.offsetWidth; el.classList.add("spin"); }
+
+  function setMode(m) {
+    mode = m;
+    $$("#dMode .seg").forEach((b) => { const on = b.dataset.mode === m; b.classList.toggle("is-selected", on); b.setAttribute("aria-selected", on); });
+    const c = cfg[m]; len.min = c.min; len.max = c.max; len.value = c.val;
+    $("#dLenOut").textContent = c.val; $("#dOpts").dataset.mode = m; pct(); relabel(); gen(true);
+  }
+  function relabel() { $("#dLenLabel").textContent = T[lang][cfg[mode].key]; paint(false); }
+
+  $$("#dMode .seg").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  len.addEventListener("input", () => { $("#dLenOut").textContent = len.value; pct(); gen(false); });
+  $$("#dOpts [data-set]").forEach((c) => c.addEventListener("change", () => gen(false)));
+  const again = () => { gen(true); spin($("#dRegen")); spin($("#dGen")); };
+  $("#dRegen").addEventListener("click", again); $("#dGen").addEventListener("click", again);
+  $("#dCopy").addEventListener("click", async () => {
+    if (!value) return;
+    try { await navigator.clipboard.writeText(value); } catch (e) {
+      const t = document.createElement("textarea"); t.value = value; t.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(t); t.select();
+      try { document.execCommand("copy"); } catch (e2) {} t.remove();
+    }
+    const b = $("#dCopy"); b.classList.add("is-copied"); clearTimeout(copiedT); copiedT = setTimeout(() => b.classList.remove("is-copied"), 1400);
+  });
+  return { init() { pct(); gen(false); }, relabel };
+})();
+
+/* ---------- boot ---------- */
+hydrateIcons();
+buildSwatches();
+bindControls();
+demo.init();
+applyLang();
+</script>
 </body>
 </html>

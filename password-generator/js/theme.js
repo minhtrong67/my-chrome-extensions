@@ -1,48 +1,20 @@
-// LockSmith — theme module
+const MD_COLORS = ["red","pink","purple","deepPurple","indigo","blue","lightBlue","cyan","teal","green","lightGreen","lime","yellow","amber","orange","deepOrange","brown","blueGrey"];
+const MD_SEEDS = {red:"#F44336",pink:"#E91E63",purple:"#9C27B0",deepPurple:"#673AB7",indigo:"#3F51B5",blue:"#2196F3",lightBlue:"#03A9F4",cyan:"#00BCD4",teal:"#009688",green:"#4CAF50",lightGreen:"#8BC34A",lime:"#CDDC39",yellow:"#FFEB3B",amber:"#FFC107",orange:"#FF9800",deepOrange:"#FF5722",brown:"#795548",blueGrey:"#607D8B"};
 
 const themeManager = {
-  current: "system",
-  mql: window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null,
+  mode: "system",
+  mql: window.matchMedia("(prefers-color-scheme: dark)"),
 
   apply(mode) {
-    this.current = mode;
-    const resolved = mode === "system" ? (this.mql && this.mql.matches ? "dark" : "light") : mode;
-    document.documentElement.setAttribute("data-theme", resolved);
-
-    const icon = document.getElementById("themeIcon");
-    if (icon) {
-      // swap icon path lightly based on resolved theme (sun vs moon feel via same glyph is fine,
-      // but we tweak stroke intensity through currentColor + class for clarity)
-      icon.parentElement.classList.toggle("is-dark", resolved === "dark");
-    }
+    this.mode = mode;
+    const dark = mode === "dark" || (mode === "system" && this.mql.matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
   },
-
   applyColor(color) {
-    document.documentElement.setAttribute("data-color", color || "teal");
+    document.documentElement.setAttribute("data-color", MD_SEEDS[color] ? color : "teal");
   },
-
-  applyFontSize(size) {
-    document.body.setAttribute("data-fontsize", size);
-  },
-
-  watchSystemChanges(onChange) {
-    if (!this.mql) return;
-    this.mql.addEventListener("change", () => {
-      if (this.current === "system") {
-        this.apply("system");
-        if (onChange) onChange();
-      }
-    });
-  },
-
-  cycle() {
-    // Explicit mapping (not array-index rotation) so the very first click
-    // from "system" always produces a visible change. If we rotated through
-    // ["light","dark","system"] by index, starting at "system" the first
-    // click would land on "light" — which, whenever the OS theme already
-    // resolves to light, looks exactly like nothing happened.
-    const next = { system: "dark", dark: "light", light: "system" }[this.current] || "system";
-    this.apply(next);
-    return next;
+  /** Re-apply when the OS theme flips while "System" is selected. */
+  watch() {
+    this.mql.addEventListener("change", () => { if (this.mode === "system") this.apply("system"); });
   }
 };

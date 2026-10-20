@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Photo Converter",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Convert images to PNG, JPEG or WEBP in one click. Right-click any image to save it in another format, or batch to .zip.",
+    "description": "Extension description"
+  }
+}

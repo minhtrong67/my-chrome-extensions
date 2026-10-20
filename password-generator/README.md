@@ -1,103 +1,161 @@
+<div align="center">
+
+<img src="icons/icon128.png" alt="Password Generator logo" width="96" height="96" />
+
 # Password Generator
 
-<p align="center"><img src="icons/icon128.png" alt="Password Generator" width="96"></p>
-<p align="center"><strong>Password, passphrase & PIN generator cho Chromium</strong><br>Material Design 3 · Roboto · 100% offline · English / Tiếng Việt</p>
+**Secure, offline password, passphrase & PIN generator for Chromium browsers.**
 
-[![Manifest V3](https://img.shields.io/badge/Manifest-V3-156683?style=flat-square)](#tech-stack) [![Offline](https://img.shields.io/badge/privacy-100%25%20offline-2e7d32?style=flat-square)](#tính-năng) [![License: MIT](https://img.shields.io/badge/license-MIT-6750A4?style=flat-square)](#license)
+Material Design 3 · Lucide icons · Light / Dark / System · English & Tiếng Việt
 
-## 1. Giới thiệu
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-009688?style=flat-square)](manifest.json)
+[![Offline](https://img.shields.io/badge/privacy-100%25%20offline-2e7d32?style=flat-square)](#privacy--security)
+[![Dependencies](https://img.shields.io/badge/dependencies-0-6750a4?style=flat-square)](#tech-stack)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
-**Password Generator** là extension mã nguồn mở giúp tạo mật khẩu mạnh, cụm mật khẩu dễ nhớ và mã PIN trực tiếp trong Chrome, Edge, Brave, Opera và các trình duyệt Chromium khác. Mọi dữ liệu được tạo cục bộ bằng Web Crypto API; extension chỉ yêu cầu quyền `storage` để lưu lựa chọn của bạn và lịch sử khi bạn bật tính năng này.
+[Tiếng Việt](README.vi.md) · [Landing page](index.html)
 
-Tác giả: **minhtrong67** · Phát triển với sự hỗ trợ của **Claude AI**.
+</div>
 
-## 2. Screenshot
+---
 
-Ảnh minh họa được lưu trong thư mục `screenshots/` và dùng tên tuần tự theo yêu cầu:
+## Overview
 
-| Ảnh | Mô tả |
+**Password Generator** is a free, open-source extension for Chrome, Edge, Brave, Opera and other Chromium browsers. It creates strong passwords, memorable passphrases and numeric PINs entirely on your device using the Web Crypto API. No server, no account, no analytics — the extension only requests the `storage` permission to remember your preferences.
+
+> Author: **minhtrong67** · Built with support from **Claude** (AI by Anthropic).
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/image01.png" width="240" alt="Password mode, light theme" /><br /><sub>Password · Light</sub></td>
+    <td align="center"><img src="screenshots/image02.png" width="240" alt="Password mode, dark theme" /><br /><sub>Password · Dark</sub></td>
+    <td align="center"><img src="screenshots/image03.png" width="240" alt="Passphrase mode" /><br /><sub>Passphrase</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/image04.png" width="240" alt="PIN mode" /><br /><sub>PIN</sub></td>
+    <td align="center"><img src="screenshots/image05.png" width="240" alt="Advanced options" /><br /><sub>Advanced options</sub></td>
+    <td align="center"><img src="screenshots/image06.png" width="240" alt="Settings page" /><br /><sub>Settings</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/image07.png" width="240" alt="Settings in Vietnamese, dark theme, purple accent" /><br /><sub>Settings · Dark · Tiếng Việt</sub></td>
+    <td align="center" colspan="2"><img src="screenshots/image08.png" width="500" alt="Landing page hero" /><br /><sub>Landing page (desktop)</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/image09.png" width="240" alt="Landing page on mobile, dark theme" /><br /><sub>Landing page (mobile · dark)</sub></td>
+    <td align="center" colspan="2"><img src="screenshots/image10.png" width="500" alt="Landing page features, Vietnamese, indigo accent" /><br /><sub>Landing page · Vietnamese · Indigo</sub></td>
+  </tr>
+</table>
+
+## Features
+
+- **Three generators** — random passwords (4–64 characters), BIP‑39 passphrases (3–10 words) and PINs (4–12 digits).
+- **Fine control** — character groups, look-alike exclusion (`I l 1 O 0`), no repeated characters and a custom exclusion list. Every enabled group is guaranteed to appear.
+- **Live strength meter** — entropy computed from the real character pool, five levels and an estimated time to crack (10 billion guesses/s).
+- **Cryptographically secure** — `crypto.getRandomValues()` with rejection sampling and Fisher–Yates shuffling; `Math.random()` is never used.
+- **Material Design 3** — tonal surfaces, state layers, segmented buttons, chips, switches and smooth motion; respects *reduced motion*.
+- **Compact settings page** (opens inside the popup, no new tab):
+  - **Color** — 18 Material Design colors (Red … Blue Grey) with a full M3 tonal palette generated for each.
+  - **Theme** — Light, Dark or System (follows the OS automatically).
+  - **Language** — English, Tiếng Việt or Auto (detected from the browser).
+  - **About** — author, AI credit and a button that opens the bundled landing page in a new tab.
+- **Recent history** — kept in session storage only and wiped when the browser closes; anything you copy is saved so you never lose it.
+- **Landing page** — one self-contained `index.html` with SEO and social meta tags, scroll animations, a live demo, theme/color/language switchers and full responsiveness.
+
+## Installation
+
+1. Download or clone this repository.
+2. Open `chrome://extensions` (Edge: `edge://extensions`, Brave: `brave://extensions`).
+3. Enable **Developer mode**.
+4. Click **Load unpacked** and choose the folder that contains `manifest.json`.
+5. Pin **Password Generator** to the toolbar.
+
+## Usage
+
+1. Choose **Password**, **Passphrase** or **PIN**.
+2. Tune the options — the result and strength meter update live.
+3. Press **Generate** (or the refresh icon) for a new value, then **Copy**.
+4. Open **Settings** (gear icon) to change color, theme or language.
+
+## Privacy & security
+
+| | |
 |---|---|
-| ![image01](screenshots/image01.png) | Giao diện sáng / Password |
-| ![image02](screenshots/image02.png) | Giao diện tối |
-| ![image03](screenshots/image03.png) | Passphrase BIP-39 |
-| ![image04](screenshots/image04.png) | PIN 4–12 chữ số |
-| ![image05](screenshots/image05.png) | Màn hình cài đặt |
+| Permissions | `storage` only — no host permissions, no tabs, no content scripts |
+| Network | None. No requests, telemetry or remote code |
+| Settings | `chrome.storage.local` |
+| History | `chrome.storage.session` — memory only, cleared when the browser closes |
+| Randomness | `crypto.getRandomValues()` + rejection sampling (no modulo bias) |
+| Passphrases | BIP‑39 English wordlist, 2,048 words (11 bits per word) |
 
-## 3. Tính năng
+## Tech stack
 
-- **Ba chế độ:** Password, Passphrase dựa trên wordlist BIP-39 2048 từ và PIN.
-- **Ngẫu nhiên mật mã:** `crypto.getRandomValues()` + rejection sampling, không dùng `Math.random()` trong lõi bảo mật.
-- **Tùy biến sâu:** độ dài, nhóm ký tự, loại ký tự dễ nhầm, tránh lặp và danh sách loại trừ thủ công.
-- **Đo độ mạnh:** entropy thực tế, thanh đo 5 cấp và ước tính thời gian bẻ khóa.
-- **Material Design 3:** hệ màu token, Roboto đóng gói offline, icon SVG đúng kích thước, state layer, elevation và motion.
-- **Theme:** Light, Dark, System; màu chủ đề Teal, Blue, Green, Purple, Orange và Pink.
-- **Song ngữ:** English / Tiếng Việt; mặc định tự nhận diện `navigator.language` của thiết bị, có thể đổi thủ công.
-- **Quản lý dữ liệu:** lịch sử cục bộ, xuất `.txt`, xuất/nhập cấu hình JSON, reset an toàn.
-- **Landing page:** `landing/index.html` là một file HTML độc lập, có SEO meta, Open Graph/Twitter Card, demo tương tác và responsive mobile.
-
-## 4. Cài đặt
-
-1. Tải hoặc clone repository.
-2. Mở `chrome://extensions` (Edge: `edge://extensions`, Brave: `brave://extensions`).
-3. Bật **Developer mode**.
-4. Chọn **Load unpacked** và chọn thư mục chứa `manifest.json`.
-5. Ghim Password Generator trên thanh công cụ để truy cập nhanh.
-
-Extension không có `host_permissions`, không đọc nội dung website và không cần server.
-
-## 5. Tech stack
-
-| Thành phần | Công nghệ |
+| Area | Technology |
 |---|---|
-| Extension | Chrome Manifest V3 |
-| UI | Semantic HTML5, CSS3, Material Design 3 tokens |
-| Font | Roboto WOFF2 self-hosted |
-| Logic | Vanilla JavaScript ES6+ |
-| Security | Web Crypto API |
-| Dictionary | BIP-39 English wordlist |
-| Landing | Một file HTML với CSS/JS inline |
+| Platform | Chrome Extension, Manifest V3 |
+| UI | Semantic HTML, CSS custom properties, Material Design 3 |
+| Icons | [Lucide](https://lucide.dev) (inline SVG, bundled — works offline) |
+| Typography | Platform default system font stack |
+| Colors | Tonal palettes generated with `@material/material-color-utilities` |
+| Logic | Vanilla JavaScript (ES2020), no framework, no bundler |
 
-## 6. Development
-
-Không có dependency hoặc framework bắt buộc. Chỉnh sửa file rồi reload extension tại trang Extensions.
-
-```bash
-# Xem landing page và popup bằng static server
-python3 -m http.server 8000
-# Mở http://localhost:8000/landing/index.html
-```
-
-Để debug popup: nhấp phải icon extension → **Inspect popup**. Kiểm tra Console, Application → Storage và responsive layout trong DevTools.
-
-## 7. Build
-
-Dự án không cần bundler. Trước khi đóng gói, kiểm tra `manifest.json`, reload extension và chạy kiểm tra JavaScript:
-
-```bash
-node --check js/main.js
-node --check js/generator.js
-node --check js/i18n.js
-zip -r password-generator-2.1.0.zip manifest.json popup.html index.html css js icons fonts screenshots landing material-theme.json
-```
-
-File ZIP có thể tải lên Chrome Web Store Developer Dashboard hoặc chia sẻ như bản cài đặt unpacked.
-
-## 8. Cấu trúc project
+## Project structure
 
 ```text
 .
-├── manifest.json
-├── popup.html                 # Popup generator và settings
-├── index.html                 # Entry page phụ
-├── landing/index.html         # Landing page self-contained
-├── css/                       # Font, tokens và component styles
-├── js/                        # Generator, i18n, storage, theme, app wiring
-├── fonts/                     # Roboto + assets font hiện có
-├── icons/                     # 16/32/48/128px và SVG
-├── screenshots/               # image01.png … image05.png
-└── material-theme.json
+├── manifest.json        # MV3 manifest (landing page registered as a sandbox page)
+├── popup.html           # Popup: generator + settings view
+├── index.html           # Landing page (single file: HTML + CSS + JS)
+├── css/
+│   ├── colors.css       # Material 3 tokens for 18 colors × light/dark
+│   └── popup.css        # Popup components and motion
+├── js/
+│   ├── boot.js          # Applies theme before first paint
+│   ├── icons.js         # Bundled Lucide icons
+│   ├── i18n.js          # English / Vietnamese strings, language detection
+│   ├── storage.js       # Settings (local) and history (session)
+│   ├── theme.js         # Theme / color helpers
+│   ├── generator.js     # Secure password, passphrase and PIN logic
+│   ├── wordlist.js      # BIP‑39 wordlist
+│   └── main.js          # UI controller
+├── icons/               # Extension icons (16/32/48/128 px) + source SVG, color #009688
+├── _locales/            # Extension name & description (en, vi)
+└── screenshots/         # image01.png … image10.png
 ```
+
+## Landing page
+
+`index.html` sits in the project root. Inside the extension, **Settings → Open landing page** opens it in a new tab through `chrome.runtime.getURL("index.html")` — no deployed URL is needed — and passes the current theme, color and language in the URL hash so both pages match. It is registered as a `sandbox` page in the manifest so its inline script can run under Manifest V3’s CSP.
+
+To publish it on the web, serve the repository root (for example with GitHub Pages) and update the `canonical`, `og:url`, `og:image` and `twitter:image` URLs in the `<head>` of `index.html` (they currently assume `https://minhtrong67.github.io/password-generator/`).
+
+## Development
+
+There is nothing to build. Edit the files, then press **Reload** on the extensions page.
+
+```bash
+# Preview the landing page locally
+python3 -m http.server 8000      # then open http://localhost:8000/
+
+# Syntax check
+for f in js/*.js; do node --check "$f"; done
+```
+
+Debug the popup via right-click on the toolbar icon → **Inspect popup**.
+
+To package a release:
+
+```bash
+zip -r password-generator-3.0.0.zip manifest.json popup.html index.html css js icons _locales
+```
+
+## Credits
+
+- Author: **minhtrong67**
+- Built with the support of **Claude** by Anthropic
+- Icons: [Lucide](https://lucide.dev) (ISC) · Wordlist: [BIP‑39](https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt)
 
 ## License
 
-Phát hành công khai dưới **MIT License**. Bạn được phép sử dụng, sao chép, chỉnh sửa, phân phối và thương mại hóa theo điều khoản của giấy phép MIT. Xem toàn văn tại [opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
+Released under the [MIT License](LICENSE).

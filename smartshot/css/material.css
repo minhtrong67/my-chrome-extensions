@@ -20,23 +20,33 @@
   --elev-2: 0 1px 2px rgb(0 0 0 / .3), 0 2px 6px 2px rgb(0 0 0 / .15);
   --elev-3: 0 1px 3px rgb(0 0 0 / .3), 0 4px 8px 3px rgb(0 0 0 / .15);
 
-  /* fallbacks until themes.css attribute selectors match (purple / light) */
-  --md-primary: #9a25ae; --md-on-primary: #fff;
-  --md-primary-container: #ffd6fe; --md-on-primary-container: #380046;
-  --md-secondary-container: #f2daf0; --md-on-secondary-container: #251429;
-  --md-surface: #fff7fa; --md-on-surface: #1e1a1e; --md-on-surface-variant: #4d444d;
-  --md-outline: #7f747f; --md-outline-variant: #d0c3cf;
-  --md-surface-container: #f6ebf2; --md-surface-container-high: #f0e5ec; --md-surface-container-highest: #eadfe6;
-  --md-surface-container-low: #fcf0f6; --md-surface-container-lowest: #fff;
-  --md-error: #ba1a1a; --md-on-error: #fff; --md-error-container: #ffdad6; --md-on-error-container: #410002;
-  --md-inverse-surface: #342f33; --md-inverse-on-surface: #f9eef4; --md-inverse-primary: #f9abff;
+  /* fallbacks until themes.css attribute selectors match (light blue / light) */
+  --md-primary: #006493;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #cae6ff;
+  --md-on-primary-container: #001e30;
+  --md-secondary-container: #d3e5f5;
+  --md-on-secondary-container: #0c1d29;
+  --md-error: #ba1a1a;
+  --md-on-error: #ffffff;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #410002;
+  --md-surface: #fcfcff;
+  --md-on-surface: #1a1c1e;
+  --md-on-surface-variant: #41474d;
+  --md-outline: #72787e;
+  --md-outline-variant: #c1c7ce;
+  --md-inverse-surface: #2e3133;
+  --md-inverse-on-surface: #f0f0f3;
+  --md-inverse-primary: #8dcdff;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #f3f3f6;
+  --md-surface-container: #edeef1;
+  --md-surface-container-high: #e8e8eb;
+  --md-surface-container-highest: #e2e2e5;
 }
 
 html { font-size: 14px; -webkit-text-size-adjust: 100%; }
-html[data-fontsize="small"]  { font-size: 12.5px; }
-html[data-fontsize="medium"] { font-size: 14px; }
-html[data-fontsize="large"]  { font-size: 15.5px; }
-html[data-fontsize="xlarge"] { font-size: 17px; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }

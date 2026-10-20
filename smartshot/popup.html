@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-accent="purple">
+<html lang="en" data-theme="light" data-accent="lightBlue">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light dark" />
 <title>SmartShot</title>
 <script src="js/boot.js"></script>
-<link rel="stylesheet" href="css/fonts.css" />
 <link rel="stylesheet" href="css/themes.css" />
 <link rel="stylesheet" href="css/material.css" />
 <link rel="stylesheet" href="css/popup.css" />
@@ -23,7 +22,6 @@
           <h1 class="t-title-lg">SmartShot</h1>
           <p class="t-body-sm muted" data-i18n="tagline">Screenshot &amp; Annotate</p>
         </div>
-        <button class="icon-btn sl" id="themeToggleBtn" data-i18n-title="toggleTheme" type="button"></button>
         <button class="icon-btn sl" id="settingsBtn" data-i18n-title="settings" type="button"><i data-lucide="settings"></i></button>
       </header>
 
@@ -84,149 +82,65 @@
 
       <div class="scroll settings">
 
-        <!-- Appearance -->
         <section class="group">
-          <h2 class="group-title"><i data-lucide="palette" data-size="18"></i><span data-i18n="appearance">Appearance</span></h2>
+          <h2 class="group-title"><i data-lucide="palette" data-size="18"></i><span data-i18n="themeColor">Theme color</span></h2>
+          <div class="swatches" id="swatches" role="radiogroup" data-i18n-title="themeColor"></div>
+        </section>
 
-          <div class="item">
-            <span class="item-label" data-i18n="theme">Theme</span>
-            <div class="segmented" id="themeSeg" role="radiogroup">
-              <label class="seg"><input type="radio" name="theme" value="light" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><i data-lucide="sun" data-size="16"></i><span data-i18n="themeLight">Light</span></span></label>
-              <label class="seg"><input type="radio" name="theme" value="dark" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><i data-lucide="moon" data-size="16"></i><span data-i18n="themeDark">Dark</span></span></label>
-              <label class="seg"><input type="radio" name="theme" value="system" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><i data-lucide="monitor" data-size="16"></i><span data-i18n="themeSystem">System</span></span></label>
-            </div>
-          </div>
-
-          <div class="item">
-            <span class="item-label" data-i18n="themeColor">Theme color</span>
-            <div class="swatches" id="swatches" role="radiogroup" aria-label="Theme color"></div>
-          </div>
-
-          <div class="item">
-            <label class="item-label" for="fontSelect" data-i18n="font">Font</label>
-            <div class="select"><select id="fontSelect"></select><i data-lucide="chevron-down"></i></div>
-            <p class="font-preview t-body-md muted" id="fontPreview" data-i18n="fontPreview">The quick brown fox jumps over the lazy dog</p>
-          </div>
-
-          <div class="item">
-            <span class="item-label" data-i18n="fontSize">Font size</span>
-            <div class="segmented" id="fontSizeSeg" role="radiogroup">
-              <label class="seg"><input type="radio" name="fontSize" value="small" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><span class="fs fs-s">A</span></span></label>
-              <label class="seg"><input type="radio" name="fontSize" value="medium" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><span class="fs fs-m">A</span></span></label>
-              <label class="seg"><input type="radio" name="fontSize" value="large" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><span class="fs fs-l">A</span></span></label>
-              <label class="seg"><input type="radio" name="fontSize" value="xlarge" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><span class="fs fs-xl">A</span></span></label>
-            </div>
-          </div>
-
-          <div class="item">
-            <label class="item-label" for="languageSelect" data-i18n="language">Language</label>
-            <div class="select"><select id="languageSelect">
-              <option value="auto" data-i18n="langAuto">Auto (device language)</option>
-              <option value="en">English</option>
-              <option value="vi">Tiếng Việt</option>
-            </select><i data-lucide="chevron-down"></i></div>
+        <section class="group">
+          <h2 class="group-title"><i data-lucide="sun" data-size="18"></i><span data-i18n="theme">Theme</span></h2>
+          <div class="segmented" id="themeSeg" role="radiogroup">
+            <label class="seg"><input type="radio" name="theme" value="light" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><i data-lucide="sun" data-size="16"></i><span data-i18n="themeLight">Light</span></span></label>
+            <label class="seg"><input type="radio" name="theme" value="dark" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><i data-lucide="moon" data-size="16"></i><span data-i18n="themeDark">Dark</span></span></label>
+            <label class="seg"><input type="radio" name="theme" value="system" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><i data-lucide="monitor" data-size="16"></i><span data-i18n="themeSystem">System</span></span></label>
           </div>
         </section>
 
-        <!-- Capture -->
         <section class="group">
-          <h2 class="group-title"><i data-lucide="camera" data-size="18"></i><span data-i18n="captureSection">Capture</span></h2>
-
-          <div class="item">
-            <span class="item-label" data-i18n="format">Format</span>
-            <div class="segmented" id="formatSeg" role="radiogroup">
-              <label class="seg"><input type="radio" name="format" value="png" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>PNG</span></label>
-              <label class="seg"><input type="radio" name="format" value="jpeg" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>JPEG</span></label>
-            </div>
+          <h2 class="group-title"><i data-lucide="languages" data-size="18"></i><span data-i18n="language">Language</span></h2>
+          <div class="segmented" id="languageSeg" role="radiogroup">
+            <label class="seg"><input type="radio" name="language" value="auto" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span><span data-i18n="langAutoShort">Auto</span></span></label>
+            <label class="seg"><input type="radio" name="language" value="en" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>English</span></label>
+            <label class="seg"><input type="radio" name="language" value="vi" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>Tiếng Việt</span></label>
           </div>
+          <p class="hint t-body-sm muted" id="langHint" data-i18n="langAuto">Auto follows your device language</p>
+        </section>
 
-          <div class="item collapsible" id="qualityItem">
-            <div class="collapsible-inner">
-              <div class="item-head"><label class="item-label" for="qualitySlider" data-i18n="quality">JPEG quality</label><span class="value" id="qualityValue">90%</span></div>
-              <input type="range" class="slider" id="qualitySlider" min="1" max="100" step="1" />
-            </div>
-          </div>
-
-          <div class="item">
-            <div class="item-head"><label class="item-label" for="delaySlider" data-i18n="fullPageDelay">Scroll delay (full page)</label><span class="value" id="delayValue">600 ms</span></div>
-            <input type="range" class="slider" id="delaySlider" min="550" max="2000" step="50" />
-            <p class="hint t-body-sm muted" data-i18n="fullPageDelayHint">Chrome limits captures to about 2 per second.</p>
-          </div>
-
-          <label class="row">
-            <span class="row-text"><span class="item-label" data-i18n="openEditorAfterCapture">Open editor after capture</span><span class="hint t-body-sm muted" data-i18n="openEditorHint">Off: save or copy instantly</span></span>
-            <span class="switch"><input type="checkbox" id="optOpenEditor" /><span class="track"></span><span class="thumb"><i data-lucide="check" data-size="16"></i></span></span>
+        <section class="group">
+          <h2 class="group-title"><i data-lucide="pencil" data-size="18"></i><span data-i18n="afterCapture">After capturing</span></h2>
+          <label class="switch-row" for="openEditorToggle">
+            <span class="switch-text">
+              <span class="t-title-md" data-i18n="openEditor">Open editor</span>
+              <span class="t-body-sm muted" id="openEditorHint" data-i18n="openEditorOn">Annotate the screenshot before saving it</span>
+            </span>
+            <span class="switch">
+              <input type="checkbox" id="openEditorToggle" role="switch" />
+              <span class="track"></span>
+              <span class="thumb"><i data-lucide="check" data-size="14"></i></span>
+            </span>
           </label>
+        </section>
 
-          <div class="item collapsible" id="quickActionItem">
-            <div class="collapsible-inner">
-              <label class="item-label" for="afterCaptureSelect" data-i18n="quickSaveAction">When not editing</label>
-              <div class="select"><select id="afterCaptureSelect">
-                <option value="download" data-i18n="afterDownload">Save to Downloads</option>
-                <option value="clipboard" data-i18n="afterClipboard">Copy to clipboard</option>
-              </select><i data-lucide="chevron-down"></i></div>
+        <section class="about" aria-label="About">
+          <div class="about-head">
+            <img src="icons/icon128.png" alt="" width="52" height="52" />
+            <div class="about-text">
+              <p class="t-title-md">SmartShot <span class="chip" id="versionChip">v1.3.0</span></p>
+              <p class="t-body-sm"><span class="muted" data-i18n="authorLine">Created by</span> <b>minhtrong67</b></p>
+              <p class="t-body-sm muted" data-i18n="aiLine">with AI support from Claude</p>
             </div>
           </div>
-        </section>
-
-        <!-- History -->
-        <section class="group">
-          <h2 class="group-title"><i data-lucide="history" data-size="18"></i><span data-i18n="historySection">History</span></h2>
-          <label class="row">
-            <span class="item-label" data-i18n="showHistory">Show recent captures</span>
-            <span class="switch"><input type="checkbox" id="optShowHistory" /><span class="track"></span><span class="thumb"><i data-lucide="check" data-size="16"></i></span></span>
-          </label>
-          <div class="item">
-            <span class="item-label" data-i18n="historyLimit">Items to keep</span>
-            <div class="segmented" id="historyLimitSeg" role="radiogroup">
-              <label class="seg"><input type="radio" name="historyLimit" value="5" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>5</span></label>
-              <label class="seg"><input type="radio" name="historyLimit" value="10" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>10</span></label>
-              <label class="seg"><input type="radio" name="historyLimit" value="20" /><span class="seg-body"><span class="seg-check"><i data-lucide="check" data-size="16"></i></span>20</span></label>
-            </div>
-          </div>
-        </section>
-
-        <!-- Data -->
-        <section class="group">
-          <h2 class="group-title"><i data-lucide="layers" data-size="18"></i><span data-i18n="dataManagement">Data</span></h2>
-          <div class="btn-row">
-            <button class="btn outlined sm sl" id="exportSettingsBtn" type="button"><i data-lucide="download" data-size="18"></i><span data-i18n="exportSettings">Export</span></button>
-            <button class="btn outlined sm sl" id="importSettingsBtn" type="button"><i data-lucide="upload" data-size="18"></i><span data-i18n="importSettings">Import</span></button>
-            <input type="file" id="importSettingsFile" accept="application/json,.json" hidden />
-          </div>
-          <button class="btn text danger sl reset-btn" id="resetBtn" type="button"><i data-lucide="rotate-ccw" data-size="18"></i><span data-i18n="resetDefault">Reset settings</span></button>
-        </section>
-
-        <!-- About -->
-        <section class="about">
-          <img src="icons/icon128.png" alt="" width="56" height="56" />
-          <div class="about-text">
-            <p class="t-title-md">SmartShot <span class="chip" id="versionChip">v1.1.0</span></p>
-            <p class="t-body-sm"><span class="muted" data-i18n="authorLine">Created by</span> <b>minhtrong67</b></p>
-            <p class="t-body-sm muted"><span data-i18n="aiLine">with AI support from Claude</span></p>
-            <p class="t-body-sm muted" data-i18n="licenseLine">Open source · MIT License</p>
-          </div>
-          <a class="icon-btn tonal sl" id="repoLink" href="https://github.com/minhtrong67/web-screenshot-ext" target="_blank" rel="noopener" title="GitHub"><i data-lucide="github"></i></a>
+          <button class="btn tonal sl" id="landingBtn" type="button"><i data-lucide="external-link" data-size="18"></i><span data-i18n="openLanding">Open landing page</span></button>
         </section>
       </div>
     </section>
   </div>
 
   <div class="snackbar" id="toast" role="status" aria-live="polite"></div>
-
-  <dialog class="md-dialog" id="confirmDialog" aria-labelledby="dlgTitle">
-    <h2 id="dlgTitle" data-i18n="resetTitle">Reset all settings?</h2>
-    <p data-i18n="resetBody">Appearance, language and capture options go back to their defaults. Your history is kept.</p>
-    <div class="actions">
-      <button class="btn text sl" id="dlgCancel" type="button" data-i18n="cancel">Cancel</button>
-      <button class="btn text sl" id="dlgOk" type="button" data-i18n="reset">Reset</button>
-    </div>
-  </dialog>
 </div>
 
 <script src="js/lucide.js"></script>
 <script src="js/accents.js"></script>
-<script src="js/fonts.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/theme.js"></script>

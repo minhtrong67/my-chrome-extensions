@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TagMark — Smart Bookmark Manager for Chrome</title>
+<meta name="description" content="TagMark organizes your real Chrome bookmarks with tags, notes, instant search, duplicate detection and bulk actions. Material Design 3, light &amp; dark themes, English and Vietnamese. 100% local." />
+<meta name="keywords" content="bookmark manager, chrome extension, bookmark tags, bookmark search, duplicate bookmarks, material design 3, quản lý bookmark, tiện ích chrome" />
+<meta name="author" content="minhtrong67" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#00695C" />
+<meta name="application-name" content="TagMark" />
+<meta name="apple-mobile-web-app-title" content="TagMark" />
+
+<!-- Open Graph / social sharing (set absolute URLs for og:image / og:url after you deploy) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TagMark" />
+<meta property="og:title" content="TagMark — Smart Bookmark Manager for Chrome" />
+<meta property="og:description" content="Tags, notes, instant search, duplicate detection and bulk actions on top of your real Chrome bookmarks. Material Design 3 · EN/VI · 100% local." />
+<meta property="og:image" content="screenshots/image07.png" />
+<meta property="og:image:alt" content="TagMark popup showing tagged bookmarks in a Material Design 3 interface" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="vi_VN" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="TagMark — Smart Bookmark Manager for Chrome" />
+<meta name="twitter:description" content="Tags, notes, instant search, duplicate detection and bulk actions on top of your real Chrome bookmarks." />
+<meta name="twitter:image" content="screenshots/image07.png" />
+<meta name="twitter:image:alt" content="TagMark popup showing tagged bookmarks" />
+<meta name="twitter:creator" content="@minhtrong67" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+<link rel="apple-touch-icon" href="icons/icon128.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "TagMark",
+  "alternateName": "TagMark Smart Bookmark Manager",
+  "applicationCategory": "BrowserApplication",
+  "operatingSystem": "Chrome, Chromium-based browsers",
+  "softwareVersion": "2.0.0",
+  "description": "Chrome extension that adds tags, notes, instant search, duplicate detection and bulk actions on top of your real bookmarks.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "minhtrong67" },
+  "inLanguage": ["en", "vi"],
+  "image": "screenshots/image07.png"
+}
+</script>
+
+<style>
+:root {
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(.2, 0, 0, 1); --ease-emph: cubic-bezier(.3, 0, 0, 1);
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 28px; --r-full: 999px;
+  --md-primary:#066a61; --md-on-primary:#fff; --md-primary-container:#bff0e8; --md-on-primary-container:#002019;
+  --md-secondary:#4a635d; --md-secondary-container:#cce8e0; --md-on-secondary-container:#06201b;
+  --md-tertiary-container:#d9e6f5; --md-on-tertiary-container:#0a1d2e;
+  --md-error:#ba1a1a; --md-error-container:#ffdad6; --md-on-error-container:#410002;
+  --md-surface:#f5faf8; --md-on-surface:#171d1b; --md-on-surface-variant:#3f4946;
+  --md-surface-container-lowest:#fff; --md-surface-container-low:#eff5f2; --md-surface-container:#e9efec;
+  --md-surface-container-high:#e3eae6; --md-surface-container-highest:#dde4e1;
+  --md-outline:#6f7976; --md-outline-variant:#bfc9c5; --md-scrim:rgba(0,0,0,.32); --md-shadow:rgba(0,0,0,.18);
+  --elev-1: 0 1px 2px var(--md-shadow), 0 1px 3px 1px color-mix(in srgb, var(--md-shadow) 60%, transparent);
+  --elev-3: 0 4px 8px 3px color-mix(in srgb, var(--md-shadow) 60%, transparent), 0 1px 3px var(--md-shadow);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font: 16px/1.6 var(--font); background: var(--md-surface); color: var(--md-on-surface); -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background-color .3s var(--ease), color .3s var(--ease); }
+h1, h2, h3, p { margin: 0; }
+a { color: var(--md-primary); text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+img { max-width: 100%; display: block; }
+.icon { display: block; flex-shrink: 0; }
+.ico { display: inline-flex; flex-shrink: 0; }
+:focus-visible { outline: 2px solid var(--md-primary); outline-offset: 3px; border-radius: 6px; }
+.skip { position: absolute; left: -999px; top: 8px; z-index: 100; padding: 8px 16px; background: var(--md-primary); color: var(--md-on-primary); border-radius: var(--r-full); }
+.skip:focus { left: 8px; }
+.wrap { width: min(1160px, 100% - 40px); margin-inline: auto; }
+
+/* App bar */
+.bar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--md-surface) 82%, transparent); backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px); transition: box-shadow .25s var(--ease), background-color .3s var(--ease); }
+.bar.scrolled { box-shadow: 0 1px 0 var(--md-outline-variant), 0 6px 20px -12px var(--md-shadow); }
+.bar-in { display: flex; align-items: center; gap: 8px; height: 68px; }
+.logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; letter-spacing: -.2px; color: var(--md-on-surface); }
+.logo img { width: 36px; height: 36px; border-radius: 10px; }
+.nav { display: flex; gap: 4px; margin-left: 32px; }
+.nav a { padding: 8px 16px; border-radius: var(--r-full); color: var(--md-on-surface-variant); font-weight: 500; font-size: 14px; transition: background-color .2s var(--ease), color .2s var(--ease); }
+.nav a:hover, .nav a.active { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.spacer { flex: 1; }
+.icon-btn { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--md-on-surface-variant); transition: background-color .2s var(--ease), transform .15s var(--ease); }
+.icon-btn:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.icon-btn:active { transform: scale(.9); }
+.lang-btn { width: auto; padding: 0 12px; gap: 6px; border-radius: var(--r-full); display: inline-flex; align-items: center; font-weight: 600; font-size: 13px; }
+.menu-btn { display: none; }
+.pop-anchor { position: relative; }
+.pop { position: absolute; right: 0; top: 52px; width: 252px; padding: 16px; border-radius: var(--r-lg); background: var(--md-surface-container); box-shadow: var(--elev-3); transform-origin: top right; animation: pop .2s var(--ease-emph); }
+.pop[hidden] { display: none; }
+.pop h3 { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--md-on-surface-variant); }
+.swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.swatch { aspect-ratio: 1; border: 0; border-radius: 50%; display: grid; place-items: center; color: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); transition: transform .16s var(--ease-emph), box-shadow .2s var(--ease); }
+.swatch:hover { transform: scale(1.15); }
+.swatch .ico { opacity: 0; transform: scale(.5); transition: opacity .2s, transform .2s var(--ease-emph); filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.swatch.dark-ink { color: #1b1b1b; } .swatch.dark-ink .ico { filter: none; }
+.swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--md-surface-container), 0 0 0 4px var(--md-on-surface); }
+.swatch[aria-checked="true"] .ico { opacity: 1; transform: none; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 28px; border: 0; border-radius: var(--r-full); font-weight: 600; font-size: 15px; transition: box-shadow .2s var(--ease), transform .15s var(--ease), filter .2s; }
+.btn:active { transform: scale(.97); }
+.btn.filled { background: var(--md-primary); color: var(--md-on-primary); }
+.btn.filled:hover { box-shadow: var(--elev-1); filter: brightness(1.08); transform: translateY(-1px); }
+.btn.tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.btn.tonal:hover { box-shadow: var(--elev-1); transform: translateY(-1px); }
+
+/* Hero */
+.hero { position: relative; padding: 64px 0 96px; overflow: hidden; }
+.hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; }
+.hero::before { width: 520px; height: 520px; right: -120px; top: -100px; background: var(--md-primary-container); animation: drift 14s ease-in-out infinite alternate; }
+.hero::after { width: 420px; height: 420px; left: -140px; bottom: -120px; background: var(--md-tertiary-container); animation: drift 18s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(40px, 30px) scale(1.12); } }
+.hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px; border-radius: var(--r-full); background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 13px; font-weight: 600; margin-bottom: 24px; }
+h1 { font-size: clamp(38px, 6vw, 64px); line-height: 1.06; letter-spacing: -1.5px; font-weight: 800; }
+h1 em { font-style: normal; color: var(--md-primary); }
+.lead { margin-top: 24px; font-size: clamp(17px, 2vw, 20px); color: var(--md-on-surface-variant); max-width: 56ch; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--md-outline-variant); border-radius: var(--r-sm); font-size: 13px; font-weight: 500; color: var(--md-on-surface-variant); }
+
+/* Mock popup */
+.stage { display: grid; place-items: center; perspective: 1200px; }
+.mock { width: 340px; max-width: 100%; border-radius: 28px; padding: 14px; background: var(--md-surface-container-high); box-shadow: var(--elev-3), 0 40px 80px -30px var(--md-shadow); animation: float 6s ease-in-out infinite; transition: transform .2s var(--ease); transform-style: preserve-3d; }
+@keyframes float { 50% { translate: 0 -12px; } }
+.m-screen { position: relative; border-radius: 18px; background: var(--md-surface); overflow: hidden; height: 470px; padding: 14px 12px; }
+.m-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.m-top img { width: 28px; height: 28px; border-radius: 8px; }
+.m-top b { font-size: 16px; display: block; line-height: 1.1; } .m-top small { font-size: 11px; color: var(--md-on-surface-variant); }
+.m-search { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: var(--r-full); background: var(--md-surface-container-high); color: var(--md-on-surface-variant); font-size: 13px; }
+.m-chips { display: flex; gap: 6px; margin: 10px 0; overflow: hidden; }
+.m-chip { flex-shrink: 0; padding: 3px 10px; border: 1px solid var(--md-outline); border-radius: 7px; font-size: 11px; font-weight: 500; color: var(--md-on-surface-variant); }
+.m-chip.on { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; }
+.m-item { display: flex; gap: 10px; align-items: center; padding: 8px 6px; border-radius: 12px; opacity: 0; animation: slideup .6s var(--ease-emph) forwards; }
+.m-item:nth-of-type(1) { animation-delay: .5s } .m-item:nth-of-type(2) { animation-delay: .65s } .m-item:nth-of-type(3) { animation-delay: .8s } .m-item:nth-of-type(4) { animation-delay: .95s }
+@keyframes slideup { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.m-item:hover { background: color-mix(in srgb, var(--md-on-surface) 6%, transparent); }
+.m-fav { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--md-surface-container-highest); color: var(--md-primary); flex-shrink: 0; }
+.m-item b { display: block; font-size: 13px; font-weight: 600; line-height: 1.25; } .m-item small { font-size: 11px; color: var(--md-on-surface-variant); display: block; }
+.m-tags { display: flex; gap: 4px; margin-top: 3px; } .m-tags i { font-style: normal; font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 5px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.m-fab { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px 0 12px; border-radius: 14px; background: var(--md-primary-container); color: var(--md-on-primary-container); font-weight: 700; font-size: 13px; box-shadow: var(--elev-3); animation: pulse 3.2s ease-in-out 1.6s infinite; }
+@keyframes pulse { 0%, 100% { transform: none; } 50% { transform: scale(1.05); } }
+
+/* Sections */
+section { padding: 88px 0; }
+.sec-head { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+.sec-head h2 { font-size: clamp(28px, 4vw, 42px); line-height: 1.15; letter-spacing: -.8px; font-weight: 800; }
+.sec-head p { margin-top: 16px; color: var(--md-on-surface-variant); font-size: 18px; }
+.alt { background: var(--md-surface-container-low); }
+.grid { display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); }
+.card { padding: 28px; border-radius: var(--r-xl); background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); transition: transform .3s var(--ease-emph), box-shadow .3s var(--ease), background-color .3s; }
+.alt .card { background: var(--md-surface); }
+.card:hover { transform: translateY(-6px); box-shadow: var(--elev-3); }
+.card .tile { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--md-primary-container); color: var(--md-on-primary-container); margin-bottom: 20px; transition: transform .3s var(--ease-emph); }
+.card:hover .tile { transform: rotate(-8deg) scale(1.08); }
+.card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.card p { color: var(--md-on-surface-variant); font-size: 15px; }
+
+/* Showcase */
+.tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+.tab { height: 40px; padding: 0 20px; border: 1px solid var(--md-outline); border-radius: var(--r-full); background: transparent; font-weight: 500; font-size: 14px; transition: background-color .2s, color .2s; }
+.tab:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.tab[aria-selected="true"] { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; }
+.shot-stage { display: grid; place-items: center; min-height: 520px; }
+.shot { width: min(380px, 100%); border-radius: 24px; border: 1px solid var(--md-outline-variant); box-shadow: var(--elev-3); overflow: hidden; background: var(--md-surface-container); animation: pop .4s var(--ease-emph); }
+.shot img { width: 100%; height: auto; }
+.shot-note { margin-top: 20px; text-align: center; color: var(--md-on-surface-variant); }
+
+/* Customize */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.split h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; letter-spacing: -.8px; font-weight: 800; }
+.split p { margin-top: 16px; color: var(--md-on-surface-variant); font-size: 17px; }
+.panel { padding: 28px; border-radius: var(--r-xl); background: var(--md-surface); border: 1px solid var(--md-outline-variant); box-shadow: var(--elev-1); }
+.panel h3 { font-size: 14px; font-weight: 600; color: var(--md-on-surface-variant); margin: 0 0 14px; }
+.panel .swatches { grid-template-columns: repeat(9, 1fr); margin-bottom: 28px; }
+.seg { display: flex; border: 1px solid var(--md-outline); border-radius: var(--r-full); overflow: hidden; margin-bottom: 28px; }
+.seg button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 0; background: transparent; font-weight: 500; font-size: 14px; transition: background-color .2s; }
+.seg button + button { border-left: 1px solid var(--md-outline); }
+.seg button:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.seg button[aria-pressed="true"] { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.panel .seg:last-child { margin-bottom: 0; }
+
+/* Install */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: step; }
+.step { position: relative; padding: 32px 28px 28px; border-radius: var(--r-xl); background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); counter-increment: step; }
+.step::before { content: counter(step); position: absolute; top: -18px; left: 24px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--md-primary); color: var(--md-on-primary); font-weight: 800; box-shadow: var(--elev-1); }
+.step h3 { font-size: 18px; margin-bottom: 8px; } .step p { color: var(--md-on-surface-variant); font-size: 15px; }
+code, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+code { display: inline-block; padding: 1px 8px; border-radius: 6px; background: var(--md-surface-container-highest); font-size: 13px; }
+.copy { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 6px 8px 6px 14px; border: 1px solid var(--md-outline-variant); border-radius: var(--r-full); background: var(--md-surface); font-size: 13px; }
+.copy button { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+kbd { display: inline-block; min-width: 34px; padding: 4px 10px; border: 1px solid var(--md-outline); border-bottom-width: 3px; border-radius: 8px; background: var(--md-surface-container-lowest); font-weight: 700; font-size: 14px; text-align: center; }
+.shortcut { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
+
+/* Footer */
+footer { padding: 56px 0 40px; border-top: 1px solid var(--md-outline-variant); background: var(--md-surface-container-low); }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: center; }
+.foot p { color: var(--md-on-surface-variant); font-size: 14px; }
+.foot strong { color: var(--md-on-surface); }
+.heart { color: var(--md-error); display: inline-block; vertical-align: -3px; animation: beat 1.8s ease-in-out infinite; }
+@keyframes beat { 0%, 100% { transform: none; } 15% { transform: scale(1.25); } 30% { transform: none; } }
+
+/* Motion helpers */
+@keyframes pop { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s var(--ease-emph), transform .7s var(--ease-emph); transition-delay: var(--d, 0ms); }
+.reveal.in { opacity: 1; transform: none; }
+.hero-in > * { opacity: 0; animation: slideup .8s var(--ease-emph) forwards; }
+.hero-in > *:nth-child(2) { animation-delay: .08s } .hero-in > *:nth-child(3) { animation-delay: .16s } .hero-in > *:nth-child(4) { animation-delay: .24s } .hero-in > *:nth-child(5) { animation-delay: .32s }
+
+/* Responsive */
+@media (max-width: 980px) {
+  .hero-grid, .split { grid-template-columns: 1fr; }
+  .hero { padding-top: 40px; }
+  .stage { margin-top: 24px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: 1fr; gap: 36px; }
+}
+@media (max-width: 820px) {
+  .nav { position: fixed; inset: 68px 0 auto 0; flex-direction: column; margin: 0; padding: 8px 20px 20px; background: var(--md-surface-container); box-shadow: var(--elev-3); border-radius: 0 0 24px 24px; transform: translateY(-12px); opacity: 0; visibility: hidden; transition: all .25s var(--ease-emph); }
+  .nav.open { transform: none; opacity: 1; visibility: visible; }
+  .nav a { padding: 14px 16px; font-size: 16px; }
+  .menu-btn { display: grid; }
+}
+@media (max-width: 620px) {
+  section { padding: 64px 0; }
+  .grid { grid-template-columns: 1fr; }
+  .panel .swatches { grid-template-columns: repeat(6, 1fr); }
+  .btn { width: 100%; }
+  .foot { flex-direction: column; text-align: center; }
+  .shot-stage { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal, .m-item, .hero-in > * { opacity: 1 !important; transform: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+<header class="bar" id="bar">
+  <div class="wrap bar-in">
+    <a class="logo" href="#top" aria-label="TagMark"><img src="icons/icon128.png" alt="" width="36" height="36" />TagMark</a>
+    <nav class="nav" id="nav" aria-label="Primary">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#preview" data-i18n="navPreview">Preview</a>
+      <a href="#customize" data-i18n="navCustomize">Customize</a>
+      <a href="#install" data-i18n="navInstall">Install</a>
+    </nav>
+    <span class="spacer"></span>
+    <div class="pop-anchor">
+      <button class="icon-btn" id="colorBtn" aria-haspopup="true" aria-expanded="false" data-i18n-title="colour" title="Colour"><span data-icon="palette"></span></button>
+      <div class="pop" id="colorPop" hidden><h3 data-i18n="colour">Colour</h3><div class="swatches" id="barSwatches" role="radiogroup"></div></div>
+    </div>
+    <button class="icon-btn" id="themeBtn" data-i18n-title="theme" title="Theme"><span id="themeIcon"></span></button>
+    <button class="icon-btn lang-btn" id="langBtn" data-i18n-title="language" title="Language"><span data-icon="languages" data-size="20"></span><span id="langCode">EN</span></button>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" data-i18n-title="menu" title="Menu"><span data-icon="menu"></span></button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <div class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-in">
+        <span class="eyebrow"><span data-icon="sparkles" data-size="16"></span><span data-i18n="eyebrow">Chrome extension · Material Design 3</span></span>
+        <h1><span data-i18n="h1a">Your bookmarks,</span> <em data-i18n="h1b">finally organized.</em></h1>
+        <p class="lead" data-i18n="lead">TagMark adds tags, notes, instant search and duplicate detection on top of your real Chrome bookmarks — in a clean, fast popup that follows your style.</p>
+        <div class="cta">
+          <a class="btn filled" href="#install"><span data-icon="download" data-size="20"></span><span data-i18n="ctaInstall">Get started</span></a>
+          <a class="btn tonal" href="#features"><span data-icon="layers" data-size="20"></span><span data-i18n="ctaFeatures">Explore features</span></a>
+        </div>
+        <div class="chips">
+          <span class="chip"><span data-icon="shield-check" data-size="16"></span><span data-i18n="chip1">100% local</span></span>
+          <span class="chip"><span data-icon="zap" data-size="16"></span><span data-i18n="chip2">Manifest V3</span></span>
+          <span class="chip"><span data-icon="languages" data-size="16"></span><span data-i18n="chip3">English · Tiếng Việt</span></span>
+          <span class="chip"><span data-icon="palette" data-size="16"></span><span data-i18n="chip4">18 colours · light/dark</span></span>
+        </div>
+      </div>
+
+      <div class="stage" aria-hidden="true">
+        <div class="mock" id="mock">
+          <div class="m-screen">
+            <div class="m-top"><img src="icons/icon48.png" alt="" /><div><b>TagMark</b><small data-i18n="tagline">Smart bookmark manager</small></div></div>
+            <div class="m-search"><span data-icon="search" data-size="16"></span><span data-i18n="mockSearch">Search title, URL, tags…</span></div>
+            <div class="m-chips"><span class="m-chip on">design 2</span><span class="m-chip">dev 5</span><span class="m-chip">reading 2</span><span class="m-chip">tools 1</span></div>
+            <div class="m-item"><div class="m-fav"><span data-icon="layers" data-size="18"></span></div><div><b>Material Design 3</b><small>m3.material.io</small><div class="m-tags"><i>design</i><i>reference</i></div></div></div>
+            <div class="m-item"><div class="m-fav"><span data-icon="puzzle" data-size="18"></span></div><div><b>Lucide Icons</b><small>lucide.dev</small><div class="m-tags"><i>design</i><i>icons</i></div></div></div>
+            <div class="m-item"><div class="m-fav"><span data-icon="folder-tree" data-size="18"></span></div><div><b>MDN Web Docs</b><small>developer.mozilla.org</small><div class="m-tags"><i>dev</i><i>docs</i></div></div></div>
+            <div class="m-item"><div class="m-fav"><span data-icon="globe" data-size="18"></span></div><div><b>Báo Tuổi Trẻ</b><small>tuoitre.vn</small><div class="m-tags"><i>đọc báo</i></div></div></div>
+            <div class="m-fab"><span data-icon="bookmark-plus" data-size="20"></span><span data-i18n="mockFab">Bookmark this page</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="alt" id="features">
+    <div class="wrap">
+      <div class="sec-head reveal"><h2 data-i18n="featTitle">Everything you need, nothing you don't</h2><p data-i18n="featSub">TagMark works directly on your real bookmarks — add structure without losing anything.</p></div>
+      <div class="grid">
+        <article class="card reveal"><div class="tile"><span data-icon="tags" data-size="26"></span></div><h3 data-i18n="f1t">Tags &amp; notes</h3><p data-i18n="f1d">Add your own tags and private notes to any bookmark, then filter by tag in one tap.</p></article>
+        <article class="card reveal" style="--d:70ms"><div class="tile"><span data-icon="search" data-size="26"></span></div><h3 data-i18n="f2t">Instant search</h3><p data-i18n="f2d">Search titles, URLs, tags and notes as you type — accent-insensitive, perfect for Vietnamese.</p></article>
+        <article class="card reveal" style="--d:140ms"><div class="tile"><span data-icon="copy-check" data-size="26"></span></div><h3 data-i18n="f3t">Duplicate detection</h3><p data-i18n="f3d">Spot bookmarks saved twice at a glance and clean them up with bulk actions.</p></article>
+        <article class="card reveal"><div class="tile"><span data-icon="square-check-big" data-size="26"></span></div><h3 data-i18n="f4t">Bulk actions</h3><p data-i18n="f4d">Select many bookmarks to tag or delete them together — no more one-by-one chores.</p></article>
+        <article class="card reveal" style="--d:70ms"><div class="tile"><span data-icon="keyboard" data-size="26"></span></div><h3 data-i18n="f5t">One-key bookmarking</h3><p data-i18n="f5d">Press Alt+Shift+M to save the current tab instantly, with a native confirmation.</p></article>
+        <article class="card reveal" style="--d:140ms"><div class="tile"><span data-icon="file-json" data-size="26"></span></div><h3 data-i18n="f6t">Backup &amp; export</h3><p data-i18n="f6d">Export JSON backups or a standard HTML file with nested folders, and import them back anytime.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview -->
+  <section id="preview">
+    <div class="wrap">
+      <div class="sec-head reveal"><h2 data-i18n="prevTitle">See it in action</h2><p data-i18n="prevSub">A calm, Material Design 3 interface in light and dark.</p></div>
+      <div class="tabs reveal" id="tabs" role="tablist"></div>
+      <div class="shot-stage reveal"><figure class="shot" id="shot" style="margin:0"><img id="shotImg" alt="" width="800" height="1160" loading="lazy" /></figure></div>
+      <p class="shot-note" id="shotNote"></p>
+    </div>
+  </section>
+
+  <!-- Customize -->
+  <section class="alt" id="customize">
+    <div class="wrap split">
+      <div class="reveal">
+        <h2 data-i18n="custTitle">Make it yours</h2>
+        <p data-i18n="custDesc">Pick any of the 18 Material Design colours, switch between light, dark or system theme, and use TagMark in English or Vietnamese. This page reacts live — try it.</p>
+      </div>
+      <div class="panel reveal" style="--d:100ms">
+        <h3 data-i18n="colour">Colour</h3>
+        <div class="swatches" id="panelSwatches" role="radiogroup"></div>
+        <h3 data-i18n="theme">Appearance</h3>
+        <div class="seg" id="themeSeg">
+          <button data-v="light" aria-pressed="false"><span data-icon="sun" data-size="18"></span><span data-i18n="light">Light</span></button>
+          <button data-v="dark" aria-pressed="false"><span data-icon="moon" data-size="18"></span><span data-i18n="dark">Dark</span></button>
+          <button data-v="system" aria-pressed="false"><span data-icon="monitor" data-size="18"></span><span data-i18n="system">System</span></button>
+        </div>
+        <h3 data-i18n="language">Language</h3>
+        <div class="seg" id="langSeg">
+          <button data-v="en" aria-pressed="false">English</button>
+          <button data-v="vi" aria-pressed="false">Tiếng Việt</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Install -->
+  <section id="install">
+    <div class="wrap">
+      <div class="sec-head reveal"><h2 data-i18n="instTitle">Install in under a minute</h2><p data-i18n="instSub">Load TagMark as an unpacked extension — no account, no tracking.</p></div>
+      <div class="steps">
+        <div class="step reveal"><h3 data-i18n="s1t">Unzip the package</h3><p data-i18n="s1d">Extract the downloaded zip to a folder you'll keep, such as Documents/bookmark-manager.</p></div>
+        <div class="step reveal" style="--d:80ms"><h3 data-i18n="s2t">Open Extensions</h3><p data-i18n="s2d">Go to the address below and switch on Developer mode in the top-right corner.</p>
+          <div class="copy"><code>chrome://extensions</code><button id="copyBtn" data-i18n-title="copy" title="Copy"><span data-icon="copy" data-size="16"></span></button></div></div>
+        <div class="step reveal" style="--d:160ms"><h3 data-i18n="s3t">Load unpacked</h3><p data-i18n="s3d">Click “Load unpacked”, select the extracted folder, then pin TagMark to your toolbar.</p></div>
+      </div>
+      <div class="shortcut reveal"><span data-i18n="shortcut">Quick bookmark shortcut:</span><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="#top"><img src="icons/icon48.png" alt="" width="36" height="36" />TagMark</a>
+    <p><span data-i18n="madeBy">Made by</span> <strong>minhtrong67</strong> <span data-i18n="withAi">with the help of AI —</span> <strong>Claude</strong> <span class="heart" data-icon="heart" data-size="16"></span><br />v2.0.0 · <span data-i18n="rights">Free &amp; open · all data stays on your device</span></p>
+  </div>
+</footer>
+
+<script>
+
+const MD_COLORS = [
+  { id: "red",        hex: "#F44336", en: "Red",         vi: "Đỏ" },
+  { id: "pink",       hex: "#E91E63", en: "Pink",        vi: "Hồng" },
+  { id: "purple",     hex: "#9C27B0", en: "Purple",      vi: "Tím" },
+  { id: "deepPurple", hex: "#673AB7", en: "Deep Purple", vi: "Tím đậm" },
+  { id: "indigo",     hex: "#3F51B5", en: "Indigo",      vi: "Chàm" },
+  { id: "blue",       hex: "#2196F3", en: "Blue",        vi: "Xanh dương" },
+  { id: "lightBlue",  hex: "#03A9F4", en: "Light Blue",  vi: "Xanh da trời" },
+  { id: "cyan",       hex: "#00BCD4", en: "Cyan",        vi: "Xanh lơ" },
+  { id: "teal",       hex: "#009688", en: "Teal",        vi: "Xanh ngọc" },
+  { id: "green",      hex: "#4CAF50", en: "Green",       vi: "Xanh lá" },
+  { id: "lightGreen", hex: "#8BC34A", en: "Light Green", vi: "Xanh lá nhạt" },
+  { id: "lime",       hex: "#CDDC39", en: "Lime",        vi: "Xanh chanh" },
+  { id: "yellow",     hex: "#FFEB3B", en: "Yellow",      vi: "Vàng" },
+  { id: "amber",      hex: "#FFC107", en: "Amber",       vi: "Hổ phách" },
+  { id: "orange",     hex: "#FF9800", en: "Orange",      vi: "Cam" },
+  { id: "deepOrange", hex: "#FF5722", en: "Deep Orange", vi: "Cam đậm" },
+  { id: "brown",      hex: "#795548", en: "Brown",       vi: "Nâu" },
+  { id: "blueGrey",   hex: "#607D8B", en: "Blue Grey",   vi: "Xám xanh" }
+];
+const DEFAULT_COLOR_ID = "teal";
+
+const colorUtil = {
+  hexToHsl(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    if (d) {
+      s = d / (1 - Math.abs(2 * l - 1));
+      if (max === r) h = ((g - b) / d) % 6;
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h = (h * 60 + 360) % 360;
+    }
+    return { h, s, l };
+  },
+  hslToRgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let rgb;
+    if (h < 60) rgb = [c, x, 0];
+    else if (h < 120) rgb = [x, c, 0];
+    else if (h < 180) rgb = [0, c, x];
+    else if (h < 240) rgb = [0, x, c];
+    else if (h < 300) rgb = [x, 0, c];
+    else rgb = [c, 0, x];
+    return rgb.map((v) => v + m);
+  },
+  luminance([r, g, b]) {
+    const f = (v) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+  },
+  toHex(rgb) {
+    return "#" + rgb.map((v) => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, "0")).join("");
+  },
+  /** Colour of hue `h` / saturation `s` whose perceptual tone (CIE L*) is `tone` (0–100). */
+  tone(h, s, tone) {
+    if (tone >= 100) return "#ffffff";
+    if (tone <= 0) return "#000000";
+    const y = tone > 8 ? Math.pow((tone + 16) / 116, 3) : tone / 903.3; // tone → relative luminance
+    let lo = 0, hi = 1, rgb = [0, 0, 0];
+    for (let i = 0; i < 22; i++) {
+      const mid = (lo + hi) / 2;
+      rgb = this.hslToRgb(h, s, mid);
+      if (this.luminance(rgb) < y) lo = mid; else hi = mid;
+    }
+    return this.toHex(rgb);
+  }
+};
+
+/** Build the CSS custom properties for a seed colour in light or dark mode. */
+function buildScheme(seedHex, dark) {
+  const { h, s } = colorUtil.hexToHsl(seedHex);
+  const sa = Math.min(0.9, Math.max(0.45, s));          // accent saturation
+  const ss = Math.min(0.28, sa * 0.4);                  // secondary (muted)
+  const sn = Math.min(0.12, Math.max(0.04, s * 0.12));  // neutral tint
+  const th = (h + 60) % 360;                            // tertiary hue
+  const T = (hh, sat, tone) => colorUtil.tone(hh, sat, tone);
+  if (!dark) {
+    return {
+      "--md-primary": T(h, sa, 40), "--md-on-primary": "#ffffff",
+      "--md-primary-container": T(h, sa * 0.8, 90), "--md-on-primary-container": T(h, sa, 10),
+      "--md-secondary": T(h, ss, 40), "--md-on-secondary": "#ffffff",
+      "--md-secondary-container": T(h, ss, 90), "--md-on-secondary-container": T(h, ss, 10),
+      "--md-tertiary": T(th, ss + 0.1, 40), "--md-tertiary-container": T(th, ss + 0.1, 90),
+      "--md-on-tertiary-container": T(th, ss + 0.1, 10),
+      "--md-error": "#BA1A1A", "--md-on-error": "#ffffff",
+      "--md-error-container": "#FFDAD6", "--md-on-error-container": "#410002",
+      "--md-surface": T(h, sn, 98), "--md-on-surface": T(h, sn, 10),
+      "--md-on-surface-variant": T(h, sn * 1.2, 30),
+      "--md-surface-container-lowest": "#ffffff", "--md-surface-container-low": T(h, sn, 96),
+      "--md-surface-container": T(h, sn, 94), "--md-surface-container-high": T(h, sn, 92),
+      "--md-surface-container-highest": T(h, sn, 90),
+      "--md-outline": T(h, sn * 1.2, 50), "--md-outline-variant": T(h, sn * 1.2, 80),
+      "--md-scrim": "rgba(0,0,0,.32)", "--md-shadow": "rgba(0,0,0,.18)"
+    };
+  }
+  const sd = sa * 0.72; // softer accents in dark mode
+  return {
+    "--md-primary": T(h, sd, 80), "--md-on-primary": T(h, sd, 20),
+    "--md-primary-container": T(h, sd, 30), "--md-on-primary-container": T(h, sd, 90),
+    "--md-secondary": T(h, ss, 80), "--md-on-secondary": T(h, ss, 20),
+    "--md-secondary-container": T(h, ss, 30), "--md-on-secondary-container": T(h, ss, 90),
+    "--md-tertiary": T(th, ss + 0.1, 80), "--md-tertiary-container": T(th, ss + 0.1, 30),
+    "--md-on-tertiary-container": T(th, ss + 0.1, 90),
+    "--md-error": "#FFB4AB", "--md-on-error": "#690005",
+    "--md-error-container": "#93000A", "--md-on-error-container": "#FFDAD6",
+    "--md-surface": T(h, sn, 6), "--md-on-surface": T(h, sn, 90),
+    "--md-on-surface-variant": T(h, sn * 1.2, 80),
+    "--md-surface-container-lowest": T(h, sn, 4), "--md-surface-container-low": T(h, sn, 10),
+    "--md-surface-container": T(h, sn, 12), "--md-surface-container-high": T(h, sn, 17),
+    "--md-surface-container-highest": T(h, sn, 22),
+    "--md-outline": T(h, sn * 1.2, 60), "--md-outline-variant": T(h, sn * 1.2, 30),
+    "--md-scrim": "rgba(0,0,0,.5)", "--md-shadow": "rgba(0,0,0,.5)"
+  };
+}
+
+function colorById(id) {
+  return MD_COLORS.find((c) => c.id === id) || MD_COLORS.find((c) => c.id === DEFAULT_COLOR_ID);
+}
+
+/** Applies theme mode ("system" | "light" | "dark") + colour id to the document. */
+const themeManager = {
+  mode: "system",
+  colorId: DEFAULT_COLOR_ID,
+  mql: typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null,
+
+  isDark() {
+    return this.mode === "dark" || (this.mode === "system" && !!(this.mql && this.mql.matches));
+  },
+
+  apply(mode, colorId) {
+    this.mode = mode || this.mode;
+    this.colorId = colorId || this.colorId;
+    const dark = this.isDark();
+    const root = document.documentElement;
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    const vars = buildScheme(colorById(this.colorId).hex, dark);
+    for (const k in vars) root.style.setProperty(k, vars[k]);
+  },
+
+  watchSystemChanges() {
+    if (!this.mql) return;
+    this.mql.addEventListener("change", () => { if (this.mode === "system") this.apply(); });
+  }
+};
+
+
+const ICONS = {"bookmark-plus":"<path d=\"M12 7v6\"/> <path d=\"M15 10H9\"/> <path d=\"M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z\"/>","check":"<path d=\"M20 6 9 17l-5-5\"/>","copy":"<rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\"/> <path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"/>","copy-check":"<path d=\"m12 15 2 2 4-4\"/> <rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\"/> <path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"/>","download":"<path d=\"M12 15V3\"/> <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/> <path d=\"m7 10 5 5 5-5\"/>","file-json":"<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\"/> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\"/> <path d=\"M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1\"/> <path d=\"M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1\"/>","folder-tree":"<path d=\"M20 10a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2.5a1 1 0 0 1-.8-.4l-.9-1.2A1 1 0 0 0 15 3h-2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z\"/> <path d=\"M20 21a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-2.9a1 1 0 0 1-.88-.55l-.42-.85a1 1 0 0 0-.92-.6H13a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z\"/> <path d=\"M3 5a2 2 0 0 0 2 2h3\"/> <path d=\"M3 3v13a2 2 0 0 0 2 2h3\"/>","globe":"<circle cx=\"12\" cy=\"12\" r=\"10\"/> <path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"/> <path d=\"M2 12h20\"/>","heart":"<path d=\"M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5\"/>","keyboard":"<path d=\"M10 8h.01\"/> <path d=\"M12 12h.01\"/> <path d=\"M14 8h.01\"/> <path d=\"M16 12h.01\"/> <path d=\"M18 8h.01\"/> <path d=\"M6 8h.01\"/> <path d=\"M7 16h10\"/> <path d=\"M8 12h.01\"/> <rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\"/>","languages":"<path d=\"m5 8 6 6\"/> <path d=\"m4 14 6-6 2-3\"/> <path d=\"M2 5h12\"/> <path d=\"M7 2h1\"/> <path d=\"m22 22-5-10-5 10\"/> <path d=\"M14 18h6\"/>","layers":"<path d=\"M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z\"/> <path d=\"M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12\"/> <path d=\"M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17\"/>","menu":"<path d=\"M4 5h16\"/> <path d=\"M4 12h16\"/> <path d=\"M4 19h16\"/>","monitor":"<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\"/> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\"/> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\"/>","moon":"<path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\"/>","palette":"<path d=\"M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z\"/> <circle cx=\"13.5\" cy=\"6.5\" r=\".5\" fill=\"currentColor\"/> <circle cx=\"17.5\" cy=\"10.5\" r=\".5\" fill=\"currentColor\"/> <circle cx=\"6.5\" cy=\"12.5\" r=\".5\" fill=\"currentColor\"/> <circle cx=\"8.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\"/>","puzzle":"<path d=\"M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z\"/>","search":"<path d=\"m21 21-4.34-4.34\"/> <circle cx=\"11\" cy=\"11\" r=\"8\"/>","shield-check":"<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/> <path d=\"m9 12 2 2 4-4\"/>","sparkles":"<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\"/> <path d=\"M20 2v4\"/> <path d=\"M22 4h-4\"/> <circle cx=\"4\" cy=\"20\" r=\"2\"/>","square-check-big":"<path d=\"M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344\"/> <path d=\"m9 11 3 3L22 4\"/>","sun":"<circle cx=\"12\" cy=\"12\" r=\"4\"/> <path d=\"M12 2v2\"/> <path d=\"M12 20v2\"/> <path d=\"m4.93 4.93 1.41 1.41\"/> <path d=\"m17.66 17.66 1.41 1.41\"/> <path d=\"M2 12h2\"/> <path d=\"M20 12h2\"/> <path d=\"m6.34 17.66-1.41 1.41\"/> <path d=\"m19.07 4.93-1.41 1.41\"/>","tags":"<path d=\"M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z\"/> <path d=\"M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193\"/> <circle cx=\"10.5\" cy=\"6.5\" r=\".5\" fill=\"currentColor\"/>","zap":"<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\"/>"};
+const ic = (n, s = 20) => `<svg class="icon" xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ""}</svg>`;
+function hydrate(root = document) {
+  root.querySelectorAll("[data-icon]").forEach((n) => { n.innerHTML = ic(n.dataset.icon, Number(n.dataset.size) || 24); n.classList.add("ico"); n.removeAttribute("data-icon"); });
+}
+
+const DICT = {
+  en: {
+    title: "TagMark — Smart Bookmark Manager for Chrome",
+    desc: "TagMark organizes your real Chrome bookmarks with tags, notes, instant search, duplicate detection and bulk actions. Material Design 3, light & dark themes, English and Vietnamese. 100% local.",
+    skip: "Skip to content", navFeatures: "Features", navPreview: "Preview", navCustomize: "Customize", navInstall: "Install",
+    colour: "Colour", theme: "Appearance", language: "Language", menu: "Menu", copy: "Copy", light: "Light", dark: "Dark", system: "System",
+    eyebrow: "Chrome extension · Material Design 3", h1a: "Your bookmarks,", h1b: "finally organized.",
+    lead: "TagMark adds tags, notes, instant search and duplicate detection on top of your real Chrome bookmarks — in a clean, fast popup that follows your style.",
+    ctaInstall: "Get started", ctaFeatures: "Explore features",
+    chip1: "100% local", chip2: "Manifest V3", chip3: "English · Tiếng Việt", chip4: "18 colours · light/dark",
+    tagline: "Smart bookmark manager", mockSearch: "Search title, URL, tags…", mockFab: "Bookmark this page",
+    featTitle: "Everything you need, nothing you don't", featSub: "TagMark works directly on your real bookmarks — add structure without losing anything.",
+    f1t: "Tags & notes", f1d: "Add your own tags and private notes to any bookmark, then filter by tag in one tap.",
+    f2t: "Instant search", f2d: "Search titles, URLs, tags and notes as you type — accent-insensitive, perfect for Vietnamese.",
+    f3t: "Duplicate detection", f3d: "Spot bookmarks saved twice at a glance and clean them up with bulk actions.",
+    f4t: "Bulk actions", f4d: "Select many bookmarks to tag or delete them together — no more one-by-one chores.",
+    f5t: "One-key bookmarking", f5d: "Press Alt+Shift+M to save the current tab instantly, with a native confirmation.",
+    f6t: "Backup & export", f6d: "Export JSON backups or a standard HTML file with nested folders, and import them back anytime.",
+    prevTitle: "See it in action", prevSub: "A calm, Material Design 3 interface in light and dark.",
+    custTitle: "Make it yours", custDesc: "Pick any of the 18 Material Design colours, switch between light, dark or system theme, and use TagMark in English or Vietnamese. This page reacts live — try it.",
+    instTitle: "Install in under a minute", instSub: "Load TagMark as an unpacked extension — no account, no tracking.",
+    s1t: "Unzip the package", s1d: "Extract the downloaded zip to a folder you'll keep, such as Documents/bookmark-manager.",
+    s2t: "Open Extensions", s2d: "Go to the address below and switch on Developer mode in the top-right corner.",
+    s3t: "Load unpacked", s3d: "Click “Load unpacked”, select the extracted folder, then pin TagMark to your toolbar.",
+    shortcut: "Quick bookmark shortcut:", madeBy: "Made by", withAi: "with the help of AI —", rights: "Free & open · all data stays on your device",
+    shots: ["Bookmarks", "Dark mode", "Edit", "Settings", "Grid view", "Vietnamese"],
+    notes: ["Search, filter by folder or tag, and sort — all in one popup.", "A true dark theme that follows your system automatically.", "Add tags and a note, move to a folder, or create one on the fly.", "Choose colour, theme and language — nothing more, nothing less.", "Switch to a compact grid when you want to scan visually.", "Fully localized Vietnamese interface with your own accent colour."],
+    copied: "Copied"
+  },
+  vi: {
+    title: "TagMark — Quản lý bookmark thông minh cho Chrome",
+    desc: "TagMark sắp xếp bookmark Chrome thật của bạn bằng thẻ, ghi chú, tìm kiếm tức thì, phát hiện trùng lặp và thao tác hàng loạt. Material Design 3, giao diện sáng/tối, tiếng Anh và tiếng Việt. 100% chạy cục bộ.",
+    skip: "Bỏ qua đến nội dung", navFeatures: "Tính năng", navPreview: "Xem trước", navCustomize: "Tuỳ chỉnh", navInstall: "Cài đặt",
+    colour: "Màu sắc", theme: "Giao diện", language: "Ngôn ngữ", menu: "Menu", copy: "Sao chép", light: "Sáng", dark: "Tối", system: "Hệ thống",
+    eyebrow: "Tiện ích Chrome · Material Design 3", h1a: "Bookmark của bạn,", h1b: "cuối cùng đã gọn gàng.",
+    lead: "TagMark thêm thẻ, ghi chú, tìm kiếm tức thì và phát hiện trùng lặp lên chính bookmark Chrome của bạn — trong một popup gọn, nhanh và đúng phong cách của bạn.",
+    ctaInstall: "Bắt đầu", ctaFeatures: "Khám phá tính năng",
+    chip1: "100% cục bộ", chip2: "Manifest V3", chip3: "English · Tiếng Việt", chip4: "18 màu · sáng/tối",
+    tagline: "Quản lý bookmark thông minh", mockSearch: "Tìm tiêu đề, URL, thẻ…", mockFab: "Lưu trang này",
+    featTitle: "Đủ mọi thứ bạn cần, không thừa thứ nào", featSub: "TagMark làm việc trực tiếp trên bookmark thật của bạn — thêm trật tự mà không mất gì.",
+    f1t: "Thẻ & ghi chú", f1d: "Thêm thẻ và ghi chú riêng cho bất kỳ bookmark nào, rồi lọc theo thẻ chỉ với một chạm.",
+    f2t: "Tìm kiếm tức thì", f2d: "Tìm theo tiêu đề, URL, thẻ và ghi chú ngay khi gõ — không phân biệt dấu, rất hợp tiếng Việt.",
+    f3t: "Phát hiện trùng lặp", f3d: "Nhận ra bookmark bị lưu hai lần trong nháy mắt và dọn dẹp bằng thao tác hàng loạt.",
+    f4t: "Thao tác hàng loạt", f4d: "Chọn nhiều bookmark để gắn thẻ hoặc xoá cùng lúc — không còn làm từng cái một.",
+    f5t: "Lưu nhanh bằng một phím tắt", f5d: "Nhấn Alt+Shift+M để lưu ngay tab hiện tại, kèm thông báo xác nhận.",
+    f6t: "Sao lưu & xuất", f6d: "Xuất bản sao lưu JSON hoặc tệp HTML chuẩn có thư mục lồng nhau, và nhập lại bất cứ lúc nào.",
+    prevTitle: "Xem thực tế", prevSub: "Giao diện Material Design 3 dịu mắt, có cả sáng và tối.",
+    custTitle: "Biến nó thành của bạn", custDesc: "Chọn một trong 18 màu Material Design, đổi giữa giao diện sáng, tối hoặc theo hệ thống, và dùng TagMark bằng tiếng Anh hoặc tiếng Việt. Trang này đổi ngay tức thì — thử xem.",
+    instTitle: "Cài đặt trong chưa đầy một phút", instSub: "Tải TagMark dạng tiện ích giải nén — không cần tài khoản, không theo dõi.",
+    s1t: "Giải nén gói", s1d: "Giải nén tệp zip đã tải vào một thư mục bạn sẽ giữ lại, ví dụ Documents/bookmark-manager.",
+    s2t: "Mở trang Tiện ích", s2d: "Truy cập địa chỉ bên dưới và bật Chế độ nhà phát triển ở góc trên bên phải.",
+    s3t: "Tải tiện ích đã giải nén", s3d: "Nhấn “Tải tiện ích đã giải nén”, chọn thư mục vừa giải nén, rồi ghim TagMark lên thanh công cụ.",
+    shortcut: "Phím tắt lưu nhanh:", madeBy: "Thực hiện bởi", withAi: "với sự hỗ trợ của AI —", rights: "Miễn phí & mở · mọi dữ liệu nằm trên thiết bị của bạn",
+    shots: ["Bookmark", "Chế độ tối", "Chỉnh sửa", "Cài đặt", "Dạng lưới", "Tiếng Việt"],
+    notes: ["Tìm kiếm, lọc theo thư mục hoặc thẻ và sắp xếp — gói trong một popup.", "Giao diện tối đúng nghĩa, tự động theo hệ thống.", "Thêm thẻ và ghi chú, chuyển thư mục hoặc tạo thư mục mới ngay tại chỗ.", "Chọn màu, giao diện và ngôn ngữ — gọn gàng, không thừa.", "Chuyển sang dạng lưới gọn khi bạn muốn duyệt bằng mắt.", "Giao diện tiếng Việt đầy đủ với màu nhấn của riêng bạn."],
+    copied: "Đã sao chép"
+  }
+};
+const SHOTS = ["image01", "image02", "image03", "image04", "image05", "image06"];
+
+/* ---- preferences (sandboxed extension pages have no localStorage → fall back to the URL) ---- */
+const params = new URLSearchParams(location.search);
+const KEY = "tagmark_landing";
+function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } }
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(prefs)); }
+  catch (_) { const p = new URLSearchParams({ lang: prefs.lang, theme: prefs.theme, color: prefs.color }); try { history.replaceState(null, "", "?" + p + location.hash); } catch (__) {} }
+}
+const stored = load();
+const prefs = {
+  lang: params.get("lang") || stored.lang || ((navigator.language || "en").toLowerCase().startsWith("vi") ? "vi" : "en"),
+  theme: params.get("theme") || stored.theme || "system",
+  color: params.get("color") || stored.color || DEFAULT_COLOR_ID
+};
+if (!DICT[prefs.lang]) prefs.lang = "en";
+if (!["light", "dark", "system"].includes(prefs.theme)) prefs.theme = "system";
+
+/* ---- theme ---- */
+const THEME_ICON = { light: "sun", dark: "moon", system: "monitor" };
+function applyTheme() {
+  themeManager.apply(prefs.theme, prefs.color);
+  const dark = themeManager.isDark();
+  document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.documentElement).getPropertyValue("--md-primary").trim();
+  $("themeIcon").innerHTML = ic(THEME_ICON[prefs.theme], 22);
+  document.querySelectorAll("#themeSeg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === prefs.theme));
+  document.querySelectorAll(".swatch").forEach((b) => b.setAttribute("aria-checked", b.dataset.c === prefs.color));
+  updateShotSrc();
+}
+const $ = (id) => document.getElementById(id);
+
+/* ---- language ---- */
+function applyLang() {
+  const d = DICT[prefs.lang];
+  document.documentElement.lang = prefs.lang;
+  document.title = d.title;
+  document.querySelector('meta[name="description"]').content = d.desc;
+  document.querySelector('meta[property="og:title"]').content = d.title;
+  document.querySelector('meta[property="og:description"]').content = d.desc;
+  document.querySelector('meta[name="twitter:title"]').content = d.title;
+  document.querySelector('meta[name="twitter:description"]').content = d.desc;
+  document.querySelector('meta[property="og:locale"]').content = prefs.lang === "vi" ? "vi_VN" : "en_US";
+  document.querySelectorAll("[data-i18n]").forEach((el) => { if (d[el.dataset.i18n] !== undefined) el.innerHTML = d[el.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => { const v = d[el.dataset.i18nTitle]; if (v) { el.title = v; el.setAttribute("aria-label", v); } });
+  $("langCode").textContent = prefs.lang.toUpperCase();
+  document.querySelectorAll("#langSeg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === prefs.lang));
+  buildTabs();
+  updateShotSrc();
+}
+
+/* ---- swatches ---- */
+function buildSwatches(el) {
+  el.innerHTML = MD_COLORS.map((c) => {
+    const light = ["yellow", "lime", "amber", "lightGreen"].includes(c.id);
+    return `<button class="swatch${light ? " dark-ink" : ""}" role="radio" data-c="${c.id}" aria-checked="false" aria-label="${c.en}" title="${c.en} · ${c.vi}" style="background:${c.hex}">${ic("check", 16)}</button>`;
+  }).join("");
+  el.addEventListener("click", (e) => { const b = e.target.closest(".swatch"); if (!b) return; prefs.color = b.dataset.c; applyTheme(); save(); });
+}
+
+/* ---- screenshot tabs ---- */
+let shotIndex = 0;
+function buildTabs() {
+  const d = DICT[prefs.lang];
+  $("tabs").innerHTML = d.shots.map((s, i) => `<button class="tab" role="tab" aria-selected="${i === shotIndex}" data-i="${i}">${s}</button>`).join("");
+}
+function updateShotSrc() {
+  const d = DICT[prefs.lang], img = $("shotImg");
+  const file = `screenshots/${SHOTS[shotIndex]}.png`;
+  if (!img.src.endsWith(file)) img.src = file;
+  img.alt = d.shots[shotIndex] + " — TagMark";
+  $("shotNote").textContent = d.notes[shotIndex];
+}
+$("tabs").addEventListener("click", (e) => {
+  const b = e.target.closest(".tab"); if (!b) return;
+  shotIndex = Number(b.dataset.i);
+  document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", t === b));
+  const shot = $("shot"); shot.style.animation = "none"; void shot.offsetWidth; shot.style.animation = "";
+  updateShotSrc();
+});
+$("shotImg").addEventListener("error", () => { $("shot").style.display = "none"; });
+$("shotImg").addEventListener("load", () => { $("shot").style.display = ""; });
+
+/* ---- controls ---- */
+$("themeBtn").addEventListener("click", () => { const order = ["light", "dark", "system"]; prefs.theme = order[(order.indexOf(prefs.theme) + 1) % 3]; applyTheme(); save(); });
+$("langBtn").addEventListener("click", () => { prefs.lang = prefs.lang === "en" ? "vi" : "en"; applyLang(); save(); });
+$("themeSeg").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { prefs.theme = b.dataset.v; applyTheme(); save(); } });
+$("langSeg").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { prefs.lang = b.dataset.v; applyLang(); save(); } });
+$("colorBtn").addEventListener("click", (e) => { e.stopPropagation(); const open = $("colorPop").hidden; $("colorPop").hidden = !open; $("colorBtn").setAttribute("aria-expanded", String(open)); });
+document.addEventListener("click", (e) => { if (!e.target.closest(".pop-anchor")) { $("colorPop").hidden = true; $("colorBtn").setAttribute("aria-expanded", "false"); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("colorPop").hidden = true; $("nav").classList.remove("open"); } });
+$("menuBtn").addEventListener("click", () => { const o = $("nav").classList.toggle("open"); $("menuBtn").setAttribute("aria-expanded", String(o)); });
+$("nav").addEventListener("click", (e) => { if (e.target.closest("a")) $("nav").classList.remove("open"); });
+$("copyBtn").addEventListener("click", async () => {
+  const b = $("copyBtn");
+  try { await navigator.clipboard.writeText("chrome://extensions"); } catch (_) {}
+  b.innerHTML = ic("check", 16); b.title = DICT[prefs.lang].copied;
+  setTimeout(() => { b.innerHTML = ic("copy", 16); b.title = DICT[prefs.lang].copy; }, 1600);
+});
+themeManager.watchSystemChanges();
+
+/* ---- scroll effects ---- */
+const bar = $("bar");
+addEventListener("scroll", () => bar.classList.toggle("scrolled", scrollY > 8), { passive: true });
+const io = "IntersectionObserver" in window ? new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }), { threshold: .12, rootMargin: "0px 0px -40px 0px" }) : null;
+document.querySelectorAll(".reveal").forEach((el) => io ? io.observe(el) : el.classList.add("in"));
+const links = [...document.querySelectorAll(".nav a")];
+const spy = "IntersectionObserver" in window ? new IntersectionObserver((entries) => entries.forEach((en) => {
+  if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+}), { rootMargin: "-45% 0px -50% 0px" }) : null;
+["features", "preview", "customize", "install"].forEach((id) => spy && spy.observe($(id)));
+
+/* ---- hero mock tilt ---- */
+const mock = $("mock");
+if (matchMedia("(hover:hover) and (prefers-reduced-motion: no-preference)").matches) {
+  const stage = mock.parentElement;
+  stage.addEventListener("pointermove", (e) => { const r = stage.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; mock.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 10}deg)`; });
+  stage.addEventListener("pointerleave", () => { mock.style.transform = ""; });
+}
+
+hydrate();
+buildSwatches($("barSwatches"));
+buildSwatches($("panelSwatches"));
+applyLang();
+applyTheme();
+</script>
+</body>
+</html>

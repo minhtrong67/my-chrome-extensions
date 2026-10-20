@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Full-bleed variant with a bolder glyph, used for the 16px and 32px toolbar sizes. -->
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="#E91E63"/>
+  <g fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 52v-10a12 12 0 0 1 12-12h10"/>
+    <path d="M76 30h10a12 12 0 0 1 12 12v10"/>
+    <path d="M98 76v10a12 12 0 0 1-12 12h-10"/>
+    <path d="M52 98h-10a12 12 0 0 1-12-12v-10"/>
+  </g>
+  <path d="M56 52v24l21-12z" fill="#fff" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+</svg>

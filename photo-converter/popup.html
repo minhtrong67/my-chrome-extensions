@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Photo Converter</title>
+<link rel="stylesheet" href="css/popup.css" />
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" /></symbol>
+<symbol id="i-image-up" viewBox="0 0 24 24"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21" /> <path d="m14 19.5 3-3 3 3" /> <path d="M17 22v-5.5" /> <circle cx="9" cy="9" r="2" /></symbol>
+<symbol id="i-clipboard-paste" viewBox="0 0 24 24"><path d="M11 14h10" /> <path d="M16 4h2a2 2 0 0 1 2 2v1.344" /> <path d="m17 18 4-4-4-4" /> <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113" /> <rect x="8" y="2" width="8" height="4" rx="1" /></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol>
+<symbol id="i-lock-open" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 9.9-1" /></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 3v12" /> <path d="m17 8-5-5-5 5" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></symbol>
+<symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" /></symbol>
+<symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" /> <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+<symbol id="i-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2" /> <path d="M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715" /> <path d="M16 12a4 4 0 0 0-4-4" /> <path d="m19 5-1.256 1.256" /> <path d="M20 12h2" /></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2" /> <line x1="8" x2="16" y1="21" y2="21" /> <line x1="12" x2="12" y1="17" y2="21" /></symbol>
+<symbol id="i-languages" viewBox="0 0 24 24"><path d="m5 8 6 6" /> <path d="m4 14 6-6 2-3" /> <path d="M2 5h12" /> <path d="M7 2h1" /> <path d="m22 22-5-10-5 10" /> <path d="M14 18h6" /></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M10 5H3" /> <path d="M12 19H3" /> <path d="M14 3v4" /> <path d="M16 17v4" /> <path d="M21 12h-9" /> <path d="M21 19h-5" /> <path d="M21 5h-7" /> <path d="M8 10v4" /> <path d="M8 12H3" /></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+<symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol>
+<symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+</svg>
+<div class="app" id="app">
+
+  <!-- ===== Converter view ===== -->
+  <section class="view is-active" id="view-converter" aria-label="Converter">
+    <header class="app-bar">
+      <img src="icons/icon48.png" alt="" class="brand-icon" width="32" height="32" />
+      <div class="brand-text">
+        <h1 data-i18n="appName">Photo Converter</h1>
+        <p data-i18n="tagline">Image format converter</p>
+      </div>
+      <button class="icon-btn ripple" id="settingsBtn" data-i18n-title="settings" title="Settings">
+        <svg class="icon"><use href="#i-settings"/></svg>
+      </button>
+    </header>
+
+    <main class="scroll" id="converterScroll">
+      <div class="drop-zone ripple" id="dropZone" role="button" tabindex="0">
+        <span class="drop-badge"><svg class="icon icon-lg"><use href="#i-image-up"/></svg></span>
+        <span class="drop-title" data-i18n="dropTitle">Drop images here or click to browse</span>
+        <span class="drop-sub" data-i18n="dropSub">PNG · JPEG · WEBP · GIF · BMP · SVG</span>
+        <span class="drop-hint"><svg class="icon icon-sm"><use href="#i-clipboard-paste"/></svg><span data-i18n="pasteHint">Tip: paste a screenshot with Ctrl+V</span></span>
+        <input type="file" id="fileInput" accept="image/*" multiple hidden />
+      </div>
+
+      <div class="url-row">
+        <div class="field grow">
+          <input type="url" id="urlInput" placeholder=" " autocomplete="off" spellcheck="false" />
+          <label for="urlInput" data-i18n="urlLabel">Image URL</label>
+        </div>
+        <button class="btn tonal ripple" id="loadUrlBtn"><svg class="icon"><use href="#i-link"/></svg><span data-i18n="load">Load</span></button>
+      </div>
+
+      <section class="card hidden" id="queueCard">
+        <div class="card-head">
+          <h2 id="queueCount">1 image</h2>
+          <button class="btn text ripple" id="clearQueueBtn" data-i18n="clearAll">Clear all</button>
+        </div>
+        <ul class="queue-list" id="queueList"></ul>
+      </section>
+
+      <section class="card hidden" id="optionsCard">
+        <div class="group">
+          <span class="group-label" data-i18n="format">Output format</span>
+          <div class="segmented" id="formatSeg" role="radiogroup">
+            <button class="seg ripple" role="radio" data-value="png">PNG</button>
+            <button class="seg ripple" role="radio" data-value="jpeg">JPEG</button>
+            <button class="seg ripple" role="radio" data-value="webp">WEBP</button>
+          </div>
+        </div>
+
+        <div class="group collapsible" id="qualityRow"><div class="inner">
+          <div class="slider-head"><span class="group-label" data-i18n="quality">Quality</span><span class="value-chip" id="qualityValue">90%</span></div>
+          <input type="range" min="1" max="100" value="90" id="qualitySlider" class="slider" />
+        </div></div>
+
+        <div class="group" id="resizeGroup">
+          <label class="switch">
+            <input type="checkbox" id="optResize" />
+            <span class="track"><span class="thumb"></span></span>
+            <span class="switch-text" data-i18n="resize">Resize</span>
+          </label>
+          <p class="hint hidden" id="resizeBatchHint" data-i18n="resizeBatchHint">Resize is available for a single image only</p>
+          <div class="collapsible" id="resizeRow"><div class="inner resize-row">
+            <div class="field grow"><input type="number" id="widthInput" min="1" max="16384" placeholder=" " /><label for="widthInput" data-i18n="width">Width</label></div>
+            <button class="icon-btn toggle ripple" id="lockBtn" aria-pressed="true" data-i18n-title="lockRatio" title="Lock aspect ratio">
+              <svg class="icon icon-locked"><use href="#i-lock"/></svg><svg class="icon icon-unlocked"><use href="#i-lock-open"/></svg>
+            </button>
+            <div class="field grow"><input type="number" id="heightInput" min="1" max="16384" placeholder=" " /><label for="heightInput" data-i18n="height">Height</label></div>
+          </div></div>
+        </div>
+
+        <div class="group" id="filenameRow">
+          <div class="field"><input type="text" id="filenameInput" placeholder=" " autocomplete="off" spellcheck="false" /><label for="filenameInput" data-i18n="filename">File name</label></div>
+        </div>
+
+        <button class="btn filled block ripple" id="convertBtn">
+          <svg class="icon icon-idle"><use href="#i-download"/></svg><span class="spinner"></span>
+          <span id="convertLabel">Convert &amp; download</span>
+        </button>
+      </section>
+
+      <section class="card" id="historyCard">
+        <div class="card-head">
+          <h2><svg class="icon icon-sm"><use href="#i-history"/></svg><span data-i18n="history">Recent history</span></h2>
+          <div class="head-actions">
+            <button class="btn text ripple" id="exportHistoryBtn"><span data-i18n="exportTxt">Export</span></button>
+            <button class="btn text danger ripple" id="clearHistoryBtn" data-i18n="clear">Clear</button>
+          </div>
+        </div>
+        <ul class="history-list" id="historyList"></ul>
+      </section>
+    </main>
+  </section>
+
+  <!-- ===== Settings view (inside the popup — no new tab needed) ===== -->
+  <section class="view" id="view-settings" aria-label="Settings">
+    <header class="app-bar">
+      <button class="icon-btn ripple" id="backBtn" data-i18n-title="back" title="Back"><svg class="icon"><use href="#i-arrow-left"/></svg></button>
+      <div class="brand-text"><h1 data-i18n="settings">Settings</h1></div>
+    </header>
+
+    <main class="scroll">
+      <section class="card">
+        <div class="card-head"><h2><svg class="icon icon-sm"><use href="#i-palette"/></svg><span data-i18n="colors">Accent colour</span></h2><span class="value-chip" id="colorName"></span></div>
+        <div class="swatches" id="swatches" role="radiogroup"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2><svg class="icon icon-sm"><use href="#i-sun-moon"/></svg><span data-i18n="theme">Appearance</span></h2></div>
+        <div class="segmented" id="themeSeg" role="radiogroup">
+          <button class="seg ripple" role="radio" data-value="light"><svg class="icon icon-sm"><use href="#i-sun"/></svg><span data-i18n="themeLight">Light</span></button>
+          <button class="seg ripple" role="radio" data-value="dark"><svg class="icon icon-sm"><use href="#i-moon"/></svg><span data-i18n="themeDark">Dark</span></button>
+          <button class="seg ripple" role="radio" data-value="system"><svg class="icon icon-sm"><use href="#i-monitor"/></svg><span data-i18n="themeSystem">System</span></button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2><svg class="icon icon-sm"><use href="#i-languages"/></svg><span data-i18n="language">Language</span></h2></div>
+        <div class="segmented" id="langSeg" role="radiogroup">
+          <button class="seg ripple" role="radio" data-value="en">English</button>
+          <button class="seg ripple" role="radio" data-value="vi">Tiếng Việt</button>
+        </div>
+      </section>
+
+      <details class="card advanced" id="advanced">
+        <summary class="ripple"><h2><svg class="icon icon-sm"><use href="#i-sliders"/></svg><span data-i18n="advanced">Advanced options</span></h2><svg class="icon chevron"><use href="#i-chevron-down"/></svg></summary>
+        <div class="advanced-body">
+          <div class="group">
+            <span class="group-label" data-i18n="defaultFormat">Default format</span>
+            <div class="segmented" id="defaultFormatSeg" role="radiogroup">
+              <button class="seg ripple" role="radio" data-value="png">PNG</button>
+              <button class="seg ripple" role="radio" data-value="jpeg">JPEG</button>
+              <button class="seg ripple" role="radio" data-value="webp">WEBP</button>
+            </div>
+          </div>
+          <div class="group">
+            <div class="slider-head"><span class="group-label" data-i18n="defaultQuality">Default quality</span><span class="value-chip" id="defaultQualityValue">90%</span></div>
+            <input type="range" min="1" max="100" value="90" id="defaultQualitySlider" class="slider" />
+          </div>
+          <div class="group">
+            <label class="switch"><input type="checkbox" id="optShowHistory" /><span class="track"><span class="thumb"></span></span><span class="switch-text" data-i18n="showHistory">Show recent history</span></label>
+            <div class="segmented small" id="historyLimitSeg" role="radiogroup" aria-label="History size">
+              <button class="seg ripple" role="radio" data-value="5">5</button>
+              <button class="seg ripple" role="radio" data-value="10">10</button>
+              <button class="seg ripple" role="radio" data-value="20">20</button>
+            </div>
+          </div>
+          <div class="group">
+            <span class="group-label" data-i18n="contextMenu">Right-click menu formats</span>
+            <label class="switch"><input type="checkbox" id="menuOriginal" /><span class="track"><span class="thumb"></span></span><span class="switch-text" data-i18n="menuOriginal">Original</span></label>
+            <label class="switch"><input type="checkbox" id="menuPng" /><span class="track"><span class="thumb"></span></span><span class="switch-text">PNG</span></label>
+            <label class="switch"><input type="checkbox" id="menuJpeg" /><span class="track"><span class="thumb"></span></span><span class="switch-text">JPEG</span></label>
+            <label class="switch"><input type="checkbox" id="menuWebp" /><span class="track"><span class="thumb"></span></span><span class="switch-text">WEBP</span></label>
+          </div>
+          <div class="group">
+            <label class="switch"><input type="checkbox" id="optAskFilename" /><span class="track"><span class="thumb"></span></span><span class="switch-text" data-i18n="askFilename">Ask where to save each time</span></label>
+            <label class="switch"><input type="checkbox" id="optShowNotification" /><span class="track"><span class="thumb"></span></span><span class="switch-text" data-i18n="showNotification">Notify after saving</span></label>
+          </div>
+          <div class="btn-row">
+            <button class="btn outlined ripple" id="exportSettingsBtn"><svg class="icon"><use href="#i-download"/></svg><span data-i18n="exportSettings">Export</span></button>
+            <button class="btn outlined ripple" id="importSettingsBtn"><svg class="icon"><use href="#i-upload"/></svg><span data-i18n="importSettings">Import</span></button>
+            <input type="file" id="importSettingsFile" accept="application/json" hidden />
+          </div>
+          <button class="btn text danger block ripple" id="resetBtn"><svg class="icon"><use href="#i-rotate-ccw"/></svg><span id="resetLabel" data-i18n="resetDefault">Reset to default</span></button>
+        </div>
+      </details>
+
+      <section class="card about">
+        <div class="about-head">
+          <img src="icons/icon128.png" alt="" width="48" height="48" />
+          <div>
+            <h2>Photo Converter</h2>
+            <p><span data-i18n="version">Version</span> <span id="versionLabel">3.0.0</span></p>
+          </div>
+        </div>
+        <ul class="about-list">
+          <li><svg class="icon icon-sm"><use href="#i-user"/></svg><span><span data-i18n="author">Author</span>: <strong>minhtrong67</strong></span></li>
+          <li><svg class="icon icon-sm"><use href="#i-sparkles"/></svg><span data-i18n="aiCredit">Built with the help of Claude AI</span></li>
+        </ul>
+        <button class="btn tonal block ripple" id="landingBtn"><svg class="icon"><use href="#i-external-link"/></svg><span data-i18n="openLanding">Open introduction page</span></button>
+      </section>
+    </main>
+  </section>
+
+  <div class="snackbar" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/zip.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

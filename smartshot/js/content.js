@@ -41,7 +41,8 @@
       case "scroll-to":
         // behavior:"instant" beats `scroll-behavior: smooth` set by the page's CSS.
         window.scrollTo({ left: message.x || 0, top: message.y || 0, behavior: "instant" });
-        requestAnimationFrame(() => requestAnimationFrame(() => sendResponse({ ok: true })));
+        // Report where the page really ended up (it may not reach the requested offset).
+        requestAnimationFrame(() => requestAnimationFrame(() => sendResponse({ ok: true, scrollY: window.scrollY })));
         return true;
 
       case "hide-fixed":
@@ -59,7 +60,7 @@
         return false;
 
       case "start-area-selection":
-        startAreaSelection(message.hint, sendResponse);
+        startAreaSelection(message.hint, message.accent, sendResponse);
         return true;
 
       default:
@@ -94,7 +95,13 @@
     hiddenFixed = [];
   }
 
-  function startAreaSelection(hintText, sendResponse) {
+  function inkFor(hex) {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? "#1C1B1F" : "#FFFFFF";
+  }
+
+  function startAreaSelection(hintText, accent, sendResponse) {
+    const color = /^#[0-9a-f]{6}$/i.test(accent) ? accent : "#03A9F4";
     if (selecting) selecting(); // replace any stale selection
     const old = document.getElementById("__smartshot_host");
     if (old) old.remove();
@@ -106,15 +113,16 @@
     const root = host.attachShadow({ mode: "closed" });
     root.innerHTML = `
       <style>
+        :host { --accent: ${color}; --ink: ${inkFor(color)}; }
         .overlay { position: fixed; inset: 0; cursor: crosshair; background: rgba(0,0,0,.38); user-select: none; touch-action: none; }
-        .box { position: fixed; display: none; border: 2px solid #CE93D8; border-radius: 2px; pointer-events: none;
+        .box { position: fixed; display: none; border: 2px solid var(--accent); border-radius: 2px; pointer-events: none;
                box-shadow: 0 0 0 100vmax rgba(0,0,0,.38); background: transparent; }
         .overlay.has-box { background: transparent; }
         .size { position: absolute; left: 0; top: -30px; padding: 3px 9px; border-radius: 12px; font: 600 12px system-ui, sans-serif;
-                color: #fff; background: #9C27B0; white-space: nowrap; }
+                color: var(--ink); background: var(--accent); white-space: nowrap; }
         .size.inside { top: 6px; left: 6px; }
         .hint { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 16px;
-                font: 500 14px/1.3 system-ui, sans-serif; color: #F5EEF8; background: #322F35; pointer-events: none;
+                font: 500 14px/1.3 system-ui, sans-serif; color: #F1F1F4; background: #2E3133; pointer-events: none;
                 box-shadow: 0 4px 14px rgba(0,0,0,.35); animation: in .22s cubic-bezier(.2,0,0,1); }
         @keyframes in { from { opacity: 0; transform: translate(-50%, -8px); } }
         @media (prefers-reduced-motion: reduce) { .hint { animation: none; } }

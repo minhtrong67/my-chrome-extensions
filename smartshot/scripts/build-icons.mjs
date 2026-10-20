@@ -1,38 +1,34 @@
-// Renders the extension icons (16/32/48/128) from vector source in Material purple #9C27B0.
+// Renders the extension icons (16/32/48/128 + 512) from vector source in Material Light Blue 500 (#03A9F4).
 // Run: npm run build:icons
 import sharp from "sharp";
 import { writeFileSync, mkdirSync } from "node:fs";
 
-const PURPLE = "#9C27B0";
+const BRAND = "#03A9F4";
 
-// Full-detail mark: rounded tile + capture-frame corners + lens + annotation spark.
+// Full-detail mark (Material keyline: glyph inside the 96px safe zone of a 128px rounded tile):
+// capture-frame corners + lens.
 const full = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#AB47BC"/><stop offset="1" stop-color="${PURPLE}"/>
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="30" fill="url(#g)"/>
+  <rect width="128" height="128" rx="28" fill="${BRAND}"/>
   <g fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M38 24H30a10 10 0 0 0-10 10v8"/>
-    <path d="M90 24h8a10 10 0 0 1 10 10v8"/>
-    <path d="M38 104h-8a10 10 0 0 1-10-10v-8"/>
-    <path d="M90 104h8a10 10 0 0 0 10-10v-8"/>
+    <path d="M44 28H36a8 8 0 0 0-8 8v8"/>
+    <path d="M84 28h8a8 8 0 0 1 8 8v8"/>
+    <path d="M44 100h-8a8 8 0 0 1-8-8v-8"/>
+    <path d="M84 100h8a8 8 0 0 0 8-8v-8"/>
   </g>
-  <circle cx="64" cy="64" r="21" fill="#fff"/>
-  <circle cx="64" cy="64" r="10" fill="${PURPLE}"/>
+  <circle cx="64" cy="64" r="20" fill="#fff"/>
+  <circle cx="64" cy="64" r="9" fill="${BRAND}"/>
 </svg>`;
 
 // Simplified for tiny sizes: thicker strokes, no inner detail that would blur away.
 const small = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="30" fill="${PURPLE}"/>
+  <rect width="128" height="128" rx="28" fill="${BRAND}"/>
   <g fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M40 24H30a10 10 0 0 0-10 10v10"/>
-    <path d="M88 24h10a10 10 0 0 1 10 10v10"/>
-    <path d="M40 104H30a10 10 0 0 1-10-10V84"/>
-    <path d="M88 104h10a10 10 0 0 0 10-10V84"/>
+    <path d="M46 28H36a8 8 0 0 0-8 8v10"/>
+    <path d="M82 28h10a8 8 0 0 1 8 8v10"/>
+    <path d="M46 100H36a8 8 0 0 1-8-8V82"/>
+    <path d="M82 100h10a8 8 0 0 0 8-8V82"/>
   </g>
-  <circle cx="64" cy="64" r="22" fill="#fff"/>
+  <circle cx="64" cy="64" r="21" fill="#fff"/>
 </svg>`;
 
 mkdirSync("icons", { recursive: true });
@@ -42,6 +38,6 @@ for (const size of [16, 32, 48, 128]) {
   await sharp(Buffer.from(src), { density: Math.max(72, (size / 128) * 72 * 8) })
     .resize(size, size).png({ compressionLevel: 9 }).toFile(`icons/icon${size}.png`);
 }
-// Larger raster used for social previews / landing page.
+// Larger raster used for the Web Store listing / social previews.
 await sharp(Buffer.from(full), { density: 600 }).resize(512, 512).png().toFile("icons/icon512.png");
 console.log("icons written");

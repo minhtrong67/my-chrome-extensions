@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-color="pink">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TubeShot</title>
+<link rel="stylesheet" href="css/palettes.css" />
+<link rel="stylesheet" href="css/popup.css" />
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ===== Capture view ===== -->
+  <section class="view" id="view-capture" aria-labelledby="appTitle">
+    <header class="app-bar" id="barCapture">
+      <img src="icons/icon48.png" alt="" class="brand-mark" width="32" height="32" />
+      <div class="app-bar-title">
+        <h1 id="appTitle">TubeShot</h1>
+        <p data-i18n="tagline">YouTube screenshot</p>
+      </div>
+      <button class="icon-btn state ripple" id="settingsBtn" data-i18n-title="settings" title="Settings"><span class="icon" data-icon="settings"></span></button>
+    </header>
+
+    <main class="content" id="contentCapture">
+
+      <!-- Empty state -->
+      <div class="empty hidden" id="emptyState">
+        <div class="empty-icon"><span class="icon" data-icon="clapperboard"></span></div>
+        <h2 id="emptyTitle" data-i18n="noVideoTitle">No video on this tab</h2>
+        <p id="emptySub" data-i18n="noVideoSub">Open a YouTube video and TubeShot finds it automatically.</p>
+        <button class="btn btn-tonal state ripple" id="openYoutubeBtn"><span class="icon" data-icon="external-link"></span><span data-i18n="openYoutube">Open YouTube</span></button>
+      </div>
+
+      <!-- Video present -->
+      <div class="stack" id="videoPane">
+        <section class="video-card" aria-live="off">
+          <p class="video-title" id="videoTitle">-</p>
+          <p class="video-channel" id="videoChannel"></p>
+          <div class="scrub">
+            <span class="time" id="timeNow">0:00</span>
+            <input type="range" class="slider" id="timeSlider" min="0" max="1000" value="0" step="1" data-i18n-aria="seekBar" />
+            <span class="time" id="timeTotal">0:00</span>
+          </div>
+        </section>
+
+        <div class="transport" role="group">
+          <button class="icon-btn tonal text state ripple" id="back10Btn" data-i18n-title="back10">-10s</button>
+          <button class="icon-btn tonal text state ripple" id="back1Btn" data-i18n-title="back1">-1s</button>
+          <button class="icon-btn tonal state ripple" id="backFrameBtn" data-i18n-title="backFrame"><span class="icon" data-icon="step-back"></span></button>
+          <button class="icon-btn filled play state ripple" id="playBtn" data-i18n-title="play"><span class="icon" id="playIcon" data-icon="play"></span></button>
+          <button class="icon-btn tonal state ripple" id="fwdFrameBtn" data-i18n-title="fwdFrame"><span class="icon" data-icon="step-forward"></span></button>
+          <button class="icon-btn tonal text state ripple" id="fwd1Btn" data-i18n-title="fwd1">+1s</button>
+          <button class="icon-btn tonal text state ripple" id="fwd10Btn" data-i18n-title="fwd10">+10s</button>
+        </div>
+
+        <div class="seek-row">
+          <label class="field">
+            <input type="text" id="seekInput" inputmode="numeric" autocomplete="off" placeholder="mm:ss" />
+            <span class="field-label" data-i18n="goToTime">Go to time</span>
+          </label>
+          <button class="btn btn-tonal state ripple" id="seekGoBtn" data-i18n="go">Go</button>
+        </div>
+
+        <section class="card options">
+          <div class="option-grid">
+            <div class="option">
+              <span class="option-label" data-i18n="format">Format</span>
+              <div class="seg" role="radiogroup" data-i18n-aria="format">
+                <label class="seg-btn state"><input type="radio" name="format" value="png" /><span>PNG</span></label>
+                <label class="seg-btn state"><input type="radio" name="format" value="jpeg" /><span>JPEG</span></label>
+              </div>
+            </div>
+            <div class="option">
+              <span class="option-label" data-i18n="scale">Size</span>
+              <div class="seg" role="radiogroup" data-i18n-aria="scale">
+                <label class="seg-btn state"><input type="radio" name="scale" value="100" /><span>100%</span></label>
+                <label class="seg-btn state"><input type="radio" name="scale" value="75" /><span>75%</span></label>
+                <label class="seg-btn state"><input type="radio" name="scale" value="50" /><span>50%</span></label>
+                <label class="seg-btn state"><input type="radio" name="scale" value="25" /><span>25%</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="collapse" id="qualityCollapse">
+            <div class="collapse-inner">
+              <div class="slider-row">
+                <span class="option-label" data-i18n="quality">JPEG quality</span>
+                <input type="range" class="slider" id="qualitySlider" min="10" max="100" step="1" value="90" data-i18n-aria="quality" />
+                <span class="slider-value" id="qualityValue">90%</span>
+              </div>
+            </div>
+          </div>
+
+          <label class="switch-row">
+            <span data-i18n="watermarkTimestamp">Timestamp badge</span>
+            <input type="checkbox" class="switch" id="optTimestamp" role="switch" />
+          </label>
+          <label class="switch-row">
+            <span data-i18n="captionInfo">Title &amp; channel caption</span>
+            <input type="checkbox" class="switch" id="optCaption" role="switch" />
+          </label>
+        </section>
+
+        <div class="capture-row">
+          <button class="btn btn-filled lg state ripple" id="captureBtn"><span class="icon" data-icon="camera"></span><span data-i18n="captureFrame">Capture frame</span></button>
+          <button class="icon-btn tonal lg state ripple" id="copyBtn" data-i18n-title="captureCopy"><span class="icon" data-icon="copy"></span></button>
+        </div>
+      </div>
+
+      <!-- History -->
+      <section class="history" id="historyCard">
+        <div class="history-head">
+          <h2 data-i18n="history">Recent captures</h2>
+          <div class="history-actions">
+            <button class="btn btn-text sm state ripple" id="exportHistoryBtn"><span class="icon" data-icon="file-text"></span><span data-i18n="exportTxt">Export .txt</span></button>
+            <button class="btn btn-text sm danger state ripple" id="clearHistoryBtn"><span class="icon" data-icon="trash-2"></span><span data-i18n="clear">Clear</span></button>
+          </div>
+        </div>
+        <ul class="history-list" id="historyList"></ul>
+      </section>
+    </main>
+  </section>
+
+  <!-- ===== Settings view ===== -->
+  <section class="view hidden" id="view-settings" aria-labelledby="settingsTitle" inert>
+    <header class="app-bar" id="barSettings">
+      <button class="icon-btn state ripple" id="backBtn" data-i18n-title="back" title="Back"><span class="icon" data-icon="arrow-left"></span></button>
+      <div class="app-bar-title"><h1 id="settingsTitle" data-i18n="settings">Settings</h1></div>
+    </header>
+
+    <main class="content" id="contentSettings">
+      <section class="card setting">
+        <h2 class="setting-title"><span class="icon" data-icon="palette"></span><span data-i18n="color">Color</span></h2>
+        <div class="swatches" id="swatches" role="radiogroup" data-i18n-aria="color"></div>
+      </section>
+
+      <section class="card setting">
+        <h2 class="setting-title"><span class="icon" data-icon="sun-moon"></span><span data-i18n="theme">Theme</span></h2>
+        <div class="seg seg-lg" role="radiogroup" data-i18n-aria="theme">
+          <label class="seg-btn state"><input type="radio" name="theme" value="light" /><span class="icon" data-icon="sun"></span><span data-i18n="themeLight">Light</span></label>
+          <label class="seg-btn state"><input type="radio" name="theme" value="dark" /><span class="icon" data-icon="moon"></span><span data-i18n="themeDark">Dark</span></label>
+          <label class="seg-btn state"><input type="radio" name="theme" value="system" /><span class="icon" data-icon="monitor"></span><span data-i18n="themeSystem">System</span></label>
+        </div>
+      </section>
+
+      <section class="card setting">
+        <h2 class="setting-title"><span class="icon" data-icon="languages"></span><span data-i18n="language">Language</span></h2>
+        <div class="seg seg-lg" role="radiogroup" data-i18n-aria="language">
+          <label class="seg-btn state"><input type="radio" name="language" value="en" /><span>English</span></label>
+          <label class="seg-btn state"><input type="radio" name="language" value="vi" /><span>Tiếng Việt</span></label>
+        </div>
+      </section>
+
+      <section class="card setting about">
+        <div class="about-head">
+          <img src="icons/icon48.png" alt="" width="44" height="44" />
+          <div>
+            <p class="about-name">TubeShot</p>
+            <p class="about-meta"><span data-i18n="version">Version</span> <span id="versionLabel">1.1.0</span></p>
+          </div>
+        </div>
+        <p class="about-credit"><span data-i18n="developedBy">Developed by</span> <strong>minhtrong67</strong><br /><span data-i18n="aiSupport">With AI assistance from</span> <strong>Claude</strong></p>
+        <button class="btn btn-tonal state ripple" id="landingBtn"><span class="icon" data-icon="external-link"></span><span data-i18n="openLanding">Visit landing page</span></button>
+      </section>
+    </main>
+  </section>
+
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

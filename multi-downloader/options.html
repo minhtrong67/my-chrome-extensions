@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi Downloader — Settings</title>
+  <link rel="stylesheet" href="css/material.css">
+  <link rel="stylesheet" href="css/options.css">
+  <script src="js/themes.js"></script>
+  <script src="js/appearance.js"></script>
+</head>
+<body>
+  <header class="top-bar surface-anim">
+    <div class="top-inner">
+      <button class="icon-btn sl ripple back-btn" id="btnBack" type="button" data-i18n-title="back"><i data-lucide="arrow-left"></i></button>
+      <img src="icons/icon48.png" width="32" height="32" alt="" class="top-logo">
+      <div class="top-title">
+        <h1 class="t-title-m" data-i18n="appName">Multi Downloader</h1>
+        <span class="t-small muted" data-i18n="settings">Settings</span>
+      </div>
+      <span class="saved-status" id="savedStatus" aria-live="polite"><i data-lucide="circle-check" data-size="18"></i><span data-i18n="savedStatus"></span></span>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <!-- Appearance -->
+    <section class="card section" id="secAppearance">
+      <h2 class="sec-title"><i data-lucide="palette"></i><span class="t-title-m" data-i18n="secAppearance"></span></h2>
+
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="themeMode"></span></div>
+        <div class="segmented" data-setting="themeMode" role="radiogroup">
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="light"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><i data-lucide="sun" data-size="18"></i><span class="seg-label" data-i18n="modeLight"></span></button>
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="dark"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><i data-lucide="moon" data-size="18"></i><span class="seg-label" data-i18n="modeDark"></span></button>
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="system"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><i data-lucide="monitor" data-size="18"></i><span class="seg-label" data-i18n="modeSystem"></span></button>
+        </div>
+      </div>
+
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="themeColor"></span><span class="row-hint" data-i18n="themeColorHint"></span></div>
+        <div class="swatches" data-setting="themeColor" id="swatches" role="radiogroup"></div>
+      </div>
+
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="font"></span><span class="row-hint" data-i18n="fontHint"></span></div>
+        <div class="font-grid" data-setting="fontFamily" id="fontGrid" role="radiogroup"></div>
+      </div>
+
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="fontSize"></span></div>
+        <div class="slider-row">
+          <input type="range" class="slider" id="fontSize" data-setting="fontSize" min="12" max="18" step="1" aria-labelledby="fontSizeLabel">
+          <span class="value-badge" id="fontSizeOut"></span>
+        </div>
+        <p class="preview-text" id="previewText"></p>
+      </div>
+
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="language"></span></div>
+        <div class="segmented" data-setting="language" role="radiogroup">
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="system"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><span class="seg-label" data-i18n="langSystem"></span></button>
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="en"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><span class="seg-label" data-i18n="langEn"></span></button>
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="vi"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><span class="seg-label" data-i18n="langVi"></span></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="galleryLayout"></span></div>
+        <div class="segmented" data-setting="viewMode" role="radiogroup">
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="grid"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><i data-lucide="layout-grid" data-size="18"></i><span class="seg-label" data-i18n="viewGrid"></span></button>
+          <button type="button" class="seg-btn sl ripple" role="radio" data-value="list"><span class="seg-check"><i data-lucide="check" data-size="18"></i></span><i data-lucide="list" data-size="18"></i><span class="seg-label" data-i18n="viewList"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download -->
+    <section class="card section" id="secDownload">
+      <h2 class="sec-title"><i data-lucide="folder-down"></i><span class="t-title-m" data-i18n="secDownload"></span></h2>
+
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="saveMode"></span></div>
+        <div class="radio-cards" data-setting="saveMode" role="radiogroup">
+          <button type="button" class="radio-card sl ripple" role="radio" data-value="ask">
+            <i data-lucide="mouse-pointer-click"></i><span class="rc-text"><b data-i18n="saveAsk"></b><small data-i18n="saveAskDesc"></small></span><span class="rc-dot"></span>
+          </button>
+          <button type="button" class="radio-card sl ripple" role="radio" data-value="downloads">
+            <i data-lucide="arrow-down-to-line"></i><span class="rc-text"><b data-i18n="saveDownloads"></b><small data-i18n="saveDownloadsDesc"></small></span><span class="rc-dot"></span>
+          </button>
+          <button type="button" class="radio-card sl ripple" role="radio" data-value="subfolder">
+            <i data-lucide="folder-open"></i><span class="rc-text"><b data-i18n="saveSubfolder"></b><small data-i18n="saveSubfolderDesc"></small></span><span class="rc-dot"></span>
+          </button>
+        </div>
+        <div class="collapsible" id="subfolderWrap">
+          <div class="collapsible-inner">
+            <label class="field-label" for="saveSubfolder" data-i18n="subfolderLabel"></label>
+            <input class="input" id="saveSubfolder" data-setting="saveSubfolder" type="text" autocomplete="off" spellcheck="false" data-i18n-ph="subfolderPlaceholder">
+            <div class="field-hint" data-i18n="subfolderHint"></div>
+            <div class="field-error" id="subfolderError" data-i18n="subfolderError"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="filenameTemplate"></span><span class="row-hint" data-i18n="filenameHint"></span></div>
+        <input class="input" id="filenameTemplate" data-setting="filenameTemplate" type="text" autocomplete="off" spellcheck="false" placeholder="{original}">
+        <div class="var-chips" id="varChips">
+          <button type="button" class="chip sl ripple" data-var="{original}">{original}</button>
+          <button type="button" class="chip sl ripple" data-var="{index}">{index}</button>
+          <button type="button" class="chip sl ripple" data-var="{date}">{date}</button>
+          <button type="button" class="chip sl ripple" data-var="{time}">{time}</button>
+          <button type="button" class="chip sl ripple" data-var="{datetime}">{datetime}</button>
+        </div>
+        <div class="preview-box"><span class="t-small muted" data-i18n="filenamePreview"></span><code id="previewValue"></code></div>
+      </div>
+
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="conflictAction"></span></div>
+        <select class="input select" id="conflictAction" data-setting="conflictAction">
+          <option value="uniquify"></option><option value="overwrite"></option><option value="prompt"></option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Images -->
+    <section class="card section" id="secImages">
+      <h2 class="sec-title"><i data-lucide="image"></i><span class="t-title-m" data-i18n="secImages"></span></h2>
+
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="excludeLogos"></span><span class="row-hint" data-i18n="excludeLogosHint"></span></div>
+        <label class="switch"><input type="checkbox" data-setting="excludeLogos"><span class="track"><span class="thumb"></span></span></label>
+      </div>
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="convertWebp"></span><span class="row-hint" data-i18n="convertWebpHint"></span></div>
+        <label class="switch"><input type="checkbox" data-setting="convertWebp"><span class="track"><span class="thumb"></span></span></label>
+      </div>
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="convertPng"></span><span class="row-hint" data-i18n="convertPngHint"></span></div>
+        <label class="switch"><input type="checkbox" data-setting="convertPng"><span class="track"><span class="thumb"></span></span></label>
+      </div>
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="quality"></span><span class="row-hint" data-i18n="qualityHint"></span></div>
+        <div class="slider-row"><input type="range" class="slider" data-setting="quality" data-out="qualityOut" min="50" max="100" step="1"><span class="value-badge" id="qualityOut"></span></div>
+      </div>
+      <div class="row col">
+        <div class="row-head"><span class="row-label" data-i18n="minSize"></span><span class="row-hint" data-i18n="minSizeHint"></span></div>
+        <div class="slider-row"><input type="range" class="slider" data-setting="minImageSize" data-out="minSizeOut" data-unit="px" min="0" max="200" step="8"><span class="value-badge" id="minSizeOut"></span></div>
+      </div>
+      <p class="note"><i data-lucide="info" data-size="18"></i><span data-i18n="requirementNote"></span></p>
+    </section>
+
+    <!-- General -->
+    <section class="card section" id="secGeneral">
+      <h2 class="sec-title"><i data-lucide="sliders-horizontal"></i><span class="t-title-m" data-i18n="secGeneral"></span></h2>
+      <div class="row">
+        <div class="row-head"><span class="row-label" data-i18n="notifications"></span><span class="row-hint" data-i18n="notificationsHint"></span></div>
+        <label class="switch"><input type="checkbox" data-setting="showNotification"><span class="track"><span class="thumb"></span></span></label>
+      </div>
+      <div class="row">
+        <div class="row-head"></div>
+        <button type="button" class="btn outlined danger has-icon sl ripple" id="btnReset"><i data-lucide="rotate-ccw" data-size="18"></i><span data-i18n="reset"></span></button>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="card section about" id="secAbout">
+      <img src="icons/icon128.png" width="64" height="64" alt="" class="about-logo">
+      <div class="about-text">
+        <h2 class="t-title-m" data-i18n="appName"></h2>
+        <p class="muted t-small" id="aboutVersion"></p>
+        <p class="t-small" data-i18n="authorLine"></p>
+        <p class="muted t-small" data-i18n="licenseLine"></p>
+      </div>
+      <a class="btn tonal has-icon sl ripple" id="repoLink" target="_blank" rel="noopener noreferrer"><i data-lucide="code" data-size="18"></i><span data-i18n="viewOnGithub"></span></a>
+    </section>
+  </main>
+
+  <dialog class="dialog" id="resetDialog" aria-labelledby="resetTitle">
+    <h2 class="t-title-l" id="resetTitle" data-i18n="resetTitle"></h2>
+    <p data-i18n="resetBody"></p>
+    <div class="actions">
+      <button type="button" class="btn text sl ripple" id="resetCancel" data-i18n="cancel"></button>
+      <button type="button" class="btn filled sl ripple" id="resetConfirm" data-i18n="confirm"></button>
+    </div>
+  </dialog>
+
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"><span class="sb-icon"></span><span class="sb-msg"></span></div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/options.js"></script>
+</body>
+</html>

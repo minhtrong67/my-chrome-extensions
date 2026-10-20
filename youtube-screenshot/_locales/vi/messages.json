@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "TubeShot - Chụp ảnh YouTube",
+    "description": "Tên tiện ích"
+  },
+  "extDescription": {
+    "message": "Chụp khung hình sạch, không có thanh điều khiển từ bất kỳ video YouTube nào đúng vào thời điểm bạn muốn, kèm tuỳ chọn huy hiệu thời gian và chú thích.",
+    "description": "Mô tả tiện ích"
+  }
+}

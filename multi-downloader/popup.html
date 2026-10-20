@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi Downloader</title>
+  <link rel="stylesheet" href="css/material.css">
+  <link rel="stylesheet" href="css/popup.css">
+  <script src="js/themes.js"></script>
+  <script src="js/appearance.js"></script>
+</head>
+<body>
+  <header class="app-bar">
+    <div class="brand">
+      <img src="icons/icon48.png" width="28" height="28" alt="">
+      <h1 data-i18n="appName">Multi Downloader</h1>
+    </div>
+    <div class="app-actions">
+      <button class="icon-btn sl ripple" id="btnView" type="button"><i data-lucide="list"></i></button>
+      <button class="icon-btn sl ripple" id="btnRescan" type="button" data-i18n-title="rescan"><i data-lucide="refresh-cw"></i></button>
+      <button class="icon-btn sl ripple" id="btnSettings" type="button" data-i18n-title="settings"><i data-lucide="settings"></i></button>
+    </div>
+    <div class="linear indeterminate" id="scanBar" hidden><span></span></div>
+  </header>
+
+  <nav class="filters" id="filters" hidden></nav>
+
+  <main id="content">
+    <div class="gallery view-grid skeletons" id="skeleton" hidden aria-hidden="true"></div>
+
+    <section class="empty" id="emptyState" hidden>
+      <div class="empty-icon"><i data-lucide="image-off" data-size="36"></i></div>
+      <h2 class="t-title-m" id="emptyTitle"></h2>
+      <p class="muted" id="emptyDesc"></p>
+      <button class="btn tonal has-icon sl ripple" id="btnEmptyRescan" type="button"><i data-lucide="refresh-cw" data-size="18"></i><span data-i18n="rescan"></span></button>
+      <p class="muted t-small tip" data-i18n="tipRightClick"></p>
+    </section>
+
+    <div class="gallery view-grid" id="gallery" role="listbox" aria-multiselectable="true" hidden></div>
+  </main>
+
+  <footer class="bottom-bar surface-anim" id="bottomBar" hidden>
+    <div class="linear" id="saveBar" hidden><span></span></div>
+    <label class="check" id="selectAllWrap">
+      <input type="checkbox" id="chkAll">
+      <span class="box sl">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="p-check" d="M20 6 9 17l-5-5"/><path class="p-minus" d="M6 12h12"/></svg>
+      </span>
+      <span class="check-text"><span class="t-label" data-i18n="selectAll"></span><span class="t-small muted" id="countText"></span></span>
+    </label>
+    <button class="btn text sl ripple" id="btnCancel" type="button" hidden data-i18n="cancel"></button>
+    <button class="btn filled has-icon sl ripple" id="btnDownload" type="button"><i data-lucide="download" data-size="18"></i><span id="btnDownloadLabel"></span></button>
+  </footer>
+
+  <!-- Settings are embedded here (options.html in an iframe) instead of opening a new tab -->
+  <section class="settings-panel" id="settingsPanel" aria-hidden="true" inert></section>
+
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"><span class="sb-icon"></span><span class="sb-msg"></span></div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/inject.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html>

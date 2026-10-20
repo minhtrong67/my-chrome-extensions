@@ -10,7 +10,7 @@
      <button class="md-ripple-host">...</button>
      QNRipple.attach(document); // wires up every .md-ripple-host once
 
-   Author: gnort67 · built with the help of Claude (Anthropic)
+   Author: minhtrong67 · AI support: Claude (Anthropic)
    ================================================================ */
 
 (function (global) {

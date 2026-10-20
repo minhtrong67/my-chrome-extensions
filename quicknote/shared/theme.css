@@ -1,370 +1,186 @@
 /* ================================================================
    QUICKNOTE — shared/theme.css
-   ------------------------------------------------------------------
-   Centralised Material Design 3 (M3 / Material You) design tokens
-   shared by every surface of the extension: popup.html, options.html
-   and landing.html.
-
-   Palette: exact Material Theme Builder export (material-theme-indigo.json)
-   Seed colour: #3F51B5 (Material Indigo)
-   Reference: https://m3.material.io/styles/color/system/overview
-
-   Author: gnort67 · built with the help of Claude (Anthropic)
+   Material Design 3 tokens + base components shared by popup, settings
+   and options. Colours below are the DEFAULT (Cyan #00BCD4) scheme; at
+   runtime shared/settings.js overrides them with the palette the user
+   picked in Settings, so every surface follows the chosen colour.
+   Font: the platform default (system-ui) — no web fonts are loaded.
+   Icons: Lucide, bundled in shared/icons.js.
+   Author: minhtrong67 · AI support: Claude (Anthropic)
    ================================================================ */
 
-/* ---------------------------------------------------------------
-   1) TYPE — Roboto & Be Vietnam Pro (authentic M3 with Vietnamese diacritics)
-   --------------------------------------------------------------- */
 :root {
-  --md-font: 'Roboto', 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --md-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --md-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Official Material 3 Type Scale */
-  --md-type-display-lg: 400 57px/1.12 var(--md-font);
-  --md-type-display-md: 400 45px/1.15 var(--md-font);
-  --md-type-display-sm: 400 36px/1.22 var(--md-font);
+  /* shape */
+  --md-shape-xs: 4px; --md-shape-sm: 8px; --md-shape-md: 12px; --md-shape-lg: 16px; --md-shape-xl: 28px; --md-shape-full: 999px;
 
-  --md-type-headline-lg: 400 32px/1.25 var(--md-font);
-  --md-type-headline-md: 400 28px/1.28 var(--md-font);
-  --md-type-headline-sm: 400 24px/1.33 var(--md-font);
-
-  --md-type-title-lg: 500 22px/1.27 var(--md-font);
-  --md-type-title-md: 500 16px/1.5 var(--md-font);
-  --md-type-title-sm: 500 14px/1.43 var(--md-font);
-
-  --md-type-body-lg: 400 16px/1.5 var(--md-font);
-  --md-type-body-md: 400 14px/1.43 var(--md-font);
-  --md-type-body-sm: 400 12px/1.33 var(--md-font);
-
-  --md-type-label-lg: 500 14px/1.43 var(--md-font);
-  --md-type-label-md: 500 12px/1.33 var(--md-font);
-  --md-type-label-sm: 500 11px/1.45 var(--md-font);
-
-  /* Convenience aliases */
-  --md-type-display: var(--md-type-headline-md);
-  --md-type-headline: var(--md-type-title-lg);
-}
-
-/* ---------------------------------------------------------------
-   2) SHAPE — M3 corner-radius scale
-   --------------------------------------------------------------- */
-:root {
-  --md-shape-none: 0px;
-  --md-shape-xs: 4px;
-  --md-shape-sm: 8px;
-  --md-shape-md: 12px;
-  --md-shape-lg: 16px;
-  --md-shape-xl: 28px;
-  --md-shape-full: 9999px; /* pill */
-}
-
-/* ---------------------------------------------------------------
-   3) MOTION — M3 standard & emphasized easing curves
-   --------------------------------------------------------------- */
-:root {
-  --md-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --md-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  /* motion */
+  --md-ease: cubic-bezier(0.2, 0, 0, 1);
   --md-ease-decel: cubic-bezier(0.05, 0.7, 0.1, 1);
   --md-ease-accel: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-dur-short: 150ms; --md-dur-medium: 250ms; --md-dur-long: 400ms;
 
-  --md-dur-short: 150ms;
-  --md-dur-medium: 250ms;
-  --md-dur-long: 400ms;
+  /* elevation */
+  --md-elev-1: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+  --md-elev-2: 0 1px 2px rgba(0,0,0,.3), 0 2px 6px 2px rgba(0,0,0,.15);
+  --md-elev-3: 0 1px 3px rgba(0,0,0,.3), 0 4px 8px 3px rgba(0,0,0,.15);
+
+  /* note label colours */
+  --md-tag-red: #d32f2f; --md-tag-orange: #ef6c00; --md-tag-yellow: #f9a825;
+  --md-tag-green: #2e7d32; --md-tag-blue: #1565c0; --md-tag-purple: #7b1fa2;
+
+  color-scheme: light dark;
 }
 
-/* ---------------------------------------------------------------
-   4) COLOR — Light scheme (from material-theme-indigo.json)
-   --------------------------------------------------------------- */
-:root,
-[data-theme='light'] {
-  --md-primary: #515B92;
-  --md-surface-tint: #515B92;
-  --md-on-primary: #FFFFFF;
-  --md-primary-container: #DEE0FF;
-  --md-on-primary-container: #394379;
-
-  --md-secondary: #5B5D72;
-  --md-on-secondary: #FFFFFF;
-  --md-secondary-container: #E0E1F9;
-  --md-on-secondary-container: #434659;
-
-  --md-tertiary: #77536D;
-  --md-on-tertiary: #FFFFFF;
-  --md-tertiary-container: #FFD7F1;
-  --md-on-tertiary-container: #5D3C55;
-
-  --md-error: #BA1A1A;
-  --md-on-error: #FFFFFF;
-  --md-error-container: #FFDAD6;
-  --md-on-error-container: #93000A;
-
-  --md-success: #1B6D39;
-  --md-on-success: #FFFFFF;
-  --md-success-container: #A3F6B4;
-  --md-on-success-container: #00210B;
-
-  --md-background: #FBF8FF;
-  --md-on-background: #1B1B21;
-
-  --md-surface: #FBF8FF;
-  --md-on-surface: #1B1B21;
-  --md-surface-variant: #E3E1EC;
-  --md-on-surface-variant: #46464F;
-
-  --md-outline: #767680;
-  --md-outline-variant: #C7C5D0;
-
-  --md-shadow-rgb: 0, 0, 0;
-  --md-shadow: 0, 0, 0;
-  --md-scrim: rgba(0, 0, 0, 0.4);
-
-  --md-inverse-surface: #303036;
-  --md-inverse-on-surface: #F2EFF7;
-  --md-inverse-primary: #BAC3FF;
-
-  --md-primary-fixed: #DEE0FF;
-  --md-on-primary-fixed: #0B154B;
-  --md-primary-fixed-dim: #BAC3FF;
-  --md-on-primary-fixed-variant: #394379;
-
-  --md-secondary-fixed: #E0E1F9;
-  --md-on-secondary-fixed: #181A2C;
-  --md-secondary-fixed-dim: #C3C5DD;
-  --md-on-secondary-fixed-variant: #434659;
-
-  --md-tertiary-fixed: #FFD7F1;
-  --md-on-tertiary-fixed: #2D1228;
-  --md-tertiary-fixed-dim: #E6BAD7;
-  --md-on-tertiary-fixed-variant: #5D3C55;
-
-  --md-surface-dim: #DBD9E0;
-  --md-surface-bright: #FBF8FF;
-  --md-surface-container-lowest: #FFFFFF;
-  --md-surface-container-low: #F5F2FA;
-  --md-surface-container: #EFEDF4;
-  --md-surface-container-high: #E9E7EF;
-  --md-surface-container-highest: #E4E1E9;
-
-  /* Aliases for backwards compatibility with earlier class names */
-  --md-surface-lowest: var(--md-surface-container-lowest);
-  --md-surface-low: var(--md-surface-container-low);
-  --md-surface-high: var(--md-surface-container-high);
-  --md-surface-highest: var(--md-surface-container-highest);
-
-  /* Note colour-label tokens (M3 tonal values for Light theme) */
-  --md-tag-red: #BA1A1A;
-  --md-tag-orange: #B85D19;
-  --md-tag-yellow: #A27A00;
-  --md-tag-green: #2E7D32;
-  --md-tag-blue: #1565C0;
-  --md-tag-purple: #7B1FA2;
-
+:root, [data-theme='light'] {
+  --md-primary: #006876;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #a1efff;
+  --md-on-primary-container: #004e59;
+  --md-secondary: #4a6268;
+  --md-on-secondary: #ffffff;
+  --md-secondary-container: #cde7ed;
+  --md-on-secondary-container: #334a50;
+  --md-tertiary: #545d7e;
+  --md-on-tertiary: #ffffff;
+  --md-tertiary-container: #dbe1ff;
+  --md-on-tertiary-container: #3c4665;
+  --md-error: #ba1a1a;
+  --md-on-error: #ffffff;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #93000a;
+  --md-surface: #f5fafc;
+  --md-on-surface: #171d1e;
+  --md-surface-variant: #dbe4e6;
+  --md-on-surface-variant: #3f484a;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #eff5f6;
+  --md-surface-container: #e9eff0;
+  --md-surface-container-high: #e3e9eb;
+  --md-surface-container-highest: #dee3e5;
+  --md-outline: #6f797b;
+  --md-outline-variant: #bfc8ca;
+  --md-inverse-surface: #2b3133;
+  --md-inverse-on-surface: #ecf2f3;
+  --md-inverse-primary: #83d3e3;
   color-scheme: light;
 }
-
-/* ---------------------------------------------------------------
-   5) COLOR — Dark scheme (from material-theme-indigo.json)
-   --------------------------------------------------------------- */
 [data-theme='dark'] {
-  --md-primary: #BAC3FF;
-  --md-surface-tint: #BAC3FF;
-  --md-on-primary: #222C61;
-  --md-primary-container: #394379;
-  --md-on-primary-container: #DEE0FF;
-
-  --md-secondary: #C3C5DD;
-  --md-on-secondary: #2D2F42;
-  --md-secondary-container: #434659;
-  --md-on-secondary-container: #E0E1F9;
-
-  --md-tertiary: #E6BAD7;
-  --md-on-tertiary: #44263D;
-  --md-tertiary-container: #5D3C55;
-  --md-on-tertiary-container: #FFD7F1;
-
-  --md-error: #FFB4AB;
+  --md-primary: #83d3e3;
+  --md-on-primary: #00363e;
+  --md-primary-container: #004e59;
+  --md-on-primary-container: #a1efff;
+  --md-secondary: #b1cbd1;
+  --md-on-secondary: #1c3439;
+  --md-secondary-container: #334a50;
+  --md-on-secondary-container: #cde7ed;
+  --md-tertiary: #bcc5eb;
+  --md-on-tertiary: #262f4d;
+  --md-tertiary-container: #3c4665;
+  --md-on-tertiary-container: #dbe1ff;
+  --md-error: #ffb4ab;
   --md-on-error: #690005;
-  --md-error-container: #93000A;
-  --md-on-error-container: #FFDAD6;
-
-  --md-success: #88D99A;
-  --md-on-success: #003914;
-  --md-success-container: #005322;
-  --md-on-success-container: #A3F6B4;
-
-  --md-background: #121318;
-  --md-on-background: #E4E1E9;
-
-  --md-surface: #121318;
-  --md-on-surface: #E4E1E9;
-  --md-surface-variant: #46464F;
-  --md-on-surface-variant: #C7C5D0;
-
-  --md-outline: #90909A;
-  --md-outline-variant: #46464F;
-
-  --md-shadow-rgb: 0, 0, 0;
-  --md-shadow: 0, 0, 0;
-  --md-scrim: rgba(0, 0, 0, 0.6);
-
-  --md-inverse-surface: #E4E1E9;
-  --md-inverse-on-surface: #303036;
-  --md-inverse-primary: #515B92;
-
-  --md-primary-fixed: #DEE0FF;
-  --md-on-primary-fixed: #0B154B;
-  --md-primary-fixed-dim: #BAC3FF;
-  --md-on-primary-fixed-variant: #394379;
-
-  --md-secondary-fixed: #E0E1F9;
-  --md-on-secondary-fixed: #181A2C;
-  --md-secondary-fixed-dim: #C3C5DD;
-  --md-on-secondary-fixed-variant: #434659;
-
-  --md-tertiary-fixed: #FFD7F1;
-  --md-on-tertiary-fixed: #2D1228;
-  --md-tertiary-fixed-dim: #E6BAD7;
-  --md-on-tertiary-fixed-variant: #5D3C55;
-
-  --md-surface-dim: #121318;
-  --md-surface-bright: #39393F;
-  --md-surface-container-lowest: #0D0E13;
-  --md-surface-container-low: #1B1B21;
-  --md-surface-container: #1F1F25;
-  --md-surface-container-high: #29292F;
-  --md-surface-container-highest: #34343A;
-
-  /* Aliases for backwards compatibility */
-  --md-surface-lowest: var(--md-surface-container-lowest);
-  --md-surface-low: var(--md-surface-container-low);
-  --md-surface-high: var(--md-surface-container-high);
-  --md-surface-highest: var(--md-surface-container-highest);
-
-  /* Note colour-label tokens (M3 tonal values for Dark theme) */
-  --md-tag-red: #FFB4AB;
-  --md-tag-orange: #FFB68F;
-  --md-tag-yellow: #EAC46C;
-  --md-tag-green: #81C784;
-  --md-tag-blue: #90CAF9;
-  --md-tag-purple: #CE93D8;
-
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+  --md-surface: #0e1416;
+  --md-on-surface: #dee3e5;
+  --md-surface-variant: #3f484a;
+  --md-on-surface-variant: #bfc8ca;
+  --md-surface-container-lowest: #090f10;
+  --md-surface-container-low: #171d1e;
+  --md-surface-container: #1b2122;
+  --md-surface-container-high: #252b2c;
+  --md-surface-container-highest: #303637;
+  --md-outline: #899295;
+  --md-outline-variant: #3f484a;
+  --md-inverse-surface: #dee3e5;
+  --md-inverse-on-surface: #2b3133;
+  --md-inverse-primary: #006876;
+  --md-tag-red: #ffb4ab; --md-tag-orange: #ffb68f; --md-tag-yellow: #f2c94c;
+  --md-tag-green: #81c784; --md-tag-blue: #90caf9; --md-tag-purple: #ce93d8;
   color-scheme: dark;
 }
 
-/* ---------------------------------------------------------------
-   6) ELEVATION — M3 elevation levels expressed as box-shadow
-   --------------------------------------------------------------- */
-:root {
-  --md-elevation-0: none;
-  --md-elevation-1: 0 1px 3px 1px rgba(var(--md-shadow-rgb), 0.15),
-    0 1px 2px 0 rgba(var(--md-shadow-rgb), 0.3);
-  --md-elevation-2: 0 2px 6px 2px rgba(var(--md-shadow-rgb), 0.15),
-    0 1px 2px 0 rgba(var(--md-shadow-rgb), 0.3);
-  --md-elevation-3: 0 4px 8px 3px rgba(var(--md-shadow-rgb), 0.15),
-    0 1px 3px 0 rgba(var(--md-shadow-rgb), 0.3);
-  --md-elevation-4: 0 6px 10px 4px rgba(var(--md-shadow-rgb), 0.15),
-    0 2px 3px 0 rgba(var(--md-shadow-rgb), 0.3);
-  --md-elevation-5: 0 8px 12px 6px rgba(var(--md-shadow-rgb), 0.15),
-    0 4px 4px 0 rgba(var(--md-shadow-rgb), 0.3);
-}
-
-/* ---------------------------------------------------------------
-   7) STATE-LAYER opacities (hover / focus / pressed) — M3 spec
-   --------------------------------------------------------------- */
-:root {
-  --md-state-hover: 0.08;
-  --md-state-focus: 0.12;
-  --md-state-pressed: 0.12;
-  --md-state-dragged: 0.16;
-}
-
-/* ---------------------------------------------------------------
-   8) Global reset + smooth theme-switch transition
-   --------------------------------------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
 body {
-  font-family: var(--md-font);
-  background: var(--md-background);
-  color: var(--md-on-background);
+  font: 400 14px/1.45 var(--md-font);
+  background: var(--md-surface);
+  color: var(--md-on-surface);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+button:disabled { cursor: default; opacity: .38; }
+.lucide { flex: none; display: block; }
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 2px solid var(--md-primary); outline-offset: 2px; }
+* { scrollbar-width: thin; scrollbar-color: var(--md-outline-variant) transparent; }
+::selection { background: color-mix(in srgb, var(--md-primary) 28%, transparent); }
+
+/* Smooth colour change when theme / palette switches (opt-in class set by JS) */
+.themed-transition, .themed-transition * {
+  transition: background-color var(--md-dur-medium) var(--md-ease), color var(--md-dur-medium) var(--md-ease),
+              border-color var(--md-dur-medium) var(--md-ease), fill var(--md-dur-medium) var(--md-ease) !important;
 }
 
-input,
-button,
-textarea,
-select {
-  font-family: inherit;
-}
-
-/* Every themeable surface animates colour changes smoothly */
-body,
-.transition-theme {
-  transition: background-color var(--md-dur-medium) var(--md-ease-standard),
-    color var(--md-dur-medium) var(--md-ease-standard),
-    border-color var(--md-dur-medium) var(--md-ease-standard);
-}
-
-/* Accessible M3 focus ring, consistent across all pages */
-:focus-visible {
-  outline: 2px solid var(--md-primary);
-  outline-offset: 2px;
-  border-radius: var(--md-shape-xs);
-}
-
-/* Thin scrollbars everywhere */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--md-outline-variant) transparent;
-}
-*::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-*::-webkit-scrollbar-thumb {
-  background: var(--md-outline-variant);
-  border-radius: var(--md-shape-full);
-}
-
-::selection {
-  background: color-mix(in srgb, var(--md-primary) 24%, transparent);
-}
-
-/* Respect users who have asked for reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
-/* ---------------------------------------------------------------
-   9) M3 ripple state-layer (used by shared/ripple.js)
-   --------------------------------------------------------------- */
-.md-ripple-host {
-  position: relative;
-  overflow: hidden;
-}
-
+/* ---- ripple (shared/ripple.js) ---- */
+.md-ripple-host { position: relative; overflow: hidden; isolation: isolate; }
 .md-ripple {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  background: currentColor;
-  opacity: var(--md-state-pressed);
-  pointer-events: none;
-  animation: md-ripple-anim 450ms var(--md-ease-standard);
+  position: absolute; border-radius: 50%; background: currentColor; opacity: .14;
+  transform: scale(0); pointer-events: none; animation: md-ripple 500ms var(--md-ease) forwards; z-index: -1;
 }
+@keyframes md-ripple { to { transform: scale(2.6); opacity: 0; } }
 
-@keyframes md-ripple-anim {
-  to {
-    transform: scale(2.8);
-    opacity: 0;
-  }
+/* ---- state layer helper: hover / pressed overlays ---- */
+.icon-btn, .filled-btn, .tonal-btn, .outlined-btn, .text-btn, .chip, .segment { position: relative; }
+.icon-btn::after, .filled-btn::after, .tonal-btn::after, .outlined-btn::after, .text-btn::after, .chip::after, .segment::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0;
+  transition: opacity var(--md-dur-short) var(--md-ease); pointer-events: none;
+}
+.icon-btn:hover::after, .filled-btn:hover::after, .tonal-btn:hover::after, .outlined-btn:hover::after,
+.text-btn:hover::after, .chip:hover::after, .segment:hover::after { opacity: .08; }
+.icon-btn:active::after, .filled-btn:active::after, .tonal-btn:active::after, .outlined-btn:active::after,
+.text-btn:active::after, .chip:active::after, .segment:active::after { opacity: .12; }
+
+/* ---- buttons ---- */
+.icon-btn {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none;
+  border-radius: var(--md-shape-full); color: var(--md-on-surface-variant);
+}
+.icon-btn.toggled { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.icon-btn.danger { color: var(--md-error); }
+
+.filled-btn, .tonal-btn, .outlined-btn, .text-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px;
+  padding: 0 24px; border-radius: var(--md-shape-full); font-weight: 500; font-size: 14px; letter-spacing: .1px; white-space: nowrap;
+  transition: box-shadow var(--md-dur-short) var(--md-ease), transform var(--md-dur-short) var(--md-ease);
+}
+.filled-btn { background: var(--md-primary); color: var(--md-on-primary); }
+.filled-btn:hover { box-shadow: var(--md-elev-1); }
+.filled-btn.danger { background: var(--md-error); color: var(--md-on-error); }
+.tonal-btn { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.outlined-btn { border: 1px solid var(--md-outline); color: var(--md-primary); }
+.text-btn { padding: 0 12px; color: var(--md-primary); }
+.text-btn.danger { color: var(--md-error); }
+.has-icon { padding-left: 16px; }
+
+/* ---- segmented button (M3) ---- */
+.segmented { display: flex; border: 1px solid var(--md-outline); border-radius: var(--md-shape-full); overflow: hidden; }
+.segment {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 8px; white-space: nowrap;
+  font-weight: 500; color: var(--md-on-surface); border-left: 1px solid var(--md-outline);
+  transition: background-color var(--md-dur-short) var(--md-ease), color var(--md-dur-short) var(--md-ease);
+}
+.segment:first-child { border-left: 0; }
+.segment .tick { display: none; }
+.segment[aria-pressed='true'] { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.segment[aria-pressed='true'] .tick { display: inline-grid; }
+.segment[aria-pressed='true'] > .lucide { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
 }

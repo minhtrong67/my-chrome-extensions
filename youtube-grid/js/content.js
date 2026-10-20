@@ -26,26 +26,32 @@
   // fewer columns on small windows instead of crushing the thumbnails.
   const MIN_CARD = "170px";
   const GAP = "16px";
+  const ROW_GAP = "28px"; // YouTube's own row spacing lived in item margins, which we reset
 
-  /** Grid rules for one page scope, with `n` columns at most. */
+  /**
+   * Grid rules for one page scope, with `n` columns at most.
+   *
+   * Only the feed's own videos (direct children of the grid, or of its rows)
+   * are re-laid-out. Items inside nested shelves ("Explore more topics", Shorts,
+   * playlists…) keep YouTube's own widths and margins: stripping those is what
+   * used to glue shelf videos together.
+   */
   function columnRule(scope, n) {
     const track = `minmax(max(${MIN_CARD}, calc((100% - ${n - 1} * var(--yg-gap)) / ${n} - 1px)), 1fr)`;
+    const feedItem = `${scope} ${TOP} > ytd-rich-item-renderer, ${scope} ${TOP} > ytd-rich-grid-row > #contents > ytd-rich-item-renderer`;
     return `
-      ${scope} {
-        --yg-gap: ${GAP};
-        --ytd-rich-grid-items-per-row: ${n} !important;
-        --ytd-rich-grid-posts-per-row: ${n} !important;
-      }
+      ${scope} { --yg-gap: ${GAP}; --yg-row-gap: ${ROW_GAP}; }
       ${scope} ${TOP} {
         display: grid !important;
         grid-template-columns: repeat(auto-fill, ${track}) !important;
         column-gap: var(--yg-gap) !important;
+        row-gap: var(--yg-row-gap) !important;
       }
       ${scope} ${TOP} > ytd-rich-grid-row,
       ${scope} ${TOP} > ytd-rich-grid-row > #contents {
         display: contents !important;
       }
-      ${scope} ${TOP} ytd-rich-item-renderer {
+      ${feedItem} {
         width: auto !important;
         max-width: none !important;
         margin: 0 !important;

@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Photo Converter",
+    "description": "Tên tiện ích"
+  },
+  "extDescription": {
+    "message": "Chuyển ảnh sang PNG, JPEG, WEBP chỉ một cú nhấp. Chuột phải để lưu định dạng khác, hoặc chuyển hàng loạt ra .zip.",
+    "description": "Mô tả tiện ích"
+  }
+}

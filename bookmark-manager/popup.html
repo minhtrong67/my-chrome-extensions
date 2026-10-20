@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TagMark</title>
+<link rel="stylesheet" href="css/popup.css" />
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ===== Top app bar (changes with the active view) ===== -->
+  <header class="app-bar" id="appBar">
+    <button class="icon-btn" id="backBtn" data-i18n-title="back" hidden><span data-icon="arrow-left"></span></button>
+    <div class="brand" id="brand">
+      <img src="icons/icon48.png" alt="" class="brand-icon" width="32" height="32" />
+      <div class="brand-text">
+        <span class="brand-title">TagMark</span>
+        <span class="brand-sub" data-i18n="tagline"></span>
+      </div>
+    </div>
+    <h1 class="bar-title" id="barTitle" hidden></h1>
+    <div class="bar-actions" id="barActions">
+      <button class="icon-btn" id="selectModeBtn" data-i18n-title="selectMode"><span data-icon="square-check-big"></span></button>
+      <div class="menu-anchor">
+        <button class="icon-btn" id="moreBtn" data-i18n-title="more" aria-haspopup="menu" aria-expanded="false"><span data-icon="ellipsis-vertical"></span></button>
+        <div class="menu" id="moreMenu" role="menu" hidden>
+          <button class="menu-item" role="menuitem" id="exportJsonBtn"><span data-icon="file-json" data-size="18"></span><span data-i18n="exportJson"></span></button>
+          <button class="menu-item" role="menuitem" id="exportHtmlBtn"><span data-icon="file-code" data-size="18"></span><span data-i18n="exportHtml"></span></button>
+          <button class="menu-item" role="menuitem" id="importJsonBtn"><span data-icon="upload" data-size="18"></span><span data-i18n="importJson"></span></button>
+          <div class="menu-divider"></div>
+          <button class="menu-item danger" role="menuitem" id="resetBtn"><span data-icon="rotate-ccw" data-size="18"></span><span data-i18n="resetDefault"></span></button>
+        </div>
+      </div>
+      <button class="icon-btn" id="settingsBtn" data-i18n-title="settings"><span data-icon="settings"></span></button>
+    </div>
+    <input type="file" id="importJsonFile" accept="application/json,.json" hidden />
+  </header>
+
+  <!-- ===== List view ===== -->
+  <main class="view" id="view-list">
+    <div class="list-head">
+      <label class="search-field">
+        <span data-icon="search" data-size="20" class="search-icon"></span>
+        <input type="search" id="searchInput" data-i18n-placeholder="searchPlaceholder" autocomplete="off" spellcheck="false" />
+        <button class="icon-btn sm" id="clearSearchBtn" data-i18n-title="clearSearch" hidden type="button"><span data-icon="x" data-size="18"></span></button>
+      </label>
+
+      <div class="filter-row">
+        <div class="select-wrap">
+          <span data-icon="folder" data-size="16" class="select-icon"></span>
+          <select id="folderFilterSelect" class="select-chip" data-i18n-title="folderLabel"></select>
+        </div>
+        <div class="select-wrap">
+          <span data-icon="list" data-size="16" class="select-icon"></span>
+          <select id="sortSelect" class="select-chip">
+            <option value="dateAdded">Newest</option>
+            <option value="titleAsc">A → Z</option>
+            <option value="titleDesc">Z → A</option>
+          </select>
+        </div>
+        <div class="segmented sm" role="group">
+          <button class="seg-btn active" id="viewListBtn" type="button" aria-pressed="true"><span data-icon="list" data-size="18"></span></button>
+          <button class="seg-btn" id="viewGridBtn" type="button" aria-pressed="false"><span data-icon="layout-grid" data-size="18"></span></button>
+        </div>
+      </div>
+
+      <div class="tag-row" id="tagRow"></div>
+
+      <div class="bulk-bar" id="bulkBar" hidden>
+        <button class="text-btn" id="bulkSelectAllBtn"></button>
+        <span class="bulk-count" id="bulkCount"></span>
+        <div class="bulk-actions">
+          <button class="icon-btn" id="bulkTagBtn" data-i18n-title="bulkAddTag"><span data-icon="tag" data-size="20"></span></button>
+          <button class="icon-btn danger" id="bulkDeleteBtn" data-i18n-title="bulkDelete"><span data-icon="trash-2" data-size="20"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="list-scroll" id="listScroll">
+      <div class="results-label" id="resultsLabel"></div>
+      <div class="bookmark-list" id="bookmarkList"></div>
+    </div>
+
+    <button class="fab" id="addPageBtn" type="button">
+      <span data-icon="bookmark-plus" data-size="22"></span>
+      <span data-i18n="addCurrentPage"></span>
+    </button>
+  </main>
+
+  <!-- ===== Edit view ===== -->
+  <section class="view" id="view-edit" hidden>
+    <div class="form-scroll">
+      <div class="field">
+        <label for="editTitleInput" data-i18n="titleLabel"></label>
+        <input type="text" id="editTitleInput" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="editUrlInput" data-i18n="urlLabel"></label>
+        <input type="text" id="editUrlInput" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="field">
+        <label for="editFolderSelect" data-i18n="folderLabel"></label>
+        <select id="editFolderSelect"></select>
+      </div>
+      <button class="text-btn start" id="newFolderToggleBtn" type="button">
+        <span data-icon="folder-plus" data-size="18"></span><span data-i18n="newFolder"></span>
+      </button>
+      <div class="new-folder-row" id="newFolderRow" hidden>
+        <div class="field grow">
+          <input type="text" id="newFolderInput" data-i18n-placeholder="newFolderPlaceholder" autocomplete="off" />
+        </div>
+        <button class="btn tonal" id="createFolderBtn" type="button" data-i18n="create"></button>
+      </div>
+
+      <div class="field">
+        <label for="tagInput" data-i18n="tagsLabel"></label>
+        <div class="tags-input-wrap" id="tagsInputWrap">
+          <span class="tag-pills" id="tagPills"></span>
+          <input type="text" id="tagInput" class="tag-input" list="tagSuggestions" data-i18n-placeholder="tagInputPlaceholder" autocomplete="off" />
+          <datalist id="tagSuggestions"></datalist>
+        </div>
+      </div>
+      <div class="field">
+        <label for="noteInput" data-i18n="noteLabel"></label>
+        <textarea id="noteInput" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn text danger" id="deleteBookmarkBtn" type="button" hidden>
+        <span data-icon="trash-2" data-size="18"></span><span data-i18n="deleteBookmark"></span>
+      </button>
+      <span class="spacer"></span>
+      <button class="btn text" id="cancelEditBtn" type="button" data-i18n="cancel"></button>
+      <button class="btn filled" id="saveBookmarkBtn" type="button" data-i18n="save"></button>
+    </div>
+  </section>
+
+  <!-- ===== Settings view ===== -->
+  <section class="view" id="view-settings" hidden>
+    <div class="form-scroll">
+      <div class="card">
+        <div class="card-head"><span data-icon="palette" data-size="20"></span><h2 data-i18n="colorSection"></h2></div>
+        <p class="card-hint" data-i18n="colorHint"></p>
+        <div class="swatches" id="swatches" role="radiogroup"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span data-icon="sun" data-size="20"></span><h2 data-i18n="themeSection"></h2></div>
+        <div class="segmented" id="themeSeg" role="radiogroup">
+          <button class="seg-btn" data-value="light" role="radio"><span data-icon="sun" data-size="18"></span><span data-i18n="themeLight"></span></button>
+          <button class="seg-btn" data-value="dark" role="radio"><span data-icon="moon" data-size="18"></span><span data-i18n="themeDark"></span></button>
+          <button class="seg-btn" data-value="system" role="radio"><span data-icon="monitor" data-size="18"></span><span data-i18n="themeSystem"></span></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span data-icon="languages" data-size="20"></span><h2 data-i18n="languageSection"></h2></div>
+        <div class="segmented" id="langSeg" role="radiogroup">
+          <button class="seg-btn" data-value="system" role="radio"><span data-icon="globe" data-size="18"></span><span data-i18n="langSystem"></span></button>
+          <button class="seg-btn" data-value="en" role="radio"><span data-i18n="langEn"></span></button>
+          <button class="seg-btn" data-value="vi" role="radio"><span data-i18n="langVi"></span></button>
+        </div>
+      </div>
+
+      <div class="card about">
+        <div class="card-head"><span data-icon="info" data-size="20"></span><h2 data-i18n="about"></h2></div>
+        <div class="about-hero">
+          <img src="icons/icon128.png" alt="" width="48" height="48" />
+          <div><strong>TagMark</strong><span class="muted" id="aboutVersion"></span></div>
+        </div>
+        <dl class="about-list">
+          <div><dt><span data-icon="user" data-size="16"></span><span data-i18n="authorLabel"></span></dt><dd id="aboutAuthor"></dd></div>
+          <div><dt><span data-icon="sparkles" data-size="16"></span><span data-i18n="aiLabel"></span></dt><dd data-i18n="aiValue"></dd></div>
+          <div><dt><span data-icon="keyboard" data-size="16"></span><span data-i18n="shortcutHint"></span></dt><dd><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd></dd></div>
+        </dl>
+        <div class="about-actions">
+          <button class="btn tonal" id="openLandingBtn" type="button">
+            <span data-icon="external-link" data-size="18"></span><span data-i18n="openLanding"></span>
+          </button>
+          <button class="btn text" id="manageShortcutsBtn" type="button" data-i18n="manageShortcuts"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Overlays ===== -->
+  <div class="scrim" id="scrim" hidden>
+    <div class="dialog" id="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dialogTitle">
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogMessage"></p>
+      <div class="field dialog-field" id="dialogField" hidden>
+        <input type="text" id="dialogInput" autocomplete="off" />
+      </div>
+      <div class="dialog-actions">
+        <button class="btn text" id="dialogCancel" type="button"></button>
+        <button class="btn filled" id="dialogOk" type="button"></button>
+      </div>
+    </div>
+  </div>
+  <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

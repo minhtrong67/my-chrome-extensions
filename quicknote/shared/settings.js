@@ -1,96 +1,65 @@
 /* ================================================================
    QUICKNOTE — shared/settings.js
-   ------------------------------------------------------------------
-   Single source of truth for QuickNote's user preferences: their
-   default values, how they are read/written from chrome.storage.local
-   and how a theme choice gets applied to the page. Both popup.js and
-   options.js import this file so the two surfaces can never drift
-   out of sync with each other.
-
-   Author: gnort67 · built with the help of Claude (Anthropic)
+   Single source of truth for user preferences (colour, theme, language)
+   and for applying them to a page. Used by popup, options and settings UI.
+   Author: minhtrong67 · AI support: Claude (Anthropic)
    ================================================================ */
-
 (function (global) {
   'use strict';
 
-  // Every setting QuickNote persists, and its default value.
-  // NOTE: `notes` and `activeId` are data, not "settings" — they are
-  // intentionally excluded here and handled directly in popup.js.
   const DEFAULTS = {
-    lang: 'vi',
-    theme: 'system', // 'system' | 'light' | 'dark'
-    fontSize: 14, // px, content editor only
-    autosaveDelay: 600, // ms, debounce before a note is written to disk
-    defaultColor: '', // '' = no colour label applied to new notes
-    sidebarOpen: true,
-    sortMode: 'updated', // 'updated' | 'created' | 'title'
+    lang: 'auto',     // 'auto' | 'vi' | 'en'
+    theme: 'system',  // 'system' | 'light' | 'dark'
+    color: 'cyan',    // key of QNPalettes.seeds
   };
-
-  const SETTINGS_KEYS = Object.keys(DEFAULTS);
-
-  // Notes in Trash older than this are purged automatically on load.
+  const KEYS = Object.keys(DEFAULTS);
   const TRASH_RETENTION_DAYS = 30;
 
-  /** Thin promise wrapper around the callback-based storage API. */
   const store = {
-    get: (keys) => new Promise((resolve) => chrome.storage.local.get(keys, resolve)),
-    set: (obj) => new Promise((resolve) => chrome.storage.local.set(obj, resolve)),
+    get: (keys) => chrome.storage.local.get(keys),
+    set: (obj) => chrome.storage.local.set(obj),
   };
 
-  /** Reads every known setting, filling in defaults for anything unset. */
-  async function loadSettings() {
-    const saved = await store.get(SETTINGS_KEYS);
-    const settings = { ...DEFAULTS };
-    for (const key of SETTINGS_KEYS) {
-      if (saved[key] !== undefined) settings[key] = saved[key];
-    }
-    return settings;
+  /** Reads preferences, falling back to defaults and discarding invalid values. */
+  async function load() {
+    const saved = await store.get(KEYS);
+    const s = { ...DEFAULTS };
+    if (['auto', 'vi', 'en'].includes(saved.lang)) s.lang = saved.lang;
+    if (['system', 'light', 'dark'].includes(saved.theme)) s.theme = saved.theme;
+    if (QNPalettes.seeds[saved.color]) s.color = saved.color;
+    return s;
   }
 
-  /** Persists a partial settings object (only the keys provided). */
-  function saveSettings(partial) {
-    return store.set(partial);
+  /** 'auto' → detect from the browser UI language; Vietnamese or English only. */
+  function resolveLang(pref) {
+    if (pref === 'vi' || pref === 'en') return pref;
+    const ui = (chrome.i18n && chrome.i18n.getUILanguage ? chrome.i18n.getUILanguage() : navigator.language) || 'en';
+    return /^vi\b/i.test(ui) ? 'vi' : 'en';
   }
 
-  /** Resets every setting to its default value and returns it. */
-  async function resetSettings() {
-    await store.set(DEFAULTS);
-    return { ...DEFAULTS };
-  }
+  const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+  const isDark = (theme) => theme === 'dark' || (theme === 'system' && darkQuery.matches);
 
-  /**
-   * Applies a theme choice ('system' | 'light' | 'dark') to the
-   * current document by setting the `data-theme` attribute that
-   * shared/theme.css keys its colour tokens off of.
-   */
-  function applyTheme(theme, doc) {
+  /** Applies theme + palette to a document by writing Material 3 tokens as CSS variables. */
+  function applyAppearance(s, doc, animate) {
     const d = doc || document;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = theme === 'dark' || (theme === 'system' && prefersDark);
-    d.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    const root = d.documentElement;
+    const dark = isDark(s.theme);
+    if (animate) {
+      root.classList.add('themed-transition');
+      clearTimeout(applyAppearance._t);
+      applyAppearance._t = setTimeout(() => root.classList.remove('themed-transition'), 400);
+    }
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    const seed = QNPalettes.seeds[s.color] || QNPalettes.seeds.cyan;
+    const values = dark ? seed.dark : seed.light;
+    QNPalettes.tokens.forEach((t, i) => root.style.setProperty('--md-' + t, '#' + values[i]));
   }
 
-  /**
-   * Registers `callback` to re-run whenever the OS/browser colour
-   * scheme changes, but only while the user's chosen theme is
-   * 'system' — otherwise an explicit Light/Dark choice would get
-   * silently overridden.
-   */
-  function watchSystemTheme(getCurrentTheme, callback) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (getCurrentTheme() === 'system') callback();
-    });
+  /** Re-applies when the OS colour scheme flips, only while theme = system. */
+  function watchSystem(getTheme, cb) {
+    darkQuery.addEventListener('change', () => { if (getTheme() === 'system') cb(); });
   }
 
-  global.QNSettings = {
-    DEFAULTS,
-    SETTINGS_KEYS,
-    TRASH_RETENTION_DAYS,
-    store,
-    loadSettings,
-    saveSettings,
-    resetSettings,
-    applyTheme,
-    watchSystemTheme,
-  };
+  global.QNSettings = { DEFAULTS, KEYS, TRASH_RETENTION_DAYS, store, load, resolveLang, applyAppearance, watchSystem };
 })(window);

@@ -4,15 +4,12 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const USED = [
-  "camera", "settings", "sun", "moon", "monitor", "arrow-left", "x", "scan",
-  "scroll-text", "crop", "history", "trash-2", "palette", "type", "languages",
-  "image", "sliders-horizontal", "download", "upload", "rotate-ccw", "info",
-  "heart", "check", "chevron-down", "triangle-alert", "mouse-pointer-2",
-  "pencil", "move-up-right", "square", "circle", "highlighter", "grid-3x3",
-  "undo-2", "redo-2", "copy", "zoom-in", "zoom-out", "maximize", "save",
-  "clock", "file-image", "external-link", "github", "keyboard", "text-cursor-input",
-  "eraser", "layers", "shield-check", "zap", "lock", "globe", "puzzle", "folder-down",
-  "sparkles", "code-xml", "scale", "bot", "menu", "ban"
+  // popup
+  "settings", "sun", "moon", "monitor", "arrow-left", "scan", "scroll-text", "crop", "image",
+  "palette", "languages", "heart", "check", "triangle-alert", "external-link",
+  // editor
+  "x", "mouse-pointer-2", "pencil", "move-up-right", "square", "circle", "type", "highlighter",
+  "grid-3x3", "undo-2", "redo-2", "trash-2", "eraser", "zoom-in", "zoom-out", "copy", "download"
 ];
 const dir = "node_modules/lucide-static/icons/";
 const out = {};

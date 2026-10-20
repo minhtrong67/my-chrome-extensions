@@ -7,59 +7,55 @@
 **Chụp vùng hiển thị, toàn trang hoặc vùng chọn — rồi chú thích và che thông tin nhạy cảm trong trình chỉnh sửa Material Design 3.**
 Miễn phí, mã nguồn mở, xử lý 100% trên máy.
 
-[English](README.md) · [Tiếng Việt](README.vi.md) · [Landing page](index.html)
+![Version](https://img.shields.io/badge/version-1.3.0-03A9F4)
+![Manifest](https://img.shields.io/badge/Manifest-V3-03A9F4)
+![License](https://img.shields.io/badge/license-MIT-03A9F4)
+
+[English](README.md) · [Tiếng Việt](README.vi.md) · [Trang giới thiệu](index.html)
 
 </div>
 
 ---
 
-## Giới thiệu
-SmartShot là tiện ích Chrome / Chromium gọn nhẹ để chụp và chú thích ảnh màn hình, với giao diện Material Design 3 tự nhận ngôn ngữ và chủ đề của thiết bị. Không có gì được tải lên đâu cả.
-
 ## Ảnh minh hoạ
+
 | Trình chú thích | Cửa sổ chụp | Cài đặt |
 |---|---|---|
 | ![Editor](screenshots/image01.png) | ![Popup](screenshots/image02.png) | ![Settings](screenshots/image03.png) |
 
-| Tối · Tiếng Việt | Màu xanh mòng két |
-|---|---|
-| ![Dark](screenshots/image04.png) | ![Teal](screenshots/image05.png) |
+| Tối · Tiếng Việt | Editor tối · màu xanh mòng két | Landing page |
+|---|---|---|
+| ![Dark](screenshots/image04.png) | ![Dark editor](screenshots/image05.png) | ![Landing](screenshots/image06.png) |
 
 ## Tính năng
-- **Chụp**: vùng hiển thị, toàn trang (tự cuộn & ghép, header dính chỉ xuất hiện một lần), vùng chọn; lưu vào Downloads, clipboard hoặc mở trình chỉnh sửa.
-- **Trình chỉnh sửa**: bút, mũi tên, hình chữ nhật, elip, chữ, bút dạ quang, **che điểm ảnh**, cắt ảnh; chọn / di chuyển / đổi cỡ / đổi màu / xoá chú thích; hoàn tác 60 bước; thu phóng; xuất PNG/JPEG; sao chép clipboard.
-- **Tuỳ biến**: sáng / tối / hệ thống, **19 màu Material**, nhiều phông chữ phổ biến (mặc định phông hệ thống), 4 cỡ chữ.
-- **Hai ngôn ngữ** Tiếng Việt & English — tự nhận theo thiết bị.
+
+- **Chụp**: vùng hiển thị, toàn trang (tự cuộn và ghép liền mạch), vùng chọn có hiển thị kích thước. Mặc định ảnh chụp mở ngay trong trình chỉnh sửa; có thể tắt trong Cài đặt (**Sau khi chụp**) để tải thẳng ảnh PNG vào thư mục Downloads mặc định.
+- **Chỉnh sửa**: bút, mũi tên, hình chữ nhật, elip, chữ, bút nhấn, làm mờ/che thông tin, cắt ảnh; chọn/di chuyển/đổi cỡ/đổi màu từng chú thích; hoàn tác 60 bước; phóng to thu nhỏ; dán hoặc kéo thả ảnh để chỉnh; xuất PNG/JPEG, tải xuống hoặc sao chép.
+- **Cài đặt** (ngay trong popup): màu chủ đề (19 màu Material), giao diện Sáng/Tối/Hệ thống, ngôn ngữ English/Tiếng Việt/Tự động. Có thẻ tác giả và nút mở trang giới thiệu trong tab mới.
 - **Riêng tư**: không theo dõi, không gọi mạng, quyền tối thiểu.
 
 ## Cài đặt
+
 1. Tải `download/SmartShot-Setup.zip` và giải nén vào một thư mục cố định.
 2. Mở `chrome://extensions`, bật **Chế độ nhà phát triển**.
-3. Nhấn **Tải tiện ích đã giải nén** và chọn thư mục vừa giải nén.
-4. Ghim biểu tượng SmartShot màu tím lên thanh công cụ.
+3. Chọn **Tải tiện ích đã giải nén** và trỏ tới thư mục vừa giải nén.
+4. Ghim biểu tượng SmartShot màu xanh lên thanh công cụ.
 
-Yêu cầu Chrome / Edge / Brave **109+**.
-
-## Công nghệ
-Manifest V3, HTML/CSS/JS thuần, Material Design 3 (`@material/material-color-utilities`), icon [Lucide](https://lucide.dev), font tự host (Fontsource), IndexedDB + `chrome.storage`.
+> Yêu cầu Chrome / Edge / Brave **109+**.
 
 ## Phát triển
+
 ```bash
 npm install
-npm run build:assets   # sinh themes.css, lucide.js, icon PNG
-```
-Sửa mã rồi bấm **Tải lại** ở `chrome://extensions`.
-
-## Build
-```bash
-npm run pack   # → dist/SmartShot-v<version>.zip và download/SmartShot-Setup.zip
+npm run build:assets   # themes, icon Lucide, icon extension
+npm run pack           # đóng gói zip
 ```
 
-## Cấu trúc dự án
-Xem sơ đồ chi tiết trong [README.md](README.md#project-structure).
+## Hạn chế đã biết
 
-## Giấy phép
-Dự án công khai, mã nguồn mở theo **[Giấy phép MIT](LICENSE)**.
+- Trang cuộn bên trong một khung con (không phải cuộn cả trang) chỉ chụp được một khung hình.
+- Không chụp được trang `chrome://…` và Web Store.
 
 ## Tác giả
-**[minhtrong67](https://github.com/minhtrong67)** — với sự hỗ trợ của AI **Claude** (Anthropic).
+
+**minhtrong67**, với sự hỗ trợ của AI **Claude** (Anthropic). Giấy phép [MIT](LICENSE).

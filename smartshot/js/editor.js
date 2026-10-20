@@ -28,9 +28,10 @@ let drag = null;                 // active pointer interaction
 let cropRect = null;
 let editing = null;              // text being edited { id|null, x, y, color, size }
 let editingId = null;
-let captureId = null;
+let captureId = null;          // IndexedDB record to clean up when the editor closes
+let historyCid = null;         // history row this image belongs to (one capture = one row)
 let captureType = "visible";
-let accent = "#9C27B0";
+let accent = "#03A9F4";
 
 const PALETTE = ["#F44336", "#FF9800", "#FFEB3B", "#4CAF50", "#2196F3", "#9C27B0", "#000000", "#FFFFFF"];
 const $ = (id) => document.getElementById(id);
@@ -60,7 +61,9 @@ function toast(key) {
   toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
 }
 
-function fontStack() { return (FONT_OPTIONS[settings.font] || FONT_OPTIONS.system).stack; }
+// The UI always uses the platform's default font; annotations use the same stack.
+const FONT_STACK = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif';
+const fontStack = () => FONT_STACK;
 const textPx = (s) => Math.round(14 + s * 2.4);
 const textFont = (o) => `600 ${textPx(o.size)}px ${fontStack()}`;
 
@@ -295,7 +298,9 @@ function fit() {
   const availW = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
   const availH = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
   let z = Math.min(1, availW / base.width);
-  if (base.height / base.width < 2.5) z = Math.min(z, availH / base.height); // very tall page captures scroll instead
+  // Fit the whole image when that's still legible; very tall page captures fit the width and scroll instead.
+  const zh = Math.min(1, availH / base.height);
+  if (zh >= z * 0.5) z = Math.min(z, zh);
   zoom = clamp(z, 0.05, 1);
   applyZoom();
 }
@@ -331,7 +336,7 @@ function pushHistory() {
 function restore(s) {
   cancelCrop(true);
   cancelText();
-  if (s.base !== base) setBase(s.base);
+  if (s.base !== base) { setBase(s.base); if (fitMode) fit(); }
   objects = clone(s.objects);
   selectedId = objects.some((o) => o.id === s.sel) ? s.sel : null;
   dirty = true;
@@ -415,9 +420,10 @@ function buildPalette() {
     box.appendChild(b);
   });
   const custom = document.createElement("label");
-  custom.className = "color-custom"; custom.title = "Custom";
+  custom.className = "color-custom"; custom.setAttribute("data-i18n-title", "customColor");
   custom.innerHTML = '<input type="color" id="customColor" value="#F44336" />';
   box.appendChild(custom);
+  i18n.apply(custom.parentNode);
   custom.querySelector("input").addEventListener("input", (e) => setColor(e.target.value.toUpperCase()));
 }
 
@@ -442,7 +448,9 @@ function setColor(hex) {
 }
 
 function savePrefs() {
-  try { localStorage.setItem("smartshot_editor", JSON.stringify({ color, size })); } catch (e) { /* ignore */ }
+  try {
+    localStorage.setItem("smartshot_editor", JSON.stringify({ color, size, format: currentFormat(), quality: parseInt($("qualitySlider").value, 10) }));
+  } catch (e) { /* ignore */ }
 }
 
 /* ------------------------------ text tool ------------------------------ */
@@ -723,8 +731,8 @@ async function download() {
     setTimeout(() => URL.revokeObjectURL(url), 8000);
     dirty = false;
     toast("toastDownloaded");
-    store.addToHistory({ captureType, filename, format, action: "download", thumbnail: thumbOf(c) }, settings.historyLimit);
-  } catch (err) { toast("toastCopyFailed"); }
+    store.upsertHistory({ cid: historyCid, captureType, filename, format, action: "download", thumbnail: thumbOf(c) });
+  } catch (err) { toast("toastExportFailed"); }
 }
 
 async function copy() {
@@ -736,7 +744,7 @@ async function copy() {
     await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
     dirty = false;
     toast("toastCopied");
-    store.addToHistory({ captureType, filename: null, format: "png", action: "clipboard", thumbnail: thumbOf(c) }, settings.historyLimit);
+    store.upsertHistory({ cid: historyCid, captureType, filename: null, format: "png", action: "clipboard", thumbnail: thumbOf(c) });
   } catch (err) { toast("toastCopyFailed"); }
 }
 
@@ -808,13 +816,14 @@ document.addEventListener("keydown", (e) => {
 });
 
 /* ------------------------------ loading images ------------------------------ */
-async function loadBlob(blob) {
+async function loadBlob(blob, fresh) {
   const bmp = await createImageBitmap(blob);
   const c = document.createElement("canvas");
   c.width = bmp.width; c.height = bmp.height;
   c.getContext("2d").drawImage(bmp, 0, 0);
   bmp.close();
   objects = []; undoStack = []; redoStack = []; selectedId = null; dirty = false;
+  if (fresh) { historyCid = `import-${Date.now()}`; captureType = "visible"; }
   fitMode = true;
   setBase(c);
   fit();
@@ -826,12 +835,12 @@ async function loadBlob(blob) {
 window.addEventListener("paste", (e) => {
   if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
   const item = [...(e.clipboardData?.items || [])].find((i) => i.type.startsWith("image/"));
-  if (item) { e.preventDefault(); loadBlob(item.getAsFile()).catch(() => toast("toastLoadFailed")); }
+  if (item) { e.preventDefault(); loadBlob(item.getAsFile(), true).catch(() => toast("toastLoadFailed")); }
 });
 window.addEventListener("dragover", (e) => e.preventDefault());
 window.addEventListener("drop", (e) => {
   const f = [...(e.dataTransfer?.files || [])].find((x) => x.type.startsWith("image/"));
-  if (f) { e.preventDefault(); loadBlob(f).catch(() => toast("toastLoadFailed")); }
+  if (f) { e.preventDefault(); loadBlob(f, true).catch(() => toast("toastLoadFailed")); }
 });
 
 /* ------------------------------ wiring & init ------------------------------ */
@@ -861,7 +870,9 @@ function wire() {
   });
 
   $("themeBtn").addEventListener("click", () => {
-    settings.theme = themeManager.cycle();
+    const order = ["light", "dark", "system"];
+    settings.theme = order[(order.indexOf(settings.theme) + 1) % order.length];
+    themeManager.apply(settings.theme);
     themeManager.mirror(settings);
     syncThemeBtn();
     store.saveSettings(settings);
@@ -870,9 +881,11 @@ function wire() {
 
   document.querySelectorAll('input[name="format"]').forEach((r) => r.addEventListener("change", () => {
     $("qualityBox").classList.toggle("is-collapsed", currentFormat() !== "jpeg");
+    savePrefs();
   }));
   const q = $("qualitySlider");
   q.addEventListener("input", () => { $("qualityValue").textContent = q.value + "%"; paintSlider(q); });
+  q.addEventListener("change", savePrefs);
 
   new ResizeObserver(() => { if (fitMode) fit(); }).observe(stage);
 }
@@ -894,6 +907,20 @@ function syncThemeBtn() {
   syncThemeBtn();
   readAccent();
 
+  // Follow settings changed in the popup while this tab is open.
+  if (chrome.storage && chrome.storage.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== "local" || !changes[STORAGE_KEY]) return;
+      const next = sanitizeSettings(changes[STORAGE_KEY].newValue);
+      if (JSON.stringify(next) === JSON.stringify(settings)) return;
+      settings = next;
+      i18n.setLang(settings.language);
+      themeManager.applyAll(settings);
+      syncThemeBtn();
+      requestAnimationFrame(() => { readAccent(); requestRender(); });
+    });
+  }
+
   try {
     const prefs = JSON.parse(localStorage.getItem("smartshot_editor") || "{}");
     if (/^#[0-9a-f]{6}$/i.test(prefs.color)) color = prefs.color;
@@ -903,16 +930,23 @@ function syncThemeBtn() {
   $("sizeSlider").value = size;
   paintSlider($("sizeSlider"));
 
-  document.querySelector(`input[name="format"][value="${settings.format}"]`).checked = true;
-  $("qualitySlider").value = settings.quality;
-  $("qualityValue").textContent = settings.quality + "%";
+  let format = "png", quality = 90;
+  try {
+    const prefs = JSON.parse(localStorage.getItem("smartshot_editor") || "{}");
+    if (prefs.format === "jpeg") format = "jpeg";
+    if (prefs.quality >= 1 && prefs.quality <= 100) quality = prefs.quality;
+  } catch (e) { /* defaults */ }
+  document.querySelector(`input[name="format"][value="${format}"]`).checked = true;
+  $("qualitySlider").value = quality;
+  $("qualityValue").textContent = quality + "%";
   paintSlider($("qualitySlider"));
-  $("qualityBox").classList.toggle("is-collapsed", settings.format !== "jpeg");
+  $("qualityBox").classList.toggle("is-collapsed", format !== "jpeg");
   setTool("select");
   updateButtons();
 
   const params = new URLSearchParams(location.search);
   captureId = params.get("id");
+  historyCid = captureId;
   captureType = ["visible", "fullpage", "area"].includes(params.get("type")) ? params.get("type") : "visible";
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
   $("filename").value = `smartshot-${captureType}-${stamp}`;

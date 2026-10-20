@@ -8,20 +8,15 @@
 const MAX_CANVAS_DIM = 32767;            // Chrome's hard limit per side
 const MAX_CANVAS_AREA = 268435456;       // ...and total pixel count
 const THUMB_SIDE = 160;
-const BLOB_URL_TTL = 5 * 60 * 1000;
-
-const mimeFor = (format) => (format === "jpeg" ? "image/jpeg" : "image/png");
 
 async function decode(dataUrl) {
   const blob = await (await fetch(dataUrl)).blob();
   return createImageBitmap(blob);
 }
 
-function canvasToBlob(canvas, format, quality) {
-  const mime = mimeFor(format);
+function canvasToBlob(canvas) {
   return new Promise((resolve, reject) => {
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime,
-      mime === "image/jpeg" ? quality : undefined);
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), "image/png");
   });
 }
 
@@ -39,10 +34,11 @@ function makeThumbnail(source, w, h) {
   return c.toDataURL("image/jpeg", 0.72);
 }
 
-async function finalize(canvas, format, quality) {
-  const blob = await canvasToBlob(canvas, format, quality);
+// Captures are always stored as lossless PNG; the editor offers PNG / JPEG when exporting.
+async function finalize(canvas) {
+  const blob = await canvasToBlob(canvas);
   const id = `cap-${Date.now()}`;
-  await capturesDb.put(id, { blob, format, width: canvas.width, height: canvas.height });
+  await capturesDb.put(id, { blob, width: canvas.width, height: canvas.height });
   const thumbnail = makeThumbnail(canvas, canvas.width, canvas.height);
   return { id, width: canvas.width, height: canvas.height, thumbnail };
 }
@@ -54,18 +50,16 @@ function newCanvas(w, h) {
 }
 
 /* ---- Plain screenshot (visible area) ---- */
-async function encodeImage({ dataUrl, format, quality }) {
+async function encodeImage({ dataUrl }) {
   const bmp = await decode(dataUrl);
   const canvas = newCanvas(bmp.width, bmp.height);
-  const g = canvas.getContext("2d");
-  if (format === "jpeg") { g.fillStyle = "#fff"; g.fillRect(0, 0, canvas.width, canvas.height); }
-  g.drawImage(bmp, 0, 0);
+  canvas.getContext("2d").drawImage(bmp, 0, 0);
   bmp.close();
-  return finalize(canvas, format, quality);
+  return finalize(canvas);
 }
 
 /* ---- Crop to a CSS-pixel rect. Scale comes from the real bitmap, so page zoom can't skew it. ---- */
-async function cropImage({ dataUrl, rect, viewportWidth, format, quality }) {
+async function cropImage({ dataUrl, rect, viewportWidth }) {
   const bmp = await decode(dataUrl);
   const scale = bmp.width / viewportWidth;
   const sx = Math.max(0, Math.round(rect.x * scale));
@@ -73,11 +67,9 @@ async function cropImage({ dataUrl, rect, viewportWidth, format, quality }) {
   const sw = Math.max(1, Math.min(bmp.width - sx, Math.round(rect.width * scale)));
   const sh = Math.max(1, Math.min(bmp.height - sy, Math.round(rect.height * scale)));
   const canvas = newCanvas(sw, sh);
-  const g = canvas.getContext("2d");
-  if (format === "jpeg") { g.fillStyle = "#fff"; g.fillRect(0, 0, sw, sh); }
-  g.drawImage(bmp, sx, sy, sw, sh, 0, 0, sw, sh);
+  canvas.getContext("2d").drawImage(bmp, sx, sy, sw, sh, 0, 0, sw, sh);
   bmp.close();
-  return finalize(canvas, format, quality);
+  return finalize(canvas);
 }
 
 /* ---- Incremental stitching: pieces are drawn as they arrive, so memory stays flat ---- */
@@ -110,51 +102,29 @@ async function stitchAdd({ dataUrl, y, viewportWidth }) {
   }
 
   stitch.ctx.drawImage(bmp, 0, Math.round(y * stitch.scale));
+  const imgCssHeight = bmp.height / stitch.scale;   // what one screenshot really covers, in CSS px
   bmp.close();
-  return maxCssHeight ? { maxCssHeight } : {};
+  return maxCssHeight ? { maxCssHeight, imgCssHeight } : { imgCssHeight };
 }
 
-async function stitchEnd({ format, quality }) {
+async function stitchAbort() { stitch = null; return {}; }
+
+async function stitchEnd() {
   if (!stitch || !stitch.canvas) throw new Error("Nothing to stitch");
   const { canvas } = stitch;
   stitch = null;
-  return finalize(canvas, format, quality);
+  return finalize(canvas);
 }
 
-/* ---- Hand-off helpers ---- */
-const liveUrls = new Map();
-
+/* ---- Blob URL for chrome.downloads (the service worker can't create object URLs for stored blobs itself) ---- */
 async function blobUrl({ id }) {
   const rec = await capturesDb.get(id);
-  if (!rec) throw new Error("Capture not found");
-  const url = URL.createObjectURL(rec.blob);
-  const timer = setTimeout(() => { URL.revokeObjectURL(url); liveUrls.delete(url); }, BLOB_URL_TTL);
-  liveUrls.set(url, timer);
-  return { url };
+  if (!rec || !rec.blob) throw new Error("Capture not found");
+  return { url: URL.createObjectURL(rec.blob) };
 }
 
-async function pngDataUrl({ id }) {
-  const rec = await capturesDb.get(id);
-  if (!rec) throw new Error("Capture not found");
-  let blob = rec.blob;
-  if (blob.type !== "image/png") {
-    const bmp = await createImageBitmap(blob);
-    const c = newCanvas(bmp.width, bmp.height);
-    c.getContext("2d").drawImage(bmp, 0, 0);
-    bmp.close();
-    blob = await canvasToBlob(c, "png");
-  }
-  const dataUrl = await new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result);
-    r.onerror = () => reject(r.error);
-    r.readAsDataURL(blob);
-  });
-  return { dataUrl };
-}
-
-async function deleteCapture({ id }) {
-  await capturesDb.delete(id);
+async function revokeUrl({ url }) {
+  if (url) URL.revokeObjectURL(url);
   return {};
 }
 
@@ -164,9 +134,9 @@ const HANDLERS = {
   "stitch-begin": stitchBegin,
   "stitch-add": stitchAdd,
   "stitch-end": stitchEnd,
+  "stitch-abort": stitchAbort,
   "blob-url": blobUrl,
-  "png-data-url": pngDataUrl,
-  "delete-capture": deleteCapture
+  "revoke-url": revokeUrl
 };
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

@@ -1,0 +1,5 @@
+{
+  "extName": { "message": "TagMark - Smart Bookmark Manager", "description": "Extension name" },
+  "extDescription": { "message": "Organize your real Chrome bookmarks with tags, notes, instant search, duplicate detection and bulk actions. Material Design 3, light/dark themes, English & Vietnamese.", "description": "Extension description" },
+  "cmdQuickBookmark": { "message": "Bookmark the current tab instantly", "description": "Keyboard shortcut label" }
+}

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-color="pink">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TubeShot: clean YouTube screenshots for Chrome</title>
+<meta name="description" content="TubeShot is a free Chrome extension that captures clean, control-free frames from any YouTube video. Step to the exact frame, add a timestamp, then save or copy it. 100% on-device." />
+<meta name="keywords" content="YouTube screenshot, YouTube frame capture, Chrome extension, video screenshot, frame by frame, timestamp, Material Design, TubeShot, chụp ảnh YouTube" />
+<meta name="author" content="minhtrong67" />
+<meta name="generator" content="Claude (AI assistance)" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#fff8f7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a1112" media="(prefers-color-scheme: dark)" />
+
+<!-- Open Graph / social sharing.
+     NOTE: crawlers (Facebook, Zalo, LinkedIn...) need ABSOLUTE URLs for og:image and og:url.
+     After you deploy, replace the relative image path below with the full URL, and add <link rel="canonical"> + og:url. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TubeShot" />
+<meta property="og:title" content="TubeShot: clean YouTube screenshots for Chrome" />
+<meta property="og:description" content="Capture control-free frames from any YouTube video. Frame-accurate, private, free." />
+<meta property="og:image" content="icons/og-image.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="TubeShot extension popup next to a clean YouTube frame" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="vi_VN" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="TubeShot: clean YouTube screenshots for Chrome" />
+<meta name="twitter:description" content="Capture control-free frames from any YouTube video. Frame-accurate, private, free." />
+<meta name="twitter:image" content="icons/og-image.png" />
+<meta name="twitter:image:alt" content="TubeShot extension popup next to a clean YouTube frame" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+<link rel="apple-touch-icon" sizes="128x128" href="icons/icon128.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "TubeShot",
+  "alternateName": "TubeShot - YouTube Screenshot",
+  "applicationCategory": "MultimediaApplication",
+  "applicationSubCategory": "Browser extension",
+  "operatingSystem": "Chrome, Edge, Brave (Chromium)",
+  "softwareVersion": "1.1.0",
+  "description": "Chrome extension that captures clean, control-free frames from any YouTube video, with frame-accurate seeking, optional timestamp and caption, PNG/JPEG export and clipboard copy.",
+  "image": "icons/og-image.png",
+  "inLanguage": ["en", "vi"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "minhtrong67" },
+  "featureList": [
+    "Clean frames without player controls",
+    "Frame-accurate seeking",
+    "Timestamp badge and caption",
+    "PNG or JPEG at 100, 75, 50 or 25 percent",
+    "Copy to clipboard",
+    "18 Material colors, light, dark and system themes",
+    "English and Vietnamese interface"
+  ]
+}
+</script>
+
+<style>
+/* Generated from Material You tonal palettes (material-color-utilities, Vibrant). Do not edit by hand. */
+[data-color="red"][data-theme="light"]{--md-primary:#c0000a;--md-on-primary:#ffffff;--md-primary-container:#ffdad5;--md-on-primary-container:#930005;--md-secondary-container:#ffdbcc;--md-on-secondary-container:#653d29;--md-surface:#fff8f7;--md-surface-container-low:#fff0ee;--md-surface-container:#ffe9e6;--md-surface-container-high:#ffe2de;--md-on-surface:#271816;--md-on-surface-variant:#58413e;--md-outline:#8c716d;--md-outline-variant:#dfbfbb;--md-inverse-surface:#3d2c2a;--md-inverse-on-surface:#ffedea;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="red"][data-theme="dark"]{--md-primary:#ffb4a9;--md-on-primary:#690002;--md-primary-container:#930005;--md-on-primary-container:#ffdad5;--md-secondary-container:#653d29;--md-on-secondary-container:#ffdbcc;--md-surface:#1e100e;--md-surface-container-low:#271816;--md-surface-container:#2b1c1a;--md-surface-container-high:#372624;--md-on-surface:#f9dcd8;--md-on-surface-variant:#dfbfbb;--md-outline:#a78a86;--md-outline-variant:#58413e;--md-inverse-surface:#f9dcd8;--md-inverse-on-surface:#3d2c2a;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="pink"][data-theme="light"]{--md-primary:#bc004b;--md-on-primary:#ffffff;--md-primary-container:#ffd9de;--md-on-primary-container:#900038;--md-secondary-container:#ffdad5;--md-on-secondary-container:#673b35;--md-surface:#fff8f7;--md-surface-container-low:#fff0f1;--md-surface-container:#ffe9ea;--md-surface-container-high:#fde2e4;--md-on-surface:#26181a;--md-on-surface-variant:#574144;--md-outline:#8a7174;--md-outline-variant:#debfc2;--md-inverse-surface:#3d2c2e;--md-inverse-on-surface:#ffecee;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="pink"][data-theme="dark"]{--md-primary:#ffb2be;--md-on-primary:#660025;--md-primary-container:#900038;--md-on-primary-container:#ffd9de;--md-secondary-container:#673b35;--md-on-secondary-container:#ffdad5;--md-surface:#1d1012;--md-surface-container-low:#26181a;--md-surface-container:#2a1c1e;--md-surface-container-high:#362628;--md-on-surface:#f7dcdf;--md-on-surface-variant:#debfc2;--md-outline:#a58a8d;--md-outline-variant:#574144;--md-inverse-surface:#f7dcdf;--md-inverse-on-surface:#3d2c2e;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="purple"][data-theme="light"]{--md-primary:#a200bb;--md-on-primary:#ffffff;--md-primary-container:#ffd6fe;--md-on-primary-container:#7b008f;--md-secondary-container:#ffd7f0;--md-on-secondary-container:#5d3c54;--md-surface:#fff7fa;--md-surface-container-low:#ffeffb;--md-surface-container:#fae9f6;--md-surface-container-high:#f4e3f0;--md-on-surface:#221922;--md-on-surface-variant:#50434f;--md-outline:#827280;--md-outline-variant:#d4c1d0;--md-inverse-surface:#372d37;--md-inverse-on-surface:#fdecf9;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="purple"][data-theme="dark"]{--md-primary:#f9abff;--md-on-primary:#570066;--md-primary-container:#7b008f;--md-on-primary-container:#ffd6fe;--md-secondary-container:#5d3c54;--md-on-secondary-container:#ffd7f0;--md-surface:#191119;--md-surface-container-low:#221922;--md-surface-container:#261d26;--md-surface-container-high:#312730;--md-on-surface:#eedeeb;--md-on-surface-variant:#d4c1d0;--md-outline:#9c8c9a;--md-outline-variant:#50434f;--md-inverse-surface:#eedeeb;--md-inverse-on-surface:#372d37;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="deep-purple"][data-theme="light"]{--md-primary:#7801ff;--md-on-primary:#ffffff;--md-primary-container:#ebddff;--md-on-primary-container:#5b00c5;--md-secondary-container:#f3daff;--md-on-secondary-container:#533f5f;--md-surface:#fef7ff;--md-surface-container-low:#f9f1ff;--md-surface-container:#f3ebfa;--md-surface-container-high:#eee5f4;--md-on-surface:#1e1a24;--md-on-surface-variant:#4a4453;--md-outline:#7b7484;--md-outline-variant:#ccc3d5;--md-inverse-surface:#332e39;--md-inverse-on-surface:#f6eefd;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="deep-purple"][data-theme="dark"]{--md-primary:#d3bbff;--md-on-primary:#3f008d;--md-primary-container:#5b00c5;--md-on-primary-container:#ebddff;--md-secondary-container:#533f5f;--md-on-secondary-container:#f3daff;--md-surface:#15121c;--md-surface-container-low:#1e1a24;--md-surface-container:#221e28;--md-surface-container-high:#2c2833;--md-on-surface:#e8dfee;--md-on-surface-variant:#ccc3d5;--md-outline:#958e9e;--md-outline-variant:#4a4453;--md-inverse-surface:#e8dfee;--md-inverse-on-surface:#332e39;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="indigo"][data-theme="light"]{--md-primary:#1242ff;--md-on-primary:#ffffff;--md-primary-container:#dee0ff;--md-on-primary-container:#002eca;--md-secondary-container:#e6deff;--md-on-secondary-container:#484264;--md-surface:#fbf8ff;--md-surface-container-low:#f4f2ff;--md-surface-container:#eeecfb;--md-surface-container-high:#e8e7f5;--md-on-surface:#1a1b25;--md-on-surface-variant:#444654;--md-outline:#757685;--md-outline-variant:#c5c5d6;--md-inverse-surface:#2f303a;--md-inverse-on-surface:#f0effe;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="indigo"][data-theme="dark"]{--md-primary:#bac3ff;--md-on-primary:#001e91;--md-primary-container:#002eca;--md-on-primary-container:#dee0ff;--md-secondary-container:#484264;--md-on-secondary-container:#e6deff;--md-surface:#11131c;--md-surface-container-low:#1a1b25;--md-surface-container:#1e1f29;--md-surface-container-high:#282934;--md-on-surface:#e2e1ef;--md-on-surface-variant:#c5c5d6;--md-outline:#8f8f9f;--md-outline-variant:#444654;--md-inverse-surface:#e2e1ef;--md-inverse-on-surface:#2f303a;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="blue"][data-theme="light"]{--md-primary:#0061a4;--md-on-primary:#ffffff;--md-primary-container:#d1e4ff;--md-on-primary-container:#00497d;--md-secondary-container:#d9e2ff;--md-on-secondary-container:#3a4664;--md-surface:#f8f9ff;--md-surface-container-low:#eef4ff;--md-surface-container:#e8eefa;--md-surface-container-high:#e3e8f4;--md-on-surface:#161c24;--md-on-surface-variant:#3f4753;--md-outline:#6f7884;--md-outline-variant:#bfc7d5;--md-inverse-surface:#2b3139;--md-inverse-on-surface:#ebf1fd;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="blue"][data-theme="dark"]{--md-primary:#9ecaff;--md-on-primary:#003258;--md-primary-container:#00497d;--md-on-primary-container:#d1e4ff;--md-secondary-container:#3a4664;--md-on-secondary-container:#d9e2ff;--md-surface:#0d141c;--md-surface-container-low:#161c24;--md-surface-container:#1a2028;--md-surface-container-high:#242a33;--md-on-surface:#dde3ee;--md-on-surface-variant:#bfc7d5;--md-outline:#89919e;--md-outline-variant:#3f4753;--md-inverse-surface:#dde3ee;--md-inverse-on-surface:#2b3139;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="light-blue"][data-theme="light"]{--md-primary:#006493;--md-on-primary:#ffffff;--md-primary-container:#cae6ff;--md-on-primary-container:#004b70;--md-secondary-container:#d5e3ff;--md-on-secondary-container:#364764;--md-surface:#f6f9ff;--md-surface-container-low:#ecf4fe;--md-surface-container:#e6eff8;--md-surface-container-high:#e1e9f3;--md-on-surface:#141c23;--md-on-surface-variant:#3d4852;--md-outline:#6d7883;--md-outline-variant:#bdc8d3;--md-inverse-surface:#293139;--md-inverse-on-surface:#e9f2fb;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="light-blue"][data-theme="dark"]{--md-primary:#8dcdff;--md-on-primary:#00344f;--md-primary-container:#004b70;--md-on-primary-container:#cae6ff;--md-secondary-container:#364764;--md-on-secondary-container:#d5e3ff;--md-surface:#0c141b;--md-surface-container-low:#141c23;--md-surface-container:#182027;--md-surface-container-high:#232b32;--md-on-surface:#dbe3ed;--md-on-surface-variant:#bdc8d3;--md-outline:#87929d;--md-outline-variant:#3d4852;--md-inverse-surface:#dbe3ed;--md-inverse-on-surface:#293139;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="cyan"][data-theme="light"]{--md-primary:#006876;--md-on-primary:#ffffff;--md-primary-container:#a1efff;--md-on-primary-container:#004e59;--md-secondary-container:#c2e8fd;--md-on-secondary-container:#264b5c;--md-surface:#eefcff;--md-surface-container-low:#e9f6f9;--md-surface-container:#e3f0f3;--md-surface-container-high:#ddebee;--md-on-surface:#111d20;--md-on-surface-variant:#3a494d;--md-outline:#697a7e;--md-outline-variant:#b8cace;--md-inverse-surface:#263235;--md-inverse-on-surface:#e6f3f6;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="cyan"][data-theme="dark"]{--md-primary:#00daf5;--md-on-primary:#00363e;--md-primary-container:#004e59;--md-on-primary-container:#a1efff;--md-secondary-container:#264b5c;--md-on-secondary-container:#c2e8fd;--md-surface:#091518;--md-surface-container-low:#111d20;--md-surface-container:#152124;--md-surface-container-high:#202c2f;--md-on-surface:#d8e5e8;--md-on-surface-variant:#b8cace;--md-outline:#839497;--md-outline-variant:#3a494d;--md-inverse-surface:#d8e5e8;--md-inverse-on-surface:#263235;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="teal"][data-theme="light"]{--md-primary:#006a60;--md-on-primary:#ffffff;--md-primary-container:#00fde7;--md-on-primary-container:#005048;--md-secondary-container:#bcebef;--md-on-secondary-container:#1e4d51;--md-surface:#eefdf8;--md-surface-container-low:#e8f7f3;--md-surface-container:#e2f1ed;--md-surface-container-high:#ddebe7;--md-on-surface:#111e1c;--md-on-surface-variant:#394a47;--md-outline:#697b77;--md-outline-variant:#b8cac6;--md-inverse-surface:#263330;--md-inverse-on-surface:#e5f4f0;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="teal"][data-theme="dark"]{--md-primary:#00deca;--md-on-primary:#003731;--md-primary-container:#005048;--md-on-primary-container:#00fde7;--md-secondary-container:#1e4d51;--md-on-secondary-container:#bcebef;--md-surface:#091614;--md-surface-container-low:#111e1c;--md-surface-container:#152220;--md-surface-container-high:#202c2a;--md-on-surface:#d7e6e2;--md-on-surface-variant:#b8cac6;--md-outline:#829490;--md-outline-variant:#394a47;--md-inverse-surface:#d7e6e2;--md-inverse-on-surface:#263330;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="green"][data-theme="light"]{--md-primary:#006e1c;--md-on-primary:#ffffff;--md-primary-container:#70ff77;--md-on-primary-container:#005313;--md-secondary-container:#c3ecd0;--md-on-secondary-container:#2a4e3a;--md-surface:#f3fcec;--md-surface-container-low:#edf6e7;--md-surface-container:#e7f1e1;--md-surface-container-high:#e2ebdc;--md-on-surface:#161e14;--md-on-surface-variant:#3f4a3c;--md-outline:#6f7a6b;--md-outline-variant:#becab8;--md-inverse-surface:#2a3328;--md-inverse-on-surface:#eaf4e4;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="green"][data-theme="dark"]{--md-primary:#00e546;--md-on-primary:#00390a;--md-primary-container:#005313;--md-on-primary-container:#70ff77;--md-secondary-container:#2a4e3a;--md-on-secondary-container:#c3ecd0;--md-surface:#0e150c;--md-surface-container-low:#161e14;--md-surface-container:#1a2218;--md-surface-container-high:#242c22;--md-on-surface:#dce5d6;--md-on-surface-variant:#becab8;--md-outline:#889484;--md-outline-variant:#3f4a3c;--md-inverse-surface:#dce5d6;--md-inverse-on-surface:#2a3328;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="light-green"][data-theme="light"]{--md-primary:#3e6a00;--md-on-primary:#ffffff;--md-primary-container:#9bfc00;--md-on-primary-container:#2e4f00;--md-secondary-container:#cbebc5;--md-on-secondary-container:#324d31;--md-surface:#f6fce8;--md-surface-container-low:#f1f6e3;--md-surface-container:#ebf0dd;--md-surface-container-high:#e5ead7;--md-on-surface:#181d12;--md-on-surface-variant:#424938;--md-outline:#727a67;--md-outline-variant:#c2c9b3;--md-inverse-surface:#2d3225;--md-inverse-on-surface:#eef3e0;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="light-green"][data-theme="dark"]{--md-primary:#88dd00;--md-on-primary:#1e3700;--md-primary-container:#2e4f00;--md-on-primary-container:#9bfc00;--md-secondary-container:#324d31;--md-on-secondary-container:#cbebc5;--md-surface:#10150a;--md-surface-container-low:#181d12;--md-surface-container:#1c2115;--md-surface-container-high:#262c1f;--md-on-surface:#dfe5d2;--md-on-surface-variant:#c2c9b3;--md-outline:#8c937f;--md-outline-variant:#424938;--md-inverse-surface:#dfe5d2;--md-inverse-on-surface:#2d3225;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="lime"][data-theme="light"]{--md-primary:#5b6300;--md-on-primary:#ffffff;--md-primary-container:#dcee00;--md-on-primary-container:#444b00;--md-secondary-container:#d9e9b7;--md-on-secondary-container:#3e4b26;--md-surface:#fcfbe4;--md-surface-container-low:#f6f5de;--md-surface-container:#f0efd9;--md-surface-container-high:#eae9d3;--md-on-surface:#1b1d0f;--md-on-surface-variant:#474835;--md-outline:#787962;--md-outline-variant:#c8c8af;--md-inverse-surface:#303123;--md-inverse-on-surface:#f3f2dc;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="lime"][data-theme="dark"]{--md-primary:#c1d100;--md-on-primary:#2f3300;--md-primary-container:#444b00;--md-on-primary-container:#dcee00;--md-secondary-container:#3e4b26;--md-on-secondary-container:#d9e9b7;--md-surface:#131408;--md-surface-container-low:#1b1d0f;--md-surface-container:#1f2113;--md-surface-container-high:#2a2b1d;--md-on-surface:#e4e4ce;--md-on-surface-variant:#c8c8af;--md-outline:#91927b;--md-outline-variant:#474835;--md-inverse-surface:#e4e4ce;--md-inverse-on-surface:#303123;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="yellow"][data-theme="light"]{--md-primary:#695f00;--md-on-primary:#ffffff;--md-primary-container:#fae500;--md-on-primary-container:#4f4800;--md-secondary-container:#e3e7af;--md-on-secondary-container:#464a20;--md-surface:#fff9e8;--md-surface-container-low:#faf4dc;--md-surface-container:#f4eed6;--md-surface-container-high:#eee8d1;--md-on-surface:#1e1c0e;--md-on-surface-variant:#4a4733;--md-outline:#7c7760;--md-outline-variant:#cdc7ac;--md-inverse-surface:#333121;--md-inverse-on-surface:#f7f1d9;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="yellow"][data-theme="dark"]{--md-primary:#dbc900;--md-on-primary:#363100;--md-primary-container:#4f4800;--md-on-primary-container:#fae500;--md-secondary-container:#464a20;--md-on-secondary-container:#e3e7af;--md-surface:#151406;--md-surface-container-low:#1e1c0e;--md-surface-container:#222011;--md-surface-container-high:#2d2a1b;--md-on-surface:#e9e3cb;--md-on-surface-variant:#cdc7ac;--md-outline:#969178;--md-outline-variant:#4a4733;--md-inverse-surface:#e9e3cb;--md-inverse-on-surface:#333121;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="amber"][data-theme="light"]{--md-primary:#785900;--md-on-primary:#ffffff;--md-primary-container:#ffdf9e;--md-on-primary-container:#5b4300;--md-secondary-container:#f4e2a7;--md-on-secondary-container:#52461a;--md-surface:#fff8f2;--md-surface-container-low:#fff2de;--md-surface-container:#faecd5;--md-surface-container-high:#f5e6d0;--md-on-surface:#211b0d;--md-on-surface-variant:#504631;--md-outline:#82765f;--md-outline-variant:#d4c5aa;--md-inverse-surface:#372f20;--md-inverse-on-surface:#fdefd8;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="amber"][data-theme="dark"]{--md-primary:#fabd00;--md-on-primary:#3f2e00;--md-primary-container:#5b4300;--md-on-primary-container:#ffdf9e;--md-secondary-container:#52461a;--md-on-secondary-container:#f4e2a7;--md-surface:#191306;--md-surface-container-low:#211b0d;--md-surface-container:#261f11;--md-surface-container-high:#30291a;--md-on-surface:#efe1ca;--md-on-surface-variant:#d4c5aa;--md-outline:#9c8f77;--md-outline-variant:#504631;--md-inverse-surface:#efe1ca;--md-inverse-on-surface:#372f20;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="orange"][data-theme="light"]{--md-primary:#8b5000;--md-on-primary:#ffffff;--md-primary-container:#ffdcbe;--md-on-primary-container:#693c00;--md-secondary-container:#ffddb3;--md-on-secondary-container:#5c421a;--md-surface:#fff8f5;--md-surface-container-low:#fff1e7;--md-surface-container:#ffeada;--md-surface-container-high:#fbe4d2;--md-on-surface:#25190e;--md-on-surface-variant:#554333;--md-outline:#887361;--md-outline-variant:#dbc2ad;--md-inverse-surface:#3b2e22;--md-inverse-on-surface:#ffeee1;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="orange"][data-theme="dark"]{--md-primary:#ffb870;--md-on-primary:#4a2800;--md-primary-container:#693c00;--md-on-primary-container:#ffdcbe;--md-secondary-container:#5c421a;--md-on-secondary-container:#ffddb3;--md-surface:#1c1107;--md-surface-container-low:#25190e;--md-surface-container:#291d12;--md-surface-container-high:#34281c;--md-on-surface:#f5dfcc;--md-on-surface-variant:#dbc2ad;--md-outline:#a38d79;--md-outline-variant:#554333;--md-inverse-surface:#f5dfcc;--md-inverse-on-surface:#3b2e22;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="deep-orange"][data-theme="light"]{--md-primary:#b02f00;--md-on-primary:#ffffff;--md-primary-container:#ffdbd1;--md-on-primary-container:#862200;--md-secondary-container:#ffdcc7;--md-on-secondary-container:#643e24;--md-surface:#fff8f6;--md-surface-container-low:#fff1ed;--md-surface-container:#ffe9e4;--md-surface-container-high:#ffe2da;--md-on-surface:#271814;--md-on-surface-variant:#58423b;--md-outline:#8c716a;--md-outline-variant:#e0c0b7;--md-inverse-surface:#3d2c28;--md-inverse-on-surface:#ffede8;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="deep-orange"][data-theme="dark"]{--md-primary:#ffb5a0;--md-on-primary:#5f1500;--md-primary-container:#862200;--md-on-primary-container:#ffdbd1;--md-secondary-container:#643e24;--md-on-secondary-container:#ffdcc7;--md-surface:#1e100c;--md-surface-container-low:#271814;--md-surface-container:#2b1c18;--md-surface-container-high:#372622;--md-on-surface:#f9dcd5;--md-on-surface-variant:#e0c0b7;--md-outline:#a78a83;--md-outline-variant:#58423b;--md-inverse-surface:#f9dcd5;--md-inverse-on-surface:#3d2c28;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="brown"][data-theme="light"]{--md-primary:#a83900;--md-on-primary:#ffffff;--md-primary-container:#ffdbcf;--md-on-primary-container:#812900;--md-secondary-container:#ffdcc4;--md-on-secondary-container:#623f21;--md-surface:#fff8f6;--md-surface-container-low:#fff1ec;--md-surface-container:#ffe9e3;--md-surface-container-high:#ffe2d9;--md-on-surface:#271813;--md-on-surface-variant:#58423a;--md-outline:#8c7168;--md-outline-variant:#dfc0b5;--md-inverse-surface:#3d2d27;--md-inverse-on-surface:#ffede7;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="brown"][data-theme="dark"]{--md-primary:#ffb59a;--md-on-primary:#5b1b00;--md-primary-container:#812900;--md-on-primary-container:#ffdbcf;--md-secondary-container:#623f21;--md-on-secondary-container:#ffdcc4;--md-surface:#1e100b;--md-surface-container-low:#271813;--md-surface-container:#2b1c17;--md-surface-container-high:#362620;--md-on-surface:#f9ddd3;--md-on-surface-variant:#dfc0b5;--md-outline:#a78b81;--md-outline-variant:#58423a;--md-inverse-surface:#f9ddd3;--md-inverse-on-surface:#3d2d27;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+[data-color="blue-grey"][data-theme="light"]{--md-primary:#006783;--md-on-primary:#ffffff;--md-primary-container:#bde9ff;--md-on-primary-container:#004d64;--md-secondary-container:#cce5ff;--md-on-secondary-container:#2e4961;--md-surface:#f4faff;--md-surface-container-low:#eaf5fc;--md-surface-container:#e4f0f6;--md-surface-container-high:#dfeaf1;--md-on-surface:#131d22;--md-on-surface-variant:#3b4950;--md-outline:#6b7981;--md-outline-variant:#bac9d1;--md-inverse-surface:#273237;--md-inverse-on-surface:#e7f2f9;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a}
+[data-color="blue-grey"][data-theme="dark"]{--md-primary:#65d3ff;--md-on-primary:#003546;--md-primary-container:#004d64;--md-on-primary-container:#bde9ff;--md-secondary-container:#2e4961;--md-on-secondary-container:#cce5ff;--md-surface:#0a151a;--md-surface-container-low:#131d22;--md-surface-container:#172126;--md-surface-container-high:#212b31;--md-on-surface:#d9e4eb;--md-on-surface-variant:#bac9d1;--md-outline:#85939b;--md-outline-variant:#3b4950;--md-inverse-surface:#d9e4eb;--md-inverse-on-surface:#273237;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6}
+
+
+/* ===== TubeShot landing - Material Design 3 ===== */
+:root{
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --ease:cubic-bezier(.2,0,0,1);--ease-out:cubic-bezier(0,0,0,1);
+  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:28px;--r-2xl:36px;--r-full:999px;
+  --elev-1:0 1px 2px rgb(0 0 0/.3),0 1px 3px 1px rgb(0 0 0/.15);
+  --elev-2:0 1px 2px rgb(0 0 0/.3),0 2px 6px 2px rgb(0 0 0/.15);
+  --elev-3:0 4px 8px 3px rgb(0 0 0/.15),0 1px 3px rgb(0 0 0/.3);
+  color-scheme:light}
+[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{margin:0;font:400 16px/1.6 var(--font);background:var(--md-surface);color:var(--md-on-surface);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+img,svg{display:block;max-width:100%}
+a{color:var(--md-primary)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--md-primary);outline-offset:3px;border-radius:6px}
+.container{width:min(1120px,100% - 32px);margin-inline:auto}
+.icon{display:inline-flex;width:20px;height:20px;flex:none}.icon svg{width:100%;height:100%}
+.skip{position:absolute;left:12px;top:-60px;background:var(--md-primary);color:var(--md-on-primary);padding:10px 16px;border-radius:var(--r-full);z-index:100;transition:top .2s var(--ease)}
+.skip:focus{top:12px}
+
+/* state layer + ripple */
+.state{position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.state::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .15s var(--ease);pointer-events:none}
+.state:hover::before{opacity:.08}.state:focus-visible::before,.state:active::before{opacity:.12}
+.rdot{position:absolute;border-radius:50%;background:currentColor;opacity:.16;transform:scale(0);pointer-events:none;animation:rip .55s var(--ease-out) forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 28px;border:0;border-radius:var(--r-full);font:500 15px/20px var(--font);text-decoration:none;transition:box-shadow .2s var(--ease),transform .12s var(--ease)}
+.btn:active{transform:scale(.98)}
+.btn-filled{background:var(--md-primary);color:var(--md-on-primary)}.btn-filled:hover{box-shadow:var(--elev-2)}
+.btn-tonal{background:var(--md-secondary-container);color:var(--md-on-secondary-container)}
+.btn-outlined{background:transparent;color:var(--md-primary);border:1px solid var(--md-outline)}
+.btn-sm{height:40px;padding:0 20px;font-size:14px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:var(--md-on-surface-variant);transition:transform .12s var(--ease)}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn.tonal{background:var(--md-secondary-container);color:var(--md-on-secondary-container)}
+.icon-btn:disabled{opacity:.38;pointer-events:none}
+.lang-btn{width:auto;padding:0 12px;gap:6px;border-radius:var(--r-full);font:600 13px/1 var(--font)}
+
+/* top app bar */
+.bar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--md-surface) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .25s var(--ease),background .25s var(--ease)}
+.bar.scrolled{border-color:var(--md-outline-variant);background:color-mix(in srgb,var(--md-surface-container) 90%,transparent)}
+.bar-in{display:flex;align-items:center;gap:8px;height:64px;padding-top:env(safe-area-inset-top)}
+.brand{display:flex;align-items:center;gap:10px;font:600 20px/1 var(--font);color:var(--md-on-surface);text-decoration:none;margin-right:auto}
+.brand img{width:36px;height:36px;border-radius:10px}
+.nav{display:flex;gap:2px;margin-right:12px}
+.nav a{padding:8px 14px;border-radius:var(--r-full);color:var(--md-on-surface-variant);text-decoration:none;font:500 14px/20px var(--font);transition:background .2s var(--ease),color .2s var(--ease)}
+.nav a:hover{background:color-mix(in srgb,var(--md-on-surface) 8%,transparent)}
+.nav a.active{background:var(--md-secondary-container);color:var(--md-on-secondary-container)}
+.menu-btn{display:none}
+.tools{display:flex;align-items:center;gap:2px;position:relative}
+.tools .t-ico{display:none}[data-mode=light] .t-light,[data-mode=dark] .t-dark,[data-mode=system] .t-system{display:inline-flex}
+.popover{position:absolute;right:0;top:calc(100% + 10px);width:264px;padding:16px;border-radius:var(--r-lg);background:var(--md-surface-container-high);box-shadow:var(--elev-3);opacity:0;transform:translateY(-8px) scale(.97);transform-origin:top right;pointer-events:none;visibility:hidden;transition:opacity .18s var(--ease),transform .22s var(--ease),visibility .22s}
+.popover.open{opacity:1;transform:none;pointer-events:auto;visibility:visible}
+.popover h3{font:500 14px/20px var(--font);color:var(--md-on-surface-variant);margin-bottom:12px}
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;justify-items:center}
+.sw{width:32px;height:32px;border:0;padding:0;border-radius:50%;background:var(--sw);color:var(--swon);display:grid;place-items:center;transition:transform .16s var(--ease),box-shadow .2s var(--ease)}
+.sw:hover{transform:scale(1.1)}.sw .icon{width:16px;height:16px;transform:scale(0);transition:transform .22s var(--ease)}
+.sw[aria-checked=true]{box-shadow:0 0 0 2px var(--bg-ring,var(--md-surface-container-high)),0 0 0 4px var(--sw)}.sw[aria-checked=true] .icon{transform:scale(1)}
+@media(max-width:900px){.nav{position:fixed;left:12px;right:12px;top:72px;flex-direction:column;padding:12px;margin:0;border-radius:var(--r-xl);background:var(--md-surface-container-high);box-shadow:var(--elev-3);opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .2s var(--ease),transform .25s var(--ease),visibility .25s}
+.nav.open{opacity:1;visibility:visible;transform:none}.nav a{padding:12px 16px}.menu-btn{display:inline-flex}}
+
+/* sections */
+section{padding:96px 0}
+.sec-head{max-width:640px;margin-bottom:48px}
+.sec-head h2{font:500 clamp(28px,4vw,40px)/1.2 var(--font);letter-spacing:-.2px}
+.sec-head p{margin-top:12px;color:var(--md-on-surface-variant);font-size:17px}
+.alt{background:var(--md-surface-container-low)}
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease-out) var(--d,0s),transform .6s var(--ease) var(--d,0s)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* hero */
+.hero{padding:48px 0 88px}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center}
+.hero h1{font:500 clamp(34px,4.5vw,56px)/1.08 var(--font);letter-spacing:-1px}
+.hero .lead{margin-top:20px;font-size:19px;line-height:1.6;color:var(--md-on-surface-variant);max-width:520px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--md-outline-variant);border-radius:var(--r-sm);font:500 13px/1 var(--font);color:var(--md-on-surface-variant)}
+.chip .icon{width:16px;height:16px;color:var(--md-primary)}
+.stage{background:var(--md-primary-container);color:var(--md-on-primary-container);border-radius:var(--r-2xl);padding:20px}
+.player{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:16/9;background:#0b1d3a;box-shadow:var(--elev-2)}
+.player>svg{position:absolute;inset:0;width:100%;height:100%}
+.pui{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:12px 14px;color:#fff;background:linear-gradient(#0008,transparent 30%,transparent 62%,#000a);transition:opacity .35s var(--ease)}
+.player.clean .pui{opacity:0}
+.pui .t{font:600 13px/1.3 var(--font);text-shadow:0 1px 3px #0008}
+.pb{display:flex;align-items:center;gap:10px;font:500 12px/1 var(--font)}
+.pb .bar2{flex:1;height:4px;border-radius:4px;background:#ffffff55;overflow:hidden}.pb .fill{display:block;height:100%;width:0;background:#fff;border-radius:4px}
+.pb .icon{width:18px;height:18px}
+.reticle{position:absolute;inset:14%;pointer-events:none;opacity:0;transition:opacity .25s var(--ease)}
+.player.clean .reticle{opacity:1}
+.reticle i{position:absolute;width:22px;height:22px;border:3px solid #fff;border-radius:5px}
+.reticle i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.reticle i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.reticle i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.reticle i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.flash.go{animation:flash .5s var(--ease-out)}
+@keyframes flash{0%{opacity:.9}100%{opacity:0}}
+.demo-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.demo-row p{font:500 14px/1.3 var(--font);opacity:.85}
+.shots{display:flex;gap:10px;margin-top:16px;min-height:76px}
+.shot{position:relative;flex:1;max-width:33%;aspect-ratio:16/9;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--elev-1);animation:drop .5s var(--ease) both}
+.shot svg{width:100%;height:100%}
+.shot b{position:absolute;right:5px;bottom:5px;padding:2px 6px;border-radius:5px;background:#000b;color:#fff;font:600 11px/1.2 var(--font)}
+@keyframes drop{from{opacity:0;transform:translateY(-22px) scale(.9)}to{opacity:1;transform:none}}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:40px}.hero{padding-top:28px}section{padding:72px 0}}
+
+/* features */
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.card{grid-column:span 2;padding:24px;border-radius:var(--r-xl);background:var(--md-surface-container);transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.card:hover{transform:translateY(-3px);box-shadow:var(--elev-2)}
+.card.big{grid-column:span 4;background:var(--md-primary);color:var(--md-on-primary);display:flex;flex-direction:column;justify-content:space-between;min-height:260px}
+.card.big p{color:inherit;opacity:.9;max-width:480px}
+.card.wide{grid-column:span 3;background:var(--md-secondary-container);color:var(--md-on-secondary-container)}
+.card.wide p{color:inherit;opacity:.85}
+.card .ic{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--md-primary-container);color:var(--md-on-primary-container);margin-bottom:16px}
+.card.big .ic{background:var(--md-on-primary);color:var(--md-primary)}
+.card.wide .ic{background:var(--md-on-secondary-container);color:var(--md-secondary-container)}
+.card .ic .icon{width:24px;height:24px}
+.card h3{font:500 20px/1.3 var(--font);margin-bottom:8px}.card p{color:var(--md-on-surface-variant);font-size:15px;line-height:1.55}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.card,.card.wide{grid-column:span 1}.card.big{grid-column:span 2}}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.card,.card.wide,.card.big{grid-column:span 1}}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.step{position:relative;padding:28px 24px;border-radius:var(--r-xl);background:var(--md-surface);border:1px solid var(--md-outline-variant)}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--md-primary);color:var(--md-on-primary);font:600 18px/1 var(--font);margin-bottom:16px}
+.step h3{font:500 20px/1.3 var(--font);margin-bottom:6px}.step p{color:var(--md-on-surface-variant)}
+@media(max-width:800px){.steps{grid-template-columns:1fr}}
+
+/* screenshots */
+.car-wrap{position:relative}
+.car{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 0 24px;scrollbar-width:none;overscroll-behavior-x:contain}
+.car::-webkit-scrollbar{display:none}
+.slide{flex:0 0 min(300px,78vw);scroll-snap-align:start}
+.slide img{width:100%;height:auto;border-radius:var(--r-xl);background:var(--md-surface-container-high)}
+.slide figcaption{margin-top:12px;font:500 14px/1.4 var(--font);color:var(--md-on-surface-variant);text-align:center}
+.car-nav{display:flex;gap:8px;justify-content:flex-end;margin-bottom:8px}
+
+/* customize */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.panel{padding:24px;border-radius:var(--r-xl);background:var(--md-surface-container);display:flex;flex-direction:column;gap:22px}
+.panel h3{display:flex;align-items:center;gap:10px;font:500 15px/20px var(--font);color:var(--md-primary);margin-bottom:12px}
+.panel .swatches{grid-template-columns:repeat(6,1fr);--bg-ring:var(--md-surface-container)}
+.seg{display:flex;border:1px solid var(--md-outline);border-radius:var(--r-full);overflow:hidden;height:40px}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:transparent;font:500 14px/1 var(--font);padding:0 10px;transition:background .2s var(--ease)}
+.seg button+button{border-left:1px solid var(--md-outline)}
+.seg button[aria-checked=true]{background:var(--md-secondary-container);color:var(--md-on-secondary-container);font-weight:700}
+.seg .icon{width:18px;height:18px}
+@media(max-width:900px){.split{grid-template-columns:1fr;gap:32px}}
+
+/* privacy / table */
+.table{border-radius:var(--r-xl);overflow:hidden;border:1px solid var(--md-outline-variant);background:var(--md-surface)}
+.row{display:grid;grid-template-columns:240px 1fr;gap:16px;padding:16px 24px;align-items:center}
+.row+.row{border-top:1px solid var(--md-outline-variant)}
+.row code{font:600 14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--md-primary);word-break:break-all}
+.row span{color:var(--md-on-surface-variant)}
+.note{display:flex;gap:12px;align-items:center;margin-top:20px;padding:16px 20px;border-radius:var(--r-lg);background:var(--md-primary-container);color:var(--md-on-primary-container);font-weight:500}
+@media(max-width:640px){.row{grid-template-columns:1fr;gap:4px}}
+
+/* install */
+.install{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.ol{display:flex;flex-direction:column;gap:14px;counter-reset:i}
+.ol li{display:flex;gap:14px;align-items:flex-start;counter-increment:i}
+.ol li::before{content:counter(i);flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--md-secondary-container);color:var(--md-on-secondary-container);font:600 14px/1 var(--font)}
+.ol li div{padding-top:3px}
+.kbd{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:6px 6px 6px 14px;border-radius:var(--r-full);background:var(--md-surface-container-high);font:600 14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.kbd button{width:32px;height:32px;border:0;border-radius:50%;background:var(--md-secondary-container);color:var(--md-on-secondary-container);display:grid;place-items:center}
+.kbd .icon{width:16px;height:16px}
+.tree{padding:20px 24px;border-radius:var(--r-xl);background:var(--md-surface-container);font:500 14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--md-on-surface-variant);overflow-x:auto;white-space:pre}
+@media(max-width:900px){.install{grid-template-columns:1fr;gap:32px}}
+
+/* faq */
+.faq{max-width:760px;display:flex;flex-direction:column;gap:8px}
+details{border-radius:var(--r-lg);background:var(--md-surface-container);overflow:hidden;transition:background .2s var(--ease)}
+details[open]{background:var(--md-surface-container-high)}
+summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;cursor:pointer;font:500 17px/1.4 var(--font);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary .icon{transition:transform .3s var(--ease);color:var(--md-on-surface-variant)}
+details[open] summary .icon{transform:rotate(180deg)}
+details p{padding:0 20px 20px;color:var(--md-on-surface-variant);animation:open .3s var(--ease) both}
+@keyframes open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* footer */
+footer{padding:48px 0 calc(40px + env(safe-area-inset-bottom));background:var(--md-surface-container);color:var(--md-on-surface-variant)}
+.foot{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.foot strong{color:var(--md-on-surface)}.foot p{line-height:1.7}
+.foot .brand{margin:0 0 8px}
+.toplink{display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);padding:12px 20px;border-radius:var(--r-sm);background:var(--md-inverse-surface);color:var(--md-inverse-on-surface);box-shadow:var(--elev-3);opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .25s var(--ease);z-index:90;font-size:14px}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;transition-duration:1ms!important;scroll-behavior:auto!important}.js .reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#071428"/><stop offset=".55" stop-color="#14566f"/><stop offset="1" stop-color="#58c3b0"/></linearGradient>
+    <linearGradient id="aur" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6bffb3" stop-opacity="0"/><stop offset=".4" stop-color="#6bffb3" stop-opacity=".75"/><stop offset=".75" stop-color="#c47bff" stop-opacity=".6"/><stop offset="1" stop-color="#c47bff" stop-opacity="0"/></linearGradient>
+  </defs>
+  <symbol id="scene" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice">
+    <rect width="640" height="360" fill="url(#sky)"/>
+    <g fill="#fff" opacity=".85"><circle cx="70" cy="40" r="1.6"/><circle cx="160" cy="76" r="1.2"/><circle cx="260" cy="30" r="1.8"/><circle cx="420" cy="52" r="1.3"/><circle cx="560" cy="34" r="1.7"/><circle cx="610" cy="90" r="1.1"/></g>
+    <path d="M0 150C90 70 170 190 270 110S450 40 520 120 600 130 640 90V210H0Z" fill="url(#aur)"/>
+    <path d="M0 190C120 120 210 230 330 160S520 110 640 170V240H0Z" fill="url(#aur)" opacity=".55"/>
+    <path d="M0 262 120 190 205 245 330 150 450 240 535 200 640 262V360H0Z" fill="#0a2236"/>
+    <path d="M0 300 90 262 190 304 300 252 420 306 530 270 640 306V360H0Z" fill="#05111e"/>
+    <circle cx="470" cy="78" r="26" fill="#eafff6" opacity=".9"/>
+  </symbol>
+</svg>
+
+<header class="bar" id="bar">
+  <div class="container bar-in">
+    <a class="brand" href="#top" aria-label="TubeShot"><img src="icons/icon48.png" width="36" height="36" alt="" />TubeShot</a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#screens" data-i18n="nav.screens">Screenshots</a>
+      <a href="#install" data-i18n="nav.install">Install</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+    <div class="tools">
+      <button class="icon-btn state rip" id="colorBtn" aria-haspopup="true" aria-expanded="false" data-i18n-title="t.color" title="Color"><span class="icon" data-icon="palette"></span></button>
+      <button class="icon-btn state rip" id="themeBtn" data-i18n-title="t.theme" title="Theme"><span class="icon t-ico t-light" data-icon="sun"></span><span class="icon t-ico t-dark" data-icon="moon"></span><span class="icon t-ico t-system" data-icon="monitor"></span></button>
+      <button class="icon-btn lang-btn state rip" id="langBtn" data-i18n-title="t.lang" title="Language"><span class="icon" data-icon="languages"></span><span id="langCode">EN</span></button>
+      <button class="icon-btn menu-btn state rip" id="menuBtn" aria-expanded="false" aria-controls="nav" data-i18n-title="t.menu" title="Menu"><span class="icon" data-icon="menu"></span></button>
+      <div class="popover" id="colorPop" role="dialog" aria-labelledby="popTitle">
+        <h3 id="popTitle" data-i18n="c.title">Color</h3>
+        <div class="swatches" data-swatches role="radiogroup"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="top">
+  <div class="container hero-grid">
+    <div>
+      <h1 data-i18n="hero.h1">Screenshot any YouTube moment. Nothing else in the frame.</h1>
+      <p class="lead" data-i18n="hero.lead">TubeShot reads the video frame itself, so your capture has no player controls and no clutter. Step to the exact frame, then save or copy it.</p>
+      <div class="cta">
+        <a class="btn btn-filled state rip" href="#install"><span class="icon" data-icon="rocket"></span><span data-i18n="hero.cta1">Install guide</span></a>
+        <a class="btn btn-outlined state rip" href="#how" data-i18n="hero.cta2">See how it works</a>
+      </div>
+      <ul class="chips">
+        <li class="chip"><span class="icon" data-icon="badge-check"></span><span data-i18n="chip.free">Free &amp; open source</span></li>
+        <li class="chip"><span class="icon" data-icon="puzzle"></span><span data-i18n="chip.mv3">Chrome · Manifest V3</span></li>
+        <li class="chip"><span class="icon" data-icon="lock"></span><span data-i18n="chip.private">Stays in your browser</span></li>
+      </ul>
+    </div>
+
+    <div class="stage" role="img" data-i18n-aria="demo.aria" aria-label="Animated demo: a video frame is captured without the player controls">
+      <div class="player" id="player">
+        <svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#scene"/></svg>
+        <div class="pui" aria-hidden="true">
+          <span class="t">Aurora over the fjord · 4K timelapse</span>
+          <div class="pb"><span class="icon" data-icon="play"></span><span id="uiNow">0:42</span><span class="bar2"><span class="fill" id="uiFill"></span></span><span>12:08</span></div>
+        </div>
+        <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="flash" id="flash"></div>
+      </div>
+      <div class="demo-row">
+        <p id="demoHint" data-i18n="demo.hint">Player controls out. Clean frame in.</p>
+        <button class="btn btn-filled btn-sm state rip" id="demoBtn"><span class="icon" data-icon="camera"></span><span data-i18n="demo.btn">Capture frame</span></button>
+      </div>
+      <div class="shots" id="shots" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="features" aria-labelledby="h-features">
+  <div class="container">
+    <div class="sec-head reveal"><h2 id="h-features" data-i18n="f.title">Everything you need to grab the perfect frame</h2><p data-i18n="f.sub">Built for people who need the picture, not the player around it.</p></div>
+    <div class="grid">
+      <article class="card big reveal"><div><div class="ic"><span class="icon" data-icon="scan"></span></div><h3 data-i18n="f1.t">Clean frames, every time</h3><p data-i18n="f1.p">TubeShot draws the video element straight onto a canvas. No controls, no overlays, no browser chrome. Just the picture at the video's native resolution.</p></div></article>
+      <article class="card reveal" style="--d:.06s"><div class="ic"><span class="icon" data-icon="step-forward"></span></div><h3 data-i18n="f2.t">Frame-accurate seeking</h3><p data-i18n="f2.p">Jump 10 s or 1 s, step one frame, drag the scrubber or type a time like 1:23.</p></article>
+      <article class="card reveal"><div class="ic"><span class="icon" data-icon="captions"></span></div><h3 data-i18n="f3.t">Timestamp and caption</h3><p data-i18n="f3.p">Stamp the time in a corner badge, or add a strip with the title, channel and time.</p></article>
+      <article class="card reveal" style="--d:.06s"><div class="ic"><span class="icon" data-icon="image"></span></div><h3 data-i18n="f4.t">PNG or JPEG, any size</h3><p data-i18n="f4.p">Lossless PNG or JPEG with adjustable quality, at 100, 75, 50 or 25 percent.</p></article>
+      <article class="card reveal" style="--d:.12s"><div class="ic"><span class="icon" data-icon="copy"></span></div><h3 data-i18n="f5.t">Save or copy</h3><p data-i18n="f5.p">Send it to Downloads, or copy it and paste it anywhere.</p></article>
+      <article class="card wide reveal"><div class="ic"><span class="icon" data-icon="history"></span></div><h3 data-i18n="f6.t">Recent captures</h3><p data-i18n="f6.p">Your last ten captures stay one click away. Open one to jump back to that second, or export the list as a text file.</p></article>
+      <article class="card wide reveal" style="--d:.06s"><div class="ic"><span class="icon" data-icon="square-play"></span></div><h3 data-i18n="f7.t">Videos, Shorts and live</h3><p data-i18n="f7.p">Works on watch pages, Shorts and live streams on youtube.com and m.youtube.com.</p></article>
+      <article class="card reveal"><div class="ic"><span class="icon" data-icon="palette"></span></div><h3 data-i18n="f8.t">Make it yours</h3><p data-i18n="f8.p">18 Material colors, light, dark or system theme, English and Tiếng Việt.</p></article>
+      <article class="card reveal" style="--d:.06s"><div class="ic"><span class="icon" data-icon="shield-check"></span></div><h3 data-i18n="f9.t">Private by design</h3><p data-i18n="f9.p">No servers, no tracking, no account. Everything runs on your device.</p></article>
+      <article class="card reveal" style="--d:.12s"><div class="ic"><span class="icon" data-icon="zap"></span></div><h3 data-i18n="f10.t">Light and fast</h3><p data-i18n="f10.p">Plain HTML, CSS and JavaScript. No build step, no runtime dependencies.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="how" aria-labelledby="h-how">
+  <div class="container">
+    <div class="sec-head reveal"><h2 id="h-how" data-i18n="h.title">Three steps to a clean screenshot</h2></div>
+    <ol class="steps">
+      <li class="step reveal"><h3 data-i18n="h1.t">Open a video</h3><p data-i18n="h1.p">Play any YouTube video or Short. TubeShot finds it automatically.</p></li>
+      <li class="step reveal" style="--d:.08s"><h3 data-i18n="h2.t">Find the frame</h3><p data-i18n="h2.p">Scrub, step or type a time until the picture is exactly right.</p></li>
+      <li class="step reveal" style="--d:.16s"><h3 data-i18n="h3.t">Capture</h3><p data-i18n="h3.p">Press Capture frame to save it, or the copy button to put it on your clipboard.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="alt" id="screens" aria-labelledby="h-screens">
+  <div class="container">
+    <div class="sec-head reveal"><h2 id="h-screens" data-i18n="s.title">See it in action</h2><p data-i18n="s.sub">A compact popup, designed to Material Design 3.</p></div>
+    <div class="car-nav"><button class="icon-btn tonal state rip" id="prev" data-i18n-title="s.prev" title="Previous"><span class="icon" data-icon="chevron-left"></span></button><button class="icon-btn tonal state rip" id="next" data-i18n-title="s.next" title="Next"><span class="icon" data-icon="chevron-right"></span></button></div>
+    <div class="car-wrap"><div class="car" id="car" tabindex="0" role="region" data-i18n-aria="s.region" aria-label="Screenshots">
+      <figure class="slide"><img src="screenshots/image01.png" width="500" height="650" loading="lazy" alt="TubeShot popup showing the current video, playback controls and capture options" data-i18n-alt="s1.alt" /><figcaption data-i18n="s1.cap">Playback controls and capture options</figcaption></figure>
+      <figure class="slide"><img src="screenshots/image02.png" width="500" height="650" loading="lazy" alt="TubeShot popup in dark theme with JPEG quality slider and recent captures" data-i18n-alt="s2.alt" /><figcaption data-i18n="s2.cap">Dark theme, JPEG quality and history</figcaption></figure>
+      <figure class="slide"><img src="screenshots/image03.png" width="500" height="650" loading="lazy" alt="Settings with the Material color palette, theme and language" data-i18n-alt="s3.alt" /><figcaption data-i18n="s3.cap">Settings: color, theme and language</figcaption></figure>
+      <figure class="slide"><img src="screenshots/image04.png" width="500" height="650" loading="lazy" alt="Vietnamese interface in dark theme with a blue color scheme" data-i18n-alt="s4.alt" /><figcaption data-i18n="s4.cap">Tiếng Việt, dark theme, blue</figcaption></figure>
+      <figure class="slide"><img src="screenshots/image05.png" width="500" height="650" loading="lazy" alt="Empty state shown when the active tab is not a YouTube video" data-i18n-alt="s5.alt" /><figcaption data-i18n="s5.cap">Friendly empty state</figcaption></figure>
+    </div></div>
+  </div>
+</section>
+
+<section id="customize" aria-labelledby="h-custom">
+  <div class="container split">
+    <div class="reveal"><div class="sec-head" style="margin:0"><h2 id="h-custom" data-i18n="c.h2">Make it yours</h2><p data-i18n="c.p">Pick any of 18 Material colors, switch between light, dark or system theme, and choose English or Tiếng Việt. Try it: this page follows your choice, just like the extension.</p></div></div>
+    <div class="panel reveal" style="--d:.08s">
+      <div><h3><span class="icon" data-icon="palette"></span><span data-i18n="c.title">Color</span></h3><div class="swatches" data-swatches role="radiogroup"></div></div>
+      <div><h3><span class="icon" data-icon="sun-moon"></span><span data-i18n="c.theme">Theme</span></h3>
+        <div class="seg" id="themeSeg" role="radiogroup">
+          <button role="radio" data-v="light" class="state"><span class="icon" data-icon="sun"></span><span data-i18n="c.light">Light</span></button>
+          <button role="radio" data-v="dark" class="state"><span class="icon" data-icon="moon"></span><span data-i18n="c.dark">Dark</span></button>
+          <button role="radio" data-v="system" class="state"><span class="icon" data-icon="monitor"></span><span data-i18n="c.system">System</span></button>
+        </div></div>
+      <div><h3><span class="icon" data-icon="languages"></span><span data-i18n="c.language">Language</span></h3>
+        <div class="seg" id="langSeg" role="radiogroup"><button role="radio" data-v="en" class="state">English</button><button role="radio" data-v="vi" class="state">Tiếng Việt</button></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="privacy" aria-labelledby="h-priv">
+  <div class="container">
+    <div class="sec-head reveal"><h2 id="h-priv" data-i18n="p.title">Private by design</h2><p data-i18n="p.sub">TubeShot asks for four things, and only uses them for capturing frames.</p></div>
+    <div class="table reveal">
+      <div class="row"><code>storage</code><span data-i18n="p1">Saves your settings and capture history on your device.</span></div>
+      <div class="row"><code>downloads</code><span data-i18n="p2">Saves captured frames to your Downloads folder.</span></div>
+      <div class="row"><code>scripting</code><span data-i18n="p3">Loads TubeShot into a YouTube tab that was already open before you installed it.</span></div>
+      <div class="row"><code>youtube.com, m.youtube.com</code><span data-i18n="p4">Lets TubeShot read the video frame. It cannot run on any other website.</span></div>
+    </div>
+    <div class="note reveal"><span class="icon" data-icon="shield-check"></span><span data-i18n="p.note">Nothing is sent to any server. No analytics, no accounts, no ads.</span></div>
+  </div>
+</section>
+
+<section id="install" aria-labelledby="h-install">
+  <div class="container install">
+    <div class="reveal">
+      <div class="sec-head" style="margin-bottom:28px"><h2 id="h-install" data-i18n="i.title">Install in a minute</h2><p data-i18n="i.sub">TubeShot loads as an unpacked extension in Chrome, Edge, Brave and other Chromium browsers.</p></div>
+      <ol class="ol">
+        <li><div data-i18n="i1">Download the project and unzip it.</div></li>
+        <li><div><span data-i18n="i2">Open the extensions page:</span><br /><span class="kbd"><span id="extUrl">chrome://extensions</span><button class="state rip" id="copyUrl" data-i18n-title="i.copy" title="Copy"><span class="icon" data-icon="copy"></span></button></span></div></li>
+        <li><div data-i18n="i3">Turn on Developer mode in the top-right corner.</div></li>
+        <li><div data-i18n="i4">Click Load unpacked and choose the folder that contains manifest.json.</div></li>
+        <li><div data-i18n="i5">Pin TubeShot, open a YouTube video and click the icon.</div></li>
+      </ol>
+    </div>
+    <pre class="tree reveal" style="--d:.08s" aria-label="Project structure">tubeshot/
+├── manifest.json
+├── popup.html
+├── index.html
+├── css/
+├── js/
+├── icons/
+├── _locales/
+└── screenshots/</pre>
+  </div>
+</section>
+
+<section class="alt" id="faq" aria-labelledby="h-faq">
+  <div class="container">
+    <div class="sec-head reveal"><h2 id="h-faq" data-i18n="q.title">Questions, answered</h2></div>
+    <div class="faq reveal">
+      <details><summary><span data-i18n="q1">Do captures include the player controls?</span><span class="icon" data-icon="chevron-down"></span></summary><p data-i18n="a1">No. TubeShot reads the video element directly, so the image contains only the video picture. A timestamp badge or caption appears only if you turn it on.</p></details>
+      <details><summary><span data-i18n="q2">Why is my capture black?</span><span class="icon" data-icon="chevron-down"></span></summary><p data-i18n="a2">Videos protected by DRM, such as some rentals and movies, cannot be read by any extension. Regular videos work normally.</p></details>
+      <details><summary><span data-i18n="q3">How do I get the highest quality?</span><span class="icon" data-icon="chevron-down"></span></summary><p data-i18n="a3">Set the YouTube player to the highest resolution first, then capture as PNG at 100 percent. The frame is saved at the video's native size.</p></details>
+      <details><summary><span data-i18n="q4">Does it work on Shorts and live streams?</span><span class="icon" data-icon="chevron-down"></span></summary><p data-i18n="a4">Yes. Shorts and live streams are supported. On live streams the progress bar is disabled because there is no fixed length.</p></details>
+      <details><summary><span data-i18n="q5">Where does my data go?</span><span class="icon" data-icon="chevron-down"></span></summary><p data-i18n="a5">Nowhere. Settings and history stay in your browser's local storage, and nothing is sent to a server.</p></details>
+      <details><summary><span data-i18n="q6">Can I use it in Vietnamese?</span><span class="icon" data-icon="chevron-down"></span></summary><p data-i18n="a6">Yes. TubeShot picks English or Tiếng Việt from your browser language, and you can change it in Settings at any time.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container foot">
+    <div>
+      <a class="brand" href="#top"><img src="icons/icon48.png" width="36" height="36" alt="" />TubeShot</a>
+      <p><span data-i18n="ft.by">Developed by</span> <strong>minhtrong67</strong><br /><span data-i18n="ft.ai">With AI assistance from</span> <strong>Claude</strong> · v1.1.0</p>
+    </div>
+    <a class="btn btn-tonal btn-sm toplink state rip" href="#top"><span class="icon" data-icon="arrow-up"></span><span data-i18n="ft.top">Back to top</span></a>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+document.documentElement.classList.add("js");
+var ICONS={"arrow-up":"<path d=\"m5 12 7-7 7 7\" /> <path d=\"M12 19V5\" />","badge-check":"<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />","camera":"<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />","captions":"<rect width=\"18\" height=\"14\" x=\"3\" y=\"5\" rx=\"2\" ry=\"2\" /> <path d=\"M7 15h4M15 15h2M7 11h2M13 11h4\" />","check":"<path d=\"M20 6 9 17l-5-5\" />","chevron-down":"<path d=\"m6 9 6 6 6-6\" />","chevron-left":"<path d=\"m15 18-6-6 6-6\" />","chevron-right":"<path d=\"m9 18 6-6-6-6\" />","copy":"<rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\" /> <path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\" />","history":"<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" /> <path d=\"M12 7v5l4 2\" />","image":"<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" ry=\"2\" /> <circle cx=\"9\" cy=\"9\" r=\"2\" /> <path d=\"m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21\" />","languages":"<path d=\"m5 8 6 6\" /> <path d=\"m4 14 6-6 2-3\" /> <path d=\"M2 5h12\" /> <path d=\"M7 2h1\" /> <path d=\"m22 22-5-10-5 10\" /> <path d=\"M14 18h6\" />","lock":"<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />","menu":"<path d=\"M4 5h16\" /> <path d=\"M4 12h16\" /> <path d=\"M4 19h16\" />","monitor":"<rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\" /> <line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\" />","moon":"<path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\" />","palette":"<path d=\"M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z\" /> <circle cx=\"13.5\" cy=\"6.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"17.5\" cy=\"10.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"6.5\" cy=\"12.5\" r=\".5\" fill=\"currentColor\" /> <circle cx=\"8.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />","play":"<path d=\"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z\" />","puzzle":"<path d=\"M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z\" />","rocket":"<path d=\"M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5\" /> <path d=\"M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09\" /> <path d=\"M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z\" /> <path d=\"M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05\" />","scan":"<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" />","shield-check":"<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />","square-play":"<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" /> <path d=\"M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z\" />","step-forward":"<path d=\"M10.029 4.285A2 2 0 0 0 7 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z\" /> <path d=\"M3 4v16\" />","sun":"<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />","sun-moon":"<path d=\"M12 2v2\" /> <path d=\"M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715\" /> <path d=\"M16 12a4 4 0 0 0-4-4\" /> <path d=\"m19 5-1.256 1.256\" /> <path d=\"M20 12h2\" />","x":"<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />","zap":"<path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\" />"};
+var COLORS=[["red","#F44336"],["pink","#E91E63"],["purple","#9C27B0"],["deep-purple","#673AB7"],["indigo","#3F51B5"],["blue","#2196F3"],["light-blue","#03A9F4"],["cyan","#00BCD4"],["teal","#009688"],["green","#4CAF50"],["light-green","#8BC34A"],["lime","#CDDC39"],["yellow","#FFEB3B"],["amber","#FFC107"],["orange","#FF9800"],["deep-orange","#FF5722"],["brown","#795548"],["blue-grey","#607D8B"]];
+var COLOR_VI={"red":"Đỏ","pink":"Hồng","purple":"Tím","deep-purple":"Tím đậm","indigo":"Chàm","blue":"Xanh dương","light-blue":"Xanh dương nhạt","cyan":"Xanh lơ","teal":"Xanh mòng két","green":"Xanh lá","light-green":"Xanh lá nhạt","lime":"Vàng chanh","yellow":"Vàng","amber":"Hổ phách","orange":"Cam","deep-orange":"Cam đậm","brown":"Nâu","blue-grey":"Xám xanh"};
+var VI={
+"skip":"Chuyển đến nội dung","nav.features":"Tính năng","nav.how":"Cách hoạt động","nav.screens":"Ảnh chụp màn hình","nav.install":"Cài đặt","nav.faq":"Hỏi đáp",
+"t.color":"Màu sắc","t.theme":"Giao diện","t.lang":"Ngôn ngữ","t.menu":"Menu","c.title":"Màu sắc",
+"hero.h1":"Chụp bất kỳ khoảnh khắc YouTube nào. Không có gì khác trong khung hình.","hero.lead":"TubeShot đọc trực tiếp khung hình video, nên ảnh chụp không có thanh điều khiển hay chi tiết thừa. Tua đến đúng khung hình, rồi lưu hoặc sao chép.","hero.cta1":"Hướng dẫn cài đặt","hero.cta2":"Xem cách hoạt động",
+"chip.free":"Miễn phí & mã nguồn mở","chip.mv3":"Chrome · Manifest V3","chip.private":"Dữ liệu ở lại trình duyệt",
+"demo.aria":"Minh hoạ động: một khung hình video được chụp mà không có thanh điều khiển","demo.hint":"Bỏ thanh điều khiển. Giữ khung hình sạch.","demo.btn":"Chụp khung hình",
+"f.title":"Mọi thứ bạn cần để chụp khung hình hoàn hảo","f.sub":"Dành cho những ai cần bức ảnh, không cần trình phát bao quanh.",
+"f1.t":"Khung hình sạch, lần nào cũng vậy","f1.p":"TubeShot vẽ trực tiếp phần tử video lên canvas. Không thanh điều khiển, không lớp phủ, không giao diện trình duyệt. Chỉ có hình ảnh ở độ phân giải gốc của video.",
+"f2.t":"Tua chính xác từng khung hình","f2.p":"Tua 10 giây hoặc 1 giây, bước từng khung hình, kéo thanh trượt hoặc gõ thời gian như 1:23.",
+"f3.t":"Huy hiệu thời gian và chú thích","f3.p":"Đóng dấu thời gian ở góc ảnh, hoặc thêm một dải gồm tiêu đề, kênh và thời gian.",
+"f4.t":"PNG hoặc JPEG, mọi kích thước","f4.p":"PNG không nén mất dữ liệu hoặc JPEG với chất lượng tuỳ chỉnh, ở mức 100, 75, 50 hoặc 25 phần trăm.",
+"f5.t":"Lưu hoặc sao chép","f5.p":"Gửi vào thư mục Downloads, hoặc sao chép rồi dán ở bất cứ đâu.",
+"f6.t":"Ảnh chụp gần đây","f6.p":"Mười ảnh chụp gần nhất luôn ở trong tầm tay. Mở một ảnh để quay lại đúng giây đó, hoặc xuất danh sách ra tệp văn bản.",
+"f7.t":"Video, Shorts và phát trực tiếp","f7.p":"Hoạt động trên trang xem video, Shorts và phát trực tiếp tại youtube.com và m.youtube.com.",
+"f8.t":"Theo phong cách của bạn","f8.p":"18 màu Material, giao diện sáng, tối hoặc theo hệ thống, tiếng Anh và tiếng Việt.",
+"f9.t":"Riêng tư từ thiết kế","f9.p":"Không máy chủ, không theo dõi, không cần tài khoản. Mọi thứ chạy trên thiết bị của bạn.",
+"f10.t":"Nhẹ và nhanh","f10.p":"HTML, CSS và JavaScript thuần. Không cần bước build, không phụ thuộc thư viện chạy.",
+"h.title":"Ba bước để có ảnh chụp sạch","h1.t":"Mở một video","h1.p":"Phát bất kỳ video hoặc Short nào trên YouTube. TubeShot tự động nhận diện.","h2.t":"Tìm khung hình","h2.p":"Kéo, bước từng khung hoặc gõ thời gian cho đến khi hình ảnh đúng ý.","h3.t":"Chụp","h3.p":"Nhấn Chụp khung hình để lưu, hoặc nút sao chép để đưa vào clipboard.",
+"s.title":"Xem tận mắt","s.sub":"Popup gọn nhẹ, thiết kế theo Material Design 3.","s.prev":"Trước","s.next":"Sau","s.region":"Ảnh chụp màn hình",
+"s1.alt":"Popup TubeShot hiển thị video hiện tại, điều khiển phát và tuỳ chọn chụp","s1.cap":"Điều khiển phát và tuỳ chọn chụp","s2.alt":"Popup TubeShot giao diện tối với thanh chất lượng JPEG và ảnh chụp gần đây","s2.cap":"Giao diện tối, chất lượng JPEG và lịch sử","s3.alt":"Cài đặt với bảng màu Material, giao diện và ngôn ngữ","s3.cap":"Cài đặt: màu sắc, giao diện, ngôn ngữ","s4.alt":"Giao diện tiếng Việt, nền tối, tông màu xanh dương","s4.cap":"Tiếng Việt, nền tối, xanh dương","s5.alt":"Trạng thái trống khi tab hiện tại không phải video YouTube","s5.cap":"Trạng thái trống thân thiện",
+"c.h2":"Theo phong cách của bạn","c.p":"Chọn một trong 18 màu Material, chuyển giữa giao diện sáng, tối hoặc theo hệ thống, và chọn tiếng Anh hoặc tiếng Việt. Thử ngay: trang này làm theo lựa chọn của bạn, giống như tiện ích.","c.theme":"Giao diện","c.light":"Sáng","c.dark":"Tối","c.system":"Hệ thống","c.language":"Ngôn ngữ",
+"p.title":"Riêng tư từ thiết kế","p.sub":"TubeShot chỉ xin bốn quyền, và chỉ dùng cho việc chụp khung hình.","p1":"Lưu cài đặt và lịch sử chụp trên thiết bị của bạn.","p2":"Lưu khung hình đã chụp vào thư mục Downloads.","p3":"Nạp TubeShot vào tab YouTube đã mở sẵn trước khi bạn cài đặt.","p4":"Cho phép TubeShot đọc khung hình video. Không thể chạy trên bất kỳ trang web nào khác.","p.note":"Không gửi gì đến máy chủ nào. Không phân tích, không tài khoản, không quảng cáo.",
+"i.title":"Cài đặt trong một phút","i.sub":"TubeShot được nạp dưới dạng tiện ích đã giải nén trên Chrome, Edge, Brave và các trình duyệt Chromium khác.","i1":"Tải dự án về và giải nén.","i2":"Mở trang tiện ích:","i3":"Bật Chế độ dành cho nhà phát triển ở góc trên bên phải.","i4":"Nhấn Tải tiện ích đã giải nén và chọn thư mục chứa manifest.json.","i5":"Ghim TubeShot, mở một video YouTube và nhấn vào biểu tượng.","i.copy":"Sao chép","i.copied":"Đã sao chép","i.copyfail":"Hãy tự sao chép chuỗi này",
+"q.title":"Giải đáp thắc mắc","q1":"Ảnh chụp có bao gồm thanh điều khiển không?","a1":"Không. TubeShot đọc trực tiếp phần tử video nên ảnh chỉ chứa hình video. Huy hiệu thời gian hoặc chú thích chỉ xuất hiện khi bạn bật.",
+"q2":"Vì sao ảnh chụp bị đen?","a2":"Video có bảo vệ bản quyền DRM, như một số phim thuê, không thể được đọc bởi bất kỳ tiện ích nào. Video thông thường hoạt động bình thường.",
+"q3":"Làm sao để có chất lượng cao nhất?","a3":"Đặt trình phát YouTube ở độ phân giải cao nhất trước, rồi chụp PNG ở mức 100 phần trăm. Khung hình được lưu theo kích thước gốc của video.",
+"q4":"Có hoạt động trên Shorts và phát trực tiếp không?","a4":"Có. Shorts và phát trực tiếp đều được hỗ trợ. Với phát trực tiếp, thanh tiến trình bị vô hiệu vì không có độ dài cố định.",
+"q5":"Dữ liệu của tôi đi đâu?","a5":"Không đi đâu cả. Cài đặt và lịch sử nằm trong bộ nhớ cục bộ của trình duyệt, không có gì được gửi đến máy chủ.",
+"q6":"Tôi có dùng được bằng tiếng Việt không?","a6":"Có. TubeShot chọn tiếng Anh hoặc tiếng Việt theo ngôn ngữ trình duyệt, và bạn có thể đổi trong Cài đặt bất cứ lúc nào.",
+"ft.by":"Phát triển bởi","ft.ai":"Với sự hỗ trợ của AI","ft.top":"Lên đầu trang",
+"meta.title":"TubeShot: chụp ảnh YouTube sạch cho Chrome","meta.desc":"TubeShot là tiện ích Chrome miễn phí giúp chụp khung hình sạch, không có thanh điều khiển từ bất kỳ video YouTube nào. Tua đến đúng khung hình, thêm huy hiệu thời gian, rồi lưu hoặc sao chép. 100% trên thiết bị."
+};
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function svg(n){return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[n]||"")+"</svg>"}
+function icons(root){$$("[data-icon]",root).forEach(function(e){e.innerHTML=svg(e.getAttribute("data-icon"))})}
+function readable(h){var n=parseInt(h.slice(1),16),f=function(c){c/=255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4)};var L=.2126*f(n>>16&255)+.7152*f(n>>8&255)+.0722*f(n&255);return L>.4?"#1d1b1e":"#fff"}
+
+/* ---- state (safe storage: sandboxed extension pages have no localStorage) ---- */
+var mql=window.matchMedia("(prefers-color-scheme: dark)");
+var state={lang:null,theme:"system",color:"pink"};
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function init(){
+  var q={};(location.hash.slice(1)+"&"+location.search.slice(1)).split("&").forEach(function(p){var kv=p.split("=");if(kv[0])q[kv[0]]=decodeURIComponent(kv[1]||"")});
+  var lang=q.lang||store("ts_lang"),theme=q.theme||store("ts_theme"),color=q.color||store("ts_color");
+  state.lang=(lang==="en"||lang==="vi")?lang:((navigator.languages&&navigator.languages[0]||navigator.language||"en").toLowerCase().indexOf("vi")===0?"vi":"en");
+  state.theme=["light","dark","system"].indexOf(theme)>-1?theme:"system";
+  state.color=COLORS.some(function(c){return c[0]===color})?color:"pink";
+}
+
+/* ---- i18n: English is the markup itself (good for SEO); Vietnamese comes from the dictionary ---- */
+var originals=[];
+function collect(){
+  $$("[data-i18n]").forEach(function(e){originals.push([e,"html",e.innerHTML,e.getAttribute("data-i18n")])});
+  $$("[data-i18n-title]").forEach(function(e){originals.push([e,"title",e.getAttribute("title"),e.getAttribute("data-i18n-title")])});
+  $$("[data-i18n-alt]").forEach(function(e){originals.push([e,"alt",e.getAttribute("alt"),e.getAttribute("data-i18n-alt")])});
+  $$("[data-i18n-aria]").forEach(function(e){originals.push([e,"aria-label",e.getAttribute("aria-label"),e.getAttribute("data-i18n-aria")])});
+}
+var meta={title:document.title,desc:$('meta[name="description"]').content,ogt:$('meta[property="og:title"]').content,ogd:$('meta[property="og:description"]').content};
+function setMeta(sel,attr,val){var e=$(sel);if(e)e.setAttribute(attr,val)}
+function applyLang(){
+  var vi=state.lang==="vi";
+  originals.forEach(function(o){var el=o[0],v=vi&&VI[o[3]]!==undefined?VI[o[3]]:o[2];if(o[1]==="html")el.innerHTML=v;else el.setAttribute(o[1],v)});
+  document.documentElement.lang=state.lang;
+  document.title=vi?VI["meta.title"]:meta.title;
+  setMeta('meta[name="description"]',"content",vi?VI["meta.desc"]:meta.desc);
+  setMeta('meta[property="og:title"]',"content",vi?VI["meta.title"]:meta.ogt);
+  setMeta('meta[name="twitter:title"]',"content",vi?VI["meta.title"]:meta.ogt);
+  setMeta('meta[property="og:locale"]',"content",vi?"vi_VN":"en_US");
+  $("#langCode").textContent=state.lang.toUpperCase();
+  $$("[data-swatches] .sw").forEach(function(b){var n=vi?COLOR_VI[b.dataset.c]:b.dataset.name;b.title=n;b.setAttribute("aria-label",n)});
+  $$("#langSeg button").forEach(function(b){b.setAttribute("aria-checked",String(b.dataset.v===state.lang))});
+}
+function applyTheme(){
+  var r=document.documentElement,res=state.theme==="system"?(mql.matches?"dark":"light"):state.theme;
+  r.setAttribute("data-theme",res);r.setAttribute("data-color",state.color);r.setAttribute("data-mode",state.theme);
+  $$("#themeSeg button").forEach(function(b){b.setAttribute("aria-checked",String(b.dataset.v===state.theme))});
+  $$("[data-swatches] .sw").forEach(function(b){b.setAttribute("aria-checked",String(b.dataset.c===state.color))});
+  var bg=getComputedStyle(r).getPropertyValue("--md-surface").trim();
+  $$('meta[name="theme-color"]').forEach(function(m){m.removeAttribute("media");m.content=bg});
+}
+mql.addEventListener&&mql.addEventListener("change",function(){if(state.theme==="system")applyTheme()});
+
+function buildSwatches(){
+  $$("[data-swatches]").forEach(function(w){
+    COLORS.forEach(function(c){
+      var b=document.createElement("button");b.type="button";b.className="sw";b.setAttribute("role","radio");
+      b.dataset.c=c[0];b.dataset.name=c[0].replace(/-/g," ").replace(/^./,function(m){return m.toUpperCase()});
+      b.style.setProperty("--sw",c[1]);b.style.setProperty("--swon",readable(c[1]));
+      b.innerHTML='<span class="icon">'+svg("check")+"</span>";
+      b.addEventListener("click",function(){state.color=c[0];store("ts_color",c[0]);applyTheme()});
+      w.appendChild(b);
+    });
+  });
+}
+
+/* ---- ripple ---- */
+document.addEventListener("pointerdown",function(e){
+  var t=e.target.closest(".rip");if(!t||t.disabled)return;
+  var r=t.getBoundingClientRect(),s=Math.max(r.width,r.height)*2,d=document.createElement("span");
+  d.className="rdot";d.style.cssText="width:"+s+"px;height:"+s+"px;left:"+(e.clientX-r.left-s/2)+"px;top:"+(e.clientY-r.top-s/2)+"px";
+  t.appendChild(d);d.addEventListener("animationend",function(){d.remove()},{once:true});
+});
+
+/* ---- header ---- */
+var bar=$("#bar");
+function onScroll(){bar.classList.toggle("scrolled",window.scrollY>8)}
+window.addEventListener("scroll",onScroll,{passive:true});onScroll();
+var pop=$("#colorPop"),cb=$("#colorBtn"),nav=$("#nav"),mb=$("#menuBtn");
+function setPop(o){pop.classList.toggle("open",o);cb.setAttribute("aria-expanded",String(o))}
+function setNav(o){nav.classList.toggle("open",o);mb.setAttribute("aria-expanded",String(o));mb.firstElementChild.innerHTML=svg(o?"x":"menu")}
+cb.addEventListener("click",function(e){e.stopPropagation();setNav(false);setPop(!pop.classList.contains("open"))});
+mb.addEventListener("click",function(e){e.stopPropagation();setPop(false);setNav(!nav.classList.contains("open"))});
+document.addEventListener("click",function(e){if(!pop.contains(e.target))setPop(false);if(!nav.contains(e.target))setNav(false)});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){setPop(false);setNav(false)}});
+$$("#nav a").forEach(function(a){a.addEventListener("click",function(){setNav(false)})});
+$("#themeBtn").addEventListener("click",function(){var o=["light","dark","system"];state.theme=o[(o.indexOf(state.theme)+1)%3];store("ts_theme",state.theme);applyTheme()});
+$("#langBtn").addEventListener("click",function(){state.lang=state.lang==="en"?"vi":"en";store("ts_lang",state.lang);applyLang()});
+$$("#themeSeg button").forEach(function(b){b.addEventListener("click",function(){state.theme=b.dataset.v;store("ts_theme",state.theme);applyTheme()})});
+$$("#langSeg button").forEach(function(b){b.addEventListener("click",function(){state.lang=b.dataset.v;store("ts_lang",state.lang);applyLang()})});
+
+/* ---- scroll spy + reveal ---- */
+if("IntersectionObserver" in window){
+  var links={};$$("#nav a").forEach(function(a){links[a.getAttribute("href").slice(1)]=a});
+  var spy=new IntersectionObserver(function(es){es.forEach(function(en){var a=links[en.target.id];if(a&&en.isIntersecting){$$("#nav a").forEach(function(x){x.classList.remove("active")});a.classList.add("active")}})},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(links).forEach(function(id){var s=document.getElementById(id);if(s)spy.observe(s)});
+  var rv=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add("in");rv.unobserve(en.target)}})},{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+  $$(".reveal").forEach(function(e){rv.observe(e)});
+}else{$$(".reveal").forEach(function(e){e.classList.add("in")})}
+
+/* ---- carousel ---- */
+var car=$("#car");function step(d){car.scrollBy({left:d*(car.firstElementChild.offsetWidth+20),behavior:"smooth"})}
+$("#prev").addEventListener("click",function(){step(-1)});$("#next").addEventListener("click",function(){step(1)});
+
+/* ---- copy ---- */
+var toastT;function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show")},2000)}
+$("#copyUrl").addEventListener("click",function(){
+  var txt=$("#extUrl").textContent,vi=state.lang==="vi";
+  var ok=function(){toast(vi?VI["i.copied"]:"Copied")},fail=function(){toast(vi?VI["i.copyfail"]:"Copy this text manually")};
+  try{navigator.clipboard.writeText(txt).then(ok,fail)}catch(e){fail()}
+});
+
+/* ---- hero demo ---- */
+var player=$("#player"),fill=$("#uiFill"),now=$("#uiNow"),shots=$("#shots"),t0=42,t=t0,busy=false,cap=0;
+function fmt(s){return Math.floor(s/60)+":"+("0"+Math.floor(s%60)).slice(-2)}
+function tick(){t+=.25;if(t>=728)t=t0;now.textContent=fmt(t);fill.style.width=(t/728*100)+"%"}
+var tickT=null;function startTick(){if(!tickT)tickT=setInterval(tick,250)}
+function capture(){
+  if(busy)return;busy=true;var label=fmt(t);
+  player.classList.add("clean");
+  setTimeout(function(){
+    var f=$("#flash");f.classList.remove("go");void f.offsetWidth;f.classList.add("go");
+    var s=document.createElement("div");s.className="shot";
+    s.innerHTML='<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice"><use href="#scene"/></svg><b>'+label+"</b>";
+    shots.insertBefore(s,shots.firstChild);while(shots.children.length>3)shots.lastChild.remove();
+    cap++;
+  },260);
+  setTimeout(function(){player.classList.remove("clean");busy=false},1100);
+}
+$("#demoBtn").addEventListener("click",capture);
+
+/* ---- boot ---- */
+init();collect();buildSwatches();icons();applyTheme();applyLang();
+if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){tick();capture()}
+else{startTick();setTimeout(capture,1400);setInterval(function(){if(!document.hidden&&!busy&&cap<3&&player.getBoundingClientRect().bottom>0)capture()},4200)}
+document.addEventListener("visibilitychange",function(){if(document.hidden){clearInterval(tickT);tickT=null}else if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)startTick()});
+})();
+</script>
+</body>
+</html>

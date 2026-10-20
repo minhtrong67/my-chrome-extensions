@@ -1,1 +1,4 @@
-{"extName":{"message":"Password Generator — Trình tạo mật khẩu"},"extDescription":{"message":"Trình tạo mật khẩu, cụm mật khẩu và mã PIN riêng tư, hoạt động offline."}}
+{
+  "extName": { "message": "Password Generator" },
+  "extDescription": { "message": "Tạo mật khẩu, cụm từ mật khẩu và mã PIN mạnh hoàn toàn ngoại tuyến bằng nguồn ngẫu nhiên an toàn. Material Design, giao diện sáng/tối, Tiếng Việt & English." }
+}

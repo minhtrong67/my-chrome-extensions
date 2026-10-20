@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Photo Converter — Convert images to PNG, JPEG &amp; WEBP in one click</title>
+<meta name="description" content="Photo Converter is a free, private Chrome extension to convert images to PNG, JPEG or WEBP. Right-click any image, batch-convert to .zip, resize and tune quality — all offline, in Material Design." />
+<meta name="keywords" content="photo converter, image converter, png to jpg, jpg to webp, webp to png, chrome extension, batch image converter, resize image, save image as, material design" />
+<meta name="author" content="minhtrong67" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#FF5722" />
+<meta name="color-scheme" content="light dark" />
+<meta name="application-name" content="Photo Converter" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
+<link rel="apple-touch-icon" href="icons/icon128.png" />
+
+<!-- Open Graph (Facebook, Zalo, LinkedIn, Discord…) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Photo Converter" />
+<meta property="og:title" content="Photo Converter — Convert images to PNG, JPEG &amp; WEBP in one click" />
+<meta property="og:description" content="Right-click any image to save it as PNG, JPEG or WEBP. Batch convert to a single .zip. Private, offline, Material Design." />
+<meta property="og:image" content="screenshots/image01.png" />
+<meta property="og:image:alt" content="Photo Converter popup showing image conversion options" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="vi_VN" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Photo Converter — Convert images to PNG, JPEG &amp; WEBP" />
+<meta name="twitter:description" content="Free, private Chrome extension. Right-click convert, batch .zip, resize, quality control." />
+<meta name="twitter:image" content="screenshots/image01.png" />
+<meta name="twitter:image:alt" content="Photo Converter popup" />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Photo Converter","applicationCategory":"MultimediaApplication","operatingSystem":"Chrome, Chromium-based browsers","softwareVersion":"3.0.0","description":"Chrome extension that converts images to PNG, JPEG or WEBP with right-click saving, batch .zip export, resizing and quality control. Works fully offline.","author":{"@type":"Person","name":"minhtrong67"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"inLanguage":["en","vi"]}
+</script>
+
+<style>
+:root{
+  --primary:#FF5722;--on-primary:#fff;--primary-container:#ffd9cc;--on-primary-container:#3a0c00;--primary-text:#b93a13;
+  --surface:#fffbff;--surface-1:#fbf3ef;--surface-2:#f7ece7;--surface-3:#f3e5df;--on-surface:#1d1b1e;--on-surface-variant:#4f4a52;
+  --outline:#7f7480;--outline-variant:#d0c4c6;--shadow:rgba(0,0,0,.16);
+  --ease:cubic-bezier(.2,0,0,1);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+body{background:var(--surface);color:var(--on-surface);line-height:1.6;font-size:16px;transition:background-color .3s var(--ease),color .3s var(--ease);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.icon{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.icon-sm{width:18px;height:18px}
+:focus-visible{outline:2px solid var(--primary-text);outline-offset:3px;border-radius:8px}
+.wrap{width:min(1120px,100% - 40px);margin-inline:auto}
+section{padding:88px 0}
+h1,h2,h3{line-height:1.15;letter-spacing:-.01em}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--primary-text);margin-bottom:12px}
+.section-head{text-align:center;max-width:680px;margin:0 auto 48px}
+.section-head h2{font-size:clamp(28px,4vw,40px);margin-bottom:12px}
+.section-head p{color:var(--on-surface-variant);font-size:18px}
+
+/* buttons */
+.btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 28px;border-radius:24px;font-weight:600;font-size:15px;transition:box-shadow .25s,transform .2s var(--ease),background-color .2s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.97)}
+.btn.filled{background:var(--primary);color:var(--on-primary);box-shadow:0 2px 6px var(--shadow)}
+.btn.filled:hover{box-shadow:0 8px 20px var(--shadow)}
+.btn.outlined{border:1px solid var(--outline);color:var(--primary-text)}
+.btn.outlined:hover{background:color-mix(in srgb,var(--primary) 8%,transparent)}
+.icon-btn{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--on-surface-variant);transition:background-color .2s,transform .2s var(--ease)}
+.icon-btn:hover{background:color-mix(in srgb,var(--on-surface) 8%,transparent)}.icon-btn:active{transform:scale(.9)}
+.wave{position:absolute;border-radius:50%;background:currentColor;opacity:.18;transform:scale(0);animation:wave .6s var(--ease) forwards;pointer-events:none;z-index:-1}
+@keyframes wave{to{transform:scale(1);opacity:0}}
+
+/* top app bar */
+.bar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s;padding-top:env(safe-area-inset-top)}
+.bar.scrolled{border-color:var(--outline-variant);box-shadow:0 2px 12px var(--shadow)}
+.bar .wrap{display:flex;align-items:center;gap:8px;height:64px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px;margin-right:auto}
+.brand svg{width:36px;height:36px}
+.nav{display:flex;gap:4px}
+.nav a{padding:8px 14px;border-radius:20px;font-size:14px;font-weight:500;color:var(--on-surface-variant);transition:background-color .2s,color .2s}
+.nav a:hover,.nav a.active{background:var(--primary-container);color:var(--on-primary-container)}
+.tools{display:flex;align-items:center;gap:2px;position:relative}
+.lang{display:flex;border:1px solid var(--outline);border-radius:18px;overflow:hidden;margin-inline:6px}
+.lang button{padding:0 12px;height:34px;font-size:13px;font-weight:600;transition:background-color .25s,color .25s}
+.lang button[aria-pressed="true"]{background:var(--primary-container);color:var(--on-primary-container)}
+.palette-pop{position:absolute;right:0;top:calc(100% + 12px);width:268px;padding:16px;border-radius:20px;background:var(--surface-2);box-shadow:0 12px 32px var(--shadow);display:grid;grid-template-columns:repeat(6,1fr);gap:10px;justify-items:center;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);transform-origin:top right;transition:opacity .2s,transform .25s var(--ease),visibility 0s .25s}
+.palette-pop.open{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .25s var(--ease),visibility 0s}
+.sw{width:34px;height:34px;border-radius:50%;background:var(--c);display:grid;place-items:center;color:var(--on);transition:transform .2s var(--ease),box-shadow .2s}
+.sw:hover{transform:scale(1.12)}
+.sw .icon{width:18px;height:18px;stroke-width:3;transform:scale(0);transition:transform .25s var(--ease)}
+.sw[aria-checked="true"]{box-shadow:0 0 0 2px var(--surface-2),0 0 0 4px var(--c)}.sw[aria-checked="true"] .icon{transform:scale(1)}
+.menu-btn{display:none}
+
+/* hero */
+.hero{padding:72px 0 96px;position:relative;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;z-index:-1;animation:float 14s ease-in-out infinite}
+.hero::before{width:480px;height:480px;background:var(--primary-container);top:10px;right:-80px}
+.hero::after{width:360px;height:360px;background:color-mix(in srgb,var(--primary) 25%,transparent);bottom:-120px;left:-100px;animation-delay:-6s}
+@keyframes float{50%{transform:translate(30px,-24px) scale(1.08)}}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border-radius:16px;background:var(--primary-container);color:var(--on-primary-container);font-size:13px;font-weight:600;margin-bottom:20px}
+.hero h1{font-size:clamp(38px,6vw,64px);font-weight:800;margin-bottom:20px}
+.hero h1 em{font-style:normal;color:var(--primary-text);background:linear-gradient(transparent 62%,var(--primary-container) 62%)}
+.hero p.lead{font-size:clamp(17px,2vw,20px);color:var(--on-surface-variant);max-width:540px;margin-bottom:32px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.chips{display:flex;gap:8px;margin-top:28px;flex-wrap:wrap}
+.chip{padding:5px 14px;border-radius:8px;border:1px solid var(--outline);font-size:13px;font-weight:600;color:var(--on-surface-variant)}
+
+/* mock popup */
+.stage{position:relative;display:grid;place-items:center;padding:20px}
+.mock{width:min(360px,100%);border-radius:28px;background:var(--surface);box-shadow:0 24px 60px var(--shadow),0 0 0 1px var(--outline-variant);padding:16px;display:flex;flex-direction:column;gap:12px;animation:bob 6s ease-in-out infinite;transform-origin:center}
+@keyframes bob{50%{transform:translateY(-10px) rotate(.6deg)}}
+.m-bar{display:flex;align-items:center;gap:10px;font-weight:700}.m-bar svg{width:28px;height:28px}.m-bar .icon{margin-left:auto;color:var(--on-surface-variant)}
+.m-drop{border:2px dashed var(--outline);border-radius:22px;padding:16px;text-align:center;font-size:13px;color:var(--on-surface-variant);display:grid;gap:6px;justify-items:center}
+.m-drop b{color:var(--on-surface);font-size:14px}
+.m-badge{width:44px;height:44px;border-radius:14px;background:var(--primary-container);color:var(--on-primary-container);display:grid;place-items:center;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.1) rotate(-4deg)}}
+.m-item{display:flex;align-items:center;gap:12px;background:var(--surface-1);border-radius:14px;padding:8px}
+.m-thumb{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#ffb74d);flex:none}
+.m-info{flex:1;font-size:13px;line-height:1.3;min-width:0}.m-info small{color:var(--on-surface-variant);display:block}
+.m-prog{height:4px;border-radius:2px;background:var(--primary-container);overflow:hidden;margin-top:6px}.m-prog i{display:block;height:100%;width:0;background:var(--primary);animation:prog 4.5s var(--ease) infinite}
+@keyframes prog{0%{width:0}70%,100%{width:100%}}
+.m-seg{display:flex;border:1px solid var(--outline);border-radius:20px;overflow:hidden;font-size:13px;font-weight:600}
+.m-seg span{flex:1;text-align:center;padding:8px 0;border-right:1px solid var(--outline);animation:seg 9s infinite}
+.m-seg span:last-child{border:0}.m-seg span:nth-child(2){animation-delay:3s}.m-seg span:nth-child(3){animation-delay:6s}
+@keyframes seg{0%,30%{background:var(--primary-container);color:var(--on-primary-container)}33.3%,100%{background:transparent;color:var(--on-surface)}}
+.m-go{height:44px;border-radius:22px;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;animation:glow 3s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--primary) 22%,transparent)}}
+.fly{position:absolute;padding:6px 14px;border-radius:12px;font-weight:700;font-size:13px;background:var(--surface-2);box-shadow:0 8px 20px var(--shadow);animation:fly 7s ease-in-out infinite}
+.fly.a{top:6%;left:-2%;color:var(--primary-text)}.fly.b{bottom:12%;right:-3%;animation-delay:-2s}.fly.c{bottom:-1%;left:6%;animation-delay:-4s}
+@keyframes fly{50%{transform:translateY(-14px)}}
+
+/* stats */
+.stats{padding:0 0 24px}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;background:var(--surface-1);border-radius:28px;padding:28px}
+.stat{text-align:center}.stat b{display:block;font-size:34px;font-weight:800;color:var(--primary-text)}.stat span{font-size:14px;color:var(--on-surface-variant)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--surface-1);border-radius:24px;padding:28px;transition:transform .35s var(--ease),box-shadow .35s,background-color .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 14px 32px var(--shadow);background:var(--surface-2)}
+.ico{width:52px;height:52px;border-radius:16px;background:var(--primary-container);color:var(--on-primary-container);display:grid;place-items:center;margin-bottom:18px;transition:transform .35s var(--ease)}
+.card:hover .ico{transform:rotate(-8deg) scale(1.08)}
+.card h3{font-size:20px;margin-bottom:8px}.card p{color:var(--on-surface-variant);font-size:15px}
+
+/* steps */
+.steps{background:var(--surface-1)}
+.step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s}
+.step{position:relative;padding:28px;border-radius:24px;background:var(--surface);counter-increment:s}
+.step::before{content:counter(s);display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--primary);color:var(--on-primary);font-weight:800;margin-bottom:16px}
+.step h3{font-size:19px;margin-bottom:6px}.step p{color:var(--on-surface-variant);font-size:15px}
+
+/* privacy */
+.privacy .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.privacy h2{font-size:clamp(28px,4vw,40px);margin-bottom:14px}
+.privacy p{color:var(--on-surface-variant);font-size:18px;margin-bottom:20px}
+.checks{list-style:none;display:grid;gap:12px}
+.checks li{display:flex;gap:12px;align-items:center;font-weight:500}
+.checks .icon{color:var(--on-primary-container);background:var(--primary-container);border-radius:50%;padding:4px;width:28px;height:28px;stroke-width:3}
+.shield{aspect-ratio:1;max-width:340px;margin-inline:auto;border-radius:44% 56% 52% 48%/48% 44% 56% 52%;background:var(--primary-container);color:var(--on-primary-container);display:grid;place-items:center;animation:morph 10s ease-in-out infinite;width:100%}
+.shield .icon{width:42%;height:42%;stroke-width:1.5}
+@keyframes morph{50%{border-radius:56% 44% 40% 60%/58% 52% 48% 42%;transform:rotate(4deg)}}
+
+/* faq */
+.faq{max-width:760px;margin-inline:auto;display:grid;gap:12px}
+details{background:var(--surface-1);border-radius:20px;transition:background-color .25s}
+details[open]{background:var(--surface-2)}
+summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;font-weight:600}
+summary::-webkit-details-marker{display:none}
+summary .icon{transition:transform .3s var(--ease);color:var(--on-surface-variant)}details[open] summary .icon{transform:rotate(180deg)}
+details p{padding:0 24px 22px;color:var(--on-surface-variant)}
+
+/* cta + footer */
+.final{text-align:center}
+.final .box{background:var(--primary);color:var(--on-primary);border-radius:36px;padding:64px 24px;position:relative;overflow:hidden}
+.final .box::after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:#fff;opacity:.1;right:-80px;top:-100px}
+.final h2{font-size:clamp(28px,4vw,42px);margin-bottom:12px}.final p{opacity:.9;font-size:18px;margin-bottom:28px}
+.final .btn{background:var(--on-primary);color:var(--primary-text)}
+footer{padding:40px 0 calc(40px + env(safe-area-inset-bottom));color:var(--on-surface-variant);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center}
+footer strong{color:var(--on-surface)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .hero .wrap,.privacy .wrap{grid-template-columns:1fr}.hero{padding-top:40px}
+  .grid,.step-grid{grid-template-columns:1fr 1fr}.stats .wrap{grid-template-columns:1fr 1fr}
+  .nav{position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--surface-2);padding:8px 16px 16px;border-radius:0 0 24px 24px;box-shadow:0 12px 24px var(--shadow);transform:translateY(-12px);opacity:0;visibility:hidden;transition:all .25s var(--ease)}
+  .nav.open{transform:none;opacity:1;visibility:visible}.nav a{padding:14px 16px}
+  .menu-btn{display:grid}.privacy .shield{order:-1;max-width:220px}section{padding:64px 0}
+}
+@media(max-width:600px){
+  .grid,.step-grid{grid-template-columns:1fr}.brand span{display:none}.tools{position:static}.palette-pop{left:12px;right:12px;width:auto;top:calc(100% + 6px)}
+  .cta .btn{flex:1}.stat b{font-size:28px}.final .box{padding:48px 20px;border-radius:28px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" /></symbol>
+<symbol id="i-image-up" viewBox="0 0 24 24"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21" /> <path d="m14 19.5 3-3 3 3" /> <path d="M17 22v-5.5" /> <circle cx="9" cy="9" r="2" /></symbol>
+<symbol id="i-clipboard-paste" viewBox="0 0 24 24"><path d="M11 14h10" /> <path d="M16 4h2a2 2 0 0 1 2 2v1.344" /> <path d="m17 18 4-4-4-4" /> <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113" /> <rect x="8" y="2" width="8" height="4" rx="1" /></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol>
+<symbol id="i-lock-open" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 9.9-1" /></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 3v12" /> <path d="m17 8-5-5-5 5" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></symbol>
+<symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" /></symbol>
+<symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z" /> <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+<symbol id="i-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2" /> <path d="M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715" /> <path d="M16 12a4 4 0 0 0-4-4" /> <path d="m19 5-1.256 1.256" /> <path d="M20 12h2" /></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2" /> <line x1="8" x2="16" y1="21" y2="21" /> <line x1="12" x2="12" y1="17" y2="21" /></symbol>
+<symbol id="i-languages" viewBox="0 0 24 24"><path d="m5 8 6 6" /> <path d="m4 14 6-6 2-3" /> <path d="M2 5h12" /> <path d="M7 2h1" /> <path d="m22 22-5-10-5 10" /> <path d="M14 18h6" /></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M10 5H3" /> <path d="M12 19H3" /> <path d="M14 3v4" /> <path d="M16 17v4" /> <path d="M21 12h-9" /> <path d="M21 19h-5" /> <path d="M21 5h-7" /> <path d="M8 10v4" /> <path d="M8 12H3" /></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+<symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol>
+<symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+<symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" /></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol>
+<symbol id="i-file-archive" viewBox="0 0 24 24"><path d="M13.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v11.5" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M8 12v-1" /> <path d="M8 18v-2" /> <path d="M8 7V6" /> <circle cx="8" cy="20" r="2" /></symbol>
+<symbol id="i-scaling" viewBox="0 0 24 24"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /> <path d="M14 15H9v-5" /> <path d="M16 3h5v5" /> <path d="M21 3 9 15" /></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4" /> <path d="M3 11v-1a4 4 0 0 1 4-4h14" /> <path d="m7 22-4-4 4-4" /> <path d="M21 13v1a4 4 0 0 1-4 4H3" /></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /></symbol>
+<symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01" /> <path d="M8.5 16.429a5 5 0 0 1 7 0" /> <path d="M5 12.859a10 10 0 0 1 5.17-2.69" /> <path d="M19 12.859a10 10 0 0 0-2.007-1.523" /> <path d="M2 8.82a15 15 0 0 1 4.177-2.643" /> <path d="M22 8.82a15 15 0 0 0-11.288-3.764" /> <path d="m2 2 20 20" /></symbol>
+<symbol id="i-mouse-pointer-click" viewBox="0 0 24 24"><path d="M14 4.1 12 6" /> <path d="m5.1 8-2.9-.8" /> <path d="m6 12-1.9 2" /> <path d="M7.2 2.2 8 5.1" /> <path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z" /></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol>
+<symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="M12 11h4" /> <path d="M12 16h4" /> <path d="M8 11h.01" /> <path d="M8 16h.01" /></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4" /> <path d="M3.34 19a10 10 0 1 1 17.32 0" /></symbol>
+<symbol id="i-folder-open" viewBox="0 0 24 24"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" /></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" /></symbol>
+<symbol id="i-file-down" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M12 18v-6" /> <path d="m9 15 3 3 3-3" /></symbol>
+</svg>
+
+<header class="bar" id="bar">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Photo Converter">
+      <svg viewBox="0 0 128 128" aria-hidden="true"><rect x="2" y="2" width="124" height="124" rx="30" fill="#FF5722"/><g transform="translate(18 16) scale(3.5)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></g><circle cx="92" cy="92" r="27" fill="#FF5722"/><circle cx="92" cy="92" r="22" fill="#fff"/><g transform="translate(76 76) scale(1.34)" fill="none" stroke="#FF5722" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></g></svg>
+      <span>Photo Converter</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#how" data-i18n="navHow">How it works</a>
+      <a href="#privacy" data-i18n="navPrivacy">Privacy</a>
+      <a href="#faq" data-i18n="navFaq">FAQ</a>
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" aria-label="Language"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="vi" aria-pressed="false">VI</button></div>
+      <button class="icon-btn" id="paletteBtn" aria-haspopup="true" aria-expanded="false" data-i18n-title="colors" title="Accent colour"><svg class="icon"><use href="#i-palette"/></svg></button>
+      <button class="icon-btn" id="themeBtn" data-i18n-title="theme" title="Theme"><svg class="icon" id="themeIcon"><use href="#i-monitor"/></svg></button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><svg class="icon"><use href="#i-menu"/></svg></button>
+      <div class="palette-pop" id="palette" role="radiogroup"></div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="badge rv"><svg class="icon icon-sm"><use href="#i-sparkles"/></svg><span data-i18n="badge">Free · Private · Offline</span></span>
+        <h1 class="rv" style="--d:.08s"><span data-i18n="h1a">Convert any image</span> <em data-i18n="h1b">in one click</em></h1>
+        <p class="lead rv" style="--d:.16s" data-i18n="lead">Right-click any picture on the web to save it as PNG, JPEG or WEBP — or drop in your own files and convert a whole batch into a single .zip. Fast, private and beautifully simple.</p>
+        <div class="cta rv" style="--d:.24s">
+          <a class="btn filled" href="#how"><svg class="icon icon-sm"><use href="#i-download"/></svg><span data-i18n="ctaStart">Get started</span></a>
+          <a class="btn outlined" href="#features"><span data-i18n="ctaFeatures">Explore features</span><svg class="icon icon-sm"><use href="#i-arrow-right"/></svg></a>
+        </div>
+        <div class="chips rv" style="--d:.32s"><span class="chip">PNG</span><span class="chip">JPEG</span><span class="chip">WEBP</span><span class="chip">GIF</span><span class="chip">BMP</span><span class="chip">SVG</span></div>
+      </div>
+      <div class="stage rv" style="--d:.2s" aria-hidden="true">
+        <div class="mock">
+          <div class="m-bar"><svg viewBox="0 0 128 128"><rect x="2" y="2" width="124" height="124" rx="30" fill="#FF5722"/><circle cx="64" cy="64" r="26" fill="#fff"/></svg>Photo Converter<svg class="icon"><use href="#i-settings"/></svg></div>
+          <div class="m-drop"><span class="m-badge"><svg class="icon"><use href="#i-image-up"/></svg></span><b data-i18n="mDrop">Drop images here</b>PNG · JPEG · WEBP</div>
+          <div class="m-item"><span class="m-thumb"></span><div class="m-info"><b>sunset-photo.png</b><small>1200×800 · 9.2 KB</small><div class="m-prog"><i></i></div></div></div>
+          <div class="m-seg"><span>PNG</span><span>JPEG</span><span>WEBP</span></div>
+          <div class="m-go"><svg class="icon icon-sm"><use href="#i-download"/></svg><span data-i18n="mGo">Convert &amp; download</span></div>
+        </div>
+        <span class="fly a">.png → .webp</span><span class="fly b">.zip</span><span class="fly c">90%</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Highlights">
+    <div class="wrap rv">
+      <div class="stat"><b>3</b><span data-i18n="st1">Output formats</span></div>
+      <div class="stat"><b>0</b><span data-i18n="st2">Files uploaded</span></div>
+      <div class="stat"><b>∞</b><span data-i18n="st3">Images per batch</span></div>
+      <div class="stat"><b>18</b><span data-i18n="st4">Accent colours</span></div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head rv"><span class="eyebrow" data-i18n="fEyebrow">Features</span><h2 data-i18n="fTitle">Everything you need, nothing you don't</h2><p data-i18n="fSub">A focused toolkit for converting images — wrapped in a clean Material Design interface.</p></div>
+      <div class="grid">
+        <article class="card rv"><div class="ico"><svg class="icon"><use href="#i-mouse-pointer-click"/></svg></div><h3 data-i18n="f1t">Right-click convert</h3><p data-i18n="f1d">Save any web image as PNG, JPEG, WEBP or its original format straight from the context menu.</p></article>
+        <article class="card rv" style="--d:.08s"><div class="ico"><svg class="icon"><use href="#i-layers"/></svg></div><h3 data-i18n="f2t">Batch to .zip</h3><p data-i18n="f2d">Drop many images at once. They are converted together and bundled into one tidy .zip file.</p></article>
+        <article class="card rv" style="--d:.16s"><div class="ico"><svg class="icon"><use href="#i-scaling"/></svg></div><h3 data-i18n="f3t">Resize &amp; quality</h3><p data-i18n="f3d">Set exact dimensions with aspect-ratio lock and fine-tune JPEG/WEBP quality with a live slider.</p></article>
+        <article class="card rv"><div class="ico"><svg class="icon"><use href="#i-clipboard-paste"/></svg></div><h3 data-i18n="f4t">Paste &amp; URL</h3><p data-i18n="f4d">Paste a screenshot with Ctrl+V or load an image from its link — no need to save it first.</p></article>
+        <article class="card rv" style="--d:.08s"><div class="ico"><svg class="icon"><use href="#i-palette"/></svg></div><h3 data-i18n="f5t">Your style</h3><p data-i18n="f5d">Pick from 18 Material colours, switch between light, dark or system theme, and use English or Vietnamese.</p></article>
+        <article class="card rv" style="--d:.16s"><div class="ico"><svg class="icon"><use href="#i-history"/></svg></div><h3 data-i18n="f6t">Smart history</h3><p data-i18n="f6d">Recent conversions with thumbnails. Repeat a right-click save with a single tap, or export the log.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="steps">
+    <div class="wrap">
+      <div class="section-head rv"><span class="eyebrow" data-i18n="hEyebrow">How it works</span><h2 data-i18n="hTitle">Three steps. That's it.</h2></div>
+      <div class="step-grid">
+        <div class="step rv"><h3 data-i18n="s1t">Add your images</h3><p data-i18n="s1d">Drag &amp; drop, browse, paste with Ctrl+V, load a URL — or just right-click an image on any page.</p></div>
+        <div class="step rv" style="--d:.1s"><h3 data-i18n="s2t">Choose a format</h3><p data-i18n="s2d">Pick PNG, JPEG or WEBP, adjust quality, and optionally resize a single image.</p></div>
+        <div class="step rv" style="--d:.2s"><h3 data-i18n="s3t">Download</h3><p data-i18n="s3d">One image downloads directly. Several images arrive together in a single .zip.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" class="privacy">
+    <div class="wrap">
+      <div class="rv">
+        <span class="eyebrow" data-i18n="pEyebrow">Privacy first</span>
+        <h2 data-i18n="pTitle">Your images never leave your device</h2>
+        <p data-i18n="pDesc">All decoding and encoding happens locally in your browser with the Canvas API. No servers, no accounts, no tracking.</p>
+        <ul class="checks">
+          <li><svg class="icon"><use href="#i-check"/></svg><span data-i18n="p1">100% offline conversion</span></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><span data-i18n="p2">No uploads, no analytics</span></li>
+          <li><svg class="icon"><use href="#i-check"/></svg><span data-i18n="p3">Open &amp; lightweight — no dependencies</span></li>
+        </ul>
+      </div>
+      <div class="shield rv" style="--d:.15s" aria-hidden="true"><svg class="icon"><use href="#i-shield-check"/></svg></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head rv"><span class="eyebrow">FAQ</span><h2 data-i18n="qTitle">Frequently asked questions</h2></div>
+      <div class="faq">
+        <details class="rv"><summary><span data-i18n="q1">Which formats are supported?</span><svg class="icon"><use href="#i-chevron-down"/></svg></summary><p data-i18n="a1">You can open PNG, JPEG, WEBP, GIF, BMP and SVG images and convert them to PNG, JPEG or WEBP.</p></details>
+        <details class="rv"><summary><span data-i18n="q2">Does it keep transparent backgrounds?</span><svg class="icon"><use href="#i-chevron-down"/></svg></summary><p data-i18n="a2">Yes for PNG and WEBP. JPEG has no transparency, so transparent areas are filled with white instead of black.</p></details>
+        <details class="rv"><summary><span data-i18n="q3">Is it really free and private?</span><svg class="icon"><use href="#i-chevron-down"/></svg></summary><p data-i18n="a3">Completely. Everything runs on your computer — nothing is uploaded and no data is collected.</p></details>
+        <details class="rv"><summary><span data-i18n="q4">Can I convert many images at once?</span><svg class="icon"><use href="#i-chevron-down"/></svg></summary><p data-i18n="a4">Yes. Add several files, choose a format and quality, and download them together as a single .zip.</p></details>
+        <details class="rv"><summary><span data-i18n="q5">Which browsers work?</span><svg class="icon"><use href="#i-chevron-down"/></svg></summary><p data-i18n="a5">Chrome 116 or newer and other Chromium-based browsers (Edge, Brave, Opera…) that support Manifest V3.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap"><div class="box rv"><h2 data-i18n="cTitle">Ready to convert?</h2><p data-i18n="cDesc">Open the extension popup from your toolbar and drop in your first image.</p><a class="btn" href="#top"><svg class="icon icon-sm"><use href="#i-image-up"/></svg><span data-i18n="cBtn">Back to top</span></a></div></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><strong>Photo Converter</strong> · v3.0.0</span>
+    <span><span data-i18n="fAuthor">Author</span>: <strong>minhtrong67</strong> · <span data-i18n="fAi">Built with the help of Claude AI</span></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var T={
+en:{navFeatures:"Features",navHow:"How it works",navPrivacy:"Privacy",navFaq:"FAQ",colors:"Accent colour",theme:"Theme",
+badge:"Free · Private · Offline",h1a:"Convert any image",h1b:"in one click",lead:"Right-click any picture on the web to save it as PNG, JPEG or WEBP — or drop in your own files and convert a whole batch into a single .zip. Fast, private and beautifully simple.",
+ctaStart:"Get started",ctaFeatures:"Explore features",mDrop:"Drop images here",mGo:"Convert & download",
+st1:"Output formats",st2:"Files uploaded",st3:"Images per batch",st4:"Accent colours",
+fEyebrow:"Features",fTitle:"Everything you need, nothing you don't",fSub:"A focused toolkit for converting images — wrapped in a clean Material Design interface.",
+f1t:"Right-click convert",f1d:"Save any web image as PNG, JPEG, WEBP or its original format straight from the context menu.",
+f2t:"Batch to .zip",f2d:"Drop many images at once. They are converted together and bundled into one tidy .zip file.",
+f3t:"Resize & quality",f3d:"Set exact dimensions with aspect-ratio lock and fine-tune JPEG/WEBP quality with a live slider.",
+f4t:"Paste & URL",f4d:"Paste a screenshot with Ctrl+V or load an image from its link — no need to save it first.",
+f5t:"Your style",f5d:"Pick from 18 Material colours, switch between light, dark or system theme, and use English or Vietnamese.",
+f6t:"Smart history",f6d:"Recent conversions with thumbnails. Repeat a right-click save with a single tap, or export the log.",
+hEyebrow:"How it works",hTitle:"Three steps. That's it.",
+s1t:"Add your images",s1d:"Drag & drop, browse, paste with Ctrl+V, load a URL — or just right-click an image on any page.",
+s2t:"Choose a format",s2d:"Pick PNG, JPEG or WEBP, adjust quality, and optionally resize a single image.",
+s3t:"Download",s3d:"One image downloads directly. Several images arrive together in a single .zip.",
+pEyebrow:"Privacy first",pTitle:"Your images never leave your device",pDesc:"All decoding and encoding happens locally in your browser with the Canvas API. No servers, no accounts, no tracking.",
+p1:"100% offline conversion",p2:"No uploads, no analytics",p3:"Open & lightweight — no dependencies",
+qTitle:"Frequently asked questions",
+q1:"Which formats are supported?",a1:"You can open PNG, JPEG, WEBP, GIF, BMP and SVG images and convert them to PNG, JPEG or WEBP.",
+q2:"Does it keep transparent backgrounds?",a2:"Yes for PNG and WEBP. JPEG has no transparency, so transparent areas are filled with white instead of black.",
+q3:"Is it really free and private?",a3:"Completely. Everything runs on your computer — nothing is uploaded and no data is collected.",
+q4:"Can I convert many images at once?",a4:"Yes. Add several files, choose a format and quality, and download them together as a single .zip.",
+q5:"Which browsers work?",a5:"Chrome 116 or newer and other Chromium-based browsers (Edge, Brave, Opera…) that support Manifest V3.",
+cTitle:"Ready to convert?",cDesc:"Open the extension popup from your toolbar and drop in your first image.",cBtn:"Back to top",
+fAuthor:"Author",fAi:"Built with the help of Claude AI",
+title:"Photo Converter — Convert images to PNG, JPEG & WEBP in one click",
+desc:"Photo Converter is a free, private Chrome extension to convert images to PNG, JPEG or WEBP. Right-click any image, batch-convert to .zip, resize and tune quality — all offline, in Material Design."},
+vi:{navFeatures:"Tính năng",navHow:"Cách dùng",navPrivacy:"Riêng tư",navFaq:"Hỏi đáp",colors:"Màu chủ đạo",theme:"Giao diện",
+badge:"Miễn phí · Riêng tư · Ngoại tuyến",h1a:"Chuyển đổi mọi ảnh",h1b:"chỉ một cú nhấp",lead:"Chuột phải vào bất kỳ ảnh nào trên web để lưu thành PNG, JPEG hoặc WEBP — hoặc thả tệp của bạn vào và chuyển đổi cả loạt thành một tệp .zip. Nhanh, riêng tư và đơn giản đến bất ngờ.",
+ctaStart:"Bắt đầu",ctaFeatures:"Khám phá tính năng",mDrop:"Thả ảnh vào đây",mGo:"Chuyển đổi & tải xuống",
+st1:"Định dạng đầu ra",st2:"Tệp bị tải lên",st3:"Ảnh mỗi lượt",st4:"Màu chủ đạo",
+fEyebrow:"Tính năng",fTitle:"Mọi thứ bạn cần, không thừa thứ nào",fSub:"Bộ công cụ gọn gàng để chuyển đổi ảnh — trong giao diện Material Design thanh lịch.",
+f1t:"Chuyển đổi bằng chuột phải",f1d:"Lưu ảnh trên web dưới dạng PNG, JPEG, WEBP hoặc định dạng gốc ngay từ menu ngữ cảnh.",
+f2t:"Hàng loạt ra .zip",f2d:"Thả nhiều ảnh cùng lúc. Chúng được chuyển đổi và đóng gói gọn trong một tệp .zip.",
+f3t:"Đổi kích thước & chất lượng",f3d:"Đặt kích thước chính xác với khoá tỉ lệ, tinh chỉnh chất lượng JPEG/WEBP bằng thanh trượt trực quan.",
+f4t:"Dán & đường dẫn",f4d:"Dán ảnh chụp màn hình bằng Ctrl+V hoặc tải ảnh từ liên kết — không cần lưu trước.",
+f5t:"Phong cách của bạn",f5d:"Chọn trong 18 màu Material, đổi giao diện sáng, tối hoặc theo hệ thống, dùng tiếng Anh hoặc tiếng Việt.",
+f6t:"Lịch sử thông minh",f6d:"Các lần chuyển đổi gần đây kèm ảnh thu nhỏ. Lặp lại lần lưu bằng chuột phải chỉ với một chạm, hoặc xuất nhật ký.",
+hEyebrow:"Cách dùng",hTitle:"Ba bước. Chỉ vậy thôi.",
+s1t:"Thêm ảnh",s1d:"Kéo thả, chọn tệp, dán bằng Ctrl+V, tải từ URL — hoặc chuột phải vào ảnh trên bất kỳ trang nào.",
+s2t:"Chọn định dạng",s2d:"Chọn PNG, JPEG hoặc WEBP, chỉnh chất lượng và đổi kích thước nếu chỉ có một ảnh.",
+s3t:"Tải xuống",s3d:"Một ảnh sẽ tải trực tiếp. Nhiều ảnh được gom lại trong một tệp .zip.",
+pEyebrow:"Ưu tiên riêng tư",pTitle:"Ảnh của bạn không bao giờ rời khỏi thiết bị",pDesc:"Toàn bộ việc giải mã và mã hoá diễn ra ngay trong trình duyệt nhờ Canvas API. Không máy chủ, không tài khoản, không theo dõi.",
+p1:"Chuyển đổi 100% ngoại tuyến",p2:"Không tải lên, không phân tích",p3:"Nhẹ & gọn — không phụ thuộc thư viện",
+qTitle:"Câu hỏi thường gặp",
+q1:"Hỗ trợ những định dạng nào?",a1:"Bạn có thể mở ảnh PNG, JPEG, WEBP, GIF, BMP, SVG và chuyển đổi sang PNG, JPEG hoặc WEBP.",
+q2:"Có giữ nền trong suốt không?",a2:"Có với PNG và WEBP. JPEG không hỗ trợ trong suốt nên vùng trong suốt được tô nền trắng thay vì đen.",
+q3:"Có thật sự miễn phí và riêng tư?",a3:"Hoàn toàn. Mọi thứ chạy trên máy của bạn — không tải lên, không thu thập dữ liệu.",
+q4:"Có chuyển đổi nhiều ảnh cùng lúc được không?",a4:"Được. Thêm nhiều tệp, chọn định dạng và chất lượng rồi tải về cùng lúc trong một tệp .zip.",
+q5:"Trình duyệt nào dùng được?",a5:"Chrome 116 trở lên và các trình duyệt nhân Chromium (Edge, Brave, Opera…) hỗ trợ Manifest V3.",
+cTitle:"Sẵn sàng chuyển đổi?",cDesc:"Mở popup tiện ích trên thanh công cụ và thả ảnh đầu tiên của bạn vào.",cBtn:"Lên đầu trang",
+fAuthor:"Tác giả",fAi:"Phát triển với sự hỗ trợ của AI Claude",
+title:"Photo Converter — Chuyển đổi ảnh sang PNG, JPEG & WEBP chỉ một cú nhấp",
+desc:"Photo Converter là tiện ích Chrome miễn phí, riêng tư giúp chuyển đổi ảnh sang PNG, JPEG hoặc WEBP. Chuột phải để lưu, chuyển hàng loạt ra .zip, đổi kích thước, chỉnh chất lượng — ngoại tuyến, Material Design."}
+};
+var COLORS=[["#F44336","Red","Đỏ"],["#E91E63","Pink","Hồng"],["#9C27B0","Purple","Tím"],["#673AB7","Deep Purple","Tím đậm"],["#3F51B5","Indigo","Chàm"],["#2196F3","Blue","Xanh dương"],["#03A9F4","Light Blue","Xanh da trời"],["#00BCD4","Cyan","Lục lam"],["#009688","Teal","Xanh mòng két"],["#4CAF50","Green","Xanh lá"],["#8BC34A","Light Green","Xanh lá nhạt"],["#CDDC39","Lime","Xanh chanh"],["#FFEB3B","Yellow","Vàng"],["#FFC107","Amber","Hổ phách"],["#FF9800","Orange","Cam"],["#FF5722","Deep Orange","Cam đậm"],["#795548","Brown","Nâu"],["#607D8B","Blue Grey","Xám xanh"]];
+
+/* ---- colour maths (same scheme generator as the extension) ---- */
+function h2r(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}
+function r2h(c){return"#"+c.map(function(v){return Math.round(Math.min(255,Math.max(0,v))).toString(16).padStart(2,"0")}).join("")}
+function mix(a,b,t){var x=h2r(a),y=h2r(b);return r2h(x.map(function(v,i){return v+(y[i]-v)*t}))}
+function lum(h){var c=h2r(h).map(function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function ctr(a,b){var l1=lum(a),l2=lum(b);return(Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05)}
+function onC(h){return ctr(h,"#ffffff")>=3?"#ffffff":"#1b1b1f"}
+function ens(c,bg,m,to){var i=0;while(ctr(c,bg)<m&&i++<24)c=mix(c,to,.08);return c}
+function scheme(s,d){
+  if(!d){var sf=mix("#ffffff",s,.035),pc=mix("#ffffff",s,.26);return{"--primary":s,"--on-primary":onC(s),"--primary-container":pc,"--on-primary-container":ens(mix(s,"#000000",.6),pc,7,"#000000"),"--primary-text":ens(s,sf,4.5,"#000000"),"--surface":sf,"--surface-1":mix("#ffffff",s,.07),"--surface-2":mix("#ffffff",s,.11),"--surface-3":mix("#ffffff",s,.15),"--on-surface":mix("#1c1b1f",s,.06),"--on-surface-variant":mix("#49454f",s,.12),"--outline":mix("#79747e",s,.15),"--outline-variant":mix("#cac4d0",s,.2),"--shadow":"rgba(0,0,0,.16)"}}
+  var sd=mix("#141316",s,.06),p=ens(s,sd,3.2,"#ffffff"),c=mix("#141316",s,.42);
+  return{"--primary":p,"--on-primary":onC(p),"--primary-container":c,"--on-primary-container":ens(mix(s,"#ffffff",.8),c,7,"#ffffff"),"--primary-text":ens(s,sd,4.5,"#ffffff"),"--surface":sd,"--surface-1":mix("#141316",s,.1),"--surface-2":mix("#141316",s,.14),"--surface-3":mix("#141316",s,.18),"--on-surface":mix("#e6e1e5",s,.05),"--on-surface-variant":mix("#cac4d0",s,.08),"--outline":mix("#938f99",s,.12),"--outline-variant":mix("#49454f",s,.15),"--shadow":"rgba(0,0,0,.5)"}
+}
+
+/* ---- state (storage may be unavailable inside the extension's sandboxed page) ---- */
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+var hash={};location.hash.replace(/^#/,"").split("&").forEach(function(p){var a=p.split("=");if(a[0])hash[a[0]]=decodeURIComponent(a[1]||"")});
+var st={
+  lang:hash.lang||ls("pc-lang")||((navigator.language||"en").toLowerCase().indexOf("vi")===0?"vi":"en"),
+  theme:hash.theme||ls("pc-theme")||"system",
+  color:hash.color||ls("pc-color")||"#FF5722"
+};
+if(st.lang!=="vi")st.lang="en";
+if(["light","dark","system"].indexOf(st.theme)<0)st.theme="system";
+if(!/^#[0-9a-f]{6}$/i.test(st.color))st.color="#FF5722";
+var mql=window.matchMedia("(prefers-color-scheme: dark)");
+var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+function applyTheme(){
+  var dark=st.theme==="dark"||(st.theme==="system"&&mql.matches),v=scheme(st.color,dark),r=document.documentElement;
+  for(var k in v)r.style.setProperty(k,v[k]);
+  r.style.colorScheme=dark?"dark":"light";
+  $("#themeIcon use").setAttribute("href","#i-"+(st.theme==="light"?"sun":st.theme==="dark"?"moon":"monitor"));
+  var tc=$('meta[name="theme-color"]');if(tc)tc.setAttribute("content",v["--primary"]);
+  $$(".sw").forEach(function(b){b.setAttribute("aria-checked",String(b.dataset.hex.toLowerCase()===st.color.toLowerCase()))});
+}
+function applyLang(){
+  var d=T[st.lang];document.documentElement.lang=st.lang;
+  $$("[data-i18n]").forEach(function(n){if(d[n.dataset.i18n]!==undefined)n.textContent=d[n.dataset.i18n]});
+  $$("[data-i18n-title]").forEach(function(n){var t=d[n.dataset.i18nTitle];n.title=t;n.setAttribute("aria-label",t)});
+  $$(".lang button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===st.lang))});
+  $$(".sw").forEach(function(b,i){var n=COLORS[i][st.lang==="vi"?2:1];b.title=n;b.setAttribute("aria-label",n)});
+  document.title=d.title;
+  [['meta[name="description"]',d.desc],['meta[property="og:title"]',d.title],['meta[property="og:description"]',d.desc],['meta[name="twitter:title"]',d.title],['meta[name="twitter:description"]',d.desc]].forEach(function(p){var m=$(p[0]);if(m)m.setAttribute("content",p[1])});
+  var og=$('meta[property="og:locale"]');if(og)og.setAttribute("content",st.lang==="vi"?"vi_VN":"en_US");
+}
+
+/* palette */
+var pal=$("#palette");
+COLORS.forEach(function(c){var b=document.createElement("button");b.className="sw";b.type="button";b.setAttribute("role","radio");b.dataset.hex=c[0];b.style.setProperty("--c",c[0]);b.style.setProperty("--on",onC(c[0]));b.innerHTML='<svg class="icon"><use href="#i-check"/></svg>';b.addEventListener("click",function(){st.color=c[0];ls("pc-color",c[0]);applyTheme()});pal.appendChild(b)});
+var pb=$("#paletteBtn");
+function togglePal(o){var open=o===undefined?!pal.classList.contains("open"):o;pal.classList.toggle("open",open);pb.setAttribute("aria-expanded",String(open))}
+pb.addEventListener("click",function(e){e.stopPropagation();togglePal()});
+document.addEventListener("click",function(e){if(!pal.contains(e.target))togglePal(false)});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){togglePal(false);nav.classList.remove("open")}});
+
+/* theme / language */
+$("#themeBtn").addEventListener("click",function(){st.theme={system:"dark",dark:"light",light:"system"}[st.theme];ls("pc-theme",st.theme);applyTheme()});
+$$(".lang button").forEach(function(b){b.addEventListener("click",function(){st.lang=b.dataset.lang;ls("pc-lang",st.lang);applyLang()})});
+(mql.addEventListener?mql.addEventListener("change",function(){if(st.theme==="system")applyTheme()}):0);
+
+/* mobile nav */
+var nav=$("#nav");$("#menuBtn").addEventListener("click",function(e){e.stopPropagation();nav.classList.toggle("open")});
+$$("#nav a").forEach(function(a){a.addEventListener("click",function(){nav.classList.remove("open")})});
+
+/* ripple */
+document.addEventListener("pointerdown",function(e){var t=e.target.closest&&e.target.closest(".btn,.icon-btn");if(!t)return;var r=t.getBoundingClientRect(),s=Math.max(r.width,r.height)*2,w=document.createElement("span");w.className="wave";w.style.cssText="width:"+s+"px;height:"+s+"px;left:"+(e.clientX-r.left-s/2)+"px;top:"+(e.clientY-r.top-s/2)+"px";t.appendChild(w);w.addEventListener("animationend",function(){w.remove()})});
+
+/* scroll: bar shadow, active nav, reveal */
+var bar=$("#bar");function onScroll(){bar.classList.toggle("scrolled",window.scrollY>8)}
+addEventListener("scroll",onScroll,{passive:true});onScroll();
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+  $$(".rv").forEach(function(n){io.observe(n)});
+  var links=$$("#nav a"),so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id)})}})},{rootMargin:"-45% 0px -50% 0px"});
+  ["features","how","privacy","faq"].forEach(function(id){so.observe(document.getElementById(id))});
+}else{$$(".rv").forEach(function(n){n.classList.add("in")})}
+
+applyLang();applyTheme();
+})();
+</script>
+</body>
+</html>

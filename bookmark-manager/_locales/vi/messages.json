@@ -1,0 +1,5 @@
+{
+  "extName": { "message": "TagMark - Quản lý bookmark thông minh", "description": "Tên tiện ích" },
+  "extDescription": { "message": "Sắp xếp bookmark Chrome thật của bạn bằng thẻ, ghi chú, tìm kiếm tức thì, phát hiện trùng lặp và thao tác hàng loạt. Material Design 3, giao diện sáng/tối, tiếng Anh & tiếng Việt.", "description": "Mô tả tiện ích" },
+  "cmdQuickBookmark": { "message": "Lưu nhanh tab hiện tại vào bookmark", "description": "Nhãn phím tắt" }
+}

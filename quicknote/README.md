@@ -1,156 +1,127 @@
 <div align="center">
 
-<img src="icons/icon128.png" width="88" height="88" alt="QuickNote logo" />
+<img src="icons/icon128.png" width="96" height="96" alt="QuickNote logo" />
 
 # QuickNote
 
-**Ghi chú nhanh, riêng tư, theo phong cách Material Design 3**
-**A fast, private note-taking extension styled with Material Design 3**
+**Ghi chú nhanh, riêng tư, chuẩn Material Design 3**<br />
+**Fast, private notes in Material Design 3**
 
-[Tính năng](#-tính-năng--features) ·
-[Cài đặt](#-cài-đặt--installation) ·
-[Sử dụng](#-sử-dụng--usage) ·
-[Cấu trúc dự án](#-cấu-trúc-dự-án--project-structure) ·
-[Quyền riêng tư](#-quyền-riêng-tư--privacy) ·
-[Giấy phép](#-giấy-phép--license)
+![Manifest V3](https://img.shields.io/badge/Manifest-V3-00BCD4) ![Material Design 3](https://img.shields.io/badge/Material%20Design-3-00BCD4) ![Lucide](https://img.shields.io/badge/icons-Lucide-00BCD4) ![License](https://img.shields.io/badge/license-MIT-00BCD4) ![Version](https://img.shields.io/badge/version-3.0.0-00BCD4)
+
+[Tính năng · Features](#-tính-năng--features) ·
+[Ảnh chụp · Screenshots](#-ảnh-chụp--screenshots) ·
+[Cài đặt · Install](#-cài-đặt--installation) ·
+[Phím tắt · Shortcuts](#-phím-tắt--shortcuts) ·
+[Cấu trúc · Structure](#-cấu-trúc-dự-án--project-structure)
+
+<img src="screenshots/image01.png" width="720" alt="QuickNote — main window" />
 
 </div>
 
----
-
-> 🇻🇳 Tài liệu này gồm hai phần: **Tiếng Việt** trước, **English** sau mỗi mục.
-> 🇬🇧 This document is bilingual: **Vietnamese** first, **English** right after each section.
+> 🇻🇳 Mỗi mục có **Tiếng Việt** trước, **English** sau. · 🇬🇧 Every section is **Vietnamese** first, **English** second.
 
 ## ✨ Tính năng · Features
 
 | | Tiếng Việt | English |
 |---|---|---|
-| ⚡ | Mở tức thì từ thanh công cụ trình duyệt, tự động lưu khi gõ | Instant access from the toolbar, autosaves as you type |
-| 🎨 | Giao diện chuẩn **Material Design 3** — màu sắc hài hoà, bo góc mềm, hiệu ứng ripple | True **Material Design 3** interface — harmonious colour roles, soft shapes, ripple feedback |
-| 🌐 | Song ngữ **Tiếng Việt / English**, chuyển đổi tức thì, font **Be Vietnam Pro** | Bilingual **Vietnamese / English**, instant switching, **Be Vietnam Pro** font |
-| 📌 | Ghim ghi chú quan trọng lên đầu danh sách | Pin important notes to the top of the list |
-| 🏷️ | Gắn nhãn màu (7 màu) để phân loại trực quan | 7 colour labels for at-a-glance organisation |
-| 🗑️ | Thùng rác an toàn — khôi phục trong vòng 30 ngày, có nút **Hoàn tác** ngay sau khi xoá | Safety-net Trash — restore within 30 days, with an **Undo** action right after deleting |
-| 🔀 | Sắp xếp theo ngày sửa, ngày tạo hoặc tiêu đề A–Z | Sort by last edited, date created, or title A–Z |
-| 📄 | Nhân bản ghi chú chỉ với một cú nhấp | Duplicate a note in a single click |
-| 📤 | Xuất/nhập ghi chú: `.json`, `.csv`, `.md`, `.txt` | Import/export notes: `.json`, `.csv`, `.md`, `.txt` |
-| ⚙️ | **Trang Cài đặt riêng** — ngôn ngữ, giao diện, cỡ chữ, độ trễ tự lưu, màu mặc định | **Dedicated Settings page** — language, theme, font size, autosave delay, default colour |
-| 💾 | **Xuất / nhập tệp cài đặt** để đồng bộ nhanh giữa các máy | **Export/import a settings file** to sync preferences across machines |
-| 🌗 | 3 chế độ giao diện: Sáng / Tối / Theo hệ thống | 3 theme modes: Light / Dark / Follow system |
-| ⌨️ | Phím tắt cho các thao tác thường dùng | Keyboard shortcuts for common actions |
-| 🔒 | Không máy chủ, không theo dõi, không quảng cáo — mọi dữ liệu chỉ lưu cục bộ | No server, no tracking, no ads — everything stays on your device |
+| ⚡ | Mở tức thì bằng biểu tượng hoặc `Alt+Shift+N`, **tự lưu khi gõ** và không mất dữ liệu khi popup đóng đột ngột | Opens instantly, **autosaves as you type** and never loses edits when the popup closes |
+| 🎨 | Giao diện **Material Design 3** với **18 màu** chủ đạo; bảng màu sáng/tối được sinh tự động | **Material Design 3** UI with **18 accent colours**; light/dark palettes generated automatically |
+| 🌗 | Giao diện **Sáng / Tối / Theo hệ thống** | **Light / Dark / System** appearance |
+| 🌐 | **Tiếng Việt & English**, tự nhận diện ngôn ngữ trình duyệt | **Vietnamese & English**, auto-detected from the browser |
+| 📌 | Ghim ghi chú, 6 nhãn màu | Pin notes, 6 colour labels |
+| 🔎 | Tìm kiếm **không dấu** ("ca phe" → "cà phê"), sắp xếp theo ngày sửa/tạo/A–Z | **Accent-insensitive** search, sort by edited/created/A–Z |
+| 🗑️ | Thùng rác 30 ngày + nút **Hoàn tác** | 30-day trash with an **Undo** action |
+| 📤 | Nhập/xuất `.json`, `.csv`, `.md`, `.txt` | Import/export `.json`, `.csv`, `.md`, `.txt` |
+| ⚙️ | Trang **Cài đặt gọn**: màu sắc · giao diện · ngôn ngữ · giới thiệu — mở ngay trong popup, không cần tab mới | **Compact Settings**: colour · appearance · language · about — opens inside the popup, no new tab |
+| 🔒 | Dữ liệu chỉ lưu trên máy, chạy hoàn toàn offline, không font/script ngoài | Data stays on-device, fully offline, no external fonts/scripts |
+| 🌍 | Có sẵn **landing page** một file (`landing.html`) | Ships with a single-file **landing page** (`landing.html`) |
 
----
+Font dùng **font mặc định của hệ thống** (`system-ui`); icon dùng **[Lucide](https://lucide.dev)** (đóng gói cục bộ).<br />
+The UI uses the **system default font** (`system-ui`); icons are **[Lucide](https://lucide.dev)** (bundled locally).
+
+## 🖼️ Ảnh chụp · Screenshots
+
+| | |
+|---|---|
+| ![](screenshots/image01.png)<br />**Giao diện chính (sáng) · Main window (light)** | ![](screenshots/image02.png)<br />**Chế độ tối, màu Deep Purple · Dark mode, Deep Purple** |
+| ![](screenshots/image03.png)<br />**Cài đặt (trong popup) · Settings (inside the popup)** | ![](screenshots/image04.png)<br />**Đổi màu Teal · Switching to Teal** |
+| ![](screenshots/image05.png)<br />**Nhãn màu · Colour labels** | ![](screenshots/image06.png)<br />**Nhập / xuất · Import / export** |
+| ![](screenshots/image07.png)<br />**Thùng rác · Trash** | ![](screenshots/image08.png)<br />**Landing page (desktop)** |
+
+<p align="center"><img src="screenshots/image09.png" width="260" alt="Landing page on mobile" /><br /><b>Landing page (mobile, dark)</b></p>
 
 ## 📦 Cài đặt · Installation
 
-QuickNote hiện được phân phối dưới dạng mã nguồn (chưa phát hành trên Chrome Web Store), vì vậy hãy cài đặt theo kiểu **tiện ích chưa đóng gói (Load unpacked)**:
-QuickNote currently ships as source code (not yet published on the Chrome Web Store), so install it as an **unpacked extension**:
+**Tiếng Việt**
+1. Giải nén thư mục `quicknote`.
+2. Mở `chrome://extensions` (hoặc `edge://extensions`) và bật **Developer mode**.
+3. Nhấn **Load unpacked** → chọn thư mục `quicknote`.
+4. Ghim biểu tượng QuickNote lên thanh công cụ.
 
-1. **Tải & giải nén** dự án này ra một thư mục bất kỳ.
-   **Download & unzip** this project to any folder.
-2. Mở `chrome://extensions` (Chrome/Brave) hoặc `edge://extensions` (Edge).
-   Open `chrome://extensions` (Chrome/Brave) or `edge://extensions` (Edge).
-3. Bật **Developer mode** (Chế độ dành cho nhà phát triển) ở góc trên bên phải.
-   Turn on **Developer mode** in the top-right corner.
-4. Nhấn **Load unpacked** và chọn thư mục `quicknote-extension` vừa giải nén.
-   Click **Load unpacked** and select the unzipped `quicknote-extension` folder.
-5. Ghim QuickNote lên thanh công cụ để truy cập nhanh.
-   Pin QuickNote to your toolbar for quick access.
+**English**
+1. Unzip the `quicknote` folder.
+2. Open `chrome://extensions` (or `edge://extensions`) and enable **Developer mode**.
+3. Click **Load unpacked** and select the `quicknote` folder.
+4. Pin the QuickNote icon to the toolbar.
 
-A step-by-step visual guide is also built into the extension itself — click the ℹ️ **About** icon in the popup toolbar to open the landing page, which includes the same instructions.
+Yêu cầu / Requires: Chrome, Edge, Brave hoặc trình duyệt Chromium ≥ 105 (Manifest V3).
 
----
+## ⚙️ Cài đặt trong ứng dụng · In-app settings
 
-## 🚀 Sử dụng · Usage
+Nhấn biểu tượng ⚙️ trên thanh công cụ của popup — bảng cài đặt trượt ra **ngay trong popup**. Cũng có thể mở từ *Details → Extension options* (hiển thị nhúng trong `chrome://extensions`).<br />
+Press ⚙️ in the popup toolbar — the settings panel slides in **inside the popup**. It is also available under *Details → Extension options* (embedded in `chrome://extensions`).
 
-### Ghi chú (Popup) · Notes (Popup)
+- **Màu sắc · Colour** — 18 màu Material (Red … Blue Grey), mặc định Cyan `#00BCD4` · 18 Material colours, default Cyan `#00BCD4`
+- **Giao diện · Appearance** — Hệ thống / Sáng / Tối · System / Light / Dark
+- **Ngôn ngữ · Language** — Tự động / Tiếng Việt / English · Auto / Vietnamese / English
+- **Giới thiệu · About** — tác giả `minhtrong67`, hỗ trợ AI **Claude** (Anthropic); nút **Mở trang giới thiệu** mở `landing.html` trong tab mới (đường dẫn nằm trong mã nguồn, không cần URL deploy) · author `minhtrong67`, AI support **Claude** (Anthropic); the **Open landing page** button opens the bundled `landing.html` in a new tab (no deployment URL needed)
 
-- **Ghi chú mới / New note** — nút nổi ở cuối thanh bên · the extended button at the bottom of the sidebar.
-- **Tìm kiếm / Search** — lọc theo tiêu đề và nội dung · filters by title and content.
-- **Tất cả / Đã ghim / Thùng rác** — ba thẻ lọc (chip) phía trên danh sách · three filter chips above the list.
-- **Ghim, gắn nhãn màu, nhân bản, sao chép nội dung** — các biểu tượng trên thanh công cụ của trình soạn thảo · **Pin, colour label, duplicate, copy content** — icons on the editor toolbar.
-- **Xoá** chuyển ghi chú vào **Thùng rác** (giữ 30 ngày, có thể khôi phục); một thông báo **Hoàn tác** hiện ra ngay lập tức. **Delete** moves a note to **Trash** (kept 30 days, restorable); an **Undo** snackbar appears immediately.
+## ⌨️ Phím tắt · Shortcuts
 
-### ⌨️ Phím tắt · Keyboard shortcuts
-
-| Thao tác · Action | Phím · Shortcut |
+| Phím · Key | Tác vụ · Action |
 |---|---|
-| Ghi chú mới · New note | `Ctrl/⌘ + Shift + N` |
-| Sao chép nội dung · Copy content | `Ctrl/⌘ + Shift + C` |
-| Tìm kiếm · Focus search | `Ctrl/⌘ + Shift + F` |
-| Ghim / bỏ ghim · Pin / unpin | `Ctrl/⌘ + Shift + P` |
-| Đóng bảng đang mở · Close open panel | `Esc` |
+| `Alt+Shift+N` | Mở QuickNote · Open QuickNote (đổi tại `chrome://extensions/shortcuts`) |
+| `Alt+N` | Ghi chú mới · New note |
+| `Alt+F` | Tìm kiếm · Search |
+| `Alt+P` | Ghim / bỏ ghim · Pin / unpin |
+| `Ctrl/⌘+S` | Lưu ngay · Save now |
+| `Esc` | Đóng hộp thoại, menu, cài đặt · Close dialog, menu, settings |
 
-### ⚙️ Trang Cài đặt · Settings page
+## 🗂️ Cấu trúc dự án · Project structure
 
-Nhấn biểu tượng **bánh răng** trong popup để mở trang Cài đặt đầy đủ (một tab riêng), gồm:
-Click the **gear** icon in the popup to open the full Settings page (a separate tab), covering:
-
-- **Chung / General** — ngôn ngữ hiển thị, hiện/ẩn thanh bên mặc định · display language, default sidebar visibility.
-- **Giao diện / Appearance** — Sáng / Tối / Theo hệ thống, màu nhãn mặc định cho ghi chú mới · Light / Dark / System, default colour label for new notes.
-- **Soạn thảo / Editor** — cỡ chữ nội dung, độ trễ tự động lưu, xem trước trực tiếp · content font size, autosave delay, live preview.
-- **Dữ liệu / Data** — xuất/nhập ghi chú, **xuất/nhập tệp cài đặt**, khôi phục cài đặt mặc định, dọn thùng rác, xoá toàn bộ ghi chú · export/import notes, **export/import a settings file**, reset to defaults, empty trash, delete all notes.
-- **Giới thiệu / About** — phiên bản, tác giả, giấy phép, liên kết tới trang giới thiệu, danh sách phím tắt · version, author, license, link to the landing page, shortcut list.
-
-### 🌐 Trang giới thiệu · Landing page
-
-Nhấn biểu tượng ⓘ trong popup (hoặc nút **Xem trang giới thiệu** trong Cài đặt) để mở một trang giới thiệu đầy đủ về QuickNote: tính năng, hướng dẫn cài đặt, và cam kết quyền riêng tư.
-Click the ⓘ icon in the popup (or the **View landing page** button in Settings) to open a full introduction to QuickNote: features, install guide, and privacy commitment.
-
----
-
-## 🗂 Cấu trúc dự án · Project structure
-
-```
-quicknote-extension/
-├── manifest.json          # Cấu hình Manifest V3 · MV3 configuration
-├── popup.html/.css/.js    # Giao diện chính (ghi chú) · Main UI (notes)
-├── options.html/.css/.js  # Trang Cài đặt riêng · Dedicated Settings page
-├── landing.html/.css/.js  # Trang giới thiệu · Landing / about page
+```text
+quicknote/
+├── manifest.json        # Manifest V3
+├── popup.html/.css/.js  # Danh sách ghi chú, trình soạn thảo, cài đặt trong popup
+├── options.html/.js     # Cài đặt nhúng trong chrome://extensions
+├── landing.html         # Landing page 1 file (HTML+CSS+JS, SEO + social meta)
 ├── shared/
-│   ├── theme.css           # Design tokens Material Design 3 dùng chung
-│   ├── i18n.js              # Từ điển song ngữ VI/EN + hàm dịch
-│   ├── settings.js          # Giá trị mặc định & truy cập chrome.storage
-│   └── ripple.js            # Hiệu ứng ripple Material dùng chung
-├── icons/                  # Biểu tượng ứng dụng (16/32/48/128/512px)
-└── LICENSE
+│   ├── theme.css        # Token Material 3 + thành phần dùng chung
+│   ├── palettes.js      # 18 bảng màu M3 (sinh bằng material-color-utilities)
+│   ├── icons.js         # Lucide icons (cục bộ)
+│   ├── i18n.js          # Từ điển vi/en
+│   ├── settings.js      # Màu · giao diện · ngôn ngữ
+│   ├── settings-ui.js   # Màn hình cài đặt dùng chung
+│   └── ripple.js        # Hiệu ứng ripple
+├── icons/               # Icon #00BCD4 (16–512 px) + icon.svg
+└── screenshots/         # image01 … image09, og-cover
 ```
 
-Toàn bộ mã nguồn được viết mới hoàn toàn theo hướng **module hoá và có chú thích đầy đủ**: mỗi tệp có một khối mô tả ở đầu file, mỗi hàm có một dòng giải thích mục đích. Các hằng số và chuỗi văn bản được tập trung tại `shared/settings.js` và `shared/i18n.js` để tránh trùng lặp giữa popup, trang cài đặt và trang giới thiệu.
+## 🔒 Quyền riêng tư · Privacy
 
-The codebase was rewritten from the ground up to be **modular and thoroughly commented**: every file opens with a short description block, and every function has a one-line explanation of its purpose. Constants and strings are centralised in `shared/settings.js` and `shared/i18n.js` so popup, options and landing never drift out of sync.
+Chỉ dùng hai quyền `storage` và `unlimitedStorage`. Không có tài khoản, không theo dõi, không yêu cầu mạng.<br />
+Only `storage` and `unlimitedStorage` permissions are used. No accounts, no tracking, no network requests.
 
----
+## 🌐 Landing page
 
-## 🔐 Quyền riêng tư · Privacy
-
-QuickNote không có máy chủ backend, không thu thập dữ liệu người dùng và không hiển thị quảng cáo. Toàn bộ ghi chú và cài đặt được lưu bằng `chrome.storage.local` — chỉ tồn tại trên máy của bạn.
-
-QuickNote has no backend server, collects no user data, and shows no ads. All notes and settings are stored via `chrome.storage.local` — they exist only on your machine.
-
-**Quyền được yêu cầu · Permissions requested:** `storage` — chỉ để lưu ghi chú và tuỳ chỉnh cục bộ · only to save notes and preferences locally.
-
----
-
-## 🛠 Công nghệ · Built with
-
-- HTML / CSS / vanilla JavaScript (không phụ thuộc thư viện ngoài · no external runtime dependencies)
-- [Material Design 3](https://m3.material.io/) — ngôn ngữ thiết kế · design language
-- [Be Vietnam Pro](https://fonts.google.com/specimen/Be+Vietnam+Pro) — phông chữ · typeface
-- Manifest V3 (Chrome / Edge / Brave / các trình duyệt gốc Chromium khác)
-
----
-
-## 👤 Tác giả · Author
-
-**gnort67**, với sự hỗ trợ của **Claude** — trợ lý AI của Anthropic — trong việc thiết kế giao diện, viết mã, sinh biểu tượng và biên soạn tài liệu.
-
-**gnort67**, with the help of **Claude** — Anthropic's AI assistant — for interface design, code, icon generation and documentation.
-
----
+`landing.html` là một file duy nhất, có animation mượt, responsive, đổi giao diện/ngôn ngữ và đầy đủ thẻ meta SEO + Open Graph + Twitter Card + JSON-LD. Khi deploy, hãy đổi `og:image`/`twitter:image` thành URL tuyệt đối và thêm `canonical`.<br />
+`landing.html` is a single file with smooth animation, responsive layout, theme/language switching and full SEO + Open Graph + Twitter Card + JSON-LD metadata. When deploying, change `og:image`/`twitter:image` to absolute URLs and add a `canonical` link.
 
 ## 📄 Giấy phép · License
 
-Phát hành theo giấy phép **MIT** — xem [`LICENSE`](./LICENSE).
-Released under the **MIT License** — see [`LICENSE`](./LICENSE).
+MIT — xem [LICENSE](LICENSE).
+
+## 👤 Tác giả · Author
+
+**minhtrong67**, với sự hỗ trợ của AI **Claude** (Anthropic) · with AI support from **Claude** (Anthropic).

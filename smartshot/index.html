@@ -8,7 +8,7 @@
 <meta name="keywords" content="screenshot extension, chrome extension, full page screenshot, annotate screenshot, screen capture, pixelate, open source, SmartShot, chụp màn hình, tiện ích chrome, minhtrong67" />
 <meta name="author" content="minhtrong67" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
-<meta name="theme-color" content="#9C27B0" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#03A9F4" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#1D1B1F" media="(prefers-color-scheme: dark)" />
 <meta name="color-scheme" content="light dark" />
 <meta name="application-name" content="SmartShot" />
@@ -43,7 +43,7 @@
   "applicationCategory": "BrowserApplication",
   "operatingSystem": "Windows, macOS, Linux, ChromeOS (Chrome 109+)",
   "description": "Free open-source Chrome extension to capture, annotate and redact screenshots.",
-  "softwareVersion": "1.1.0",
+  "softwareVersion": "1.3.0",
   "license": "https://opensource.org/licenses/MIT",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": { "@type": "Person", "name": "minhtrong67", "url": "https://github.com/minhtrong67" },
@@ -54,81 +54,81 @@
 </script>
 
 <style>
-/* ===== Material Design 3 tokens (seed #9C27B0) ===== */
+/* ===== Material Design 3 tokens (seed #03A9F4 · Light Blue 500) ===== */
 :root, [data-theme="light"] {
-  --md-primary: #9a25ae;
-    --md-on-primary: #ffffff;
-    --md-primary-container: #ffd6fe;
-    --md-on-primary-container: #35003f;
-    --md-secondary: #6b586b;
-    --md-on-secondary: #ffffff;
-    --md-secondary-container: #f4dbf1;
-    --md-on-secondary-container: #251626;
-    --md-tertiary: #82524a;
-    --md-on-tertiary: #ffffff;
-    --md-tertiary-container: #ffdad4;
-    --md-on-tertiary-container: #33110c;
-    --md-error: #ba1a1a;
-    --md-on-error: #ffffff;
-    --md-error-container: #ffdad6;
-    --md-on-error-container: #410002;
-    --md-background: #fffbff;
-    --md-on-background: #1e1a1d;
-    --md-surface: #fffbff;
-    --md-on-surface: #1e1a1d;
-    --md-surface-variant: #ecdfe8;
-    --md-on-surface-variant: #4d444c;
-    --md-outline: #7f747d;
-    --md-outline-variant: #d0c3cc;
-    --md-inverse-surface: #332f32;
-    --md-inverse-on-surface: #f7eef3;
-    --md-inverse-primary: #f9abff;
-    --md-surface-dim: #e0d8dc;
-    --md-surface-bright: #fff7fa;
-    --md-surface-container-lowest: #ffffff;
-    --md-surface-container-low: #faf1f5;
-    --md-surface-container: #f4ecf0;
-    --md-surface-container-high: #eee6ea;
-    --md-surface-container-highest: #e9e0e4;
+  --md-primary: #006493;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #cae6ff;
+  --md-on-primary-container: #001e30;
+  --md-secondary: #50606e;
+  --md-on-secondary: #ffffff;
+  --md-secondary-container: #d3e5f5;
+  --md-on-secondary-container: #0c1d29;
+  --md-tertiary: #65587b;
+  --md-on-tertiary: #ffffff;
+  --md-tertiary-container: #ebddff;
+  --md-on-tertiary-container: #201634;
+  --md-error: #ba1a1a;
+  --md-on-error: #ffffff;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #410002;
+  --md-background: #fcfcff;
+  --md-on-background: #1a1c1e;
+  --md-surface: #fcfcff;
+  --md-on-surface: #1a1c1e;
+  --md-surface-variant: #dde3ea;
+  --md-on-surface-variant: #41474d;
+  --md-outline: #72787e;
+  --md-outline-variant: #c1c7ce;
+  --md-inverse-surface: #2e3133;
+  --md-inverse-on-surface: #f0f0f3;
+  --md-inverse-primary: #8dcdff;
+  --md-surface-dim: #d9dadd;
+  --md-surface-bright: #f9f9fc;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #f3f3f6;
+  --md-surface-container: #edeef1;
+  --md-surface-container-high: #e8e8eb;
+  --md-surface-container-highest: #e2e2e5;
   --elev1: 0 1px 2px rgb(0 0 0/.3), 0 1px 3px 1px rgb(0 0 0/.15);
   --elev2: 0 1px 2px rgb(0 0 0/.3), 0 2px 6px 2px rgb(0 0 0/.15);
   --elev3: 0 4px 8px 3px rgb(0 0 0/.15), 0 1px 3px rgb(0 0 0/.3);
 }
 [data-theme="dark"] {
-  --md-primary: #f9abff;
-    --md-on-primary: #570066;
-    --md-primary-container: #7b008f;
-    --md-on-primary-container: #ffd6fe;
-    --md-secondary: #d7bfd5;
-    --md-on-secondary: #3b2b3c;
-    --md-secondary-container: #534153;
-    --md-on-secondary-container: #f4dbf1;
-    --md-tertiary: #f6b8ad;
-    --md-on-tertiary: #4c251f;
-    --md-tertiary-container: #673b34;
-    --md-on-tertiary-container: #ffdad4;
-    --md-error: #ffb4ab;
-    --md-on-error: #690005;
-    --md-error-container: #93000a;
-    --md-on-error-container: #ffb4ab;
-    --md-background: #1e1a1d;
-    --md-on-background: #e9e0e4;
-    --md-surface: #1e1a1d;
-    --md-on-surface: #e9e0e4;
-    --md-surface-variant: #4d444c;
-    --md-on-surface-variant: #d0c3cc;
-    --md-outline: #998d96;
-    --md-outline-variant: #4d444c;
-    --md-inverse-surface: #e9e0e4;
-    --md-inverse-on-surface: #332f32;
-    --md-inverse-primary: #9a25ae;
-    --md-surface-dim: #161215;
-    --md-surface-bright: #3c383b;
-    --md-surface-container-lowest: #100d10;
-    --md-surface-container-low: #1e1a1d;
-    --md-surface-container: #221e22;
-    --md-surface-container-high: #2d292c;
-    --md-surface-container-highest: #383337;
+  --md-primary: #8dcdff;
+  --md-on-primary: #00344f;
+  --md-primary-container: #004b70;
+  --md-on-primary-container: #cae6ff;
+  --md-secondary: #b7c9d9;
+  --md-on-secondary: #22323f;
+  --md-secondary-container: #384956;
+  --md-on-secondary-container: #d3e5f5;
+  --md-tertiary: #cfc0e8;
+  --md-on-tertiary: #362b4b;
+  --md-tertiary-container: #4d4162;
+  --md-on-tertiary-container: #ebddff;
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffb4ab;
+  --md-background: #1a1c1e;
+  --md-on-background: #e2e2e5;
+  --md-surface: #1a1c1e;
+  --md-on-surface: #e2e2e5;
+  --md-surface-variant: #41474d;
+  --md-on-surface-variant: #c1c7ce;
+  --md-outline: #8b9198;
+  --md-outline-variant: #41474d;
+  --md-inverse-surface: #e2e2e5;
+  --md-inverse-on-surface: #2e3133;
+  --md-inverse-primary: #006493;
+  --md-surface-dim: #111416;
+  --md-surface-bright: #37393c;
+  --md-surface-container-lowest: #0c0e11;
+  --md-surface-container-low: #1a1c1e;
+  --md-surface-container: #1e2022;
+  --md-surface-container-high: #282a2d;
+  --md-surface-container-highest: #333537;
 }
 :root {
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
@@ -319,12 +319,12 @@ footer { padding: 36px 0 48px; color: var(--md-on-surface-variant); font-size: .
     <div class="container">
       <div class="sec-head reveal"><p class="eyebrow" data-i18n="fEyebrow">Features</p><h2 data-i18n="fTitle">Everything you need, nothing you don't</h2><p data-i18n="fSub">Three capture modes, a fast annotation editor and a polished Material Design 3 interface.</p></div>
       <div class="grid">
-        <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /></svg></div><h3 data-i18n="f1t">Visible area</h3><p data-i18n="f1d">One click grabs exactly what's on screen — instantly, in PNG or JPEG.</p></article>
+        <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /></svg></div><h3 data-i18n="f1t">Visible area</h3><p data-i18n="f1d">One click grabs exactly what's on screen — then export as PNG or JPEG.</p></article>
         <article class="card reveal" style="--d:70ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" /><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></svg></div><h3 data-i18n="f2t">Full page</h3><p data-i18n="f2d">Scrolls automatically and stitches a seamless tall image. Sticky headers appear only once.</p></article>
         <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14" /><path d="M18 22V8a2 2 0 0 0-2-2H2" /></svg></div><h3 data-i18n="f3t">Selected area</h3><p data-i18n="f3d">Drag a rectangle with a live size label to capture just the part you need.</p></article>
         <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg></div><h3 data-i18n="f4t">Powerful editor</h3><p data-i18n="f4d">Pen, arrows, shapes, text and highlighter. Select, move, resize and recolor any annotation.</p></article>
         <article class="card reveal" style="--d:70ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M3 9h18" /><path d="M3 15h18" /><path d="M9 3v18" /><path d="M15 3v18" /></svg></div><h3 data-i18n="f5t">Irreversible redaction</h3><p data-i18n="f5d">Pixelate passwords and personal data. The exported pixels are truly gone.</p></article>
-        <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg></div><h3 data-i18n="f6t">Make it yours</h3><p data-i18n="f6d">Light, dark or system theme, 19 Material colors, popular fonts and four text sizes.</p></article>
+        <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg></div><h3 data-i18n="f6t">Make it yours</h3><p data-i18n="f6d">Light, dark or system theme with 19 Material colors — and it follows your device language.</p></article>
         <article class="card reveal"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg></div><h3 data-i18n="f7t">Auto language</h3><p data-i18n="f7d">Detects your device language and switches to English or Tiếng Việt automatically.</p></article>
         <article class="card reveal" style="--d:70ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 8h.01" /><path d="M12 12h.01" /><path d="M14 8h.01" /><path d="M16 12h.01" /><path d="M18 8h.01" /><path d="M6 8h.01" /><path d="M7 16h10" /><path d="M8 12h.01" /><rect width="20" height="16" x="2" y="4" rx="2" /></svg></div><h3 data-i18n="f8t">Keyboard friendly</h3><p data-i18n="f8d">Tool hotkeys, Ctrl+Z / Y, Ctrl+S to save and Ctrl+C to copy. Paste or drop any image to edit.</p></article>
         <article class="card reveal" style="--d:140ms"><div class="ico"><svg class="lucide" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></div><h3 data-i18n="f9t">Private by design</h3><p data-i18n="f9d">Works fully offline with minimal permissions. Nothing is ever sent to a server.</p></article>
@@ -339,7 +339,7 @@ footer { padding: 36px 0 48px; color: var(--md-on-surface-variant); font-size: .
       <figure class="shot" style="margin:0"><img src="screenshots/image02.png" alt="Capture popup" loading="lazy" width="354" height="520" /><figcaption data-i18n="c2">Capture popup</figcaption></figure>
       <figure class="shot" style="margin:0"><img src="screenshots/image03.png" alt="Settings" loading="lazy" width="354" height="520" /><figcaption data-i18n="c3">Settings</figcaption></figure>
       <figure class="shot" style="margin:0"><img src="screenshots/image04.png" alt="Dark theme in Vietnamese" loading="lazy" width="354" height="520" /><figcaption data-i18n="c4">Dark theme · Tiếng Việt</figcaption></figure>
-      <figure class="shot" style="margin:0"><img src="screenshots/image05.png" alt="Teal accent color" loading="lazy" width="354" height="520" /><figcaption data-i18n="c5">Teal accent</figcaption></figure>
+      <figure class="shot wide" style="margin:0"><img src="screenshots/image05.png" alt="Dark editor with teal accent color" loading="lazy" width="832" height="520" /><figcaption data-i18n="c5">Dark editor · Teal accent</figcaption></figure>
     </div>
   </section>
 
@@ -350,7 +350,7 @@ footer { padding: 36px 0 48px; color: var(--md-on-surface-variant); font-size: .
         <div class="step reveal"><h3 data-i18n="i1t">Download &amp; unzip</h3><p data-i18n="i1d">Download the package and extract it to a permanent folder.</p></div>
         <div class="step reveal" style="--d:70ms"><h3 data-i18n="i2t">Open extensions</h3><p><span data-i18n="i2d">Go to</span> <code>chrome://extensions</code> <span data-i18n="i2e">and switch on Developer mode.</span></p></div>
         <div class="step reveal" style="--d:140ms"><h3 data-i18n="i3t">Load unpacked</h3><p data-i18n="i3d">Click “Load unpacked” and choose the extracted SmartShot folder.</p></div>
-        <div class="step reveal" style="--d:210ms"><h3 data-i18n="i4t">Pin &amp; capture</h3><p data-i18n="i4d">Pin the purple icon to your toolbar and start capturing.</p></div>
+        <div class="step reveal" style="--d:210ms"><h3 data-i18n="i4t">Pin &amp; capture</h3><p data-i18n="i4d">Pin the blue icon to your toolbar and start capturing.</p></div>
       </div>
       <div class="cta-card reveal" style="margin-top:48px">
         <div><h2 data-i18n="ctaT">Ready to capture smarter?</h2><p data-i18n="ctaD">Free forever and open source under the MIT License.</p></div>
@@ -393,22 +393,22 @@ const T = {
     lead:"SmartShot captures the visible area, an entire scrolling page or any region you drag — then lets you draw, add text and pixelate sensitive info. Everything stays on your device.",
     m1:"No tracking, no uploads", m2:"English & Tiếng Việt", m3:"19 Material colors",
     fEyebrow:"Features", fTitle:"Everything you need, nothing you don't", fSub:"Three capture modes, a fast annotation editor and a polished Material Design 3 interface.",
-    f1t:"Visible area", f1d:"One click grabs exactly what's on screen — instantly, in PNG or JPEG.",
+    f1t:"Visible area", f1d:"One click grabs exactly what's on screen — then export as PNG or JPEG.",
     f2t:"Full page", f2d:"Scrolls automatically and stitches a seamless tall image. Sticky headers appear only once.",
     f3t:"Selected area", f3d:"Drag a rectangle with a live size label to capture just the part you need.",
     f4t:"Powerful editor", f4d:"Pen, arrows, shapes, text and highlighter. Select, move, resize and recolor any annotation.",
     f5t:"Irreversible redaction", f5d:"Pixelate passwords and personal data. The exported pixels are truly gone.",
-    f6t:"Make it yours", f6d:"Light, dark or system theme, 19 Material colors, popular fonts and four text sizes.",
+    f6t:"Make it yours", f6d:"Light, dark or system theme with 19 Material colors — and it follows your device language.",
     f7t:"Auto language", f7d:"Detects your device language and switches to English or Tiếng Việt automatically.",
     f8t:"Keyboard friendly", f8d:"Tool hotkeys, Ctrl+Z / Y, Ctrl+S to save and Ctrl+C to copy. Paste or drop any image to edit.",
     f9t:"Private by design", f9d:"Works fully offline with minimal permissions. Nothing is ever sent to a server.",
     sEyebrow:"Screenshots", sTitle:"A calm, modern interface", sSub:"Material Design 3 with smooth motion — in light, dark and any accent color.",
-    c1:"Annotation editor", c2:"Capture popup", c3:"Settings", c4:"Dark theme · Tiếng Việt", c5:"Teal accent",
+    c1:"Annotation editor", c2:"Capture popup", c3:"Settings", c4:"Dark theme · Tiếng Việt", c5:"Dark editor · Teal accent",
     iEyebrow:"Install", iTitle:"Up and running in a minute", iSub:"Load SmartShot as an unpacked extension in Chrome, Edge, Brave or any Chromium browser.",
     i1t:"Download & unzip", i1d:"Download the package and extract it to a permanent folder.",
     i2t:"Open extensions", i2d:"Go to", i2e:"and switch on Developer mode.",
     i3t:"Load unpacked", i3d:"Click “Load unpacked” and choose the extracted SmartShot folder.",
-    i4t:"Pin & capture", i4d:"Pin the purple icon to your toolbar and start capturing.",
+    i4t:"Pin & capture", i4d:"Pin the blue icon to your toolbar and start capturing.",
     ctaT:"Ready to capture smarter?", ctaD:"Free forever and open source under the MIT License.",
     aEyebrow:"About", aTitle:"Built in the open", aSub:"SmartShot is public and open source — contributions and ideas are welcome.",
     by:"Created by", ai:"with AI support from Claude (Anthropic)", lic:"MIT License · free to use, modify and share", source:"View source",
@@ -421,22 +421,22 @@ const T = {
     lead:"SmartShot chụp vùng hiển thị, cả trang cuộn dài hoặc bất kỳ vùng nào bạn kéo chọn — rồi cho phép vẽ, thêm chữ và che điểm ảnh thông tin nhạy cảm. Mọi thứ nằm trên thiết bị của bạn.",
     m1:"Không theo dõi, không tải lên", m2:"English & Tiếng Việt", m3:"19 màu Material",
     fEyebrow:"Tính năng", fTitle:"Đủ dùng, không rườm rà", fSub:"Ba chế độ chụp, trình chú thích nhanh và giao diện Material Design 3 tinh tế.",
-    f1t:"Vùng hiển thị", f1d:"Một chạm là chụp đúng phần đang hiện trên màn hình — PNG hoặc JPEG.",
+    f1t:"Vùng hiển thị", f1d:"Một chạm là chụp đúng phần đang hiện trên màn hình — rồi xuất PNG hoặc JPEG.",
     f2t:"Toàn trang", f2d:"Tự động cuộn và ghép thành một ảnh dài liền mạch. Header dính chỉ xuất hiện một lần.",
     f3t:"Vùng chọn", f3d:"Kéo hình chữ nhật có hiển thị kích thước trực tiếp để chụp đúng phần cần.",
     f4t:"Trình chỉnh sửa mạnh", f4d:"Bút, mũi tên, hình khối, chữ và bút dạ quang. Chọn, di chuyển, đổi cỡ và đổi màu mọi chú thích.",
     f5t:"Che thông tin triệt để", f5d:"Làm mờ mật khẩu, dữ liệu cá nhân. Điểm ảnh khi xuất ra không thể khôi phục.",
-    f6t:"Tuỳ biến theo ý bạn", f6d:"Giao diện sáng, tối hoặc theo hệ thống, 19 màu Material, phông chữ phổ biến và bốn cỡ chữ.",
+    f6t:"Tuỳ biến theo ý bạn", f6d:"Giao diện sáng, tối hoặc theo hệ thống cùng 19 màu Material — và tự theo ngôn ngữ thiết bị.",
     f7t:"Tự nhận diện ngôn ngữ", f7d:"Nhận ngôn ngữ thiết bị và tự chuyển sang Tiếng Việt hoặc English.",
     f8t:"Thao tác bàn phím", f8d:"Phím tắt công cụ, Ctrl+Z / Y, Ctrl+S để lưu, Ctrl+C để sao chép. Dán hoặc kéo thả ảnh bất kỳ để chỉnh sửa.",
     f9t:"Riêng tư từ thiết kế", f9d:"Hoạt động hoàn toàn ngoại tuyến với quyền tối thiểu. Không gửi gì tới máy chủ.",
     sEyebrow:"Ảnh minh hoạ", sTitle:"Giao diện dịu mắt, hiện đại", sSub:"Material Design 3 với chuyển động mượt — sáng, tối và mọi màu chủ đề.",
-    c1:"Trình chú thích", c2:"Cửa sổ chụp", c3:"Cài đặt", c4:"Giao diện tối · Tiếng Việt", c5:"Màu chủ đề xanh mòng két",
+    c1:"Trình chú thích", c2:"Cửa sổ chụp", c3:"Cài đặt", c4:"Giao diện tối · Tiếng Việt", c5:"Trình chỉnh sửa tối · Màu xanh mòng két",
     iEyebrow:"Cài đặt", iTitle:"Sẵn sàng sau một phút", iSub:"Nạp SmartShot dưới dạng tiện ích giải nén trên Chrome, Edge, Brave hoặc trình duyệt Chromium bất kỳ.",
     i1t:"Tải về & giải nén", i1d:"Tải gói cài đặt và giải nén vào một thư mục cố định.",
     i2t:"Mở trang tiện ích", i2d:"Truy cập", i2e:"và bật Chế độ nhà phát triển.",
     i3t:"Tải tiện ích đã giải nén", i3d:"Nhấn “Tải tiện ích đã giải nén” rồi chọn thư mục SmartShot vừa giải nén.",
-    i4t:"Ghim & chụp", i4d:"Ghim biểu tượng màu tím lên thanh công cụ và bắt đầu chụp.",
+    i4t:"Ghim & chụp", i4d:"Ghim biểu tượng màu xanh lên thanh công cụ và bắt đầu chụp.",
     ctaT:"Sẵn sàng chụp thông minh hơn?", ctaD:"Miễn phí mãi mãi và mã nguồn mở theo Giấy phép MIT.",
     aEyebrow:"Giới thiệu", aTitle:"Xây dựng công khai", aSub:"SmartShot là dự án công khai, mã nguồn mở — đóng góp và ý tưởng luôn được chào đón.",
     by:"Tác giả", ai:"với sự hỗ trợ của AI Claude (Anthropic)", lic:"Giấy phép MIT · tự do sử dụng, chỉnh sửa và chia sẻ", source:"Xem mã nguồn",
@@ -447,8 +447,30 @@ const T = {
 
 const root = document.documentElement;
 const deviceLang = ((navigator.languages && navigator.languages[0]) || navigator.language || "en").toLowerCase().startsWith("vi") ? "vi" : "en";
-let lang = localStorage.getItem("ss_lang") || deviceLang;
-let theme = localStorage.getItem("ss_theme") || "system";
+
+// Storage can be unavailable (e.g. when this page is opened from inside the extension in a sandboxed frame).
+const ls = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
+};
+// The extension opens this page as index.html#theme=dark&lang=vi so it matches the user's settings.
+const hp = new URLSearchParams(/[=&]/.test(location.hash.slice(1)) ? location.hash.slice(1) : "");
+const hTheme = ["light", "dark", "system"].includes(hp.get("theme")) ? hp.get("theme") : null;
+const hLang = ["en", "vi"].includes(hp.get("lang")) ? hp.get("lang") : null;
+if (hTheme || hLang) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* ignore */ } }
+
+let lang = hLang || ls.get("ss_lang") || deviceLang;
+let theme = hTheme || ls.get("ss_theme") || "system";
+if (hLang) ls.set("ss_lang", lang);
+if (hTheme) ls.set("ss_theme", theme);
+
+// Inside the extension the packaged zip isn't available — send download buttons to the repository instead.
+if (location.protocol === "chrome-extension:") {
+  document.querySelectorAll('a[href^="download/"]').forEach((a) => {
+    a.href = "https://github.com/minhtrong67/web-screenshot-ext/releases";
+    a.removeAttribute("download"); a.target = "_blank"; a.rel = "noopener";
+  });
+}
 
 function applyLang() {
   root.lang = lang;
@@ -462,8 +484,8 @@ function applyTheme() {
   root.dataset.theme = dark ? "dark" : "light";
   document.getElementById("themeBtn").innerHTML = svg(theme === "system" ? "monitor" : dark ? "moon" : "sun");
 }
-document.getElementById("langBtn").onclick = () => { lang = lang === "en" ? "vi" : "en"; localStorage.setItem("ss_lang", lang); applyLang(); };
-document.getElementById("themeBtn").onclick = () => { theme = { system: "light", light: "dark", dark: "system" }[theme]; localStorage.setItem("ss_theme", theme); applyTheme(); };
+document.getElementById("langBtn").onclick = () => { lang = lang === "en" ? "vi" : "en"; ls.set("ss_lang", lang); applyLang(); };
+document.getElementById("themeBtn").onclick = () => { theme = { system: "light", light: "dark", dark: "system" }[theme]; ls.set("ss_theme", theme); applyTheme(); };
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => theme === "system" && applyTheme());
 applyLang(); applyTheme();
 document.getElementById("year").textContent = new Date().getFullYear();

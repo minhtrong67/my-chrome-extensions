@@ -1,17 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <defs>
-    <linearGradient id="themeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1B7393" />
-      <stop offset="100%" stop-color="#0D465C" />
-    </linearGradient>
-  </defs>
-  <!-- Background Squircle -->
-  <rect x="6.4" y="6.4" width="115.2" height="115.2" rx="30.7" fill="url(#themeGrad)" />
-  <!-- Lock Shackle -->
-  <path d="M 45 66.5 V 45.4 A 19 19 0 0 1 83 45.4 V 66.5" fill="none" stroke="#FFFFFF" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Lock Body -->
-  <rect x="29.4" y="58.9" width="69.2" height="51.2" rx="11.5" fill="#FFFFFF" />
-  <!-- Keyhole -->
-  <circle cx="64" cy="79.4" r="6.6" fill="#156683" />
-  <path d="M 61.6 82.5 L 66.4 82.5 L 67.5 96.8 L 60.5 96.8 Z" fill="#156683" />
+  <rect width="128" height="128" rx="28" fill="#009688"/>
+  <g transform="translate(24 24) scale(3.333)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    <circle cx="12" cy="16.5" r="1" fill="#fff"/>
+  </g>
 </svg>

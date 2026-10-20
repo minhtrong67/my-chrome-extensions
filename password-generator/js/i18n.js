@@ -1,227 +1,108 @@
-// LockSmith — i18n module
-// Bilingual dictionary: English (en) and Vietnamese (vi)
-
 const I18N = {
   en: {
-    tagline: "Password Generator",
-    modePassword: "Password",
-    modePassphrase: "Passphrase",
-    modePin: "PIN",
-    copy: "Copy",
-    copied: "Copied!",
-    regenerate: "Regenerate",
-    strengthWeak: "Weak",
-    strengthFair: "Fair",
-    strengthGood: "Good",
-    strengthStrong: "Strong",
-    strengthVeryStrong: "Very strong",
-    crackTimeLabel: "Time to crack:",
-    crackInstant: "instantly",
-    crackSeconds: (n) => `${n} second${n !== 1 ? "s" : ""}`,
-    crackMinutes: (n) => `${n} minute${n !== 1 ? "s" : ""}`,
-    crackHours: (n) => `${n} hour${n !== 1 ? "s" : ""}`,
-    crackDays: (n) => `${n} day${n !== 1 ? "s" : ""}`,
-    crackYears: (n) => `${n} year${n !== 1 ? "s" : ""}`,
-    crackThousandYears: (n) => `${n} thousand years`,
-    crackMillionYears: (n) => `${n} million years`,
-    crackBillionYears: (n) => `${n}+ billion years`,
-    length: "Length",
-    uppercase: "Uppercase A-Z",
-    lowercase: "Lowercase a-z",
-    numbers: "Numbers 0-9",
-    symbols: "Symbols !@#$",
+    appName: "Password Generator",
+    modePassword: "Password", modePassphrase: "Passphrase", modePin: "PIN",
+    copy: "Copy", regenerate: "Generate new", settings: "Settings", back: "Back",
+    strength: ["Weak", "Fair", "Good", "Strong", "Very strong"],
+    crackLabel: "Time to crack",
+    crack: {
+      instant: "instantly",
+      seconds: (n) => `${n} second${n === 1 ? "" : "s"}`,
+      minutes: (n) => `${n} minute${n === 1 ? "" : "s"}`,
+      hours: (n) => `${n} hour${n === 1 ? "" : "s"}`,
+      days: (n) => `${n} day${n === 1 ? "" : "s"}`,
+      years: (n) => `${n} year${n === 1 ? "" : "s"}`,
+      thousandYears: (n) => `${n} thousand years`,
+      millionYears: (n) => `${n} million years`,
+      billionYears: () => "billions of years"
+    },
+    length: "Length", wordCount: "Words", pinLength: "Digits",
+    uppercase: "A–Z", lowercase: "a–z", numbers: "0–9", symbols: "#$%",
     advanced: "Advanced options",
-    excludeAmbiguous: "Exclude ambiguous characters (l, 1, I, O, 0)",
-    noDuplicate: "Avoid repeating characters",
-    customExclude: "Custom characters to exclude",
-    wordCount: "Number of words",
-    separator: "Separator",
-    capitalize: "Capitalize each word",
-    addNumber: "Add a random number",
-    pinLength: "Number of digits",
-    generate: "Generate Password",
-    generatePassphrase: "Generate Passphrase",
-    generatePin: "Generate PIN",
-    history: "Recent history",
-    clear: "Clear",
-    exportTxt: "Export .txt",
-    toastHistoryExported: "History exported as .txt",
-    toastHistoryEmpty: "No history to export",
-    madeBy: "Made by",
-    settings: "Settings",
-    appearance: "Appearance",
-    theme: "Theme",
-    themeSystem: "System",
-    themeLight: "Light",
-    themeDark: "Dark",
-    fontSize: "Font size",
-    fontSmall: "Small",
-    fontMedium: "Medium",
-    fontLarge: "Large",
-    language: "Language",
-    languageAuto: "Auto (device)",
-    displayOptions: "Display",
-    showStrength: "Show strength meter",
-    showHistory: "Save recent history",
-    showHistoryHint: "When off, generated values are shown once and never saved anywhere — nothing to clear later.",
-    historyLimit: "History items to keep",
-    dataManagement: "Data",
-    exportSettings: "Export settings",
-    importSettings: "Import settings",
-    resetDefault: "Reset to default",
-    confirmClickAgain: "Click again to confirm",
-    about: "About",
-    colorTheme: "Theme color",
-    credits: "Credits",
-    openLanding: "Open landing page",
-    creditsTitle: "Built with care",
-    creditsBody: "An open-source password toolkit crafted by",
-    withClaude: "with support from Claude AI",
-    close: "Close",
-    authorLine: "Developed by",
-    historyEmpty: "No passwords generated yet",
-    historyPrivacyHint: "History is stored only on this device, in plain text, so anyone with access to your computer could read it. Keep it off for anything highly sensitive.",
-    toastCopied: "Copied to clipboard",
-    toastCopyFailed: "Could not copy",
+    excludeAmbiguous: "Exclude look-alike characters (I l 1 O 0)",
+    noDuplicate: "No repeated characters",
+    customExclude: "Characters to exclude",
+    separator: "Separator", sepSpace: "Space",
+    capitalize: "Capitalize words", addNumber: "Add a number",
+    generatePassword: "Generate password", generatePassphrase: "Generate passphrase", generatePin: "Generate PIN",
+    history: "Recent", historyHint: "Cleared when you close the browser",
+    historyEmpty: "Nothing generated yet", clear: "Clear",
+    toastCopied: "Copied to clipboard", toastCopyFailed: "Couldn’t copy — select the text manually",
     toastCleared: "History cleared",
-    toastExported: "Settings exported",
-    toastImported: "Settings imported successfully",
-    toastImportFailed: "Invalid settings file",
-    toastReset: "Settings reset to default",
-    needOneCharType: "Select at least one character type",
-    warningShorterThanRequested: "Fewer unique characters available than requested — password is shorter than the length you set",
-    customExcludePlaceholder: "e.g. { } ; \""
+    errNoType: "Select at least one character type",
+    errAllExcluded: "Every character is excluded — loosen the filters",
+    warnShorter: "Not enough unique characters — password is shorter than requested",
+    appearance: "Color", themeTitle: "Theme", languageTitle: "Language",
+    themeSystem: "System", themeLight: "Light", themeDark: "Dark",
+    langAuto: "Auto", langEn: "English", langVi: "Tiếng Việt",
+    about: "About", author: "Author", madeWith: "Supported by Claude (Anthropic)",
+    openLanding: "Open landing page", version: "Version",
+    colorNames: { red: "Red", pink: "Pink", purple: "Purple", deepPurple: "Deep purple", indigo: "Indigo", blue: "Blue", lightBlue: "Light blue", cyan: "Cyan", teal: "Teal", green: "Green", lightGreen: "Light green", lime: "Lime", yellow: "Yellow", amber: "Amber", orange: "Orange", deepOrange: "Deep orange", brown: "Brown", blueGrey: "Blue grey" }
   },
   vi: {
-    tagline: "Trình Tạo Mật Khẩu",
-    modePassword: "Mật khẩu",
-    modePassphrase: "Cụm mật khẩu",
-    modePin: "Mã PIN",
-    copy: "Sao chép",
-    copied: "Đã sao chép!",
-    regenerate: "Tạo lại",
-    strengthWeak: "Yếu",
-    strengthFair: "Trung bình",
-    strengthGood: "Khá",
-    strengthStrong: "Mạnh",
-    strengthVeryStrong: "Rất mạnh",
-    crackTimeLabel: "Thời gian bẻ khoá:",
-    crackInstant: "ngay lập tức",
-    crackSeconds: (n) => `${n} giây`,
-    crackMinutes: (n) => `${n} phút`,
-    crackHours: (n) => `${n} giờ`,
-    crackDays: (n) => `${n} ngày`,
-    crackYears: (n) => `${n} năm`,
-    crackThousandYears: (n) => `${n} nghìn năm`,
-    crackMillionYears: (n) => `${n} triệu năm`,
-    crackBillionYears: (n) => `hơn ${n} tỷ năm`,
-    length: "Độ dài",
-    uppercase: "Chữ hoa A-Z",
-    lowercase: "Chữ thường a-z",
-    numbers: "Chữ số 0-9",
-    symbols: "Ký tự đặc biệt !@#$",
-    advanced: "Tuỳ chọn nâng cao",
-    excludeAmbiguous: "Loại ký tự dễ nhầm (l, 1, I, O, 0)",
-    noDuplicate: "Tránh lặp lại ký tự",
-    customExclude: "Ký tự tuỳ chỉnh cần loại bỏ",
-    wordCount: "Số lượng từ",
-    separator: "Ký tự phân cách",
-    capitalize: "Viết hoa chữ cái đầu mỗi từ",
-    addNumber: "Thêm số ngẫu nhiên",
-    pinLength: "Số chữ số",
-    generate: "Tạo Mật Khẩu",
-    generatePassphrase: "Tạo Cụm Mật Khẩu",
-    generatePin: "Tạo Mã PIN",
-    history: "Lịch sử gần đây",
-    clear: "Xoá",
-    exportTxt: "Xuất .txt",
-    toastHistoryExported: "Đã xuất lịch sử ra file .txt",
-    toastHistoryEmpty: "Không có lịch sử để xuất",
-    madeBy: "Thực hiện bởi",
-    settings: "Cài đặt",
-    appearance: "Giao diện",
-    theme: "Chủ đề",
-    themeSystem: "Theo hệ thống",
-    themeLight: "Sáng",
-    themeDark: "Tối",
-    fontSize: "Cỡ chữ",
-    fontSmall: "Nhỏ",
-    fontMedium: "Vừa",
-    fontLarge: "Lớn",
-    language: "Ngôn ngữ",
-    languageAuto: "Tự động (thiết bị)",
-    displayOptions: "Hiển thị",
-    showStrength: "Hiện thanh đo độ mạnh",
-    showHistory: "Lưu lịch sử gần đây",
-    showHistoryHint: "Khi tắt, giá trị vừa tạo chỉ hiện một lần và không được lưu lại ở đâu cả — không có gì để xoá về sau.",
-    historyLimit: "Số mục lịch sử lưu trữ",
-    dataManagement: "Dữ liệu",
-    exportSettings: "Xuất cài đặt",
-    importSettings: "Nhập cài đặt",
-    resetDefault: "Khôi phục mặc định",
-    confirmClickAgain: "Nhấn lại để xác nhận",
-    about: "Giới thiệu",
-    colorTheme: "Màu chủ đề",
-    credits: "Ghi nhận",
-    openLanding: "Mở trang giới thiệu",
-    creditsTitle: "Được tạo nên bằng sự tận tâm",
-    creditsBody: "Bộ công cụ mật khẩu mã nguồn mở được phát triển bởi",
-    withClaude: "với sự hỗ trợ của Claude AI",
-    close: "Đóng",
-    authorLine: "Phát triển bởi",
-    historyEmpty: "Chưa có mật khẩu nào được tạo",
-    historyPrivacyHint: "Lịch sử chỉ lưu trên thiết bị này dưới dạng văn bản thường, nên bất kỳ ai dùng chung máy tính đều có thể đọc được. Nên tắt nếu bạn tạo thứ gì đó thực sự nhạy cảm.",
-    toastCopied: "Đã sao chép vào bộ nhớ tạm",
-    toastCopyFailed: "Không thể sao chép",
-    toastCleared: "Đã xoá lịch sử",
-    toastExported: "Đã xuất cài đặt",
-    toastImported: "Nhập cài đặt thành công",
-    toastImportFailed: "Tệp cài đặt không hợp lệ",
-    toastReset: "Đã khôi phục cài đặt mặc định",
-    needOneCharType: "Chọn ít nhất một loại ký tự",
-    warningShorterThanRequested: "Không đủ ký tự khác nhau như yêu cầu — mật khẩu ngắn hơn độ dài bạn đã đặt",
-    customExcludePlaceholder: "vd: { } ; \""
+    appName: "Password Generator",
+    modePassword: "Mật khẩu", modePassphrase: "Cụm từ", modePin: "PIN",
+    copy: "Sao chép", regenerate: "Tạo mới", settings: "Cài đặt", back: "Quay lại",
+    strength: ["Yếu", "Trung bình", "Khá", "Mạnh", "Rất mạnh"],
+    crackLabel: "Thời gian bẻ khóa",
+    crack: {
+      instant: "tức thì",
+      seconds: (n) => `${n} giây`, minutes: (n) => `${n} phút`, hours: (n) => `${n} giờ`,
+      days: (n) => `${n} ngày`, years: (n) => `${n} năm`,
+      thousandYears: (n) => `${n} nghìn năm`, millionYears: (n) => `${n} triệu năm`,
+      billionYears: () => "hàng tỷ năm"
+    },
+    length: "Độ dài", wordCount: "Số từ", pinLength: "Số chữ số",
+    uppercase: "A–Z", lowercase: "a–z", numbers: "0–9", symbols: "#$%",
+    advanced: "Tùy chọn nâng cao",
+    excludeAmbiguous: "Loại ký tự dễ nhầm (I l 1 O 0)",
+    noDuplicate: "Không lặp ký tự",
+    customExclude: "Ký tự cần loại trừ",
+    separator: "Dấu phân cách", sepSpace: "Cách",
+    capitalize: "Viết hoa chữ cái đầu", addNumber: "Thêm số ngẫu nhiên",
+    generatePassword: "Tạo mật khẩu", generatePassphrase: "Tạo cụm từ", generatePin: "Tạo mã PIN",
+    history: "Gần đây", historyHint: "Tự xóa khi bạn đóng trình duyệt",
+    historyEmpty: "Chưa có gì được tạo", clear: "Xóa",
+    toastCopied: "Đã sao chép", toastCopyFailed: "Không sao chép được — hãy bôi đen và chép thủ công",
+    toastCleared: "Đã xóa lịch sử",
+    errNoType: "Hãy chọn ít nhất một loại ký tự",
+    errAllExcluded: "Mọi ký tự đều bị loại — hãy nới lỏng bộ lọc",
+    warnShorter: "Không đủ ký tự khác nhau — mật khẩu ngắn hơn yêu cầu",
+    appearance: "Màu sắc", themeTitle: "Giao diện", languageTitle: "Ngôn ngữ",
+    themeSystem: "Hệ thống", themeLight: "Sáng", themeDark: "Tối",
+    langAuto: "Tự động", langEn: "English", langVi: "Tiếng Việt",
+    about: "Giới thiệu", author: "Tác giả", madeWith: "Hỗ trợ bởi Claude (Anthropic)",
+    openLanding: "Mở trang giới thiệu", version: "Phiên bản",
+    colorNames: { red: "Đỏ", pink: "Hồng", purple: "Tím", deepPurple: "Tím đậm", indigo: "Chàm", blue: "Xanh dương", lightBlue: "Xanh da trời", cyan: "Xanh lơ", teal: "Xanh ngọc", green: "Xanh lá", lightGreen: "Xanh lá nhạt", lime: "Xanh chanh", yellow: "Vàng", amber: "Hổ phách", orange: "Cam", deepOrange: "Cam đậm", brown: "Nâu", blueGrey: "Xám xanh" }
   }
 };
 
 const i18n = {
-  current: "en",
-
-  /** Look up a key; if its value is a function (used for strings that need
-   *  a number interpolated, e.g. crack-time durations), call it with the
-   *  remaining arguments. */
-  t(key, ...args) {
-    const entry = (I18N[this.current] && I18N[this.current][key]) ?? I18N.en[key] ?? key;
-    return typeof entry === "function" ? entry(...args) : entry;
+  lang: "en",
+  /** Resolve "auto" to the browser UI language: Vietnamese if it is, otherwise English. */
+  resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    const l = (navigator.language || "en").toLowerCase();
+    return l.startsWith("vi") ? "vi" : "en";
   },
-
-  setLang(lang) {
-    const detected = (navigator.language || "en").toLowerCase().startsWith("vi") ? "vi" : "en";
-    this.current = lang === "auto" ? detected : (I18N[lang] ? lang : "en");
+  set(pref) {
+    this.lang = this.resolve(pref);
+    document.documentElement.lang = this.lang;
     this.apply();
   },
-
-  apply() {
-    document.documentElement.lang = this.current;
-
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      if (el.classList.contains("is-armed")) return; // mid-countdown "click again to confirm" state — don't clobber it
-      const key = el.getAttribute("data-i18n");
-      el.textContent = this.t(key);
+  /** t("a.b", arg) — dotted lookup, functions are called with arg, falls back to English. */
+  t(key, arg) {
+    const look = (dict) => key.split(".").reduce((o, k) => (o == null ? o : o[k]), dict);
+    let v = look(I18N[this.lang]);
+    if (v === undefined) v = look(I18N.en);
+    return typeof v === "function" ? v(arg) : v ?? key;
+  },
+  apply(root = document) {
+    root.querySelectorAll("[data-i18n]").forEach((n) => { n.textContent = this.t(n.dataset.i18n); });
+    root.querySelectorAll("[data-i18n-label]").forEach((n) => {
+      const v = this.t(n.dataset.i18nLabel);
+      n.setAttribute("aria-label", v);
+      n.setAttribute("title", v);
     });
-
-    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-title");
-      el.title = this.t(key);
-    });
-
-    const excludeInput = document.getElementById("customExclude");
-    if (excludeInput) excludeInput.placeholder = this.t("customExcludePlaceholder");
-
-    const langCode = document.getElementById("langCode");
-    if (langCode) langCode.textContent = this.current.toUpperCase();
-
-    const languageSelect = document.getElementById("languageSelect");
-    if (languageSelect) languageSelect.value = this.current;
   }
 };

@@ -1,1 +1,4 @@
-{"extName":{"message":"Password Generator"},"extDescription":{"message":"Private offline password, passphrase and PIN generator."}}
+{
+  "extName": { "message": "Password Generator" },
+  "extDescription": { "message": "Generate strong passwords, passphrases and PINs offline with a secure random source. Material Design, light/dark themes, English & Vietnamese." }
+}
