@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Extension Pack — Chromium extensions by minhtrong67</title>
+<meta name="description" content="9 open-source Chromium extensions (Manifest V3) that run entirely on your device. By minhtrong67.">
+<meta name="author" content="minhtrong67">
+<link rel="canonical" href="https://minhtrong67.github.io/my-extension-pack/">
+<link rel="icon" type="image/svg+xml" href="smartshot/icons/icon.svg">
+<meta name="theme-color" content="#fafaf9" id="tc">
+<meta property="og:type" content="website">
+<meta property="og:title" content="My Extension Pack">
+<meta property="og:description" content="9 open-source Chromium extensions that run entirely on your device.">
+<meta property="og:image" content="og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"My Extension Pack","applicationCategory":"BrowserExtension","operatingSystem":"Chromium","author":{"@type":"Person","name":"minhtrong67","url":"https://github.com/minhtrong67"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script>
+(function(){try{var t=localStorage.getItem('xp-theme')||'system';
+document.documentElement.dataset.theme=(t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme:dark)').matches))?'dark':'light'}catch(e){}})();
+</script>
+<style>
+:root{--bg:#fafaf9;--sf:#fff;--sub:#f3f3f1;--bd:#e5e5e2;--tx:#171717;--tx2:#52525b;--tx3:#71717a;--ac:#0f766e;--acx:#fff;--ach:#115e59;--r:8px;--ease:cubic-bezier(.2,.7,.2,1);
+--sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color-scheme:light}
+[data-theme=dark]{--bg:#0d0d0e;--sf:#151517;--sub:#1c1c1f;--bd:#27272a;--tx:#f4f4f5;--tx2:#a1a1aa;--tx3:#8b8b94;--ac:#5eead4;--acx:#042f2e;--ach:#99f6e4;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px;-webkit-text-size-adjust:100%}
+html.theming *{transition:background-color .3s,border-color .3s,color .3s!important}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+code,kbd{font-family:var(--mono);font-size:.88em}
+p{color:var(--tx2)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:4px}
+[data-lucide]{width:18px;height:18px;stroke-width:1.75;flex:none}
+svg.lucide{width:18px;height:18px;flex:none}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 max(1.25rem,env(safe-area-inset-left))}
+section{padding:5.5rem 0 0}
+h2{font-size:clamp(1.5rem,3vw,1.9rem);font-weight:650;letter-spacing:-.02em;line-height:1.2}
+.lead{max-width:52ch;margin-top:.6rem}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top);background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+.bar{display:flex;align-items:center;gap:1.5rem;height:60px}
+.brand{display:flex;align-items:center;gap:.55rem;font-weight:650;letter-spacing:-.01em}
+.brand i,.brand svg{color:var(--ac)}
+.nav{display:flex;gap:.25rem;margin-left:auto}
+.nav a{padding:.4rem .75rem;border-radius:var(--r);font-size:.92rem;color:var(--tx2);transition:color .2s,background .2s}
+.nav a:hover{color:var(--tx);background:var(--sub)}
+.ctl{display:flex;align-items:center;gap:.5rem}
+.seg{display:flex;padding:2px;border:1px solid var(--bd);border-radius:var(--r);background:var(--sub)}
+.seg button{display:grid;place-items:center;min-width:30px;height:28px;padding:0 .45rem;border-radius:6px;color:var(--tx3);font-size:.78rem;font-weight:600;transition:background .25s var(--ease),color .2s,box-shadow .25s}
+.seg button:hover{color:var(--tx)}
+.seg button[aria-pressed=true]{background:var(--sf);color:var(--tx);box-shadow:0 1px 2px rgb(0 0 0/.12)}
+.ib{display:grid;place-items:center;width:34px;height:34px;border-radius:var(--r);color:var(--tx2);transition:background .2s,color .2s}
+.ib:hover{background:var(--sub);color:var(--tx)}
+.menu-btn{display:none}
+.menu-btn .x,.menu-btn[aria-expanded=true] .m{display:none}
+.menu-btn[aria-expanded=true] .x{display:block}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:.5rem;height:42px;padding:0 1.1rem;border-radius:var(--r);font-weight:550;font-size:.95rem;border:1px solid var(--bd);transition:transform .2s var(--ease),background .2s,border-color .2s}
+.btn:hover{border-color:var(--tx3)}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}
+.btn.pri:hover{background:var(--ach);border-color:var(--ach)}
+
+/* hero */
+.hero>*{animation:rise .7s var(--ease) both}
+.hero>:nth-child(2){animation-delay:.08s}.hero>:nth-child(3){animation-delay:.16s}.hero>:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.hero h1{font-size:clamp(2.2rem,6.2vw,4.1rem);font-weight:700;letter-spacing:-.035em;line-height:1.06;max-width:17ch}
+.hero .sub{font-size:1.15rem;max-width:50ch;margin-top:1.4rem}
+.acts{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:2rem}
+.facts{display:flex;flex-wrap:wrap;gap:.4rem 1.6rem;margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--bd);font-size:.9rem;color:var(--tx3)}
+.facts b{color:var(--tx);font-weight:600}
+
+/* extension list */
+.tools{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin:2rem 0 .5rem}
+.tabs{display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:none;margin:0 -.25rem}
+.tabs button{position:relative;padding:.45rem .75rem;font-size:.92rem;color:var(--tx3);white-space:nowrap;transition:color .2s}
+.tabs button::after{content:"";position:absolute;left:.75rem;right:.75rem;bottom:0;height:2px;background:var(--ac);transform:scaleX(0);transition:transform .3s var(--ease)}
+.tabs button:hover{color:var(--tx)}
+.tabs button[aria-pressed=true]{color:var(--tx);font-weight:600}
+.tabs button[aria-pressed=true]::after{transform:scaleX(1)}
+.search{position:relative;flex:0 1 280px;width:100%}
+.search i,.search svg{position:absolute;left:.75rem;top:50%;translate:0 -50%;color:var(--tx3);pointer-events:none}
+.search input{width:100%;height:40px;padding:0 .8rem 0 2.5rem;font:inherit;font-size:.92rem;color:var(--tx);background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);transition:border-color .2s,box-shadow .2s}
+.search input:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 20%,transparent)}
+.list{border-top:1px solid var(--bd)}
+.row{display:grid;grid-template-columns:44px 1fr auto 20px;align-items:center;gap:1rem;width:100%;padding:1.1rem .5rem;text-align:left;border-bottom:1px solid var(--bd);animation:fade .45s var(--ease) both;animation-delay:calc(var(--i)*35ms);transition:background .25s,padding .3s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+.row:hover{background:var(--sub);padding-left:1rem;padding-right:1rem}
+.row:hover .go{transform:translateX(3px);color:var(--tx)}
+.ico{width:44px;height:44px;border-radius:10px;background:var(--sf);border:1px solid var(--bd);display:grid;place-items:center;overflow:hidden}
+.ico img{width:28px;height:28px;object-fit:contain}
+.nm{font-weight:600;display:flex;align-items:baseline;gap:.6rem}
+.nm small{font-family:var(--mono);font-size:.74rem;color:var(--tx3);font-weight:400}
+.ds{font-size:.92rem;color:var(--tx2);margin-top:.15rem;max-width:68ch}
+kbd{padding:.2rem .5rem;border:1px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--tx2);white-space:nowrap}
+.go{color:var(--tx3);transition:transform .25s var(--ease),color .2s}
+.empty{display:none;padding:3rem 0;text-align:center}
+.empty.on{display:block}
+.empty b{display:block;color:var(--tx);margin-bottom:.25rem}
+
+/* principles */
+.pr{display:grid;grid-template-columns:repeat(2,1fr);gap:2.5rem 3.5rem;margin-top:2.5rem}
+.pr i,.pr svg{color:var(--ac);margin-bottom:.7rem}
+.pr h3{font-size:1.05rem;font-weight:600;margin-bottom:.3rem}
+
+/* install */
+.ins{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2.5rem;align-items:start}
+ol{list-style:none;counter-reset:s}
+ol li{counter-increment:s;position:relative;padding:0 0 1.5rem 2.6rem}
+ol li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;border:1px solid var(--bd);display:grid;place-items:center;font-size:.8rem;font-weight:600;color:var(--tx2)}
+ol li::after{content:"";position:absolute;left:13.5px;top:34px;bottom:6px;width:1px;background:var(--bd)}
+ol li:last-child::after{display:none}
+ol h3{font-size:1rem;font-weight:600}
+ol p{font-size:.93rem}
+p code,.cmd code{background:var(--sub);padding:.1rem .35rem;border-radius:4px}
+.cmd{position:sticky;top:84px;border:1px solid var(--bd);border-radius:12px;background:var(--sf);overflow:hidden}
+.cmd-h{padding:.6rem 1rem;border-bottom:1px solid var(--bd);font-size:.8rem;color:var(--tx3)}
+.cmd-b{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem}
+.cmd-b code{background:none;padding:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.cp{display:inline-flex;align-items:center;gap:.4rem;height:32px;padding:0 .7rem;border:1px solid var(--bd);border-radius:6px;font-size:.82rem;color:var(--tx2);transition:color .2s,border-color .2s}
+.cp:hover{color:var(--tx);border-color:var(--tx3)}
+.cp.ok{color:var(--ac);border-color:var(--ac)}
+.tip{padding:0 1rem 1rem;font-size:.88rem}
+
+/* faq */
+.faq{margin-top:2rem;border-top:1px solid var(--bd);max-width:760px}
+.q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.1rem 0;text-align:left;font-weight:550}
+.q svg{color:var(--tx3);transition:transform .35s var(--ease)}
+.fi{border-bottom:1px solid var(--bd)}
+.fi.open .q svg{transform:rotate(180deg)}
+.a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s var(--ease)}
+.a>div{overflow:hidden}
+.a p{padding-bottom:1.1rem;max-width:62ch}
+.fi.open .a{grid-template-rows:1fr}
+
+/* author + footer */
+.au{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;padding:2rem;border:1px solid var(--bd);border-radius:12px;background:var(--sf)}
+.au img{width:72px;height:72px;border-radius:50%;border:1px solid var(--bd);background:var(--sub)}
+.au>div{flex:1;min-width:240px}
+.au h2{font-size:1.25rem}
+.links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+footer{margin-top:5.5rem;border-top:1px solid var(--bd);padding:1.75rem 0 calc(1.75rem + env(safe-area-inset-bottom));font-size:.88rem;color:var(--tx3)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem}
+footer a:hover{color:var(--tx)}
+
+/* dialog */
+dialog{margin:auto;width:min(720px,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);padding:0;border:1px solid var(--bd);border-radius:14px;background:var(--bg);color:var(--tx);box-shadow:0 24px 60px rgb(0 0 0/.25);overflow:hidden}
+dialog[open]{display:flex;flex-direction:column;animation:pop .32s var(--ease)}
+dialog[open]::backdrop{background:rgb(10 10 10/.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fadeb .3s}
+dialog.closing{animation:out .18s ease forwards}
+dialog.closing::backdrop{animation:fadeb .18s reverse forwards}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}}
+@keyframes out{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes fadeb{from{opacity:0}}
+.dh{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.25rem 1rem}
+.dh h3{font-size:1.2rem;font-weight:650;line-height:1.2}
+.dh p{font-size:.9rem}
+.dh .ib{margin-left:auto}
+.db{overflow-y:auto;padding:0 1.25rem 1.25rem}
+.shots{display:flex;gap:.6rem;overflow-x:auto;scroll-snap-type:x mandatory;margin:1rem 0 1.25rem;padding-bottom:.4rem}
+.shots img{height:190px;width:auto;max-width:none;border:1px solid var(--bd);border-radius:8px;scroll-snap-align:start;background:var(--sub)}
+.db h4{font-size:.9rem;font-weight:600;margin:1.25rem 0 .6rem}
+.ft{list-style:none;display:grid;gap:.5rem}
+.ft li{display:flex;gap:.6rem;font-size:.93rem;color:var(--tx2)}
+.ft svg{color:var(--ac);margin-top:.2rem;width:16px;height:16px}
+.sp{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;padding:1rem;border:1px solid var(--bd);border-radius:10px;font-size:.88rem}
+.sp span{display:block;color:var(--tx3);font-size:.8rem;margin-bottom:.15rem}
+.df{display:flex;justify-content:flex-end;gap:.6rem;padding:.9rem 1.25rem calc(.9rem + env(safe-area-inset-bottom));border-top:1px solid var(--bd)}
+
+@media (max-width:860px){
+ .menu-btn{display:grid}
+ .nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;margin:0;padding:.5rem 1.25rem 1rem;background:var(--bg);border-bottom:1px solid var(--bd);visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .25s,transform .25s var(--ease),visibility .25s}
+ .nav.open{visibility:visible;opacity:1;transform:none}
+ .nav a{padding:.7rem .5rem;font-size:1rem}
+ .ctl{margin-left:auto}
+ .ins{grid-template-columns:1fr;gap:2rem}.cmd{position:static;order:-1}
+}
+@media (max-width:640px){
+ section{padding-top:4rem}
+ .pr{grid-template-columns:1fr;gap:2rem}
+ .row{grid-template-columns:40px 1fr 20px;gap:.8rem}.row kbd{display:none}
+ .ds{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+ .bar{gap:.75rem}.brand span{display:none}
+ .btn{flex:1;justify-content:center}
+ .au{padding:1.25rem}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="hdr"><div class="wrap bar">
+ <a href="#" class="brand" aria-label="My Extension Pack"><i data-lucide="blocks"></i><span>Extension Pack</span></a>
+ <nav class="nav" id="nav" aria-label="Main">
+  <a href="#extensions" data-i="nExt"></a><a href="#principles" data-i="nPri"></a><a href="#install" data-i="nIns"></a><a href="#faq" data-i="nFaq"></a>
+ </nav>
+ <div class="ctl">
+  <div class="seg" role="group" aria-label="Theme" id="themeSeg">
+   <button data-t="light" aria-label="Light" title="Light"><i data-lucide="sun"></i></button>
+   <button data-t="dark" aria-label="Dark" title="Dark"><i data-lucide="moon"></i></button>
+   <button data-t="system" aria-label="System" title="System"><i data-lucide="monitor"></i></button>
+  </div>
+  <div class="seg" role="group" aria-label="Language" id="langSeg">
+   <button data-l="vi">VI</button><button data-l="en">EN</button>
+  </div>
+  <a class="ib" href="https://github.com/minhtrong67/my-extension-pack" target="_blank" rel="noopener" aria-label="GitHub"><i data-lucide="github"></i></a>
+  <button class="ib menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="Menu"><i class="m" data-lucide="menu"></i><i class="x" data-lucide="x"></i></button>
+ </div>
+</div></header>
+
+<main>
+<section style="padding-top:clamp(4rem,10vw,7.5rem)"><div class="wrap hero">
+ <h1 data-i="h1"></h1>
+ <p class="sub" data-i="sub"></p>
+ <div class="acts">
+  <a class="btn pri" href="#extensions"><span data-i="cta1"></span><i data-lucide="arrow-down"></i></a>
+  <a class="btn" href="#install"><i data-lucide="download"></i><span data-i="cta2"></span></a>
+ </div>
+ <div class="facts"><span data-i="f1"></span><span data-i="f2"></span><span data-i="f3"></span></div>
+</div></section>
+
+<section id="extensions"><div class="wrap">
+ <h2 data-i="extT"></h2><p class="lead" data-i="extS"></p>
+ <div class="tools">
+  <div class="tabs" id="tabs" role="group">
+   <button data-c="all" aria-pressed="true" data-i="cAll"></button><button data-c="productivity" aria-pressed="false" data-i="cPro"></button><button data-c="media" aria-pressed="false" data-i="cMed"></button><button data-c="security" aria-pressed="false" data-i="cSec"></button><button data-c="youtube" aria-pressed="false">YouTube</button>
+  </div>
+  <label class="search"><i data-lucide="search"></i><input id="q" type="search" data-ph="search" autocomplete="off"></label>
+ </div>
+ <div class="list" id="list"></div>
+ <div class="empty" id="empty"><b data-i="emT"></b><span data-i="emD"></span></div>
+</div></section>
+
+<section id="principles"><div class="wrap">
+ <h2 data-i="priT"></h2>
+ <div class="pr">
+  <div><i data-lucide="shield-check"></i><h3 data-i="p1t"></h3><p data-i="p1d"></p></div>
+  <div><i data-lucide="zap"></i><h3 data-i="p2t"></h3><p data-i="p2d"></p></div>
+  <div><i data-lucide="palette"></i><h3 data-i="p3t"></h3><p data-i="p3d"></p></div>
+  <div><i data-lucide="globe"></i><h3 data-i="p4t"></h3><p data-i="p4d"></p></div>
+ </div>
+</div></section>
+
+<section id="install"><div class="wrap">
+ <h2 data-i="insT"></h2><p class="lead" data-i="insS"></p>
+ <div class="ins">
+  <ol>
+   <li><h3 data-i="s1t"></h3><p data-i="s1d"></p></li>
+   <li><h3 data-i="s2t"></h3><p data-i="s2d"></p></li>
+   <li><h3 data-i="s3t"></h3><p data-i="s3d"></p></li>
+   <li><h3 data-i="s4t"></h3><p data-i="s4d"></p></li>
+  </ol>
+  <div class="cmd">
+   <div class="cmd-h">Terminal</div>
+   <div class="cmd-b"><code id="cmdTxt">git clone https://github.com/minhtrong67/my-extension-pack.git</code>
+    <button class="cp" id="cp" type="button"><i data-lucide="copy"></i><span data-i="copy"></span></button></div>
+   <p class="tip" data-i="tip"></p>
+  </div>
+ </div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+ <h2 data-i="faqT"></h2>
+ <div class="faq" id="faqList">
+  <div class="fi open"><button class="q" aria-expanded="true"><span data-i="q1"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a1"></p></div></div></div>
+  <div class="fi"><button class="q" aria-expanded="false"><span data-i="q2"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a2"></p></div></div></div>
+  <div class="fi"><button class="q" aria-expanded="false"><span data-i="q3"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a3"></p></div></div></div>
+  <div class="fi"><button class="q" aria-expanded="false"><span data-i="q4"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a4"></p></div></div></div>
+ </div>
+</div></section>
+
+<section id="author"><div class="wrap"><div class="au">
+ <img src="https://github.com/minhtrong67.png?size=144" alt="minhtrong67" width="72" height="72" loading="lazy">
+ <div><h2>minhtrong67</h2><p data-i="bio"></p>
+  <div class="links">
+   <a class="btn" href="https://github.com/minhtrong67" target="_blank" rel="noopener"><i data-lucide="github"></i>GitHub</a>
+   <a class="btn" href="https://github.com/minhtrong67/my-extension-pack" target="_blank" rel="noopener"><i data-lucide="folder-git-2"></i>Repository</a>
+   <a class="btn" href="mailto:minhtrong9760@gmail.com"><i data-lucide="mail"></i>Email</a>
+  </div></div>
+</div></div></section>
+</main>
+
+<footer><div class="wrap"><span data-i="copy2"></span><a href="https://github.com/minhtrong67/my-extension-pack/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></div></footer>
+
+<dialog id="dlg" aria-labelledby="dT">
+ <div class="dh"><div class="ico"><img id="dI" alt="" width="28" height="28"></div>
+  <div><h3 id="dT"></h3><p id="dTag"></p></div>
+  <button class="ib" id="dX" aria-label="Close"><i data-lucide="x"></i></button></div>
+ <div class="db">
+  <p id="dD"></p>
+  <div class="shots" id="dS"></div>
+  <h4 data-i="dFeat"></h4><ul class="ft" id="dF"></ul>
+  <h4 data-i="dSpec"></h4>
+  <div class="sp"><div><span data-i="dSc"></span><kbd id="dSc"></kbd></div><div><span data-i="dPm"></span><code id="dPm"></code></div><div><span data-i="dFo"></span><code id="dFo"></code></div></div>
+ </div>
+ <div class="df"><button class="btn" id="dC" type="button" data-i="close"></button><a class="btn pri" id="dG" target="_blank" rel="noopener"><i data-lucide="github"></i><span data-i="src"></span></a></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<script>
+const X=[
+{id:'smartshot',n:'SmartShot',v:'1.3.0',c:'media',sc:'Alt + Shift + S',p:'activeTab, scripting, storage',sh:6,
+ vi:{t:'Chụp màn hình và chú thích',d:'Chụp vùng nhìn thấy, toàn trang hoặc vùng chọn, rồi vẽ, thêm chữ và làm mờ thông tin nhạy cảm.',f:['Ba chế độ chụp: vùng nhìn thấy, vùng chọn, cuộn toàn trang','Chú thích bằng mũi tên, hình khối, bút vẽ, văn bản và số bước','Làm mờ hoặc pixel hóa dữ liệu nhạy cảm, tải PNG hoặc chép vào clipboard']},
+ en:{t:'Screen capture and annotation',d:'Capture the visible area, a full page or a selection, then draw, add text and blur sensitive details.',f:['Three capture modes: visible area, selection, full-page scroll','Annotate with arrows, shapes, pen, text and step numbers','Blur or pixelate private data, then download PNG or copy to clipboard']}},
+{id:'quicknote',n:'QuickNote',v:'3.0.0',c:'productivity',sc:'Alt + Shift + N',p:'storage, unlimitedStorage',sh:5,
+ vi:{t:'Ghi chú tức thì',d:'Ghi nhanh ý tưởng và việc cần làm khi đang duyệt web. Tự động lưu, có tìm kiếm và ghim.',f:['Tự động lưu vào chrome.storage.local','Nhiều ghi chú, tìm kiếm theo thời gian thực, ghim ghi chú quan trọng','Xuất và nhập bản sao lưu dạng JSON hoặc văn bản thuần']},
+ en:{t:'Instant notes',d:'Jot down ideas and to-dos while you browse. Autosaves, with search and pinning.',f:['Autosaves to chrome.storage.local','Multiple notes, live search, pin the important ones','Export and import backups as JSON or plain text']}},
+{id:'bookmark-manager',n:'TagMark',v:'2.0.0',c:'productivity',sc:'Alt + Shift + M',p:'bookmarks, storage, favicon',sh:5,
+ vi:{t:'Quản lý bookmark bằng thẻ',d:'Sắp xếp bookmark thật của trình duyệt bằng thẻ và ghi chú, tìm nhanh, phát hiện liên kết trùng.',f:['Đồng bộ trực tiếp với Chrome Bookmarks API','Gắn thẻ và ghi chú riêng cho từng liên kết','Phát hiện URL trùng và thao tác hàng loạt']},
+ en:{t:'Bookmarks with tags',d:'Organize your real browser bookmarks with tags and notes, instant search and duplicate detection.',f:['Works directly on the Chrome Bookmarks API','Add tags and private notes to any link','Detects duplicate URLs and supports bulk actions']}},
+{id:'youtube-grid',n:'YouTube Grid',v:'3.0.0',c:'youtube',sc:['Tự động','Automatic'],p:'storage, scripting, youtube.com',sh:4,
+ vi:{t:'Lưới video YouTube',d:'Chọn số cột video từ 2 đến 8+ cho màn hình rộng, ẩn Shorts, bình luận và thẻ đề xuất.',f:['Số cột riêng cho Trang chủ, Đăng ký và Kênh','Ẩn YouTube Shorts khỏi trang chủ và tìm kiếm','Lưu cấu hình, áp dụng ngay không cần tải lại trang']},
+ en:{t:'YouTube video grid',d:'Set 2 to 8+ video columns for wide screens and hide Shorts, comments and end cards.',f:['Separate column counts for Home, Subscriptions and Channels','Removes Shorts from feeds and search','Settings persist and apply without reloading']}},
+{id:'youtube-screenshot',n:'TubeShot',v:'1.1.0',c:'youtube',sc:['Nút trên trình phát','Player button'],p:'activeTab, scripting, storage',sh:4,
+ vi:{t:'Chụp khung hình YouTube',d:'Lấy ảnh từ video ở độ phân giải gốc, không dính thanh điều khiển của trình phát.',f:['Chụp đúng khung hình video, không có controls hay overlay','Tua từng khung hình tới lui','Tùy chọn đóng dấu thời gian và tiêu đề video']},
+ en:{t:'YouTube frame capture',d:'Grab frames from a video at native resolution, without the player controls in the way.',f:['Captures the raw video frame, no controls or overlays','Step forward and back one frame at a time','Optional timestamp and title watermark']}},
+{id:'password-generator',n:'Password Generator',v:'3.0.0',c:'security',sc:['Popup','Popup'],p:'storage',sh:4,
+ vi:{t:'Tạo mật khẩu, passphrase và PIN',d:'Sinh mật khẩu ngẫu nhiên bằng Web Crypto API, passphrase Diceware và mã PIN. Hoàn toàn offline.',f:['Ba chế độ: mật khẩu, passphrase, PIN 4 đến 12 số','Thanh đo độ mạnh và thời gian bẻ khóa ước tính','Loại bỏ ký tự dễ nhầm như l, 1, I, O, 0']},
+ en:{t:'Password, passphrase and PIN generator',d:'Random passwords via the Web Crypto API, Diceware passphrases and PINs. Fully offline.',f:['Three modes: password, passphrase, 4 to 12 digit PIN','Strength meter with estimated crack time','Option to drop look-alike characters such as l, 1, I, O, 0']}},
+{id:'photo-converter',n:'Photo Converter',v:'3.0.0',c:'media',sc:['Chuột phải / Popup','Right-click / Popup'],p:'contextMenus, downloads, storage',sh:4,
+ vi:{t:'Đổi định dạng ảnh',d:'Chuột phải vào ảnh để lưu thành PNG, JPEG hoặc WEBP, hoặc kéo thả nhiều ảnh để đổi hàng loạt.',f:['Menu chuột phải lưu ảnh sang định dạng khác','Đổi hàng loạt và tải về dạng .zip','Xử lý bằng Canvas trên máy, có thanh chỉnh chất lượng']},
+ en:{t:'Image format converter',d:'Right-click any image to save as PNG, JPEG or WEBP, or drop several files to convert in bulk.',f:['Context menu saves images in another format','Batch convert and download as .zip','Runs on Canvas locally, with a quality slider']}},
+{id:'multi-downloader',n:'Multi Downloader',v:'3.0.0',c:'media',sc:['Popup','Popup'],p:'activeTab, scripting, downloads, storage',sh:0,
+ vi:{t:'Tải ảnh hàng loạt',d:'Quét mọi ảnh trên trang, lọc theo kích thước và định dạng, tự bỏ icon nhỏ, cắt 512×512 cho dữ liệu huấn luyện AI.',f:['Quét ảnh từ thẻ img, srcset và background-image','Lọc theo kích thước tối thiểu, tỉ lệ và định dạng','Cắt và đổi cỡ 512×512, tải về thư mục hoặc .zip']},
+ en:{t:'Bulk image downloader',d:'Scan a page for images, filter by size and format, skip small icons, auto-crop to 512×512 for AI training sets.',f:['Finds images in img, srcset and background-image','Filter by minimum size, aspect ratio and format','Crop and resize to 512×512, save to a folder or .zip']}},
+{id:'case-converter',n:'Case Converter',v:'1.0.0',c:'productivity',sc:['Popup / phím tắt','Popup / hotkeys'],p:'activeTab, scripting, contextMenus',sh:3,
+ vi:{t:'Đổi kiểu chữ',d:'Đổi kiểu chữ cho văn bản đã chọn hoặc dán vào popup: hoa, thường, camelCase, snake_case, kebab-case và hơn thế.',f:['Hơn 9 kiểu: UPPER, lower, Title, camelCase, PascalCase, snake_case…','Bôi đen văn bản trên bất kỳ trang nào để đổi tại chỗ','Hỗ trợ đầy đủ tiếng Việt có dấu và Unicode']},
+ en:{t:'Text case converter',d:'Change the case of selected text or paste into the popup: upper, lower, camelCase, snake_case, kebab-case and more.',f:['9+ styles: UPPER, lower, Title, camelCase, PascalCase, snake_case…','Select text on any page and convert in place','Full support for Vietnamese diacritics and Unicode']}}
+];
+const T={
+vi:{nExt:'Tiện ích',nPri:'Nguyên tắc',nIns:'Cài đặt',nFaq:'Hỏi đáp',
+h1:'Chín tiện ích cho Chromium, chạy hoàn toàn trên máy bạn',sub:'Mã nguồn mở, dùng Manifest V3, không theo dõi và không quảng cáo. Mỗi tiện ích làm tốt một việc.',cta1:'Xem tiện ích',cta2:'Cách cài đặt',
+f1:'<b>9</b> tiện ích',f2:'<b>0</b> dữ liệu thu thập',f3:'Giấy phép <b>MIT</b>',
+extT:'Tiện ích',extS:'Mỗi tiện ích hoạt động độc lập, bạn chỉ cài cái mình cần.',cAll:'Tất cả',cPro:'Năng suất',cMed:'Ảnh và video',cSec:'Bảo mật',search:'Tìm theo tên hoặc tính năng',emT:'Không có tiện ích phù hợp',emD:'Thử từ khóa khác hoặc chọn lại danh mục.',
+priT:'Nguyên tắc',p1t:'Chạy trên máy bạn',p1d:'Mọi thao tác xử lý ngay trong trình duyệt. Không telemetry, không máy chủ trung gian.',p2t:'Manifest V3',p2d:'Dùng service worker nền, tự giải phóng bộ nhớ khi không hoạt động.',p3t:'Giao diện nhất quán',p3d:'Thiết kế theo Material Design 3, có chủ đề sáng, tối và hai ngôn ngữ Anh, Việt.',p4t:'Mọi trình duyệt Chromium',p4d:'Chrome, Edge, Brave, Opera, Vivaldi và Cốc Cốc.',
+insT:'Cài đặt trong 4 bước',insS:'Các tiện ích ở dạng unpacked, không cần công cụ build.',
+s1t:'Tải mã nguồn',s1d:'Clone repository từ GitHub hoặc tải ZIP rồi giải nén.',s2t:'Mở trang tiện ích',s2d:'Nhập <code>chrome://extensions</code> hoặc <code>edge://extensions</code> vào thanh địa chỉ.',s3t:'Bật Developer mode',s3d:'Bật công tắc ở góc trên bên phải trang.',s4t:'Load unpacked',s4d:'Chọn thư mục của tiện ích muốn cài, ví dụ <code>smartshot</code>.',
+copy:'Sao chép',copied:'Đã chép',tip:'Ghim tiện ích bằng biểu tượng mảnh ghép trên thanh công cụ, và đặt phím tắt tại <code>chrome://extensions/shortcuts</code>.',
+faqT:'Hỏi đáp',q1:'Các tiện ích này có an toàn không?',a1:'Toàn bộ mã nguồn công khai. Tiện ích xử lý dữ liệu ngay trong trình duyệt, không có mã theo dõi của bên thứ ba và không gửi dữ liệu ra ngoài.',
+q2:'Cập nhật khi có phiên bản mới như thế nào?',a2:'Chạy <code>git pull</code> trong thư mục dự án, rồi nhấn nút tải lại của tiện ích tại <code>chrome://extensions</code>.',
+q3:'Dùng được trên Firefox hoặc Safari không?',a3:'Hiện chỉ nhắm tới trình duyệt Chromium. Có thể chuyển sang Firefox bằng cách chỉnh lại manifest.',
+q4:'Báo lỗi hoặc đóng góp ở đâu?',a4:'Mở Issue hoặc gửi Pull Request trên GitHub của minhtrong67/my-extension-pack.',
+bio:'Lập trình viên mã nguồn mở, làm các tiện ích trình duyệt gọn nhẹ và tôn trọng quyền riêng tư.',copy2:'© 2026 minhtrong67. Mã nguồn mở theo giấy phép MIT.',
+dFeat:'Tính năng chính',dSpec:'Thông số',dSc:'Phím tắt',dPm:'Quyền',dFo:'Thư mục',close:'Đóng',src:'Xem mã nguồn'},
+en:{nExt:'Extensions',nPri:'Principles',nIns:'Install',nFaq:'FAQ',
+h1:'Nine Chromium extensions that run entirely on your machine',sub:'Open source, built on Manifest V3, no tracking and no ads. Each extension does one job well.',cta1:'Browse extensions',cta2:'How to install',
+f1:'<b>9</b> extensions',f2:'<b>0</b> data collected',f3:'<b>MIT</b> licensed',
+extT:'Extensions',extS:'Each one works on its own, so you only install what you need.',cAll:'All',cPro:'Productivity',cMed:'Media',cSec:'Security',search:'Search by name or feature',emT:'No matching extensions',emD:'Try another keyword or pick a different category.',
+priT:'Principles',p1t:'Runs on your device',p1d:'Everything is processed inside the browser. No telemetry, no middleman servers.',p2t:'Manifest V3',p2d:'Built on background service workers that release memory when idle.',p3t:'Consistent interface',p3d:'Designed with Material Design 3, with light, dark and system themes in English and Vietnamese.',p4t:'Any Chromium browser',p4d:'Chrome, Edge, Brave, Opera, Vivaldi and Cốc Cốc.',
+insT:'Install in 4 steps',insS:'Extensions load unpacked, so there is no build tooling to set up.',
+s1t:'Get the source',s1d:'Clone the repository from GitHub, or download the ZIP and extract it.',s2t:'Open the extensions page',s2d:'Enter <code>chrome://extensions</code> or <code>edge://extensions</code> in the address bar.',s3t:'Turn on Developer mode',s3d:'Use the toggle in the top-right corner of the page.',s4t:'Load unpacked',s4d:'Select the folder of the extension you want, for example <code>smartshot</code>.',
+copy:'Copy',copied:'Copied',tip:'Pin extensions from the puzzle-piece menu in the toolbar, and set hotkeys at <code>chrome://extensions/shortcuts</code>.',
+faqT:'FAQ',q1:'Are these extensions safe?',a1:'All source code is public. Extensions process data inside the browser, include no third-party tracking and send nothing out.',
+q2:'How do I update to a new version?',a2:'Run <code>git pull</code> in the project folder, then click reload on the extension at <code>chrome://extensions</code>.',
+q3:'Do they work on Firefox or Safari?',a3:'They target Chromium browsers only. Porting to Firefox is possible with manifest changes.',
+q4:'Where do I report bugs or contribute?',a4:'Open an issue or send a pull request on minhtrong67/my-extension-pack on GitHub.',
+bio:'Open-source developer building lightweight, privacy-respecting browser extensions.',copy2:'© 2026 minhtrong67. Open source under the MIT License.',
+dFeat:'Key features',dSpec:'Details',dSc:'Shortcut',dPm:'Permissions',dFo:'Folder',close:'Close',src:'View source'}};
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const R=document.documentElement,sv=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},ld=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const mq=matchMedia('(prefers-color-scheme:dark)');
+let theme=ld('xp-theme')||'system',lang=ld('xp-lang')||((navigator.language||'').toLowerCase().startsWith('vi')?'vi':'en'),cat='all',query='',cur=null;
+const ic=()=>window.lucide&&lucide.createIcons();
+
+function setTheme(t,anim){
+ theme=t;sv('xp-theme',t);
+ if(anim){R.classList.add('theming');setTimeout(()=>R.classList.remove('theming'),350)}
+ const d=t==='dark'||(t==='system'&&mq.matches);R.dataset.theme=d?'dark':'light';
+ $('#tc').content=d?'#0d0d0e':'#fafaf9';
+ $$('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
+}
+mq.addEventListener('change',()=>theme==='system'&&setTheme('system'));
+
+function setLang(l){
+ lang=l;sv('xp-lang',l);R.lang=l;const t=T[l];
+ $$('[data-i]').forEach(e=>e.innerHTML=t[e.dataset.i]);
+ $$('[data-ph]').forEach(e=>e.placeholder=t[e.dataset.ph]);
+ $$('#langSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
+ document.title=l==='vi'?'My Extension Pack — Tiện ích Chromium của minhtrong67':'My Extension Pack — Chromium extensions by minhtrong67';
+ render();if(cur)fill(cur);ic();
+}
+
+const L=(x,k)=>x[lang][k],sc=x=>Array.isArray(x.sc)?x.sc[lang==='vi'?0:1]:x.sc;
+const icon=x=>`${x.id}/icons/${x.id==='multi-downloader'?'icon128.png':'icon.svg'}`;
+const fb=x=>`this.onerror=null;this.src='${x.id}/icons/icon128.png'`;
+
+function render(){
+ const q=query.toLowerCase().trim();
+ const f=X.filter(x=>(cat==='all'||x.c===cat)&&(!q||[x.n,x.id,L(x,'t'),L(x,'d'),...x[lang].f].join(' ').toLowerCase().includes(q)));
+ $('#list').innerHTML=f.map((x,i)=>`<button class="row" style="--i:${i}" data-id="${x.id}"><span class="ico"><img src="${icon(x)}" alt="" loading="lazy" onerror="${fb(x)}"></span><span><span class="nm">${x.n}<small>v${x.v}</small></span><span class="ds" style="display:block">${L(x,'d')}</span></span><kbd>${sc(x)}</kbd><i class="go" data-lucide="chevron-right"></i></button>`).join('');
+ $('#empty').classList.toggle('on',!f.length);ic();
+}
+
+function fill(x){
+ $('#dI').src=icon(x);$('#dI').onerror=function(){this.onerror=null;this.src=`${x.id}/icons/icon128.png`};
+ $('#dT').textContent=x.n+' ';$('#dTag').textContent=L(x,'t');$('#dD').textContent=L(x,'d');
+ $('#dF').innerHTML=x[lang].f.map(s=>`<li><i data-lucide="check"></i><span>${s}</span></li>`).join('');
+ $('#dSc').textContent=sc(x);$('#dPm').textContent=x.p;$('#dFo').textContent='/'+x.id;$('#dG').href=`https://github.com/minhtrong67/my-extension-pack/tree/main/${x.id}`;
+ const e=x.id==='case-converter'?'svg':'png';
+ $('#dS').innerHTML=Array.from({length:x.sh},(_,i)=>`<img src="${x.id}/screenshots/image0${i+1}.${e}" alt="${x.n} ${i+1}" loading="lazy" onerror="this.remove()">`).join('');
+ $('#dS').style.display=x.sh?'flex':'none';ic();
+}
+const dlg=$('#dlg');
+function open(id){cur=X.find(x=>x.id===id);fill(cur);dlg.showModal();R.style.overflow='hidden'}
+function close(){if(!dlg.open)return;dlg.classList.add('closing');setTimeout(()=>{dlg.close();dlg.classList.remove('closing');R.style.overflow='';cur=null},180)}
+$('#list').addEventListener('click',e=>{const b=e.target.closest('.row');b&&open(b.dataset.id)});
+$('#dX').onclick=$('#dC').onclick=close;
+dlg.addEventListener('click',e=>{if(e.target===dlg)close()});
+dlg.addEventListener('cancel',e=>{e.preventDefault();close()});
+
+$('#themeSeg').addEventListener('click',e=>{const b=e.target.closest('button');b&&setTheme(b.dataset.t,true)});
+$('#langSeg').addEventListener('click',e=>{const b=e.target.closest('button');b&&b.dataset.l!==lang&&setLang(b.dataset.l)});
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cat=b.dataset.c;$$('#tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+$('#q').addEventListener('input',e=>{query=e.target.value;render()});
+
+const nav=$('#nav'),mb=$('#menuBtn');
+mb.onclick=()=>{const o=nav.classList.toggle('open');mb.setAttribute('aria-expanded',o)};
+nav.addEventListener('click',e=>{if(e.target.closest('a')){nav.classList.remove('open');mb.setAttribute('aria-expanded',false)}});
+
+$('#faqList').addEventListener('click',e=>{const b=e.target.closest('.q');if(!b)return;const f=b.parentElement,o=f.classList.toggle('open');b.setAttribute('aria-expanded',o)});
+
+$('#cp').onclick=function(){
+ const b=this,done=()=>{const s=b.querySelector('span');s.textContent=T[lang].copied;b.classList.add('ok');setTimeout(()=>{s.textContent=T[lang].copy;b.classList.remove('ok')},2000)};
+ const txt=$('#cmdTxt').textContent;
+ (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(done).catch(()=>{const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}t.remove()});
+};
+
+setTheme(theme);setLang(lang);
+</script>
+</body>
+</html>
