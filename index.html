@@ -1,436 +1,3255 @@
 <!DOCTYPE html>
-<html lang="vi" data-theme="light">
+<html lang="vi" data-theme="system">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>My Extension Pack — Chromium extensions by minhtrong67</title>
-<meta name="description" content="9 open-source Chromium extensions (Manifest V3) that run entirely on your device. By minhtrong67.">
+<title>My Chrome Extensions — Bộ Tiện Ích Chromium Material 3 Expressive</title>
+<meta name="description" content="Bộ sưu tập 10 tiện ích mở rộng Chromium (Manifest V3) mạnh mẽ, bảo mật, 100% ngoại tuyến và thiết kế theo ngôn ngữ Material 3 Expressive. Phát triển bởi minhtrong67.">
 <meta name="author" content="minhtrong67">
-<link rel="canonical" href="https://minhtrong67.github.io/my-extension-pack/">
+<link rel="canonical" href="https://minhtrong67.github.io/my-chrome-extensions/">
 <link rel="icon" type="image/svg+xml" href="smartshot/icons/icon.svg">
-<meta name="theme-color" content="#fafaf9" id="tc">
+<meta name="theme-color" content="#6750A4" id="themeMeta">
 <meta property="og:type" content="website">
-<meta property="og:title" content="My Extension Pack">
-<meta property="og:description" content="9 open-source Chromium extensions that run entirely on your device.">
-<meta property="og:image" content="og-image.jpg">
+<meta property="og:title" content="My Chrome Extensions — Material 3 Expressive 2026">
+<meta property="og:description" content="10 tiện ích Chromium Manifest V3 xử lý 100% cục bộ trên máy, không theo dõi, không quảng cáo.">
+<meta property="og:url" content="https://github.com/minhtrong67/my-chrome-extensions">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"My Extension Pack","applicationCategory":"BrowserExtension","operatingSystem":"Chromium","author":{"@type":"Person","name":"minhtrong67","url":"https://github.com/minhtrong67"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
-<script>
-(function(){try{var t=localStorage.getItem('xp-theme')||'system';
-document.documentElement.dataset.theme=(t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme:dark)').matches))?'dark':'light'}catch(e){}})();
+
+<!-- Typography: Google Fonts Plus Jakarta Sans & JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "My Chrome Extensions",
+  "applicationCategory": "BrowserExtension",
+  "operatingSystem": "Chromium (Chrome, Edge, Brave, Opera, Vivaldi, Cốc Cốc)",
+  "author": {
+    "@type": "Person",
+    "name": "minhtrong67",
+    "url": "https://github.com/minhtrong67"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
 </script>
+
+<script>
+(function() {
+  try {
+    var savedTheme = localStorage.getItem('mce-theme') || 'system';
+    var isDark = savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+  } catch(e) {}
+})();
+</script>
+
 <style>
-:root{--bg:#fafaf9;--sf:#fff;--sub:#f3f3f1;--bd:#e5e5e2;--tx:#171717;--tx2:#52525b;--tx3:#71717a;--ac:#0f766e;--acx:#fff;--ach:#115e59;--r:8px;--ease:cubic-bezier(.2,.7,.2,1);
---sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color-scheme:light}
-[data-theme=dark]{--bg:#0d0d0e;--sf:#151517;--sub:#1c1c1f;--bd:#27272a;--tx:#f4f4f5;--tx2:#a1a1aa;--tx3:#8b8b94;--ac:#5eead4;--acx:#042f2e;--ach:#99f6e4;color-scheme:dark}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:72px;-webkit-text-size-adjust:100%}
-html.theming *{transition:background-color .3s,border-color .3s,color .3s!important}
-body{font-family:var(--sans);background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
-a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-code,kbd{font-family:var(--mono);font-size:.88em}
-p{color:var(--tx2)}
-:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:4px}
-[data-lucide]{width:18px;height:18px;stroke-width:1.75;flex:none}
-svg.lucide{width:18px;height:18px;flex:none}
-.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 max(1.25rem,env(safe-area-inset-left))}
-section{padding:5.5rem 0 0}
-h2{font-size:clamp(1.5rem,3vw,1.9rem);font-weight:650;letter-spacing:-.02em;line-height:1.2}
-.lead{max-width:52ch;margin-top:.6rem}
+/* ==========================================================================
+   MATERIAL 3 EXPRESSIVE (2026) DESIGN TOKENS
+   ========================================================================== */
+:root {
+  /* Font Families */
+  --m3-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --m3-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-/* header */
-.hdr{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top);background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
-.bar{display:flex;align-items:center;gap:1.5rem;height:60px}
-.brand{display:flex;align-items:center;gap:.55rem;font-weight:650;letter-spacing:-.01em}
-.brand i,.brand svg{color:var(--ac)}
-.nav{display:flex;gap:.25rem;margin-left:auto}
-.nav a{padding:.4rem .75rem;border-radius:var(--r);font-size:.92rem;color:var(--tx2);transition:color .2s,background .2s}
-.nav a:hover{color:var(--tx);background:var(--sub)}
-.ctl{display:flex;align-items:center;gap:.5rem}
-.seg{display:flex;padding:2px;border:1px solid var(--bd);border-radius:var(--r);background:var(--sub)}
-.seg button{display:grid;place-items:center;min-width:30px;height:28px;padding:0 .45rem;border-radius:6px;color:var(--tx3);font-size:.78rem;font-weight:600;transition:background .25s var(--ease),color .2s,box-shadow .25s}
-.seg button:hover{color:var(--tx)}
-.seg button[aria-pressed=true]{background:var(--sf);color:var(--tx);box-shadow:0 1px 2px rgb(0 0 0/.12)}
-.ib{display:grid;place-items:center;width:34px;height:34px;border-radius:var(--r);color:var(--tx2);transition:background .2s,color .2s}
-.ib:hover{background:var(--sub);color:var(--tx)}
-.menu-btn{display:none}
-.menu-btn .x,.menu-btn[aria-expanded=true] .m{display:none}
-.menu-btn[aria-expanded=true] .x{display:block}
+  /* Material 3 Expressive Dynamic Palette - Light */
+  --md-sys-color-primary: #65558F;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #EADDFF;
+  --md-sys-color-on-primary-container: #210F47;
+  --md-sys-color-primary-hover: #54447D;
 
-/* buttons */
-.btn{display:inline-flex;align-items:center;gap:.5rem;height:42px;padding:0 1.1rem;border-radius:var(--r);font-weight:550;font-size:.95rem;border:1px solid var(--bd);transition:transform .2s var(--ease),background .2s,border-color .2s}
-.btn:hover{border-color:var(--tx3)}
-.btn:active{transform:scale(.97)}
-.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}
-.btn.pri:hover{background:var(--ach);border-color:var(--ach)}
+  --md-sys-color-secondary: #625B71;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-secondary-container: #E8DEF8;
+  --md-sys-color-on-secondary-container: #1D192B;
 
-/* hero */
-.hero>*{animation:rise .7s var(--ease) both}
-.hero>:nth-child(2){animation-delay:.08s}.hero>:nth-child(3){animation-delay:.16s}.hero>:nth-child(4){animation-delay:.24s}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}}
-.hero h1{font-size:clamp(2.2rem,6.2vw,4.1rem);font-weight:700;letter-spacing:-.035em;line-height:1.06;max-width:17ch}
-.hero .sub{font-size:1.15rem;max-width:50ch;margin-top:1.4rem}
-.acts{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:2rem}
-.facts{display:flex;flex-wrap:wrap;gap:.4rem 1.6rem;margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--bd);font-size:.9rem;color:var(--tx3)}
-.facts b{color:var(--tx);font-weight:600}
+  --md-sys-color-tertiary: #7D5260;
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #FFD8E4;
+  --md-sys-color-on-tertiary-container: #31111D;
 
-/* extension list */
-.tools{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin:2rem 0 .5rem}
-.tabs{display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:none;margin:0 -.25rem}
-.tabs button{position:relative;padding:.45rem .75rem;font-size:.92rem;color:var(--tx3);white-space:nowrap;transition:color .2s}
-.tabs button::after{content:"";position:absolute;left:.75rem;right:.75rem;bottom:0;height:2px;background:var(--ac);transform:scaleX(0);transition:transform .3s var(--ease)}
-.tabs button:hover{color:var(--tx)}
-.tabs button[aria-pressed=true]{color:var(--tx);font-weight:600}
-.tabs button[aria-pressed=true]::after{transform:scaleX(1)}
-.search{position:relative;flex:0 1 280px;width:100%}
-.search i,.search svg{position:absolute;left:.75rem;top:50%;translate:0 -50%;color:var(--tx3);pointer-events:none}
-.search input{width:100%;height:40px;padding:0 .8rem 0 2.5rem;font:inherit;font-size:.92rem;color:var(--tx);background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);transition:border-color .2s,box-shadow .2s}
-.search input:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 20%,transparent)}
-.list{border-top:1px solid var(--bd)}
-.row{display:grid;grid-template-columns:44px 1fr auto 20px;align-items:center;gap:1rem;width:100%;padding:1.1rem .5rem;text-align:left;border-bottom:1px solid var(--bd);animation:fade .45s var(--ease) both;animation-delay:calc(var(--i)*35ms);transition:background .25s,padding .3s var(--ease)}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}}
-.row:hover{background:var(--sub);padding-left:1rem;padding-right:1rem}
-.row:hover .go{transform:translateX(3px);color:var(--tx)}
-.ico{width:44px;height:44px;border-radius:10px;background:var(--sf);border:1px solid var(--bd);display:grid;place-items:center;overflow:hidden}
-.ico img{width:28px;height:28px;object-fit:contain}
-.nm{font-weight:600;display:flex;align-items:baseline;gap:.6rem}
-.nm small{font-family:var(--mono);font-size:.74rem;color:var(--tx3);font-weight:400}
-.ds{font-size:.92rem;color:var(--tx2);margin-top:.15rem;max-width:68ch}
-kbd{padding:.2rem .5rem;border:1px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--tx2);white-space:nowrap}
-.go{color:var(--tx3);transition:transform .25s var(--ease),color .2s}
-.empty{display:none;padding:3rem 0;text-align:center}
-.empty.on{display:block}
-.empty b{display:block;color:var(--tx);margin-bottom:.25rem}
+  --md-sys-color-surface: #FEF7FF;
+  --md-sys-color-surface-dim: #DED8E1;
+  --md-sys-color-surface-bright: #FEF7FF;
+  --md-sys-color-surface-container-lowest: #FFFFFF;
+  --md-sys-color-surface-container-low: #F7F2FA;
+  --md-sys-color-surface-container: #F3EDF7;
+  --md-sys-color-surface-container-high: #ECE6F0;
+  --md-sys-color-surface-container-highest: #E6E0E9;
 
-/* principles */
-.pr{display:grid;grid-template-columns:repeat(2,1fr);gap:2.5rem 3.5rem;margin-top:2.5rem}
-.pr i,.pr svg{color:var(--ac);margin-bottom:.7rem}
-.pr h3{font-size:1.05rem;font-weight:600;margin-bottom:.3rem}
+  --md-sys-color-on-surface: #1D1B20;
+  --md-sys-color-on-surface-variant: #49454F;
+  --md-sys-color-outline: #79747E;
+  --md-sys-color-outline-variant: #CAC4D0;
 
-/* install */
-.ins{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2.5rem;align-items:start}
-ol{list-style:none;counter-reset:s}
-ol li{counter-increment:s;position:relative;padding:0 0 1.5rem 2.6rem}
-ol li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;border:1px solid var(--bd);display:grid;place-items:center;font-size:.8rem;font-weight:600;color:var(--tx2)}
-ol li::after{content:"";position:absolute;left:13.5px;top:34px;bottom:6px;width:1px;background:var(--bd)}
-ol li:last-child::after{display:none}
-ol h3{font-size:1rem;font-weight:600}
-ol p{font-size:.93rem}
-p code,.cmd code{background:var(--sub);padding:.1rem .35rem;border-radius:4px}
-.cmd{position:sticky;top:84px;border:1px solid var(--bd);border-radius:12px;background:var(--sf);overflow:hidden}
-.cmd-h{padding:.6rem 1rem;border-bottom:1px solid var(--bd);font-size:.8rem;color:var(--tx3)}
-.cmd-b{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem}
-.cmd-b code{background:none;padding:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
-.cp{display:inline-flex;align-items:center;gap:.4rem;height:32px;padding:0 .7rem;border:1px solid var(--bd);border-radius:6px;font-size:.82rem;color:var(--tx2);transition:color .2s,border-color .2s}
-.cp:hover{color:var(--tx);border-color:var(--tx3)}
-.cp.ok{color:var(--ac);border-color:var(--ac)}
-.tip{padding:0 1rem 1rem;font-size:.88rem}
+  --md-sys-color-success: #1E6C41;
+  --md-sys-color-success-container: #C8F0D3;
+  --md-sys-color-on-success-container: #00210E;
 
-/* faq */
-.faq{margin-top:2rem;border-top:1px solid var(--bd);max-width:760px}
-.q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.1rem 0;text-align:left;font-weight:550}
-.q svg{color:var(--tx3);transition:transform .35s var(--ease)}
-.fi{border-bottom:1px solid var(--bd)}
-.fi.open .q svg{transform:rotate(180deg)}
-.a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s var(--ease)}
-.a>div{overflow:hidden}
-.a p{padding-bottom:1.1rem;max-width:62ch}
-.fi.open .a{grid-template-rows:1fr}
+  /* Ambient Glow & Shadows */
+  --ambient-hero-1: rgba(101, 85, 143, 0.16);
+  --ambient-hero-2: rgba(125, 82, 96, 0.12);
+  --ambient-card-glow: rgba(101, 85, 143, 0.08);
 
-/* author + footer */
-.au{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;padding:2rem;border:1px solid var(--bd);border-radius:12px;background:var(--sf)}
-.au img{width:72px;height:72px;border-radius:50%;border:1px solid var(--bd);background:var(--sub)}
-.au>div{flex:1;min-width:240px}
-.au h2{font-size:1.25rem}
-.links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
-footer{margin-top:5.5rem;border-top:1px solid var(--bd);padding:1.75rem 0 calc(1.75rem + env(safe-area-inset-bottom));font-size:.88rem;color:var(--tx3)}
-footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem}
-footer a:hover{color:var(--tx)}
+  --elevation-1: 0 1px 3px 1px rgba(0,0,0,0.06), 0 1px 2px 0 rgba(0,0,0,0.08);
+  --elevation-2: 0 4px 8px 3px rgba(0,0,0,0.06), 0 1px 3px 0 rgba(0,0,0,0.1);
+  --elevation-3: 0 8px 24px 6px rgba(0,0,0,0.08), 0 4px 8px 0 rgba(0,0,0,0.06);
+  --elevation-4: 0 16px 36px 8px rgba(0,0,0,0.12), 0 6px 12px 0 rgba(0,0,0,0.08);
 
-/* dialog */
-dialog{margin:auto;width:min(720px,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);padding:0;border:1px solid var(--bd);border-radius:14px;background:var(--bg);color:var(--tx);box-shadow:0 24px 60px rgb(0 0 0/.25);overflow:hidden}
-dialog[open]{display:flex;flex-direction:column;animation:pop .32s var(--ease)}
-dialog[open]::backdrop{background:rgb(10 10 10/.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fadeb .3s}
-dialog.closing{animation:out .18s ease forwards}
-dialog.closing::backdrop{animation:fadeb .18s reverse forwards}
-@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}}
-@keyframes out{to{opacity:0;transform:translateY(8px) scale(.98)}}
-@keyframes fadeb{from{opacity:0}}
-.dh{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.25rem 1rem}
-.dh h3{font-size:1.2rem;font-weight:650;line-height:1.2}
-.dh p{font-size:.9rem}
-.dh .ib{margin-left:auto}
-.db{overflow-y:auto;padding:0 1.25rem 1.25rem}
-.shots{display:flex;gap:.6rem;overflow-x:auto;scroll-snap-type:x mandatory;margin:1rem 0 1.25rem;padding-bottom:.4rem}
-.shots img{height:190px;width:auto;max-width:none;border:1px solid var(--bd);border-radius:8px;scroll-snap-align:start;background:var(--sub)}
-.db h4{font-size:.9rem;font-weight:600;margin:1.25rem 0 .6rem}
-.ft{list-style:none;display:grid;gap:.5rem}
-.ft li{display:flex;gap:.6rem;font-size:.93rem;color:var(--tx2)}
-.ft svg{color:var(--ac);margin-top:.2rem;width:16px;height:16px}
-.sp{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;padding:1rem;border:1px solid var(--bd);border-radius:10px;font-size:.88rem}
-.sp span{display:block;color:var(--tx3);font-size:.8rem;margin-bottom:.15rem}
-.df{display:flex;justify-content:flex-end;gap:.6rem;padding:.9rem 1.25rem calc(.9rem + env(safe-area-inset-bottom));border-top:1px solid var(--bd)}
+  /* Expressive Shapes */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
 
-@media (max-width:860px){
- .menu-btn{display:grid}
- .nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;margin:0;padding:.5rem 1.25rem 1rem;background:var(--bg);border-bottom:1px solid var(--bd);visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .25s,transform .25s var(--ease),visibility .25s}
- .nav.open{visibility:visible;opacity:1;transform:none}
- .nav a{padding:.7rem .5rem;font-size:1rem}
- .ctl{margin-left:auto}
- .ins{grid-template-columns:1fr;gap:2rem}.cmd{position:static;order:-1}
+  /* Expressive Motion Curves */
+  --ease-expressive-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-expressive-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-expressive-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: light;
 }
-@media (max-width:640px){
- section{padding-top:4rem}
- .pr{grid-template-columns:1fr;gap:2rem}
- .row{grid-template-columns:40px 1fr 20px;gap:.8rem}.row kbd{display:none}
- .ds{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
- .bar{gap:.75rem}.brand span{display:none}
- .btn{flex:1;justify-content:center}
- .au{padding:1.25rem}
+
+[data-theme="dark"] {
+  /* Material 3 Expressive Dynamic Palette - Dark OLED Deep */
+  --md-sys-color-primary: #D0BCFF;
+  --md-sys-color-on-primary: #381E72;
+  --md-sys-color-primary-container: #4F378B;
+  --md-sys-color-on-primary-container: #EADDFF;
+  --md-sys-color-primary-hover: #DFCFFF;
+
+  --md-sys-color-secondary: #CCC2DC;
+  --md-sys-color-on-secondary: #332D41;
+  --md-sys-color-secondary-container: #4A4458;
+  --md-sys-color-on-secondary-container: #E8DEF8;
+
+  --md-sys-color-tertiary: #EFB8C8;
+  --md-sys-color-on-tertiary: #492532;
+  --md-sys-color-tertiary-container: #633B48;
+  --md-sys-color-on-tertiary-container: #FFD8E4;
+
+  --md-sys-color-surface: #141218;
+  --md-sys-color-surface-dim: #141218;
+  --md-sys-color-surface-bright: #3B383E;
+  --md-sys-color-surface-container-lowest: #0F0D13;
+  --md-sys-color-surface-container-low: #1D1B20;
+  --md-sys-color-surface-container: #211F26;
+  --md-sys-color-surface-container-high: #2B2930;
+  --md-sys-color-surface-container-highest: #36343B;
+
+  --md-sys-color-on-surface: #E6E0E9;
+  --md-sys-color-on-surface-variant: #CAC4D0;
+  --md-sys-color-outline: #938F99;
+  --md-sys-color-outline-variant: #49454F;
+
+  --md-sys-color-success: #67D990;
+  --md-sys-color-success-container: #005328;
+  --md-sys-color-on-success-container: #93F6B3;
+
+  --ambient-hero-1: rgba(208, 188, 255, 0.12);
+  --ambient-hero-2: rgba(239, 184, 200, 0.08);
+  --ambient-card-glow: rgba(208, 188, 255, 0.06);
+
+  --elevation-1: 0 1px 3px 1px rgba(0,0,0,0.35);
+  --elevation-2: 0 4px 12px 2px rgba(0,0,0,0.45);
+  --elevation-3: 0 10px 28px 4px rgba(0,0,0,0.55);
+  --elevation-4: 0 20px 48px 8px rgba(0,0,0,0.65);
+
+  color-scheme: dark;
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* ==========================================================================
+   BASE RESET & TYPOGRAPHY
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
+}
+
+html.theming, html.theming * {
+  transition: background-color 0.35s var(--ease-expressive-standard),
+              border-color 0.35s var(--ease-expressive-standard),
+              color 0.35s var(--ease-expressive-standard),
+              box-shadow 0.35s var(--ease-expressive-standard) !important;
+}
+
+body {
+  font-family: var(--m3-font-sans);
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+code, kbd {
+  font-family: var(--m3-font-mono);
+  font-size: 0.85em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 max(1.5rem, env(safe-area-inset-left));
+}
+
+/* ==========================================================================
+   AMBIENT EXPRESSIVE BACKGROUND
+   ========================================================================== */
+.ambient-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+.ambient-blob-1 {
+  position: absolute;
+  top: -15vw;
+  right: -10vw;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ambient-hero-1) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: floatOrb 22s ease-in-out infinite alternate;
+}
+.ambient-blob-2 {
+  position: absolute;
+  top: 30vh;
+  left: -15vw;
+  width: 45vw;
+  height: 45vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ambient-hero-2) 0%, transparent 70%);
+  filter: blur(90px);
+  animation: floatOrb 18s ease-in-out infinite alternate-reverse;
+}
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(4vw, 6vh) scale(1.08); }
+  100% { transform: translate(-3vw, 10vh) scale(0.95); }
+}
+
+/* ==========================================================================
+   HEADER / TOP APP BAR (Material 3 Expressive Pinned)
+   ========================================================================== */
+.top-app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-top: env(safe-area-inset-top);
+  background-color: color-mix(in srgb, var(--md-sys-color-surface) 82%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--md-sys-color-surface-container-highest);
+  transition: box-shadow 0.3s ease;
+}
+.top-app-bar.scrolled {
+  box-shadow: var(--elevation-2);
+}
+.app-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 1.5rem;
+}
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-full);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: transform 0.25s var(--ease-expressive-spring), background 0.2s;
+}
+.brand-pill:hover {
+  transform: scale(1.03);
+  background: var(--md-sys-color-surface-container);
+}
+.brand-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 10px rgba(101, 85, 143, 0.3);
+}
+.brand-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: var(--md-sys-color-on-surface);
+}
+.brand-title span {
+  color: var(--md-sys-color-primary);
+}
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-link {
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: all 0.2s ease;
+}
+.nav-link:hover {
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.action-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Material 3 Segmented Control (Pills) */
+.m3-segmented-control {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  gap: 2px;
+}
+.m3-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: all 0.25s var(--ease-expressive-standard);
+}
+.m3-seg-btn:hover {
+  color: var(--md-sys-color-on-surface);
+}
+.m3-seg-btn[aria-pressed="true"] {
+  background: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-primary);
+  box-shadow: var(--elevation-1);
+}
+
+/* Expressive Icon Button */
+.m3-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: all 0.2s var(--ease-expressive-spring);
+}
+.m3-icon-btn:hover {
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface-container-highest);
+  transform: translateY(-1px);
+}
+.m3-icon-btn:active {
+  transform: scale(0.94);
+}
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+/* Mobile Nav Drawer */
+.mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 73px;
+  left: 0;
+  right: 0;
+  background: var(--md-sys-color-surface-container);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  padding: 1.25rem 1.5rem 1.75rem;
+  box-shadow: var(--elevation-3);
+  z-index: 49;
+  transform: translateY(-10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s var(--ease-expressive-standard);
+}
+.mobile-drawer.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mobile-drawer a {
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius-lg);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface-container-low);
+}
+
+/* ==========================================================================
+   BUTTONS (Material 3 Expressive Specification)
+   ========================================================================== */
+.m3-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 48px;
+  padding: 0 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s var(--ease-expressive-spring),
+              background 0.2s ease,
+              box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.m3-btn:hover {
+  transform: translateY(-2px);
+}
+.m3-btn:active {
+  transform: scale(0.97);
+}
+
+/* Filled Primary */
+.m3-btn-filled {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: var(--elevation-2);
+}
+.m3-btn-filled:hover {
+  background: var(--md-sys-color-primary-hover);
+  box-shadow: var(--elevation-3);
+}
+
+/* Tonal / Secondary Container */
+.m3-btn-tonal {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+.m3-btn-tonal:hover {
+  background: color-mix(in srgb, var(--md-sys-color-secondary-container) 85%, var(--md-sys-color-on-secondary-container));
+}
+
+/* Outlined */
+.m3-btn-outlined {
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-outline);
+}
+.m3-btn-outlined:hover {
+  background: var(--md-sys-color-surface-container-high);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Small Pill Button */
+.m3-btn-sm {
+  height: 36px;
+  padding: 0 1.1rem;
+  font-size: 0.86rem;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   HERO SECTION (Material 3 Expressive)
+   ========================================================================== */
+.hero-section {
+  padding: clamp(3.5rem, 8vw, 6.5rem) 0 3.5rem;
+  position: relative;
+}
+.hero-content {
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-full);
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--elevation-1);
+}
+.pulse-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--md-sys-color-success);
+  box-shadow: 0 0 0 0 rgba(30, 108, 65, 0.7);
+  animation: pulseGlow 2s infinite;
+}
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(103, 217, 144, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(103, 217, 144, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(103, 217, 144, 0); }
+}
+
+.hero-headline {
+  font-size: clamp(2.4rem, 6.5vw, 4.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 1.5rem;
+}
+.hero-headline-highlight {
+  background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subhead {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 680px;
+  margin-bottom: 2.5rem;
+}
+
+.hero-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+/* Metric / Stat Expressive Bar */
+.hero-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 980px;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--elevation-1);
+}
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.stat-box:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -0.625rem;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: var(--md-sys-color-outline-variant);
+}
+.stat-number {
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  font-weight: 800;
+  color: var(--md-sys-color-primary);
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   SHOWCASE SECTION & CONTROL DOCK
+   ========================================================================== */
+.showcase-section {
+  padding: 4.5rem 0 2rem;
+}
+.section-header-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 2.25rem;
+}
+.section-tag {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--md-sys-color-primary);
+}
+.section-title {
+  font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--md-sys-color-on-surface);
+}
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 640px;
+}
+
+/* Expressive Filter & Search Dock */
+.control-dock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  margin-bottom: 2rem;
+}
+
+/* M3 Filter Chips */
+.filter-chips-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.filter-chips-cluster::-webkit-scrollbar {
+  display: none;
+}
+.m3-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 38px;
+  padding: 0 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  white-space: nowrap;
+  transition: all 0.25s var(--ease-expressive-spring);
+}
+.m3-filter-chip:hover {
+  background: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  transform: translateY(-1px);
+}
+.m3-filter-chip[aria-pressed="true"] {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: var(--md-sys-color-primary);
+  font-weight: 700;
+  box-shadow: var(--elevation-1);
+}
+.chip-badge {
+  display: inline-grid;
+  place-items: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  background: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-primary);
+  font-weight: 700;
+}
+
+/* Search Bar & View Mode */
+.dock-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 320px;
+  justify-content: flex-end;
+}
+.search-field {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+}
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--md-sys-color-on-surface-variant);
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 2.4rem 0 2.8rem;
+  border-radius: var(--radius-full);
+  font-family: var(--m3-font-sans);
+  font-size: 0.92rem;
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: all 0.25s ease;
+}
+.search-input:focus {
+  outline: none;
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent);
+}
+.search-clear-btn {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+  display: none;
+  place-items: center;
+}
+.search-clear-btn.active {
+  display: grid;
+}
+
+.view-mode-toggle {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: var(--radius-full);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+.view-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: all 0.2s;
+}
+.view-btn[aria-pressed="true"] {
+  background: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-primary);
+  box-shadow: var(--elevation-1);
+}
+
+/* ==========================================================================
+   PRODUCT CARDS GRID & LIST (Material 3 Expressive)
+   ========================================================================== */
+.extensions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+/* Extension Card (Material 3 Expressive Container) */
+.m3-ext-card {
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-surface-container-highest);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.4rem;
+  transition: transform 0.35s var(--ease-expressive-spring),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease,
+              background 0.35s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--elevation-1);
+  cursor: pointer;
+}
+.m3-ext-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--elevation-3);
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline-variant));
+  background: var(--md-sys-color-surface-container);
+}
+.m3-ext-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.m3-ext-card:hover::before {
+  opacity: 1;
+}
+
+/* Card Header */
+.card-header-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.1rem;
+}
+.ext-avatar-box {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-lg);
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: var(--elevation-1);
+  overflow: hidden;
+}
+.ext-avatar-box img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+.ext-meta-info {
+  flex: 1;
+  min-width: 0;
+}
+.ext-title-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+.ext-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--md-sys-color-on-surface);
+}
+.ext-version-badge {
+  font-family: var(--m3-font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+}
+.ext-tagline {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+}
+
+/* Card Body */
+.ext-summary-text {
+  font-size: 0.94rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card Feature Pills */
+.ext-feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* Card Footer / Action Row */
+.card-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--md-sys-color-surface-container-highest);
+  gap: 0.75rem;
+}
+.shortcut-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.shortcut-chip kbd {
+  background: var(--md-sys-color-surface-container-lowest);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.card-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* ==========================================================================
+   LIST VIEW VARIANT
+   ========================================================================== */
+.extensions-grid.list-mode {
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+.extensions-grid.list-mode .m3-ext-card {
+  flex-direction: row;
+  align-items: center;
+  padding: 1.1rem 1.4rem;
+  gap: 1.5rem;
+}
+.extensions-grid.list-mode .card-header-row {
+  align-items: center;
+  flex: 0 0 320px;
+}
+.extensions-grid.list-mode .ext-summary-text {
+  flex: 1;
+  -webkit-line-clamp: 2;
+  margin: 0;
+}
+.extensions-grid.list-mode .ext-feature-pills {
+  display: none;
+}
+.extensions-grid.list-mode .card-action-bar {
+  padding-top: 0;
+  border-top: none;
+  flex: 0 0 auto;
+}
+
+/* Empty Results State */
+.empty-results-box {
+  display: none;
+  text-align: center;
+  padding: 4.5rem 1.5rem;
+  background: var(--md-sys-color-surface-container-low);
+  border-radius: var(--radius-xl);
+  border: 1px dashed var(--md-sys-color-outline);
+}
+.empty-results-box.visible {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.empty-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-primary);
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   PRINCIPLES & ARCHITECTURE SECTION
+   ========================================================================== */
+.principles-section {
+  padding: 5rem 0;
+}
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+}
+.principle-card {
+  padding: 2.25rem;
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--elevation-1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.principle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--elevation-3);
+}
+.principle-icon-halo {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-lg);
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--elevation-1);
+}
+.principle-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.5rem;
+}
+.principle-desc {
+  font-size: 0.96rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   INSTALLATION STEPPER & TERMINAL SECTION
+   ========================================================================== */
+.install-section {
+  padding: 4.5rem 0;
+}
+.install-layout-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  margin-top: 2.5rem;
+}
+
+/* Stepper Component */
+.m3-stepper {
+  list-style: none;
+  position: relative;
+}
+.step-item {
+  position: relative;
+  padding-left: 3.5rem;
+  padding-bottom: 2.25rem;
+}
+.step-item:last-child {
+  padding-bottom: 0;
+}
+.step-badge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1rem;
+  box-shadow: var(--elevation-2);
+}
+.step-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 44px;
+  bottom: 0;
+  width: 2px;
+  background: var(--md-sys-color-outline-variant);
+}
+.step-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.35rem;
+}
+.step-desc {
+  font-size: 0.94rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.55;
+}
+
+/* Terminal Card (Sticky) */
+.terminal-card {
+  position: sticky;
+  top: 96px;
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  overflow: hidden;
+  box-shadow: var(--elevation-2);
+}
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: var(--md-sys-color-surface-container-high);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot-red { background: #FF5F56; }
+.dot-yellow { background: #FFBD2E; }
+.dot-green { background: #27C93F; }
+.terminal-title {
+  font-family: var(--m3-font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.terminal-body {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--md-sys-color-surface-container-lowest);
+}
+.terminal-code {
+  font-family: var(--m3-font-mono);
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.terminal-code::-webkit-scrollbar {
+  display: none;
+}
+.terminal-tip-box {
+  padding: 1rem 1.25rem;
+  font-size: 0.86rem;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-low);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+/* Browser Compatibility Matrix */
+.browser-compat-card {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+.compat-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.browser-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.browser-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+}
+
+/* ==========================================================================
+   FAQ SECTION (Material 3 Accordion)
+   ========================================================================== */
+.faq-section {
+  padding: 4.5rem 0;
+}
+.faq-list-wrap {
+  max-width: 840px;
+  margin: 2.5rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.m3-accordion-item {
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+.m3-accordion-item.open {
+  background: var(--md-sys-color-surface-container);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: var(--elevation-1);
+}
+.accordion-header-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.6rem;
+  text-align: left;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  gap: 1rem;
+}
+.accordion-icon {
+  color: var(--md-sys-color-on-surface-variant);
+  transition: transform 0.35s var(--ease-expressive-spring);
+  flex-shrink: 0;
+}
+.m3-accordion-item.open .accordion-icon {
+  transform: rotate(180deg);
+  color: var(--md-sys-color-primary);
+}
+.accordion-content-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease-expressive-standard);
+}
+.accordion-content-inner {
+  overflow: hidden;
+}
+.accordion-content-inner p {
+  padding: 0 1.6rem 1.4rem;
+  font-size: 0.95rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.65;
+}
+.m3-accordion-item.open .accordion-content-collapse {
+  grid-template-rows: 1fr;
+}
+
+/* ==========================================================================
+   AUTHOR & REPO CARD
+   ========================================================================== */
+.author-section {
+  padding: 4rem 0;
+}
+.author-card {
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--md-sys-color-surface-container-low) 0%, var(--md-sys-color-surface-container) 100%);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--elevation-2);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.author-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--md-sys-color-primary);
+  box-shadow: var(--elevation-2);
+  object-fit: cover;
+}
+.author-info {
+  flex: 1;
+  min-width: 280px;
+}
+.author-name {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.3rem;
+}
+.author-bio {
+  font-size: 1rem;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 1.25rem;
+  max-width: 580px;
+}
+.author-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.footer-wrap {
+  margin-top: 4rem;
+  border-top: 1px solid var(--md-sys-color-surface-container-highest);
+  padding: 2.25rem 0 calc(2.25rem + env(safe-area-inset-bottom));
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-links {
+  display: flex;
+  gap: 1.25rem;
+}
+.footer-links a:hover {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   EXPRESSIVE MODAL DIALOG SHEET
+   ========================================================================== */
+.m3-dialog {
+  margin: auto;
+  width: min(840px, calc(100% - 2rem));
+  max-height: calc(100dvh - 3rem);
+  padding: 0;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-xl);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--elevation-4);
+  overflow: hidden;
+}
+.m3-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: modalPop 0.35s var(--ease-expressive-spring);
+}
+.m3-dialog[open]::backdrop {
+  background: rgba(15, 13, 19, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: backdropFade 0.3s ease;
+}
+.m3-dialog.closing {
+  animation: modalOut 0.2s ease forwards;
+}
+.m3-dialog.closing::backdrop {
+  animation: backdropFade 0.2s reverse forwards;
+}
+@keyframes modalPop {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes modalOut {
+  to { opacity: 0; transform: translateY(16px) scale(0.97); }
+}
+@keyframes backdropFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--md-sys-color-surface-container-highest);
+}
+.dialog-avatar-box {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-lg);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.dialog-avatar-box img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.dialog-title-meta {
+  flex: 1;
+}
+.dialog-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--md-sys-color-on-surface);
+}
+.dialog-tagline {
+  font-size: 0.92rem;
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+.dialog-body {
+  overflow-y: auto;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.dialog-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Gallery Strip */
+.dialog-section-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-sys-color-primary);
+  margin-bottom: 0.6rem;
+}
+.screenshots-strip {
+  display: flex;
+  gap: 0.85rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+}
+.screenshots-strip img {
+  height: 210px;
+  width: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  scroll-snap-align: start;
+  cursor: zoom-in;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: var(--md-sys-color-surface-container-low);
+}
+.screenshots-strip img:hover {
+  transform: scale(1.02);
+  box-shadow: var(--elevation-2);
+}
+
+/* Features List in Dialog */
+.dialog-features-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.dialog-features-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--md-sys-color-on-surface);
+}
+.dialog-features-list li i {
+  color: var(--md-sys-color-success);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+/* Specs Grid */
+.dialog-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+.spec-item-box span {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 0.25rem;
+}
+.spec-item-box strong {
+  font-size: 0.92rem;
+  color: var(--md-sys-color-on-surface);
+}
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.75rem calc(1.1rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--md-sys-color-surface-container-highest);
+  background: var(--md-sys-color-surface-container-low);
+  gap: 1rem;
+}
+
+/* ==========================================================================
+   IMAGE LIGHTBOX MODAL
+   ========================================================================== */
+.m3-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(8, 7, 10, 0.92);
+  backdrop-filter: blur(16px);
+  display: none;
+  place-items: center;
+  padding: 2rem;
+}
+.m3-lightbox.active {
+  display: grid;
+  animation: backdropFade 0.25s ease;
+}
+.lightbox-img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.15);
+  animation: modalPop 0.3s var(--ease-expressive-spring);
+}
+.lightbox-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.2s;
+}
+.lightbox-close-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   SNACKBAR / TOAST NOTIFICATION
+   ========================================================================== */
+.m3-snackbar {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-surface);
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  box-shadow: var(--elevation-3);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s var(--ease-expressive-spring);
+}
+.m3-snackbar.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   FLOATING ACTION BUTTON (FAB)
+   ========================================================================== */
+.m3-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  box-shadow: var(--elevation-3);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition: all 0.3s var(--ease-expressive-spring);
+}
+.m3-fab.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+.m3-fab:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: var(--elevation-4);
+}
+.m3-fab:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 960px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-menu-toggle {
+    display: grid;
+  }
+  .hero-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  .stat-box:nth-child(2)::after {
+    display: none;
+  }
+  .install-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .terminal-card {
+    position: static;
+  }
+  .principles-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .stat-box::after {
+    display: none !important;
+  }
+  .extensions-grid {
+    grid-template-columns: 1fr;
+  }
+  .control-dock {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .dock-actions {
+    flex-direction: column;
+  }
+  .search-field {
+    max-width: 100%;
+  }
+  .app-bar-inner {
+    height: 64px;
+  }
+  .brand-title {
+    display: none;
+  }
+  .m3-fab {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 </head>
 <body>
-<header class="hdr"><div class="wrap bar">
- <a href="#" class="brand" aria-label="My Extension Pack"><i data-lucide="blocks"></i><span>Extension Pack</span></a>
- <nav class="nav" id="nav" aria-label="Main">
-  <a href="#extensions" data-i="nExt"></a><a href="#principles" data-i="nPri"></a><a href="#install" data-i="nIns"></a><a href="#faq" data-i="nFaq"></a>
- </nav>
- <div class="ctl">
-  <div class="seg" role="group" aria-label="Theme" id="themeSeg">
-   <button data-t="light" aria-label="Light" title="Light"><i data-lucide="sun"></i></button>
-   <button data-t="dark" aria-label="Dark" title="Dark"><i data-lucide="moon"></i></button>
-   <button data-t="system" aria-label="System" title="System"><i data-lucide="monitor"></i></button>
-  </div>
-  <div class="seg" role="group" aria-label="Language" id="langSeg">
-   <button data-l="vi">VI</button><button data-l="en">EN</button>
-  </div>
-  <a class="ib" href="https://github.com/minhtrong67/my-extension-pack" target="_blank" rel="noopener" aria-label="GitHub"><i data-lucide="github"></i></a>
-  <button class="ib menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="Menu"><i class="m" data-lucide="menu"></i><i class="x" data-lucide="x"></i></button>
- </div>
-</div></header>
 
+<!-- Ambient Ambient Mesh Canvas -->
+<div class="ambient-canvas" aria-hidden="true">
+  <div class="ambient-blob-1"></div>
+  <div class="ambient-blob-2"></div>
+</div>
+
+<!-- ==========================================================================
+     TOP APP BAR / HEADER
+     ========================================================================== -->
+<header class="top-app-bar" id="appBar">
+  <div class="container app-bar-inner">
+    <a href="#" class="brand-pill" aria-label="My Chrome Extensions">
+      <div class="brand-icon-box">
+        <i data-lucide="layers"></i>
+      </div>
+      <div class="brand-title">Chrome<span>Extensions</span></div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <a href="#showcase" class="nav-link" data-i="navExtensions">Tiện ích</a>
+      <a href="#principles" class="nav-link" data-i="navPrinciples">Tiêu chuẩn</a>
+      <a href="#install" class="nav-link" data-i="navInstall">Cài đặt</a>
+      <a href="#faq" class="nav-link" data-i="navFaq">Hỏi đáp</a>
+      <a href="#author" class="nav-link" data-i="navAuthor">Tác giả</a>
+    </nav>
+
+    <!-- Controls Cluster -->
+    <div class="action-cluster">
+      <!-- Theme Switcher Segmented Control -->
+      <div class="m3-segmented-control" role="group" aria-label="Theme selector" id="themeSegment">
+        <button class="m3-seg-btn" data-t="light" title="Light theme" aria-label="Light"><i data-lucide="sun" style="width:16px;height:16px;"></i></button>
+        <button class="m3-seg-btn" data-t="dark" title="Dark theme" aria-label="Dark"><i data-lucide="moon" style="width:16px;height:16px;"></i></button>
+        <button class="m3-seg-btn" data-t="system" title="System theme" aria-label="System"><i data-lucide="laptop" style="width:16px;height:16px;"></i></button>
+      </div>
+
+      <!-- Language Switcher -->
+      <div class="m3-segmented-control" role="group" aria-label="Language selector" id="langSegment">
+        <button class="m3-seg-btn" data-l="vi">VI</button>
+        <button class="m3-seg-btn" data-l="en">EN</button>
+      </div>
+
+      <!-- GitHub Link -->
+      <a href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer" class="m3-icon-btn" title="GitHub Repository" aria-label="GitHub Repository">
+        <i data-lucide="github" style="width:18px;height:18px;"></i>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="m3-icon-btn mobile-menu-toggle" id="mobileMenuBtn" aria-label="Menu" aria-expanded="false">
+        <i data-lucide="menu" id="menuIcon" style="width:20px;height:20px;"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="#showcase" data-i="navExtensions">Tiện ích</a>
+  <a href="#principles" data-i="navPrinciples">Tiêu chuẩn</a>
+  <a href="#install" data-i="navInstall">Cài đặt</a>
+  <a href="#faq" data-i="navFaq">Hỏi đáp</a>
+  <a href="#author" data-i="navAuthor">Tác giả</a>
+</div>
+
+<!-- ==========================================================================
+     MAIN CONTENT
+     ========================================================================== -->
 <main>
-<section style="padding-top:clamp(4rem,10vw,7.5rem)"><div class="wrap hero">
- <h1 data-i="h1"></h1>
- <p class="sub" data-i="sub"></p>
- <div class="acts">
-  <a class="btn pri" href="#extensions"><span data-i="cta1"></span><i data-lucide="arrow-down"></i></a>
-  <a class="btn" href="#install"><i data-lucide="download"></i><span data-i="cta2"></span></a>
- </div>
- <div class="facts"><span data-i="f1"></span><span data-i="f2"></span><span data-i="f3"></span></div>
-</div></section>
 
-<section id="extensions"><div class="wrap">
- <h2 data-i="extT"></h2><p class="lead" data-i="extS"></p>
- <div class="tools">
-  <div class="tabs" id="tabs" role="group">
-   <button data-c="all" aria-pressed="true" data-i="cAll"></button><button data-c="productivity" aria-pressed="false" data-i="cPro"></button><button data-c="media" aria-pressed="false" data-i="cMed"></button><button data-c="security" aria-pressed="false" data-i="cSec"></button><button data-c="youtube" aria-pressed="false">YouTube</button>
-  </div>
-  <label class="search"><i data-lucide="search"></i><input id="q" type="search" data-ph="search" autocomplete="off"></label>
- </div>
- <div class="list" id="list"></div>
- <div class="empty" id="empty"><b data-i="emT"></b><span data-i="emD"></span></div>
-</div></section>
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <div class="hero-pill-badge">
+        <div class="pulse-indicator"></div>
+        <span data-i="heroBadge">✨ Material 3 Expressive 2026 · Chromium Manifest V3</span>
+      </div>
 
-<section id="principles"><div class="wrap">
- <h2 data-i="priT"></h2>
- <div class="pr">
-  <div><i data-lucide="shield-check"></i><h3 data-i="p1t"></h3><p data-i="p1d"></p></div>
-  <div><i data-lucide="zap"></i><h3 data-i="p2t"></h3><p data-i="p2d"></p></div>
-  <div><i data-lucide="palette"></i><h3 data-i="p3t"></h3><p data-i="p3d"></p></div>
-  <div><i data-lucide="globe"></i><h3 data-i="p4t"></h3><p data-i="p4d"></p></div>
- </div>
-</div></section>
+      <h1 class="hero-headline">
+        <span data-i="heroTitle1">Bộ Tiện Ích Trình Duyệt</span><br>
+        <span class="hero-headline-highlight" data-i="heroTitle2">100% Cục Bộ & Bảo Mật Tuyệt Đối</span>
+      </h1>
 
-<section id="install"><div class="wrap">
- <h2 data-i="insT"></h2><p class="lead" data-i="insS"></p>
- <div class="ins">
-  <ol>
-   <li><h3 data-i="s1t"></h3><p data-i="s1d"></p></li>
-   <li><h3 data-i="s2t"></h3><p data-i="s2d"></p></li>
-   <li><h3 data-i="s3t"></h3><p data-i="s3d"></p></li>
-   <li><h3 data-i="s4t"></h3><p data-i="s4d"></p></li>
-  </ol>
-  <div class="cmd">
-   <div class="cmd-h">Terminal</div>
-   <div class="cmd-b"><code id="cmdTxt">git clone https://github.com/minhtrong67/my-extension-pack.git</code>
-    <button class="cp" id="cp" type="button"><i data-lucide="copy"></i><span data-i="copy"></span></button></div>
-   <p class="tip" data-i="tip"></p>
-  </div>
- </div>
-</div></section>
+      <p class="hero-subhead" data-i="heroSub">
+        Mã nguồn mở, xây dựng theo tiêu chuẩn Manifest V3 mới nhất. Mọi tác vụ xử lý trực tiếp trên thiết bị của bạn — không máy chủ trung gian, không thu thập telemetry và hoàn toàn không quảng cáo.
+      </p>
 
-<section id="faq"><div class="wrap">
- <h2 data-i="faqT"></h2>
- <div class="faq" id="faqList">
-  <div class="fi open"><button class="q" aria-expanded="true"><span data-i="q1"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a1"></p></div></div></div>
-  <div class="fi"><button class="q" aria-expanded="false"><span data-i="q2"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a2"></p></div></div></div>
-  <div class="fi"><button class="q" aria-expanded="false"><span data-i="q3"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a3"></p></div></div></div>
-  <div class="fi"><button class="q" aria-expanded="false"><span data-i="q4"></span><i data-lucide="chevron-down"></i></button><div class="a"><div><p data-i="a4"></p></div></div></div>
- </div>
-</div></section>
+      <div class="hero-cta-group">
+        <a href="#showcase" class="m3-btn m3-btn-filled">
+          <i data-lucide="sparkles" style="width:18px;height:18px;"></i>
+          <span data-i="ctaExplore">Khám Phá 10 Tiện Ích</span>
+        </a>
+        <a href="#install" class="m3-btn m3-btn-tonal">
+          <i data-lucide="download-cloud" style="width:18px;height:18px;"></i>
+          <span data-i="ctaInstall">Hướng Dẫn Cài Đặt</span>
+        </a>
+        <a href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer" class="m3-btn m3-btn-outlined">
+          <i data-lucide="github" style="width:18px;height:18px;"></i>
+          <span>GitHub (my-chrome-extensions)</span>
+        </a>
+      </div>
 
-<section id="author"><div class="wrap"><div class="au">
- <img src="https://github.com/minhtrong67.png?size=144" alt="minhtrong67" width="72" height="72" loading="lazy">
- <div><h2>minhtrong67</h2><p data-i="bio"></p>
-  <div class="links">
-   <a class="btn" href="https://github.com/minhtrong67" target="_blank" rel="noopener"><i data-lucide="github"></i>GitHub</a>
-   <a class="btn" href="https://github.com/minhtrong67/my-extension-pack" target="_blank" rel="noopener"><i data-lucide="folder-git-2"></i>Repository</a>
-   <a class="btn" href="mailto:minhtrong9760@gmail.com"><i data-lucide="mail"></i>Email</a>
-  </div></div>
-</div></div></section>
+      <!-- Quick Metrics Grid -->
+      <div class="hero-stats-grid">
+        <div class="stat-box">
+          <div class="stat-number">10</div>
+          <div class="stat-label" data-i="stat1">Tiện ích độc lập</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">0</div>
+          <div class="stat-label" data-i="stat2">Dữ liệu thu thập (Zero Telemetry)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">100%</div>
+          <div class="stat-label" data-i="stat3">Xử lý ngoại tuyến trên máy</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">MIT</div>
+          <div class="stat-label" data-i="stat4">Giấy phép mã nguồn mở</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE SECTION -->
+  <section class="showcase-section" id="showcase">
+    <div class="container">
+      <div class="section-header-wrap">
+        <span class="section-tag" data-i="showcaseTag">DANH MỤC SẢN PHẨM</span>
+        <h2 class="section-title" data-i="showcaseTitle">Kho Tiện Ích Chromium Sẵn Sàng Sử Dụng</h2>
+        <p class="section-desc" data-i="showcaseDesc">
+          Mỗi tiện ích giải quyết triệt để một tác vụ chuyên biệt, thiết kế giao diện đồng bộ, tốc độ phản hồi tức thì và tiết kiệm RAM tối đa.
+        </p>
+      </div>
+
+      <!-- Filter, Search and View Controls Dock -->
+      <div class="control-dock">
+        <!-- Category Filter Chips -->
+        <div class="filter-chips-cluster" id="filterCluster" role="group" aria-label="Filter by category">
+          <button class="m3-filter-chip" data-cat="all" aria-pressed="true">
+            <i data-lucide="layout-grid" style="width:16px;height:16px;"></i>
+            <span data-i="catAll">Tất cả</span>
+            <span class="chip-badge" id="badgeAll">10</span>
+          </button>
+          <button class="m3-filter-chip" data-cat="productivity" aria-pressed="false">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;"></i>
+            <span data-i="catProd">Năng suất</span>
+            <span class="chip-badge" id="badgeProd">3</span>
+          </button>
+          <button class="m3-filter-chip" data-cat="media" aria-pressed="false">
+            <i data-lucide="image" style="width:16px;height:16px;"></i>
+            <span data-i="catMedia">Media & Ảnh</span>
+            <span class="chip-badge" id="badgeMedia">3</span>
+          </button>
+          <button class="m3-filter-chip" data-cat="youtube" aria-pressed="false">
+            <i data-lucide="youtube" style="width:16px;height:16px;"></i>
+            <span>YouTube</span>
+            <span class="chip-badge" id="badgeYt">2</span>
+          </button>
+          <button class="m3-filter-chip" data-cat="security" aria-pressed="false">
+            <i data-lucide="shield-check" style="width:16px;height:16px;"></i>
+            <span data-i="catSec">Bảo mật</span>
+            <span class="chip-badge" id="badgeSec">1</span>
+          </button>
+          <button class="m3-filter-chip" data-cat="tools" aria-pressed="false">
+            <i data-lucide="command" style="width:16px;height:16px;"></i>
+            <span data-i="catTools">Hệ thống</span>
+            <span class="chip-badge" id="badgeTools">1</span>
+          </button>
+        </div>
+
+        <!-- Search Bar & View Mode Toggle -->
+        <div class="dock-actions">
+          <div class="search-field">
+            <i data-lucide="search" class="search-icon" style="width:18px;height:18px;"></i>
+            <input type="search" id="searchInput" class="search-input" placeholder="Tìm theo tên, tính năng..." data-ph="searchPlaceholder" autocomplete="off" spellcheck="false">
+            <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search">
+              <i data-lucide="x" style="width:14px;height:14px;"></i>
+            </button>
+          </div>
+
+          <div class="view-mode-toggle" role="group" aria-label="View mode">
+            <button class="view-btn" id="btnViewGrid" aria-pressed="true" title="Grid View">
+              <i data-lucide="grid" style="width:18px;height:18px;"></i>
+            </button>
+            <button class="view-btn" id="btnViewList" aria-pressed="false" title="List View">
+              <i data-lucide="list" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extensions Cards Grid -->
+      <div class="extensions-grid" id="extensionsGrid"></div>
+
+      <!-- Empty State -->
+      <div class="empty-results-box" id="emptyResults">
+        <div class="empty-icon-wrap">
+          <i data-lucide="search-x" style="width:32px;height:32px;"></i>
+        </div>
+        <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.4rem;" data-i="emptyTitle">Không tìm thấy tiện ích phù hợp</h3>
+        <p style="color:var(--md-sys-color-on-surface-variant);font-size:0.92rem;" data-i="emptyDesc">Hãy thử tìm với từ khóa khác hoặc bấm nút "Tất cả" để xóa bộ lọc.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES & STANDARDS SECTION -->
+  <section class="principles-section" id="principles">
+    <div class="container">
+      <div class="section-header-wrap">
+        <span class="section-tag" data-i="priTag">TRIẾT LÝ THIẾT KẾ</span>
+        <h2 class="section-title" data-i="priTitle">Tiêu Chuẩn Kỹ Thuật Đẳng Cấp</h2>
+        <p class="section-desc" data-i="priDesc">
+          Không chỉ là các tiện ích đơn thuần, bộ sưu tập được kiến tạo dựa trên các nguyên tắc bất biến về quyền riêng tư, trải nghiệm người dùng và hiệu năng phần cứng.
+        </p>
+      </div>
+
+      <div class="principles-grid">
+        <div class="principle-card">
+          <div class="principle-icon-halo">
+            <i data-lucide="shield-check" style="width:26px;height:26px;"></i>
+          </div>
+          <h3 class="principle-title" data-i="p1Title">100% Cục Bộ & Bảo Mật Tuyệt Đối</h3>
+          <p class="principle-desc" data-i="p1Desc">
+            Mọi quá trình xử lý ảnh, tạo mật khẩu, quản lý bookmark đều diễn ra trên máy tính của bạn thông qua Canvas API và Web Crypto API. Không có bất kỳ dòng mã theo dõi (Google Analytics, Sentry...) hay máy chủ trung gian nào.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-icon-halo">
+            <i data-lucide="cpu" style="width:26px;height:26px;"></i>
+          </div>
+          <h3 class="principle-title" data-i="p2Title">Chuẩn Hiện Đại Manifest V3</h3>
+          <p class="principle-desc" data-i="p2Desc">
+            Tuân thủ nghiêm ngặt chính sách bảo mật thế hệ mới nhất của Chromium. Vận hành bằng Background Service Workers thông minh, tự động giải phóng tài nguyên bộ nhớ RAM khi không có tác vụ và khởi động ngay khi cần.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-icon-halo">
+            <i data-lucide="palette" style="width:26px;height:26px;"></i>
+          </div>
+          <h3 class="principle-title" data-i="p3Title">Ngôn Ngữ Material 3 Expressive 2026</h3>
+          <p class="principle-desc" data-i="p3Desc">
+            Trải nghiệm thẩm mỹ tinh tế với hệ thống Dynamic Color, các góc bo tròn mềm mại, độ tương phản trực quan và chuyển động vi mô chân thực. Tự động hòa nhập mượt mà theo tông màu Sáng / Tối của hệ điều hành.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-icon-halo">
+            <i data-lucide="chrome" style="width:26px;height:26px;"></i>
+          </div>
+          <h3 class="principle-title" data-i="p4Title">Tương Thích Toàn Diện Chromium</h3>
+          <p class="principle-desc" data-i="p4Desc">
+            Chạy hoàn hảo trên Google Chrome, Microsoft Edge, Brave Browser, Opera, Vivaldi, Cốc Cốc và mọi trình duyệt sử dụng nhân Chromium hiện đại từ phiên bản 100 trở lên.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALLATION STEPPER SECTION -->
+  <section class="install-section" id="install">
+    <div class="container">
+      <div class="section-header-wrap">
+        <span class="section-tag" data-i="insTag">HƯỚNG DẪN CÀI ĐẶT</span>
+        <h2 class="section-title" data-i="insTitle">Cài Đặt Dễ Dàng Chỉ Với 4 Bước</h2>
+        <p class="section-desc" data-i="insDesc">
+          Tất cả tiện ích đều ở dạng mã nguồn mở nguyên bản (Unpacked Extension), không cần cài đặt Node.js hay bất kỳ môi trường lập trình phức tạp nào.
+        </p>
+      </div>
+
+      <div class="install-layout-grid">
+        <!-- Steps List -->
+        <ol class="m3-stepper">
+          <li class="step-item">
+            <div class="step-badge">1</div>
+            <h3 class="step-title" data-i="step1Title">Tải mã nguồn về máy</h3>
+            <p class="step-desc" data-i="step1Desc">
+              Clone kho lưu trữ GitHub bằng lệnh Git hoặc tải tệp ZIP từ trang dự án rồi giải nén vào ổ đĩa máy tính của bạn.
+            </p>
+          </li>
+          <li class="step-item">
+            <div class="step-badge">2</div>
+            <h3 class="step-title" data-i="step2Title">Mở trang quản lý Tiện ích</h3>
+            <p class="step-desc" data-i="step2Desc">
+              Truy cập <code>chrome://extensions</code> trên Google Chrome hoặc <code>edge://extensions</code> trên Microsoft Edge từ thanh địa chỉ.
+            </p>
+          </li>
+          <li class="step-item">
+            <div class="step-badge">3</div>
+            <h3 class="step-title" data-i="step3Title">Bật "Developer mode"</h3>
+            <p class="step-desc" data-i="step3Desc">
+              Gạt công tắc <strong>Developer mode</strong> (Chế độ dành cho nhà phát triển) ở góc trên cùng bên phải màn hình sang trạng thái Bật.
+            </p>
+          </li>
+          <li class="step-item">
+            <div class="step-badge">4</div>
+            <h3 class="step-title" data-i="step4Title">Nhấn "Load unpacked" & Chọn thư mục</h3>
+            <p class="step-desc" data-i="step4Desc">
+              Nhấn nút <strong>Load unpacked</strong> (Tải tiện ích đã giải nén) ở góc trên bên trái, điều hướng đến thư mục tiện ích bạn muốn cài (ví dụ: <code>smartshot</code>, <code>quicknote</code>, <code>bookmark-manager</code>...) và bấm <strong>Select Folder</strong>.
+            </p>
+          </li>
+        </ol>
+
+        <!-- Terminal Snippet Card -->
+        <div>
+          <div class="terminal-card">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="terminal-dot dot-red"></span>
+                <span class="terminal-dot dot-yellow"></span>
+                <span class="terminal-dot dot-green"></span>
+              </div>
+              <div class="terminal-title">Terminal / Bash</div>
+            </div>
+            <div class="terminal-body">
+              <code class="terminal-code" id="gitCmdCode">git clone https://github.com/minhtrong67/my-chrome-extensions.git</code>
+              <button class="m3-btn m3-btn-sm m3-btn-tonal" id="copyGitBtn">
+                <i data-lucide="copy" style="width:14px;height:14px;"></i>
+                <span data-i="btnCopy">Sao chép</span>
+              </button>
+            </div>
+            <div class="terminal-tip-box">
+              <i data-lucide="lightbulb" style="width:18px;height:18px;flex-shrink:0;color:var(--md-sys-color-primary);"></i>
+              <span data-i="tipText">Mẹo: Ghim tiện ích ra thanh công cụ trình duyệt bằng biểu tượng Mảnh ghép và bấm chiếc Ghim (📌 Pin) để sử dụng thuận tiện nhất.</span>
+            </div>
+          </div>
+
+          <!-- Compatibility Matrix -->
+          <div class="browser-compat-card">
+            <div class="compat-title" data-i="compatTitle">Trình duyệt được hỗ trợ chính thức:</div>
+            <div class="browser-badges-row">
+              <span class="browser-badge"><i data-lucide="check" style="width:14px;height:14px;color:var(--md-sys-color-success);"></i> Google Chrome</span>
+              <span class="browser-badge"><i data-lucide="check" style="width:14px;height:14px;color:var(--md-sys-color-success);"></i> Microsoft Edge</span>
+              <span class="browser-badge"><i data-lucide="check" style="width:14px;height:14px;color:var(--md-sys-color-success);"></i> Brave Browser</span>
+              <span class="browser-badge"><i data-lucide="check" style="width:14px;height:14px;color:var(--md-sys-color-success);"></i> Cốc Cốc</span>
+              <span class="browser-badge"><i data-lucide="check" style="width:14px;height:14px;color:var(--md-sys-color-success);"></i> Opera & GX</span>
+              <span class="browser-badge"><i data-lucide="check" style="width:14px;height:14px;color:var(--md-sys-color-success);"></i> Vivaldi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-header-wrap" style="text-align:center;align-items:center;">
+        <span class="section-tag" data-i="faqTag">HỎI & ĐÁP</span>
+        <h2 class="section-title" data-i="faqTitle">Các Câu Hỏi Thường Gặp</h2>
+        <p class="section-desc" data-i="faqDesc">
+          Tất cả những điều bạn cần biết trước khi cài đặt và sử dụng bộ tiện ích.
+        </p>
+      </div>
+
+      <div class="faq-list-wrap" id="faqAccordion">
+        <div class="m3-accordion-item open">
+          <button class="accordion-header-btn" aria-expanded="true">
+            <span data-i="q1">Tiện ích này có an toàn và bảo mật không?</span>
+            <i data-lucide="chevron-down" class="accordion-icon"></i>
+          </button>
+          <div class="accordion-content-collapse">
+            <div class="accordion-content-inner">
+              <p data-i="a1">
+                Tuyệt đối an toàn. Toàn bộ mã nguồn mở 100% minh bạch trên GitHub. Các tiện ích hoạt động độc lập ngay trên máy của bạn thông qua Canvas API và Web Crypto API, không kết nối internet ra ngoài, không có telemetry và chỉ yêu cầu quyền hạn tối thiểu tuyệt đối cần thiết để thực hiện tính năng.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="m3-accordion-item">
+          <button class="accordion-header-btn" aria-expanded="false">
+            <span data-i="q2">Làm thế nào để cập nhật khi có phiên bản mới?</span>
+            <i data-lucide="chevron-down" class="accordion-icon"></i>
+          </button>
+          <div class="accordion-content-collapse">
+            <div class="accordion-content-inner">
+              <p data-i="a2">
+                Rất đơn giản! Bạn chỉ cần mở Terminal trong thư mục dự án và chạy <code>git pull</code> để kéo mã mới nhất về, sau đó vào trang <code>chrome://extensions</code> và nhấn nút biểu tượng Tải lại (Reload icon) của tiện ích.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="m3-accordion-item">
+          <button class="accordion-header-btn" aria-expanded="false">
+            <span data-i="q3">Làm sao để đổi phím tắt kích hoạt tiện ích?</span>
+            <i data-lucide="chevron-down" class="accordion-icon"></i>
+          </button>
+          <div class="accordion-content-collapse">
+            <div class="accordion-content-inner">
+              <p data-i="a3">
+                Bạn chỉ cần truy cập vào <code>chrome://extensions/shortcuts</code> trên thanh địa chỉ, tìm đến tiện ích mong muốn (ví dụ: SmartShot, QuickNote, TagMark) và bấm biểu tượng bút chì để tự do gán bất kỳ tổ hợp phím nào bạn thấy thuận tay nhất.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="m3-accordion-item">
+          <button class="accordion-header-btn" aria-expanded="false">
+            <span data-i="q4">Tôi có thể đóng góp mã nguồn hoặc báo lỗi ở đâu?</span>
+            <i data-lucide="chevron-down" class="accordion-icon"></i>
+          </button>
+          <div class="accordion-content-collapse">
+            <div class="accordion-content-inner">
+              <p data-i="a4">
+                Dự án luôn hoan nghênh mọi đóng góp! Bạn có thể mở Issue để báo lỗi, đề xuất tính năng mới hoặc gửi Pull Request trực tiếp tại kho lưu trữ GitHub <code>minhtrong67/my-chrome-extensions</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTHOR & COMMUNITY SECTION -->
+  <section class="author-section" id="author">
+    <div class="container">
+      <div class="author-card">
+        <img src="https://github.com/minhtrong67.png?size=180" alt="minhtrong67" class="author-avatar" width="90" height="90" loading="lazy">
+        <div class="author-info">
+          <h3 class="author-name">minhtrong67</h3>
+          <p class="author-bio" data-i="authorBio">
+            Lập trình viên đam mê mã nguồn mở, chuyên xây dựng các công cụ duyệt web tối ưu, tinh gọn, tốc độ cao và tôn trọng tuyệt đối quyền riêng tư của người dùng.
+          </p>
+          <div class="author-links-row">
+            <a href="https://github.com/minhtrong67" target="_blank" rel="noopener noreferrer" class="m3-btn m3-btn-sm m3-btn-filled">
+              <i data-lucide="github" style="width:16px;height:16px;"></i>
+              <span>GitHub Profile</span>
+            </a>
+            <a href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer" class="m3-btn m3-btn-sm m3-btn-tonal">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+              <span data-i="starRepo">Tặng Star cho Dự Án</span>
+            </a>
+            <a href="mailto:minhtrong9760@gmail.com" class="m3-btn m3-btn-sm m3-btn-outlined">
+              <i data-lucide="mail" style="width:16px;height:16px;"></i>
+              <span>minhtrong9760@gmail.com</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
-<footer><div class="wrap"><span data-i="copy2"></span><a href="https://github.com/minhtrong67/my-extension-pack/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></div></footer>
+<!-- FOOTER -->
+<footer class="footer-wrap">
+  <div class="container footer-inner">
+    <div>
+      <span data-i="footerCopy">© 2026 minhtrong67. Mã nguồn mở theo giấy phép MIT.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://github.com/minhtrong67/my-chrome-extensions/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+      <a href="#showcase" data-i="navExtensions">Tiện ích</a>
+      <a href="#install" data-i="navInstall">Cài đặt</a>
+    </div>
+  </div>
+</footer>
 
-<dialog id="dlg" aria-labelledby="dT">
- <div class="dh"><div class="ico"><img id="dI" alt="" width="28" height="28"></div>
-  <div><h3 id="dT"></h3><p id="dTag"></p></div>
-  <button class="ib" id="dX" aria-label="Close"><i data-lucide="x"></i></button></div>
- <div class="db">
-  <p id="dD"></p>
-  <div class="shots" id="dS"></div>
-  <h4 data-i="dFeat"></h4><ul class="ft" id="dF"></ul>
-  <h4 data-i="dSpec"></h4>
-  <div class="sp"><div><span data-i="dSc"></span><kbd id="dSc"></kbd></div><div><span data-i="dPm"></span><code id="dPm"></code></div><div><span data-i="dFo"></span><code id="dFo"></code></div></div>
- </div>
- <div class="df"><button class="btn" id="dC" type="button" data-i="close"></button><a class="btn pri" id="dG" target="_blank" rel="noopener"><i data-lucide="github"></i><span data-i="src"></span></a></div>
+<!-- ==========================================================================
+     EXPRESSIVE DETAILS MODAL (M3 Bottom/Center Sheet)
+     ========================================================================== -->
+<dialog class="m3-dialog" id="detailDialog" aria-labelledby="dialogTitle">
+  <div class="dialog-header">
+    <div class="dialog-avatar-box">
+      <img id="dlgIcon" alt="" width="40" height="40">
+    </div>
+    <div class="dialog-title-meta">
+      <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+        <h3 class="dialog-title" id="dialogTitle"></h3>
+        <span class="ext-version-badge" id="dlgVersion"></span>
+      </div>
+      <div class="dialog-tagline" id="dlgTagline"></div>
+    </div>
+    <button class="m3-icon-btn" id="dlgCloseBtn" aria-label="Close dialog">
+      <i data-lucide="x" style="width:20px;height:20px;"></i>
+    </button>
+  </div>
+
+  <div class="dialog-body">
+    <p class="dialog-desc" id="dlgDescription"></p>
+
+    <!-- Screenshots Carousel -->
+    <div id="dlgScreenshotsWrap">
+      <div class="dialog-section-label" data-i="dlgScreenLabel">Hình ảnh giao diện</div>
+      <div class="screenshots-strip" id="dlgScreenshotsStrip"></div>
+    </div>
+
+    <!-- Feature Highlights -->
+    <div>
+      <div class="dialog-section-label" data-i="dlgFeaturesLabel">Tính năng nổi bật</div>
+      <ul class="dialog-features-list" id="dlgFeaturesList"></ul>
+    </div>
+
+    <!-- Specs Matrix -->
+    <div>
+      <div class="dialog-section-label" data-i="dlgSpecsLabel">Thông số kỹ thuật</div>
+      <div class="dialog-specs-grid">
+        <div class="spec-item-box">
+          <span data-i="dlgSpecShortcut">Phím tắt kích hoạt</span>
+          <strong id="dlgShortcutKey"><kbd></kbd></strong>
+        </div>
+        <div class="spec-item-box">
+          <span data-i="dlgSpecFolder">Thư mục nguồn</span>
+          <strong id="dlgFolderName" style="font-family:var(--m3-font-mono);"></strong>
+        </div>
+        <div class="spec-item-box">
+          <span data-i="dlgSpecPermissions">Quyền hạn (Permissions)</span>
+          <strong id="dlgPermissions" style="font-family:var(--m3-font-mono);font-size:0.84rem;"></strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-footer">
+    <button class="m3-btn m3-btn-tonal" id="dlgCopyFolderBtn">
+      <i data-lucide="folder" style="width:16px;height:16px;"></i>
+      <span data-i="btnCopyFolder">Sao chép đường dẫn thư mục</span>
+    </button>
+    <a href="#" target="_blank" rel="noopener noreferrer" class="m3-btn m3-btn-filled" id="dlgGithubLink">
+      <i data-lucide="github" style="width:16px;height:16px;"></i>
+      <span data-i="btnViewGithub">Xem mã nguồn</span>
+    </a>
+  </div>
 </dialog>
 
+<!-- LIGHTBOX MODAL (Image Zoom) -->
+<div class="m3-lightbox" id="lightbox">
+  <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Close zoom">
+    <i data-lucide="x" style="width:24px;height:24px;"></i>
+  </button>
+  <img src="" alt="" class="lightbox-img" id="lightboxImg">
+</div>
+
+<!-- SNACKBAR TOAST -->
+<div class="m3-snackbar" id="snackbar">
+  <i data-lucide="check-circle" style="width:18px;height:18px;color:var(--md-sys-color-success);"></i>
+  <span id="snackbarText">Đã sao chép vào bộ nhớ tạm!</span>
+</div>
+
+<!-- FLOATING ACTION BUTTON (Scroll to Top) -->
+<button class="m3-fab" id="scrollTopFab" aria-label="Scroll to top" title="Scroll to top">
+  <i data-lucide="arrow-up" style="width:24px;height:24px;"></i>
+</button>
+
+<!-- ==========================================================================
+     SCRIPTS & DATA ENGINE
+     ========================================================================== -->
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+
 <script>
-const X=[
-{id:'smartshot',n:'SmartShot',v:'1.3.0',c:'media',sc:'Alt + Shift + S',p:'activeTab, scripting, storage',sh:6,
- vi:{t:'Chụp màn hình và chú thích',d:'Chụp vùng nhìn thấy, toàn trang hoặc vùng chọn, rồi vẽ, thêm chữ và làm mờ thông tin nhạy cảm.',f:['Ba chế độ chụp: vùng nhìn thấy, vùng chọn, cuộn toàn trang','Chú thích bằng mũi tên, hình khối, bút vẽ, văn bản và số bước','Làm mờ hoặc pixel hóa dữ liệu nhạy cảm, tải PNG hoặc chép vào clipboard']},
- en:{t:'Screen capture and annotation',d:'Capture the visible area, a full page or a selection, then draw, add text and blur sensitive details.',f:['Three capture modes: visible area, selection, full-page scroll','Annotate with arrows, shapes, pen, text and step numbers','Blur or pixelate private data, then download PNG or copy to clipboard']}},
-{id:'quicknote',n:'QuickNote',v:'3.0.0',c:'productivity',sc:'Alt + Shift + N',p:'storage, unlimitedStorage',sh:5,
- vi:{t:'Ghi chú tức thì',d:'Ghi nhanh ý tưởng và việc cần làm khi đang duyệt web. Tự động lưu, có tìm kiếm và ghim.',f:['Tự động lưu vào chrome.storage.local','Nhiều ghi chú, tìm kiếm theo thời gian thực, ghim ghi chú quan trọng','Xuất và nhập bản sao lưu dạng JSON hoặc văn bản thuần']},
- en:{t:'Instant notes',d:'Jot down ideas and to-dos while you browse. Autosaves, with search and pinning.',f:['Autosaves to chrome.storage.local','Multiple notes, live search, pin the important ones','Export and import backups as JSON or plain text']}},
-{id:'bookmark-manager',n:'TagMark',v:'2.0.0',c:'productivity',sc:'Alt + Shift + M',p:'bookmarks, storage, favicon',sh:5,
- vi:{t:'Quản lý bookmark bằng thẻ',d:'Sắp xếp bookmark thật của trình duyệt bằng thẻ và ghi chú, tìm nhanh, phát hiện liên kết trùng.',f:['Đồng bộ trực tiếp với Chrome Bookmarks API','Gắn thẻ và ghi chú riêng cho từng liên kết','Phát hiện URL trùng và thao tác hàng loạt']},
- en:{t:'Bookmarks with tags',d:'Organize your real browser bookmarks with tags and notes, instant search and duplicate detection.',f:['Works directly on the Chrome Bookmarks API','Add tags and private notes to any link','Detects duplicate URLs and supports bulk actions']}},
-{id:'youtube-grid',n:'YouTube Grid',v:'3.0.0',c:'youtube',sc:['Tự động','Automatic'],p:'storage, scripting, youtube.com',sh:4,
- vi:{t:'Lưới video YouTube',d:'Chọn số cột video từ 2 đến 8+ cho màn hình rộng, ẩn Shorts, bình luận và thẻ đề xuất.',f:['Số cột riêng cho Trang chủ, Đăng ký và Kênh','Ẩn YouTube Shorts khỏi trang chủ và tìm kiếm','Lưu cấu hình, áp dụng ngay không cần tải lại trang']},
- en:{t:'YouTube video grid',d:'Set 2 to 8+ video columns for wide screens and hide Shorts, comments and end cards.',f:['Separate column counts for Home, Subscriptions and Channels','Removes Shorts from feeds and search','Settings persist and apply without reloading']}},
-{id:'youtube-screenshot',n:'TubeShot',v:'1.1.0',c:'youtube',sc:['Nút trên trình phát','Player button'],p:'activeTab, scripting, storage',sh:4,
- vi:{t:'Chụp khung hình YouTube',d:'Lấy ảnh từ video ở độ phân giải gốc, không dính thanh điều khiển của trình phát.',f:['Chụp đúng khung hình video, không có controls hay overlay','Tua từng khung hình tới lui','Tùy chọn đóng dấu thời gian và tiêu đề video']},
- en:{t:'YouTube frame capture',d:'Grab frames from a video at native resolution, without the player controls in the way.',f:['Captures the raw video frame, no controls or overlays','Step forward and back one frame at a time','Optional timestamp and title watermark']}},
-{id:'password-generator',n:'Password Generator',v:'3.0.0',c:'security',sc:['Popup','Popup'],p:'storage',sh:4,
- vi:{t:'Tạo mật khẩu, passphrase và PIN',d:'Sinh mật khẩu ngẫu nhiên bằng Web Crypto API, passphrase Diceware và mã PIN. Hoàn toàn offline.',f:['Ba chế độ: mật khẩu, passphrase, PIN 4 đến 12 số','Thanh đo độ mạnh và thời gian bẻ khóa ước tính','Loại bỏ ký tự dễ nhầm như l, 1, I, O, 0']},
- en:{t:'Password, passphrase and PIN generator',d:'Random passwords via the Web Crypto API, Diceware passphrases and PINs. Fully offline.',f:['Three modes: password, passphrase, 4 to 12 digit PIN','Strength meter with estimated crack time','Option to drop look-alike characters such as l, 1, I, O, 0']}},
-{id:'photo-converter',n:'Photo Converter',v:'3.0.0',c:'media',sc:['Chuột phải / Popup','Right-click / Popup'],p:'contextMenus, downloads, storage',sh:4,
- vi:{t:'Đổi định dạng ảnh',d:'Chuột phải vào ảnh để lưu thành PNG, JPEG hoặc WEBP, hoặc kéo thả nhiều ảnh để đổi hàng loạt.',f:['Menu chuột phải lưu ảnh sang định dạng khác','Đổi hàng loạt và tải về dạng .zip','Xử lý bằng Canvas trên máy, có thanh chỉnh chất lượng']},
- en:{t:'Image format converter',d:'Right-click any image to save as PNG, JPEG or WEBP, or drop several files to convert in bulk.',f:['Context menu saves images in another format','Batch convert and download as .zip','Runs on Canvas locally, with a quality slider']}},
-{id:'multi-downloader',n:'Multi Downloader',v:'3.0.0',c:'media',sc:['Popup','Popup'],p:'activeTab, scripting, downloads, storage',sh:0,
- vi:{t:'Tải ảnh hàng loạt',d:'Quét mọi ảnh trên trang, lọc theo kích thước và định dạng, tự bỏ icon nhỏ, cắt 512×512 cho dữ liệu huấn luyện AI.',f:['Quét ảnh từ thẻ img, srcset và background-image','Lọc theo kích thước tối thiểu, tỉ lệ và định dạng','Cắt và đổi cỡ 512×512, tải về thư mục hoặc .zip']},
- en:{t:'Bulk image downloader',d:'Scan a page for images, filter by size and format, skip small icons, auto-crop to 512×512 for AI training sets.',f:['Finds images in img, srcset and background-image','Filter by minimum size, aspect ratio and format','Crop and resize to 512×512, save to a folder or .zip']}},
-{id:'case-converter',n:'Case Converter',v:'1.0.0',c:'productivity',sc:['Popup / phím tắt','Popup / hotkeys'],p:'activeTab, scripting, contextMenus',sh:3,
- vi:{t:'Đổi kiểu chữ',d:'Đổi kiểu chữ cho văn bản đã chọn hoặc dán vào popup: hoa, thường, camelCase, snake_case, kebab-case và hơn thế.',f:['Hơn 9 kiểu: UPPER, lower, Title, camelCase, PascalCase, snake_case…','Bôi đen văn bản trên bất kỳ trang nào để đổi tại chỗ','Hỗ trợ đầy đủ tiếng Việt có dấu và Unicode']},
- en:{t:'Text case converter',d:'Change the case of selected text or paste into the popup: upper, lower, camelCase, snake_case, kebab-case and more.',f:['9+ styles: UPPER, lower, Title, camelCase, PascalCase, snake_case…','Select text on any page and convert in place','Full support for Vietnamese diacritics and Unicode']}}
+/**
+ * 10 EXTENSIONS FULL METADATA DIRECTORY
+ */
+const EXTENSIONS_DATA = [
+  {
+    id: 'smartshot',
+    name: 'SmartShot',
+    version: '1.3.0',
+    category: 'media',
+    shortcut: 'Alt + Shift + S',
+    permissions: 'activeTab, scripting, storage',
+    screenshotsCount: 6,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Chụp & Chú Thích Màn Hình Chuyên Sâu',
+      desc: 'Giải pháp chụp màn hình toàn diện 100% cục bộ. Cho phép chụp vùng hiển thị hiện tại, vùng chọn tùy ý hoặc cuộn chụp toàn bộ trang web; biên tập chú thích chuyên nghiệp và che mờ thông tin riêng tư trước khi chia sẻ.',
+      features: [
+        '3 chế độ chụp đa năng: vùng thấy (visible), vùng chọn tự do và cuộn chụp toàn trang web (full page)',
+        'Bộ công cụ chú thích phong phú: bút vẽ tự do, mũi tên, hình hộp, hình elip, văn bản và đánh số thứ tự bước (1, 2, 3...)',
+        'Công cụ làm mờ (Blur) và Pixelate để bảo vệ mật khẩu, thẻ tín dụng và dữ liệu cá nhân',
+        'Tải ngay tệp ảnh PNG sắc nét hoặc sao chép thẳng vào Clipboard để dán nhanh'
+      ],
+      tags: ['Chụp toàn trang', 'Vẽ chú thích', 'Làm mờ thông tin', 'Clipboard']
+    },
+    en: {
+      tagline: 'Deep Screenshot & Annotation Suite',
+      desc: 'All-in-one local screenshot utility. Capture visible tab viewport, custom region or full scrolling webpage; add rich vector annotations and blur sensitive private data before sharing.',
+      features: [
+        '3 versatile capture modes: visible area, freeform drag selection and auto-scrolling full page capture',
+        'Rich markup toolset: freehand pen, directional arrows, boxes, ellipses, text callouts and step counters',
+        'Smart blur and pixelate tools to safeguard passwords, credit cards and private information',
+        'Download high-definition PNG files or copy straight to system clipboard'
+      ],
+      tags: ['Full Page Scroll', 'Markup & Draw', 'Privacy Blur', 'Direct Clipboard']
+    }
+  },
+  {
+    id: 'quicknote',
+    name: 'QuickNote',
+    version: '3.0.0',
+    category: 'productivity',
+    shortcut: 'Alt + Shift + N',
+    permissions: 'storage, unlimitedStorage',
+    screenshotsCount: 9,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Sổ Tay Ghi Chú Tức Thì Material 3',
+      desc: 'Ghi lại mọi ý tưởng, đầu việc cần làm và trích dẫn nội dung ngay trong khi lướt web mà không làm gián đoạn luồng công việc. Giao diện Material Design 3 cực đẹp, tự động lưu ngoại tuyến 100%.',
+      features: [
+        'Tự động lưu tức thời từng ký tự vào chrome.storage.local',
+        'Quản lý nhiều ghi chú độc lập, tìm kiếm thời gian thực theo tiêu đề và nội dung',
+        'Ghim (Pin) những ghi chú ưu tiên hoặc khẩn cấp lên vị trí đầu danh sách',
+        'Sao lưu và khôi phục dữ liệu nhanh chóng dưới dạng tệp JSON hoặc Plain Text'
+      ],
+      tags: ['Tự động lưu', 'Ghim ưu tiên', 'Tìm kiếm', 'Xuất JSON/TXT']
+    },
+    en: {
+      tagline: 'Instant Material 3 Scratchpad',
+      desc: 'Jot down fleeting thoughts, to-dos and web snippets seamlessly while browsing without interrupting your workflow. Beautiful Material 3 UI, 100% offline autosave.',
+      features: [
+        'Instant keystroke autosave directly to chrome.storage.local',
+        'Manage multiple notes effortlessly with live search by title and content',
+        'Pin vital notes to the top of your workspace',
+        'Fast backup export and import in JSON or plain text formats'
+      ],
+      tags: ['Instant Autosave', 'Pin to Top', 'Live Search', 'JSON/TXT Backup']
+    }
+  },
+  {
+    id: 'bookmark-manager',
+    name: 'TagMark',
+    version: '2.0.0',
+    category: 'productivity',
+    shortcut: 'Alt + Shift + M',
+    permissions: 'bookmarks, storage, favicon',
+    screenshotsCount: 8,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Quản Lý Dấu Trang Thông Minh Bằng Thẻ',
+      desc: 'Nâng cấp trình quản lý bookmark Chrome mặc định với hệ thống phân loại bằng thẻ đa tầng (Tags), ghi chú riêng tư cho từng link, tìm kiếm siêu tốc và phát hiện liên kết trùng lặp.',
+      features: [
+        'Tương tác 2 chiều với dữ liệu Chrome Bookmarks API thực tế',
+        'Gắn nhiều thẻ nhãn (Tags) linh hoạt và ghi chú riêng tư cho từng liên kết',
+        'Tự động phát hiện URL bị lưu trùng lặp để dọn dẹp bộ nhớ',
+        'Thao tác chọn hàng loạt (Bulk Actions) để gắn thẻ hoặc xóa nhanh chóng'
+      ],
+      tags: ['Đồng bộ Chrome', 'Gắn thẻ đa tầng', 'Phát hiện trùng', 'Thao tác loạt']
+    },
+    en: {
+      tagline: 'Smart Multi-Tagged Bookmark Manager',
+      desc: 'Supercharge default Chrome bookmarks with flexible multi-tagging, private notes for each link, lightning-fast instant search and duplicate URL detection.',
+      features: [
+        'Real two-way sync with native Chrome Bookmarks API',
+        'Attach flexible multi-tags and private markdown notes to any link',
+        'Smart duplicate URL detection to keep your bookmarks clean',
+        'Bulk selection mode for mass-tagging and quick cleanup'
+      ],
+      tags: ['Native API Sync', 'Multi-Tagging', 'Duplicate Finder', 'Batch Actions']
+    }
+  },
+  {
+    id: 'youtube-grid',
+    name: 'YouTube Grid',
+    version: '3.0.0',
+    category: 'youtube',
+    shortcut: 'Tự động áp dụng',
+    permissions: 'storage, scripting, youtube.com',
+    screenshotsCount: 4,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Tùy Biến Lưới Video YouTube & Dọn Rác',
+      desc: 'Toàn quyền điều chỉnh số lượng cột video YouTube (từ 2 đến 8+ cột) tối ưu hoàn hảo cho màn hình lớn, 2K, 4K hoặc Ultrawide, kèm bộ công cụ dọn sạch Shorts, bình luận và đề xuất rác.',
+      features: [
+        'Tùy chỉnh số cột độc lập cho Trang chủ, Kênh đăng ký (Subscriptions) và Trang kênh',
+        'Bộ dọn dẹp: ẩn hoàn toàn video ngắn YouTube Shorts khỏi trang chủ và kết quả tìm kiếm',
+        'Tùy chọn ẩn phần bình luận và thẻ đề xuất cuối video (End-screen cards)',
+        'Lưu cấu hình và cập nhật CSS ngay tức thì mà không cần tải lại trang'
+      ],
+      tags: ['2–8+ Cột Video', 'Ẩn Shorts', 'Dọn bình luận', 'Tối ưu Ultrawide']
+    },
+    en: {
+      tagline: 'YouTube Grid Customizer & Declutter',
+      desc: 'Take full control of YouTube video column layouts (from 2 to 8+ columns) tailored for wide, 2K, 4K and ultrawide monitors, plus a declutter suite to hide Shorts and visual noise.',
+      features: [
+        'Independent column sliders for Home feed, Subscriptions and Channel pages',
+        'Declutter suite: completely hide YouTube Shorts from feeds and search results',
+        'Optional toggle to suppress video comments and end-screen recommendation cards',
+        'Real-time CSS injection that updates your view without reloading tabs'
+      ],
+      tags: ['2–8+ Columns', 'Hide Shorts', 'Mute Comments', 'Ultrawide Ready']
+    }
+  },
+  {
+    id: 'youtube-screenshot',
+    name: 'TubeShot',
+    version: '1.1.0',
+    category: 'youtube',
+    shortcut: 'Nút Player / Phím tắt',
+    permissions: 'activeTab, scripting, storage',
+    screenshotsCount: 8,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Chụp Ảnh YouTube Sạch Khung Hình',
+      desc: 'Chụp ảnh tĩnh từ video YouTube ở độ phân giải gốc cao nhất mà không bị vướng thanh tiến trình hay nút tạm dừng. Hỗ trợ tua từng khung hình chuẩn xác mili-giây.',
+      features: [
+        'Trích xuất khung hình video gốc 100% sạch sẽ, không dính controls hay overlay',
+        'Phím điều hướng tiến/lùi từng khung hình (Frame-by-Frame) bắt trúng khoảnh khắc',
+        'Tùy chọn đóng dấu mốc thời gian (Timestamp) và tiêu đề video lên ảnh chụp',
+        'Tích hợp nút chụp trực tiếp ngay trên thanh điều khiển của trình phát YouTube'
+      ],
+      tags: ['Khung hình sạch', 'Tua Frame-by-Frame', 'Đóng dấu thời gian', 'Độ phân giải gốc']
+    },
+    en: {
+      tagline: 'Clean YouTube Frame Grabber',
+      desc: 'Capture pristine video stills from YouTube at native max resolution without player controls, progress bars or pause overlays. Features millisecond-accurate frame navigation.',
+      features: [
+        'Clean raw frame capture straight from video stream, 100% free of UI overlays',
+        'Millisecond-accurate frame-by-frame forward and rewind stepping keys',
+        'Optional watermark banner with video title and current timestamp',
+        'Integrated one-click capture icon on YouTube native control bar'
+      ],
+      tags: ['Pristine Frame', 'Frame Step', 'Timestamp Stamp', 'Native Resolution']
+    }
+  },
+  {
+    id: 'password-generator',
+    name: 'Password Generator',
+    version: '3.0.0',
+    category: 'security',
+    shortcut: 'Popup tiện ích',
+    permissions: 'storage',
+    screenshotsCount: 10,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Tạo Mật Khẩu, Passphrase & PIN An Toàn',
+      desc: 'Trình tạo thông tin bảo mật mạnh mẽ chuẩn Web Crypto API, hỗ trợ cụm từ Diceware dễ nhớ và mã PIN ngân hàng, xử lý hoàn toàn ngoại tuyến không lưu trữ dữ liệu.',
+      features: [
+        '3 chế độ linh hoạt: Ký tự ngẫu nhiên, cụm từ Passphrase Diceware, mã PIN 4-12 số',
+        'Sử dụng Web Crypto API (crypto.getRandomValues) an toàn chuẩn mật mã học',
+        'Thanh đo độ mạnh mật khẩu và ước tính thời gian máy tính cần để bẻ khóa',
+        'Tùy chọn loại bỏ các ký tự tương đồng dễ gây nhầm lẫn (l, 1, I, O, 0)'
+      ],
+      tags: ['Web Crypto API', 'Passphrase Diceware', 'PIN an toàn', 'Đo độ mạnh']
+    },
+    en: {
+      tagline: 'Secure Password, Passphrase & PIN Generator',
+      desc: 'Cryptographically secure password generator powered by the Web Crypto API, supporting Diceware passphrases and banking PINs, 100% offline.',
+      features: [
+        '3 flexible modes: Random strings, Diceware passphrases, 4-12 digit security PINs',
+        'Hardware entropy via native crypto.getRandomValues() API',
+        'Visual entropy strength meter with estimated brute-force crack time',
+        'Option to exclude confusing lookalike characters like l, 1, I, O, 0'
+      ],
+      tags: ['Web Crypto API', 'Diceware Passphrase', 'Banking PIN', 'Crack Meter']
+    }
+  },
+  {
+    id: 'photo-converter',
+    name: 'Photo Converter',
+    version: '3.0.0',
+    category: 'media',
+    shortcut: 'Chuột phải / Popup',
+    permissions: 'contextMenus, downloads, storage',
+    screenshotsCount: 11,
+    screenshotExt: 'png',
+    hasSvg: true,
+    vi: {
+      tagline: 'Chuyển Đổi Định Dạng Ảnh Tức Thì',
+      desc: 'Chuyển đổi qua lại giữa các định dạng PNG, JPEG và WebP nhanh chóng ngay trên trình duyệt mà không cần tải ảnh lên bất kỳ máy chủ bên thứ ba nào.',
+      features: [
+        'Menu ngữ cảnh chuột phải: nhấp chuột phải vào bất kỳ ảnh nào trên web để lưu ngay',
+        'Chuyển đổi hàng loạt (Batch Converter): kéo thả nhiều tệp và tải về file .zip đóng gói',
+        'Thanh trượt điều chỉnh tỷ lệ nén và chất lượng hình ảnh đầu ra trực quan',
+        '100% xử lý bằng HTML5 Canvas cục bộ, không tiêu tốn băng thông mạng'
+      ],
+      tags: ['PNG / JPEG / WebP', 'Chuột phải chuyển nhanh', 'Kéo thả hàng loạt', 'Xuất file ZIP']
+    },
+    en: {
+      tagline: 'Instant Image Format Converter',
+      desc: 'Convert images seamlessly between PNG, JPEG and WebP formats right in your browser without uploading files to external third-party cloud servers.',
+      features: [
+        'Right-click context menu to convert and save any web image on the fly',
+        'Drag-and-drop batch converter with automatic ZIP archive export',
+        'Interactive sliders to adjust compression quality and dimensions',
+        '100% processed through local HTML5 Canvas with zero network upload'
+      ],
+      tags: ['PNG / JPEG / WebP', 'Right-Click Save', 'Batch Drag-Drop', 'ZIP Export']
+    }
+  },
+  {
+    id: 'multi-downloader',
+    name: 'Multi Downloader',
+    version: '3.0.0',
+    category: 'media',
+    shortcut: 'Popup quét trang',
+    permissions: 'activeTab, scripting, downloads, storage',
+    screenshotsCount: 0,
+    screenshotExt: 'png',
+    hasSvg: false,
+    vi: {
+      tagline: 'Tải Ảnh Hàng Loạt & Chuẩn Hóa AI',
+      desc: 'Quét toàn bộ hình ảnh trên trang web hiện tại, lọc theo độ phân giải, định dạng và tự động cắt chuẩn 512×512 sẵn sàng làm dữ liệu huấn luyện AI / LoRA.',
+      features: [
+        'Quét sâu toàn diện: tự động nhận diện thẻ <img>, hình nền CSS và thuộc tính srcset',
+        'Lọc thông minh theo kích thước, tỉ lệ và định dạng; loại bỏ icon và avatar rác',
+        'Chế độ AI Training Auto-crop: tự động cắt và định hình kích thước chuẩn 512×512',
+        'Tải linh hoạt: lưu vào thư mục con riêng biệt hoặc đóng gói tệp nén .zip'
+      ],
+      tags: ['Quét toàn trang', 'Lọc kích thước', 'Chuẩn hóa AI 512x512', 'Tải nén ZIP']
+    },
+    en: {
+      tagline: 'Bulk Image Downloader & AI Cropper',
+      desc: 'Scan any webpage for images, filter by dimensions and format, and auto-crop to 512×512 ready for AI / LoRA machine learning dataset training.',
+      features: [
+        'Deep page scanner: detects img tags, CSS background-images and srcset sources',
+        'Smart filters by width/height, aspect ratio and format; filters out tiny icons',
+        'AI Training auto-crop mode: centers and formats images to 512x512',
+        'Flexible download: save directly to a dedicated subfolder or download as ZIP'
+      ],
+      tags: ['Deep Page Scan', 'Dimension Filters', 'AI 512x512 Crop', 'Packed ZIP']
+    }
+  },
+  {
+    id: 'case-converter',
+    name: 'Case Converter',
+    version: '1.0.0',
+    category: 'productivity',
+    shortcut: 'Popup / Tại chỗ',
+    permissions: 'activeTab, scripting, contextMenus',
+    screenshotsCount: 3,
+    screenshotExt: 'svg',
+    hasSvg: true,
+    vi: {
+      tagline: 'Chuyển Đổi Kiểu Chữ Đa Năng',
+      desc: 'Biến đổi văn bản giữa hơn 9 kiểu chữ thông dụng (camelCase, snake_case, UPPERCASE, kebab-case...) ngay tại chỗ trên trang web hoặc qua popup tiện ích.',
+      features: [
+        'Hơn 9 kiểu chữ: UPPER, lower, Title Case, camelCase, PascalCase, snake_case, kebab-case...',
+        'Chuyển đổi tức thì: bôi đen văn bản trên bất kỳ trang web nào và đổi tại chỗ',
+        'Hỗ trợ hoàn hảo bảng mã Unicode và tiếng Việt có dấu đầy đủ',
+        'Tự động sao chép kết quả vào bộ nhớ tạm Clipboard với 1 cú nhấp'
+      ],
+      tags: ['camelCase', 'snake_case', 'Đổi tại chỗ', 'Unicode Tiếng Việt']
+    },
+    en: {
+      tagline: 'Universal Text Case Transformer',
+      desc: 'Seamlessly convert text between 9+ popular casing formats (camelCase, snake_case, UPPERCASE, kebab-case...) in-place on any webpage or via popup.',
+      features: [
+        '9+ casing styles: UPPER, lower, Title, camelCase, PascalCase, snake_case, kebab-case...',
+        'In-place text selection transformation via convenient hotkeys',
+        'Full Unicode and Vietnamese diacritics support',
+        'Automatic one-click copy to clipboard'
+      ],
+      tags: ['camelCase', 'snake_case', 'In-place Transform', 'Full Unicode']
+    }
+  },
+  {
+    id: 'chrome-shortcuts',
+    name: 'Settings Shortcuts',
+    version: '1.0.0',
+    category: 'tools',
+    shortcut: 'Alt + Shift + S',
+    permissions: 'storage',
+    screenshotsCount: 0,
+    screenshotExt: 'png',
+    hasSvg: false,
+    vi: {
+      tagline: 'Phím Tắt Mở Nhanh Trang Cài Đặt Chrome',
+      desc: 'Mở tức thì các trang quản lý và tính năng nội bộ cốt lõi của Chrome (Cài đặt, Tiện ích, Lịch sử tải về, Mật khẩu, Quyền riêng tư...) bằng phím tắt cá nhân hóa.',
+      features: [
+        'Gán phím tắt nhanh cho hơn 15 trang chrome:// nội bộ quan trọng',
+        'Cài sẵn tổ hợp phím cho Cài đặt (Alt+Shift+S), Tiện ích, Lịch sử, Tải về...',
+        'Trang tùy chọn Options trực quan cho phép gán và đổi phím theo thói quen',
+        'Cực nhẹ, không tốn RAM nền và khởi chạy tức thì'
+      ],
+      tags: ['chrome:// nội bộ', 'Phím tắt cá nhân', 'Trang Options', 'Siêu nhẹ 0 RAM']
+    },
+    en: {
+      tagline: 'Chrome Internal Settings Shortcuts',
+      desc: 'Jump directly to essential Chrome internal management pages (Settings, Extensions, Downloads, History, Passwords, Privacy) with customizable keyboard shortcuts.',
+      features: [
+        'Custom hotkeys for 15+ chrome:// internal management URLs',
+        'Built-in presets for Settings (Alt+Shift+S), Extensions, History, Downloads...',
+        'Intuitive options page to customize keybindings to your preferences',
+        'Ultra-lightweight with zero background RAM footprint'
+      ],
+      tags: ['chrome:// Pages', 'Custom Hotkeys', 'Options Page', 'Zero RAM']
+    }
+  }
 ];
-const T={
-vi:{nExt:'Tiện ích',nPri:'Nguyên tắc',nIns:'Cài đặt',nFaq:'Hỏi đáp',
-h1:'Chín tiện ích cho Chromium, chạy hoàn toàn trên máy bạn',sub:'Mã nguồn mở, dùng Manifest V3, không theo dõi và không quảng cáo. Mỗi tiện ích làm tốt một việc.',cta1:'Xem tiện ích',cta2:'Cách cài đặt',
-f1:'<b>9</b> tiện ích',f2:'<b>0</b> dữ liệu thu thập',f3:'Giấy phép <b>MIT</b>',
-extT:'Tiện ích',extS:'Mỗi tiện ích hoạt động độc lập, bạn chỉ cài cái mình cần.',cAll:'Tất cả',cPro:'Năng suất',cMed:'Ảnh và video',cSec:'Bảo mật',search:'Tìm theo tên hoặc tính năng',emT:'Không có tiện ích phù hợp',emD:'Thử từ khóa khác hoặc chọn lại danh mục.',
-priT:'Nguyên tắc',p1t:'Chạy trên máy bạn',p1d:'Mọi thao tác xử lý ngay trong trình duyệt. Không telemetry, không máy chủ trung gian.',p2t:'Manifest V3',p2d:'Dùng service worker nền, tự giải phóng bộ nhớ khi không hoạt động.',p3t:'Giao diện nhất quán',p3d:'Thiết kế theo Material Design 3, có chủ đề sáng, tối và hai ngôn ngữ Anh, Việt.',p4t:'Mọi trình duyệt Chromium',p4d:'Chrome, Edge, Brave, Opera, Vivaldi và Cốc Cốc.',
-insT:'Cài đặt trong 4 bước',insS:'Các tiện ích ở dạng unpacked, không cần công cụ build.',
-s1t:'Tải mã nguồn',s1d:'Clone repository từ GitHub hoặc tải ZIP rồi giải nén.',s2t:'Mở trang tiện ích',s2d:'Nhập <code>chrome://extensions</code> hoặc <code>edge://extensions</code> vào thanh địa chỉ.',s3t:'Bật Developer mode',s3d:'Bật công tắc ở góc trên bên phải trang.',s4t:'Load unpacked',s4d:'Chọn thư mục của tiện ích muốn cài, ví dụ <code>smartshot</code>.',
-copy:'Sao chép',copied:'Đã chép',tip:'Ghim tiện ích bằng biểu tượng mảnh ghép trên thanh công cụ, và đặt phím tắt tại <code>chrome://extensions/shortcuts</code>.',
-faqT:'Hỏi đáp',q1:'Các tiện ích này có an toàn không?',a1:'Toàn bộ mã nguồn công khai. Tiện ích xử lý dữ liệu ngay trong trình duyệt, không có mã theo dõi của bên thứ ba và không gửi dữ liệu ra ngoài.',
-q2:'Cập nhật khi có phiên bản mới như thế nào?',a2:'Chạy <code>git pull</code> trong thư mục dự án, rồi nhấn nút tải lại của tiện ích tại <code>chrome://extensions</code>.',
-q3:'Dùng được trên Firefox hoặc Safari không?',a3:'Hiện chỉ nhắm tới trình duyệt Chromium. Có thể chuyển sang Firefox bằng cách chỉnh lại manifest.',
-q4:'Báo lỗi hoặc đóng góp ở đâu?',a4:'Mở Issue hoặc gửi Pull Request trên GitHub của minhtrong67/my-extension-pack.',
-bio:'Lập trình viên mã nguồn mở, làm các tiện ích trình duyệt gọn nhẹ và tôn trọng quyền riêng tư.',copy2:'© 2026 minhtrong67. Mã nguồn mở theo giấy phép MIT.',
-dFeat:'Tính năng chính',dSpec:'Thông số',dSc:'Phím tắt',dPm:'Quyền',dFo:'Thư mục',close:'Đóng',src:'Xem mã nguồn'},
-en:{nExt:'Extensions',nPri:'Principles',nIns:'Install',nFaq:'FAQ',
-h1:'Nine Chromium extensions that run entirely on your machine',sub:'Open source, built on Manifest V3, no tracking and no ads. Each extension does one job well.',cta1:'Browse extensions',cta2:'How to install',
-f1:'<b>9</b> extensions',f2:'<b>0</b> data collected',f3:'<b>MIT</b> licensed',
-extT:'Extensions',extS:'Each one works on its own, so you only install what you need.',cAll:'All',cPro:'Productivity',cMed:'Media',cSec:'Security',search:'Search by name or feature',emT:'No matching extensions',emD:'Try another keyword or pick a different category.',
-priT:'Principles',p1t:'Runs on your device',p1d:'Everything is processed inside the browser. No telemetry, no middleman servers.',p2t:'Manifest V3',p2d:'Built on background service workers that release memory when idle.',p3t:'Consistent interface',p3d:'Designed with Material Design 3, with light, dark and system themes in English and Vietnamese.',p4t:'Any Chromium browser',p4d:'Chrome, Edge, Brave, Opera, Vivaldi and Cốc Cốc.',
-insT:'Install in 4 steps',insS:'Extensions load unpacked, so there is no build tooling to set up.',
-s1t:'Get the source',s1d:'Clone the repository from GitHub, or download the ZIP and extract it.',s2t:'Open the extensions page',s2d:'Enter <code>chrome://extensions</code> or <code>edge://extensions</code> in the address bar.',s3t:'Turn on Developer mode',s3d:'Use the toggle in the top-right corner of the page.',s4t:'Load unpacked',s4d:'Select the folder of the extension you want, for example <code>smartshot</code>.',
-copy:'Copy',copied:'Copied',tip:'Pin extensions from the puzzle-piece menu in the toolbar, and set hotkeys at <code>chrome://extensions/shortcuts</code>.',
-faqT:'FAQ',q1:'Are these extensions safe?',a1:'All source code is public. Extensions process data inside the browser, include no third-party tracking and send nothing out.',
-q2:'How do I update to a new version?',a2:'Run <code>git pull</code> in the project folder, then click reload on the extension at <code>chrome://extensions</code>.',
-q3:'Do they work on Firefox or Safari?',a3:'They target Chromium browsers only. Porting to Firefox is possible with manifest changes.',
-q4:'Where do I report bugs or contribute?',a4:'Open an issue or send a pull request on minhtrong67/my-extension-pack on GitHub.',
-bio:'Open-source developer building lightweight, privacy-respecting browser extensions.',copy2:'© 2026 minhtrong67. Open source under the MIT License.',
-dFeat:'Key features',dSpec:'Details',dSc:'Shortcut',dPm:'Permissions',dFo:'Folder',close:'Close',src:'View source'}};
 
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const R=document.documentElement,sv=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},ld=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
-const mq=matchMedia('(prefers-color-scheme:dark)');
-let theme=ld('xp-theme')||'system',lang=ld('xp-lang')||((navigator.language||'').toLowerCase().startsWith('vi')?'vi':'en'),cat='all',query='',cur=null;
-const ic=()=>window.lucide&&lucide.createIcons();
-
-function setTheme(t,anim){
- theme=t;sv('xp-theme',t);
- if(anim){R.classList.add('theming');setTimeout(()=>R.classList.remove('theming'),350)}
- const d=t==='dark'||(t==='system'&&mq.matches);R.dataset.theme=d?'dark':'light';
- $('#tc').content=d?'#0d0d0e':'#fafaf9';
- $$('#themeSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
-}
-mq.addEventListener('change',()=>theme==='system'&&setTheme('system'));
-
-function setLang(l){
- lang=l;sv('xp-lang',l);R.lang=l;const t=T[l];
- $$('[data-i]').forEach(e=>e.innerHTML=t[e.dataset.i]);
- $$('[data-ph]').forEach(e=>e.placeholder=t[e.dataset.ph]);
- $$('#langSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
- document.title=l==='vi'?'My Extension Pack — Tiện ích Chromium của minhtrong67':'My Extension Pack — Chromium extensions by minhtrong67';
- render();if(cur)fill(cur);ic();
-}
-
-const L=(x,k)=>x[lang][k],sc=x=>Array.isArray(x.sc)?x.sc[lang==='vi'?0:1]:x.sc;
-const icon=x=>`${x.id}/icons/${x.id==='multi-downloader'?'icon128.png':'icon.svg'}`;
-const fb=x=>`this.onerror=null;this.src='${x.id}/icons/icon128.png'`;
-
-function render(){
- const q=query.toLowerCase().trim();
- const f=X.filter(x=>(cat==='all'||x.c===cat)&&(!q||[x.n,x.id,L(x,'t'),L(x,'d'),...x[lang].f].join(' ').toLowerCase().includes(q)));
- $('#list').innerHTML=f.map((x,i)=>`<button class="row" style="--i:${i}" data-id="${x.id}"><span class="ico"><img src="${icon(x)}" alt="" loading="lazy" onerror="${fb(x)}"></span><span><span class="nm">${x.n}<small>v${x.v}</small></span><span class="ds" style="display:block">${L(x,'d')}</span></span><kbd>${sc(x)}</kbd><i class="go" data-lucide="chevron-right"></i></button>`).join('');
- $('#empty').classList.toggle('on',!f.length);ic();
-}
-
-function fill(x){
- $('#dI').src=icon(x);$('#dI').onerror=function(){this.onerror=null;this.src=`${x.id}/icons/icon128.png`};
- $('#dT').textContent=x.n+' ';$('#dTag').textContent=L(x,'t');$('#dD').textContent=L(x,'d');
- $('#dF').innerHTML=x[lang].f.map(s=>`<li><i data-lucide="check"></i><span>${s}</span></li>`).join('');
- $('#dSc').textContent=sc(x);$('#dPm').textContent=x.p;$('#dFo').textContent='/'+x.id;$('#dG').href=`https://github.com/minhtrong67/my-extension-pack/tree/main/${x.id}`;
- const e=x.id==='case-converter'?'svg':'png';
- $('#dS').innerHTML=Array.from({length:x.sh},(_,i)=>`<img src="${x.id}/screenshots/image0${i+1}.${e}" alt="${x.n} ${i+1}" loading="lazy" onerror="this.remove()">`).join('');
- $('#dS').style.display=x.sh?'flex':'none';ic();
-}
-const dlg=$('#dlg');
-function open(id){cur=X.find(x=>x.id===id);fill(cur);dlg.showModal();R.style.overflow='hidden'}
-function close(){if(!dlg.open)return;dlg.classList.add('closing');setTimeout(()=>{dlg.close();dlg.classList.remove('closing');R.style.overflow='';cur=null},180)}
-$('#list').addEventListener('click',e=>{const b=e.target.closest('.row');b&&open(b.dataset.id)});
-$('#dX').onclick=$('#dC').onclick=close;
-dlg.addEventListener('click',e=>{if(e.target===dlg)close()});
-dlg.addEventListener('cancel',e=>{e.preventDefault();close()});
-
-$('#themeSeg').addEventListener('click',e=>{const b=e.target.closest('button');b&&setTheme(b.dataset.t,true)});
-$('#langSeg').addEventListener('click',e=>{const b=e.target.closest('button');b&&b.dataset.l!==lang&&setLang(b.dataset.l)});
-$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cat=b.dataset.c;$$('#tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
-$('#q').addEventListener('input',e=>{query=e.target.value;render()});
-
-const nav=$('#nav'),mb=$('#menuBtn');
-mb.onclick=()=>{const o=nav.classList.toggle('open');mb.setAttribute('aria-expanded',o)};
-nav.addEventListener('click',e=>{if(e.target.closest('a')){nav.classList.remove('open');mb.setAttribute('aria-expanded',false)}});
-
-$('#faqList').addEventListener('click',e=>{const b=e.target.closest('.q');if(!b)return;const f=b.parentElement,o=f.classList.toggle('open');b.setAttribute('aria-expanded',o)});
-
-$('#cp').onclick=function(){
- const b=this,done=()=>{const s=b.querySelector('span');s.textContent=T[lang].copied;b.classList.add('ok');setTimeout(()=>{s.textContent=T[lang].copy;b.classList.remove('ok')},2000)};
- const txt=$('#cmdTxt').textContent;
- (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(done).catch(()=>{const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}t.remove()});
+/**
+ * BILINGUAL DICTIONARY
+ */
+const I18N = {
+  vi: {
+    navExtensions: 'Tiện ích',
+    navPrinciples: 'Tiêu chuẩn',
+    navInstall: 'Cài đặt',
+    navFaq: 'Hỏi đáp',
+    navAuthor: 'Tác giả',
+    heroBadge: '✨ Material 3 Expressive 2026 · Chromium Manifest V3',
+    heroTitle1: 'Bộ Tiện Ích Trình Duyệt',
+    heroTitle2: '100% Cục Bộ & Bảo Mật Tuyệt Đối',
+    heroSub: 'Mã nguồn mở, xây dựng theo tiêu chuẩn Manifest V3 mới nhất. Mọi tác vụ xử lý trực tiếp trên thiết bị của bạn — không máy chủ trung gian, không thu thập telemetry và hoàn toàn không quảng cáo.',
+    ctaExplore: 'Khám Phá 10 Tiện Ích',
+    ctaInstall: 'Hướng Dẫn Cài Đặt',
+    stat1: 'Tiện ích độc lập',
+    stat2: 'Dữ liệu thu thập (Zero Telemetry)',
+    stat3: 'Xử lý ngoại tuyến trên máy',
+    stat4: 'Giấy phép mã nguồn mở',
+    showcaseTag: 'DANH MỤC SẢN PHẨM',
+    showcaseTitle: 'Kho Tiện Ích Chromium Sẵn Sàng Sử Dụng',
+    showcaseDesc: 'Mỗi tiện ích giải quyết triệt để một tác vụ chuyên biệt, thiết kế giao diện đồng bộ, tốc độ phản hồi tức thì và tiết kiệm RAM tối đa.',
+    catAll: 'Tất cả',
+    catProd: 'Năng suất',
+    catMedia: 'Media & Ảnh',
+    catSec: 'Bảo mật',
+    catTools: 'Hệ thống',
+    searchPlaceholder: 'Tìm theo tên, tính năng...',
+    emptyTitle: 'Không tìm thấy tiện ích phù hợp',
+    emptyDesc: 'Hãy thử tìm với từ khóa khác hoặc bấm nút "Tất cả" để xóa bộ lọc.',
+    cardBtnDetails: 'Chi tiết',
+    priTag: 'TRIẾT LÝ THIẾT KẾ',
+    priTitle: 'Tiêu Chuẩn Kỹ Thuật Đẳng Cấp',
+    priDesc: 'Không chỉ là các tiện ích đơn thuần, bộ sưu tập được kiến tạo dựa trên các nguyên tắc bất biến về quyền riêng tư, trải nghiệm người dùng và hiệu năng phần cứng.',
+    p1Title: '100% Cục Bộ & Bảo Mật Tuyệt Đối',
+    p1Desc: 'Mọi quá trình xử lý ảnh, tạo mật khẩu, quản lý bookmark đều diễn ra trên máy tính của bạn thông qua Canvas API và Web Crypto API. Không có bất kỳ dòng mã theo dõi (Google Analytics, Sentry...) hay máy chủ trung gian nào.',
+    p2Title: 'Chuẩn Hiện Đại Manifest V3',
+    p2Desc: 'Tuân thủ nghiêm ngặt chính sách bảo mật thế hệ mới nhất của Chromium. Vận hành bằng Background Service Workers thông minh, tự động giải phóng tài nguyên bộ nhớ RAM khi không có tác vụ và khởi động ngay khi cần.',
+    p3Title: 'Ngôn Ngữ Material 3 Expressive 2026',
+    p3Desc: 'Trải nghiệm thẩm mỹ tinh tế với hệ thống Dynamic Color, các góc bo tròn mềm mại, độ tương phản trực quan và chuyển động vi mô chân thực. Tự động hòa nhập mượt mà theo tông màu Sáng / Tối của hệ điều hành.',
+    p4Title: 'Tương Thích Toàn Diện Chromium',
+    p4Desc: 'Chạy hoàn hảo trên Google Chrome, Microsoft Edge, Brave Browser, Opera, Vivaldi, Cốc Cốc và mọi trình duyệt sử dụng nhân Chromium hiện đại từ phiên bản 100 trở lên.',
+    insTag: 'HƯỚNG DẪN CÀI ĐẶT',
+    insTitle: 'Cài Đặt Dễ Dàng Chỉ Với 4 Bước',
+    insDesc: 'Tất cả tiện ích đều ở dạng mã nguồn mở nguyên bản (Unpacked Extension), không cần cài đặt Node.js hay bất kỳ môi trường lập trình phức tạp nào.',
+    step1Title: 'Tải mã nguồn về máy',
+    step1Desc: 'Clone kho lưu trữ GitHub bằng lệnh Git hoặc tải tệp ZIP từ trang dự án rồi giải nén vào ổ đĩa máy tính của bạn.',
+    step2Title: 'Mở trang quản lý Tiện ích',
+    step2Desc: 'Truy cập chrome://extensions trên Google Chrome hoặc edge://extensions trên Microsoft Edge từ thanh địa chỉ.',
+    step3Title: 'Bật "Developer mode"',
+    step3Desc: 'Gạt công tắc Developer mode (Chế độ dành cho nhà phát triển) ở góc trên cùng bên phải màn hình sang trạng thái Bật.',
+    step4Title: 'Nhấn "Load unpacked" & Chọn thư mục',
+    step4Desc: 'Nhấn nút Load unpacked (Tải tiện ích đã giải nén) ở góc trên bên trái, điều hướng đến thư mục tiện ích bạn muốn cài (ví dụ: smartshot, quicknote, bookmark-manager...) và bấm Select Folder.',
+    btnCopy: 'Sao chép',
+    copiedText: 'Đã chép!',
+    tipText: 'Mẹo: Ghim tiện ích ra thanh công cụ trình duyệt bằng biểu tượng Mảnh ghép và bấm chiếc Ghim (📌 Pin) để sử dụng thuận tiện nhất.',
+    compatTitle: 'Trình duyệt được hỗ trợ chính thức:',
+    faqTag: 'HỎI & ĐÁP',
+    faqTitle: 'Các Câu Hỏi Thường Gặp',
+    faqDesc: 'Tất cả những điều bạn cần biết trước khi cài đặt và sử dụng bộ tiện ích.',
+    q1: 'Tiện ích này có an toàn và bảo mật không?',
+    a1: 'Tuyệt đối an toàn. Toàn bộ mã nguồn mở 100% minh bạch trên GitHub. Các tiện ích hoạt động độc lập ngay trên máy của bạn thông qua Canvas API và Web Crypto API, không kết nối internet ra ngoài, không có telemetry và chỉ yêu cầu quyền hạn tối thiểu tuyệt đối cần thiết để thực hiện tính năng.',
+    q2: 'Làm thế nào để cập nhật khi có phiên bản mới?',
+    a2: 'Rất đơn giản! Bạn chỉ cần mở Terminal trong thư mục dự án và chạy git pull để kéo mã mới nhất về, sau đó vào trang chrome://extensions và nhấn nút biểu tượng Tải lại (Reload icon) của tiện ích.',
+    q3: 'Làm sao để đổi phím tắt kích hoạt tiện ích?',
+    a3: 'Bạn chỉ cần truy cập vào chrome://extensions/shortcuts trên thanh địa chỉ, tìm đến tiện ích mong muốn (ví dụ: SmartShot, QuickNote, TagMark) và bấm biểu tượng bút chì để tự do gán bất kỳ tổ hợp phím nào bạn thấy thuận tay nhất.',
+    q4: 'Tôi có thể đóng góp mã nguồn hoặc báo lỗi ở đâu?',
+    a4: 'Dự án luôn hoan nghênh mọi đóng góp! Bạn có thể mở Issue để báo lỗi, đề xuất tính năng mới hoặc gửi Pull Request trực tiếp tại kho lưu trữ GitHub minhtrong67/my-chrome-extensions.',
+    authorBio: 'Lập trình viên đam mê mã nguồn mở, chuyên xây dựng các công cụ duyệt web tối ưu, tinh gọn, tốc độ cao và tôn trọng tuyệt đối quyền riêng tư của người dùng.',
+    starRepo: 'Tặng Star cho Dự Án',
+    footerCopy: '© 2026 minhtrong67. Mã nguồn mở theo giấy phép MIT.',
+    dlgScreenLabel: 'Hình ảnh giao diện',
+    dlgFeaturesLabel: 'Tính năng nổi bật',
+    dlgSpecsLabel: 'Thông số kỹ thuật',
+    dlgSpecShortcut: 'Phím tắt kích hoạt',
+    dlgSpecFolder: 'Thư mục nguồn',
+    dlgSpecPermissions: 'Quyền hạn (Permissions)',
+    btnCopyFolder: 'Sao chép đường dẫn',
+    btnViewGithub: 'Xem mã nguồn'
+  },
+  en: {
+    navExtensions: 'Extensions',
+    navPrinciples: 'Standards',
+    navInstall: 'Installation',
+    navFaq: 'FAQ',
+    navAuthor: 'Author',
+    heroBadge: '✨ Material 3 Expressive 2026 · Chromium Manifest V3',
+    heroTitle1: 'Browser Extension Suite',
+    heroTitle2: '100% Local & Privacy-First',
+    heroSub: 'Open source, engineered with the latest Chromium Manifest V3 specifications. Everything runs natively on your hardware — zero telemetry, zero middleman servers, and zero ads.',
+    ctaExplore: 'Explore 10 Extensions',
+    ctaInstall: 'Installation Guide',
+    stat1: 'Independent Extensions',
+    stat2: 'Data Collected (Zero Telemetry)',
+    stat3: 'Processed 100% Locally',
+    stat4: 'Open Source MIT License',
+    showcaseTag: 'PRODUCT SUITE',
+    showcaseTitle: 'Ready-to-Use Chromium Extensions',
+    showcaseDesc: 'Each tool excels at one focused workflow with consistent Material 3 styling, instantaneous responsiveness and negligible memory footprint.',
+    catAll: 'All',
+    catProd: 'Productivity',
+    catMedia: 'Media & Imaging',
+    catSec: 'Security',
+    catTools: 'System Tools',
+    searchPlaceholder: 'Search by name, features...',
+    emptyTitle: 'No matching extensions found',
+    emptyDesc: 'Try searching with different terms or click "All" to reset filters.',
+    cardBtnDetails: 'Details',
+    priTag: 'DESIGN PHILOSOPHY',
+    priTitle: 'World-Class Engineering Standards',
+    priDesc: 'More than just utility add-ons, our suite is designed from first principles: uncompromising privacy, expressive UI ergonomics and hardware efficiency.',
+    p1Title: '100% On-Device & Zero Telemetry',
+    p1Desc: 'All image processing, password cryptography and bookmark indexing happen directly on your local CPU via Canvas and Web Crypto APIs. Absolutely no telemetry trackers or external servers.',
+    p2Title: 'Modern Manifest V3 Architecture',
+    p2Desc: 'Strict adherence to modern Chromium security protocols. Driven by intelligent background service workers that gracefully sleep when idle and wake instantly on demand.',
+    p3Title: 'Material 3 Expressive 2026 Design',
+    p3Desc: 'Delightful aesthetics powered by dynamic color tokens, organic curved geometry, tactile micro-interactions and automatic OS light/dark theme adaptation.',
+    p4Title: 'Comprehensive Chromium Compatibility',
+    p4Desc: 'Seamlessly compatible across Google Chrome, Microsoft Edge, Brave Browser, Opera, Vivaldi, Cốc Cốc and all modern Chromium 100+ engines.',
+    insTag: 'QUICK START',
+    insTitle: 'Effortless 4-Step Setup',
+    insDesc: 'All extensions are distributed as clean unpacked source code — no Node.js compilation or complex developer toolchains required.',
+    step1Title: 'Clone the Repository',
+    step1Desc: 'Clone via Git terminal or download the repository ZIP file from GitHub and extract it to your local storage drive.',
+    step2Title: 'Open Extension Manager',
+    step2Desc: 'Navigate to chrome://extensions in Google Chrome or edge://extensions in Microsoft Edge from your address bar.',
+    step3Title: 'Enable Developer Mode',
+    step3Desc: 'Turn on the Developer mode toggle switch located at the top-right corner of the extensions dashboard.',
+    step4Title: 'Load Unpacked & Select Folder',
+    step4Desc: 'Click the Load unpacked button in the top-left corner, navigate to the specific extension directory (e.g., smartshot, quicknote, bookmark-manager...) and click Select Folder.',
+    btnCopy: 'Copy',
+    copiedText: 'Copied!',
+    tipText: 'Tip: Pin your favorite extensions to the browser toolbar via the puzzle icon (📌 Pin) for one-click access.',
+    compatTitle: 'Officially Supported Browsers:',
+    faqTag: 'FAQ',
+    faqTitle: 'Frequently Asked Questions',
+    faqDesc: 'Everything you need to know before loading and running the suite.',
+    q1: 'Are these extensions secure and private?',
+    a1: '100% safe and auditable. All source code is completely public on GitHub. Operations execute strictly on your device using native web APIs. There are no tracking scripts, analytics SDKs or remote server requests.',
+    q2: 'How do I update to newer releases?',
+    a2: 'Simply run git pull inside the repository folder, then visit chrome://extensions and click the circular Reload button on the extension card.',
+    q3: 'Can I customize the keyboard shortcuts?',
+    a3: 'Yes! Visit chrome://extensions/shortcuts, locate any extension (such as SmartShot, QuickNote or TagMark) and click the pencil icon to assign your favorite key combinations.',
+    q4: 'Where can I report bugs or submit improvements?',
+    a4: 'Contributions are very welcome! You can submit issues, request new features or open pull requests directly on GitHub at minhtrong67/my-chrome-extensions.',
+    authorBio: 'Passionate open-source developer focused on crafting ultra-fast, lightweight and strictly privacy-respecting browser productivity tools.',
+    starRepo: 'Star on GitHub',
+    footerCopy: '© 2026 minhtrong67. Open source under the MIT License.',
+    dlgScreenLabel: 'Interface Screenshots',
+    dlgFeaturesLabel: 'Key Highlights',
+    dlgSpecsLabel: 'Technical Specifications',
+    dlgSpecShortcut: 'Activation Shortcut',
+    dlgSpecFolder: 'Source Directory',
+    dlgSpecPermissions: 'Permissions Audit',
+    btnCopyFolder: 'Copy Directory Path',
+    btnViewGithub: 'View Source Code'
+  }
 };
 
-setTheme(theme);setLang(lang);
+/**
+ * APPLICATION CONTROLLER
+ */
+(function() {
+  const root = document.documentElement;
+  const storageKeyTheme = 'mce-theme';
+  const storageKeyLang = 'mce-lang';
+  const repoBaseUrl = 'https://github.com/minhtrong67/my-chrome-extensions';
+
+  // System & persistent state
+  let currentTheme = localStorage.getItem(storageKeyTheme) || 'system';
+  let currentLang = localStorage.getItem(storageKeyLang) || ((navigator.language || '').toLowerCase().startsWith('vi') ? 'vi' : 'en');
+  let currentCategory = 'all';
+  let currentSearchQuery = '';
+  let isListView = false;
+  let activeModalExt = null;
+
+  // Media query listener for OS dark mode
+  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  // DOM Elements
+  const themeSeg = document.getElementById('themeSegment');
+  const langSeg = document.getElementById('langSegment');
+  const filterCluster = document.getElementById('filterCluster');
+  const searchInput = document.getElementById('searchInput');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  const extensionsGrid = document.getElementById('extensionsGrid');
+  const emptyResults = document.getElementById('emptyResults');
+  const viewGridBtn = document.getElementById('btnViewGrid');
+  const viewListBtn = document.getElementById('btnViewList');
+  const detailDialog = document.getElementById('detailDialog');
+  const dlgCloseBtn = document.getElementById('dlgCloseBtn');
+  const dlgCopyFolderBtn = document.getElementById('dlgCopyFolderBtn');
+  const dlgGithubLink = document.getElementById('dlgGithubLink');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+  const snackbar = document.getElementById('snackbar');
+  const snackbarText = document.getElementById('snackbarText');
+  const scrollTopFab = document.getElementById('scrollTopFab');
+  const copyGitBtn = document.getElementById('copyGitBtn');
+  const gitCmdCode = document.getElementById('gitCmdCode');
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  const appBar = document.getElementById('appBar');
+
+  // Helper to re-render lucide icons safely
+  function refreshIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
+  // Toast / Snackbar notification
+  let toastTimer = null;
+  function showToast(message) {
+    if (toastTimer) clearTimeout(toastTimer);
+    snackbarText.textContent = message;
+    snackbar.classList.add('active');
+    toastTimer = setTimeout(() => {
+      snackbar.classList.remove('active');
+    }, 2800);
+  }
+
+  // Copy helper with fallback
+  function copyTextToClipboard(text, successMsg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successMsg);
+      }).catch(() => fallbackCopy(text, successMsg));
+    } else {
+      fallbackCopy(text, successMsg);
+    }
+  }
+
+  function fallbackCopy(text, successMsg) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast(successMsg);
+    } catch(e) {}
+    ta.remove();
+  }
+
+  // Theme Engine
+  function applyTheme(theme, animate) {
+    currentTheme = theme;
+    try { localStorage.setItem(storageKeyTheme, theme); } catch(e) {}
+
+    if (animate) {
+      root.classList.add('theming');
+      setTimeout(() => root.classList.remove('theming'), 350);
+    }
+
+    const isDark = theme === 'dark' || (theme === 'system' && darkQuery.matches);
+    root.dataset.theme = isDark ? 'dark' : 'light';
+
+    const themeMeta = document.getElementById('themeMeta');
+    if (themeMeta) {
+      themeMeta.content = isDark ? '#141218' : '#65558F';
+    }
+
+    themeSeg.querySelectorAll('.m3-seg-btn').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.t === theme);
+    });
+  }
+
+  darkQuery.addEventListener('change', () => {
+    if (currentTheme === 'system') applyTheme('system', true);
+  });
+
+  themeSeg.addEventListener('click', (e) => {
+    const btn = e.target.closest('.m3-seg-btn');
+    if (btn && btn.dataset.t) {
+      applyTheme(btn.dataset.t, true);
+    }
+  });
+
+  // Language Engine
+  function applyLanguage(lang) {
+    currentLang = lang;
+    try { localStorage.setItem(storageKeyLang, lang); } catch(e) {}
+    root.lang = lang;
+
+    const dict = I18N[lang];
+    document.querySelectorAll('[data-i]').forEach(el => {
+      const key = el.dataset.i;
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll('[data-ph]').forEach(el => {
+      const key = el.dataset.ph;
+      if (dict[key]) el.placeholder = dict[key];
+    });
+
+    langSeg.querySelectorAll('.m3-seg-btn').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.l === lang);
+    });
+
+    document.title = lang === 'vi' 
+      ? 'My Chrome Extensions — Bộ Tiện Ích Chromium Material 3 Expressive'
+      : 'My Chrome Extensions — Material 3 Expressive Chromium Suite';
+
+    renderCards();
+    if (activeModalExt) populateDialog(activeModalExt);
+    refreshIcons();
+  }
+
+  langSeg.addEventListener('click', (e) => {
+    const btn = e.target.closest('.m3-seg-btn');
+    if (btn && btn.dataset.l && btn.dataset.l !== currentLang) {
+      applyLanguage(btn.dataset.l);
+    }
+  });
+
+  // Icon path resolver with smart fallback
+  function getIconUrl(ext) {
+    if (ext.hasSvg) return `${ext.id}/icons/icon.svg`;
+    return `${ext.id}/icons/icon128.png`;
+  }
+
+  // Render Showcase Cards
+  function renderCards() {
+    const q = currentSearchQuery.toLowerCase().trim();
+    const filtered = EXTENSIONS_DATA.filter(ext => {
+      const matchesCat = currentCategory === 'all' || ext.category === currentCategory;
+      if (!matchesCat) return false;
+      if (!q) return true;
+
+      const langData = ext[currentLang];
+      const searchHaystack = [
+        ext.name,
+        ext.id,
+        ext.shortcut,
+        ext.permissions,
+        langData.tagline,
+        langData.desc,
+        ...(langData.features || []),
+        ...(langData.tags || [])
+      ].join(' ').toLowerCase();
+
+      return searchHaystack.includes(q);
+    });
+
+    if (filtered.length === 0) {
+      extensionsGrid.innerHTML = '';
+      emptyResults.classList.add('visible');
+      return;
+    }
+
+    emptyResults.classList.remove('visible');
+
+    extensionsGrid.innerHTML = filtered.map(ext => {
+      const loc = ext[currentLang];
+      const iconPath = getIconUrl(ext);
+      const fallbackSrc = `${ext.id}/icons/icon128.png`;
+      const dict = I18N[currentLang];
+
+      const tagPills = (loc.tags || []).slice(0, 3).map(tag => 
+        `<span class="feature-pill"><i data-lucide="sparkle" style="width:12px;height:12px;"></i>${tag}</span>`
+      ).join('');
+
+      return `
+        <article class="m3-ext-card" data-id="${ext.id}" tabindex="0" role="button" aria-label="${ext.name} - ${loc.tagline}">
+          <div>
+            <div class="card-header-row">
+              <div class="ext-avatar-box">
+                <img src="${iconPath}" alt="${ext.name}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackSrc}'">
+              </div>
+              <div class="ext-meta-info">
+                <div class="ext-title-bar">
+                  <h3 class="ext-name">${ext.name}</h3>
+                  <span class="ext-version-badge">v${ext.version}</span>
+                </div>
+                <div class="ext-tagline">${loc.tagline}</div>
+              </div>
+            </div>
+
+            <p class="ext-summary-text" style="margin-top:0.9rem;">
+              ${loc.desc}
+            </p>
+          </div>
+
+          <div>
+            <div class="ext-feature-pills" style="margin-bottom:1rem;">
+              ${tagPills}
+            </div>
+
+            <div class="card-action-bar">
+              <div class="shortcut-chip">
+                <i data-lucide="command" style="width:14px;height:14px;"></i>
+                <kbd>${ext.shortcut}</kbd>
+              </div>
+              <div class="card-cta-group">
+                <button type="button" class="m3-btn m3-btn-sm m3-btn-tonal btn-open-detail" data-id="${ext.id}">
+                  <i data-lucide="info" style="width:14px;height:14px;"></i>
+                  <span>${dict.cardBtnDetails}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    refreshIcons();
+  }
+
+  // Filter Cluster Click
+  filterCluster.addEventListener('click', (e) => {
+    const chip = e.target.closest('.m3-filter-chip');
+    if (!chip) return;
+    currentCategory = chip.dataset.cat;
+    filterCluster.querySelectorAll('.m3-filter-chip').forEach(c => {
+      c.setAttribute('aria-pressed', c === chip);
+    });
+    renderCards();
+  });
+
+  // Search Input with Debounce & Clear Button
+  let searchDebounceTimer = null;
+  searchInput.addEventListener('input', (e) => {
+    const val = e.target.value;
+    searchClearBtn.classList.toggle('active', val.length > 0);
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+      currentSearchQuery = val;
+      renderCards();
+    }, 180);
+  });
+
+  searchClearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    searchClearBtn.classList.remove('active');
+    currentSearchQuery = '';
+    renderCards();
+    searchInput.focus();
+  });
+
+  // View Mode Switcher
+  viewGridBtn.addEventListener('click', () => {
+    extensionsGrid.classList.remove('list-mode');
+    viewGridBtn.setAttribute('aria-pressed', 'true');
+    viewListBtn.setAttribute('aria-pressed', 'false');
+  });
+
+  viewListBtn.addEventListener('click', () => {
+    extensionsGrid.classList.add('list-mode');
+    viewListBtn.setAttribute('aria-pressed', 'true');
+    viewGridBtn.setAttribute('aria-pressed', 'false');
+  });
+
+  // Modal Dialog Engine
+  function populateDialog(ext) {
+    activeModalExt = ext;
+    const loc = ext[currentLang];
+    const iconPath = getIconUrl(ext);
+    const fallbackSrc = `${ext.id}/icons/icon128.png`;
+
+    const dlgIcon = document.getElementById('dlgIcon');
+    dlgIcon.src = iconPath;
+    dlgIcon.onerror = function() { this.onerror = null; this.src = fallbackSrc; };
+
+    document.getElementById('dialogTitle').textContent = ext.name;
+    document.getElementById('dlgVersion').textContent = `v${ext.version}`;
+    document.getElementById('dlgTagline').textContent = loc.tagline;
+    document.getElementById('dlgDescription').textContent = loc.desc;
+
+    // Features
+    const featuresList = document.getElementById('dlgFeaturesList');
+    featuresList.innerHTML = (loc.features || []).map(f => 
+      `<li><i data-lucide="check-circle-2" style="width:18px;height:18px;"></i><span>${f}</span></li>`
+    ).join('');
+
+    // Specs
+    document.getElementById('dlgShortcutKey').innerHTML = `<kbd>${ext.shortcut}</kbd>`;
+    document.getElementById('dlgFolderName').textContent = `/${ext.id}`;
+    document.getElementById('dlgPermissions').textContent = ext.permissions;
+    document.getElementById('dlgGithubLink').href = `${repoBaseUrl}/tree/main/${ext.id}`;
+
+    // Screenshots
+    const screenshotsWrap = document.getElementById('dlgScreenshotsWrap');
+    const screenshotsStrip = document.getElementById('dlgScreenshotsStrip');
+
+    if (ext.screenshotsCount > 0) {
+      screenshotsWrap.style.display = 'block';
+      screenshotsStrip.innerHTML = Array.from({ length: ext.screenshotsCount }, (_, idx) => {
+        const num = String(idx + 1).padStart(2, '0');
+        const imgUrl = `${ext.id}/screenshots/image${num}.${ext.screenshotExt}`;
+        return `<img src="${imgUrl}" alt="${ext.name} preview ${idx+1}" loading="lazy" data-full="${imgUrl}" onerror="this.remove()">`;
+      }).join('');
+    } else {
+      screenshotsWrap.style.display = 'none';
+      screenshotsStrip.innerHTML = '';
+    }
+
+    refreshIcons();
+  }
+
+  function openDialog(extId) {
+    const ext = EXTENSIONS_DATA.find(x => x.id === extId);
+    if (!ext) return;
+    populateDialog(ext);
+    detailDialog.showModal();
+    root.style.overflow = 'hidden';
+  }
+
+  function closeDialog() {
+    if (!detailDialog.open) return;
+    detailDialog.classList.add('closing');
+    setTimeout(() => {
+      detailDialog.close();
+      detailDialog.classList.remove('closing');
+      root.style.overflow = '';
+      activeModalExt = null;
+    }, 200);
+  }
+
+  // Card click triggers dialog
+  extensionsGrid.addEventListener('click', (e) => {
+    const card = e.target.closest('.m3-ext-card');
+    if (!card) return;
+    openDialog(card.dataset.id);
+  });
+
+  extensionsGrid.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const card = e.target.closest('.m3-ext-card');
+      if (card) {
+        e.preventDefault();
+        openDialog(card.dataset.id);
+      }
+    }
+  });
+
+  dlgCloseBtn.addEventListener('click', closeDialog);
+  detailDialog.addEventListener('click', (e) => {
+    if (e.target === detailDialog) closeDialog();
+  });
+  detailDialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeDialog();
+  });
+
+  // Copy folder path
+  dlgCopyFolderBtn.addEventListener('click', () => {
+    if (!activeModalExt) return;
+    const msg = currentLang === 'vi' 
+      ? `Đã sao chép: /${activeModalExt.id}` 
+      : `Copied: /${activeModalExt.id}`;
+    copyTextToClipboard(`/${activeModalExt.id}`, msg);
+  });
+
+  // Lightbox Zoom
+  document.getElementById('dlgScreenshotsStrip').addEventListener('click', (e) => {
+    const img = e.target.closest('img');
+    if (!img) return;
+    lightboxImg.src = img.dataset.full || img.src;
+    lightbox.classList.add('active');
+  });
+
+  lightboxCloseBtn.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+  });
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) lightbox.classList.remove('active');
+  });
+
+  // Terminal Git Copy Button
+  copyGitBtn.addEventListener('click', () => {
+    const cmd = gitCmdCode.textContent;
+    const dict = I18N[currentLang];
+    copyTextToClipboard(cmd, dict.copiedText || 'Đã sao chép!');
+    copyGitBtn.querySelector('span').textContent = dict.copiedText || 'Đã chép!';
+    setTimeout(() => {
+      copyGitBtn.querySelector('span').textContent = dict.btnCopy || 'Sao chép';
+    }, 2000);
+  });
+
+  // FAQ Accordion
+  document.getElementById('faqAccordion').addEventListener('click', (e) => {
+    const btn = e.target.closest('.accordion-header-btn');
+    if (!btn) return;
+    const item = btn.parentElement;
+    const isOpen = item.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Scroll to Top FAB & App Bar Box-Shadow on Scroll
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    scrollTopFab.classList.toggle('visible', y > 400);
+    appBar.classList.toggle('scrolled', y > 20);
+  }, { passive: true });
+
+  scrollTopFab.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Mobile Hamburger Toggle
+  mobileMenuBtn.addEventListener('click', () => {
+    const isOpen = mobileDrawer.classList.toggle('open');
+    mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+  });
+
+  mobileDrawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      mobileDrawer.classList.remove('open');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Global ESC Key Handler
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (lightbox.classList.contains('active')) {
+        lightbox.classList.remove('active');
+      } else if (detailDialog.open) {
+        closeDialog();
+      }
+    }
+  });
+
+  // Initial Boot
+  applyTheme(currentTheme, false);
+  applyLanguage(currentLang);
+})();
 </script>
+
 </body>
 </html>
