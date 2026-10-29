@@ -1,0 +1,62 @@
+{
+ "extName": {
+  "message": "Phím tắt Cài đặt"
+ },
+ "extDesc": {
+  "message": "Mở nhanh mọi trang cài đặt của Chrome bằng phím tắt do bạn tùy chỉnh."
+ },
+ "cmd_main": {
+  "message": "Mở: Cài đặt Chrome"
+ },
+ "cmd_downloads_settings": {
+  "message": "Mở: Cài đặt tải xuống"
+ },
+ "cmd_downloads": {
+  "message": "Mở: Danh sách tải xuống"
+ },
+ "cmd_history": {
+  "message": "Mở: Lịch sử duyệt web"
+ },
+ "cmd_bookmarks": {
+  "message": "Mở: Dấu trang"
+ },
+ "cmd_extensions": {
+  "message": "Mở: Tiện ích mở rộng"
+ },
+ "cmd_ext_shortcuts": {
+  "message": "Mở: Phím tắt tiện ích"
+ },
+ "cmd_passwords": {
+  "message": "Mở: Mật khẩu"
+ },
+ "cmd_privacy": {
+  "message": "Mở: Quyền riêng tư và bảo mật"
+ },
+ "cmd_cookies": {
+  "message": "Mở: Cookie và dữ liệu trang web"
+ },
+ "cmd_appearance": {
+  "message": "Mở: Giao diện"
+ },
+ "cmd_search": {
+  "message": "Mở: Công cụ tìm kiếm"
+ },
+ "cmd_startup": {
+  "message": "Mở: Khi khởi động"
+ },
+ "cmd_languages": {
+  "message": "Mở: Ngôn ngữ"
+ },
+ "cmd_accessibility": {
+  "message": "Mở: Hỗ trợ tiếp cận"
+ },
+ "cmd_system": {
+  "message": "Mở: Hệ thống"
+ },
+ "cmd_reset": {
+  "message": "Mở: Đặt lại cài đặt"
+ },
+ "cmd_flags": {
+  "message": "Mở: Tính năng thử nghiệm"
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "extName": {
+  "message": "Settings Shortcuts"
+ },
+ "extDesc": {
+  "message": "Open any Chrome settings page instantly with your own keyboard shortcuts."
+ },
+ "cmd_main": {
+  "message": "Open: Chrome Settings"
+ },
+ "cmd_downloads_settings": {
+  "message": "Open: Download settings"
+ },
+ "cmd_downloads": {
+  "message": "Open: Downloads list"
+ },
+ "cmd_history": {
+  "message": "Open: History"
+ },
+ "cmd_bookmarks": {
+  "message": "Open: Bookmarks"
+ },
+ "cmd_extensions": {
+  "message": "Open: Extensions"
+ },
+ "cmd_ext_shortcuts": {
+  "message": "Open: Extension shortcuts"
+ },
+ "cmd_passwords": {
+  "message": "Open: Passwords"
+ },
+ "cmd_privacy": {
+  "message": "Open: Privacy and security"
+ },
+ "cmd_cookies": {
+  "message": "Open: Cookies and site data"
+ },
+ "cmd_appearance": {
+  "message": "Open: Appearance"
+ },
+ "cmd_search": {
+  "message": "Open: Search engine"
+ },
+ "cmd_startup": {
+  "message": "Open: On startup"
+ },
+ "cmd_languages": {
+  "message": "Open: Languages"
+ },
+ "cmd_accessibility": {
+  "message": "Open: Accessibility"
+ },
+ "cmd_system": {
+  "message": "Open: System"
+ },
+ "cmd_reset": {
+  "message": "Open: Reset settings"
+ },
+ "cmd_flags": {
+  "message": "Open: Experiments (flags)"
+ }
+}

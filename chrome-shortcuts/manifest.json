@@ -1,0 +1,103 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
+  "version": "1.0.0",
+  "default_locale": "en",
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extName__"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "open_main": {
+      "description": "__MSG_cmd_main__",
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      }
+    },
+    "open_downloads_settings": {
+      "description": "__MSG_cmd_downloads_settings__",
+      "suggested_key": {
+        "default": "Alt+Shift+D"
+      }
+    },
+    "open_downloads": {
+      "description": "__MSG_cmd_downloads__"
+    },
+    "open_history": {
+      "description": "__MSG_cmd_history__",
+      "suggested_key": {
+        "default": "Alt+Shift+H"
+      }
+    },
+    "open_bookmarks": {
+      "description": "__MSG_cmd_bookmarks__"
+    },
+    "open_extensions": {
+      "description": "__MSG_cmd_extensions__",
+      "suggested_key": {
+        "default": "Alt+Shift+E"
+      }
+    },
+    "open_ext_shortcuts": {
+      "description": "__MSG_cmd_ext_shortcuts__"
+    },
+    "open_passwords": {
+      "description": "__MSG_cmd_passwords__"
+    },
+    "open_privacy": {
+      "description": "__MSG_cmd_privacy__"
+    },
+    "open_cookies": {
+      "description": "__MSG_cmd_cookies__"
+    },
+    "open_appearance": {
+      "description": "__MSG_cmd_appearance__"
+    },
+    "open_search": {
+      "description": "__MSG_cmd_search__"
+    },
+    "open_startup": {
+      "description": "__MSG_cmd_startup__"
+    },
+    "open_languages": {
+      "description": "__MSG_cmd_languages__"
+    },
+    "open_accessibility": {
+      "description": "__MSG_cmd_accessibility__"
+    },
+    "open_system": {
+      "description": "__MSG_cmd_system__"
+    },
+    "open_reset": {
+      "description": "__MSG_cmd_reset__"
+    },
+    "open_flags": {
+      "description": "__MSG_cmd_flags__"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}

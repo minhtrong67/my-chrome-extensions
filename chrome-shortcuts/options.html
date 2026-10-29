@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings Shortcuts</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<main class="page">
+  <header class="hero">
+    <div class="hero-top">
+      <div class="logo-shape">⌨️</div>
+      <div class="actions"><button class="icon-btn" id="langBtn">VI</button><button class="icon-btn" id="themeBtn">◐</button></div>
+    </div>
+    <h1 data-i18n="title"></h1>
+    <p data-i18n="subtitle"></p>
+  </header>
+
+  <section class="toolbar">
+    <div class="seg" id="tabs">
+      <button data-tab="presets" class="on" data-i18n="tabPresets"></button>
+      <button data-tab="custom" data-i18n="tabCustom"></button>
+    </div>
+    <label class="search"><span>🔍</span><input id="q" data-i18n-ph="search" autocomplete="off"></label>
+  </section>
+
+  <section id="viewPresets"><div class="grid" id="presetGrid"></div></section>
+  <section id="viewCustom" hidden>
+    <div class="grid" id="customGrid"></div>
+    <div class="empty" id="customEmpty" data-i18n="customEmpty"></div>
+    <p class="note" data-i18n="customNote"></p>
+  </section>
+
+  <section class="panel">
+    <h2 data-i18n="behavior"></h2>
+    <div class="seg" id="openIn">
+      <button data-v="new" data-i18n="newTab"></button>
+      <button data-v="current" data-i18n="curTab"></button>
+    </div>
+  </section>
+
+  <section class="panel tonal">
+    <h2 data-i18n="howTitle"></h2>
+    <p data-i18n="howBody"></p>
+    <button class="btn filled" id="openShortcuts" data-i18n="manageKeys"></button>
+  </section>
+</main>
+
+<button class="fab" id="fab" hidden>＋ <span data-i18n="add"></span></button>
+
+<dialog id="dlg">
+  <h2 id="dlgTitle"></h2>
+  <label class="field"><span data-i18n="fName"></span><input id="fLabel" maxlength="40"></label>
+  <label class="field"><span data-i18n="fUrl"></span><input id="fUrl" placeholder="chrome://settings/downloads"></label>
+  <div class="field"><span data-i18n="fKeys"></span><button class="rec" id="rec" type="button"></button></div>
+  <div class="err" id="err"></div>
+  <div class="dlg-actions"><button class="btn text" id="cancel" data-i18n="cancel"></button><button class="btn filled" id="save" data-i18n="save"></button></div>
+</dialog>
+<script src="presets.js"></script><script src="options.js"></script>
+</body></html>
