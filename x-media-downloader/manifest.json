@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "X Media Downloader",
+  "version": "1.0.0",
+  "description": "Download videos and images from X (Twitter) and TweetDeck with one click. For personal use.",
+  "minimum_chrome_version": "111",
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "action": {
+    "default_title": "X Media Downloader",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" }
+  },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["storage", "downloads"],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://*.x.com/*",
+    "https://twitter.com/*",
+    "https://*.twitter.com/*",
+    "https://cdn.syndication.twimg.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://*.x.com/*", "https://twitter.com/*", "https://*.twitter.com/*"],
+      "js": ["src/inject.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://x.com/*", "https://*.x.com/*", "https://twitter.com/*", "https://*.twitter.com/*"],
+      "js": ["src/shared.js", "src/content.js"],
+      "css": ["src/content.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "commands": {
+    "download-media": {
+      "suggested_key": { "default": "Alt+Shift+D" },
+      "description": "Download media of the current post"
+    }
+  }
+}
