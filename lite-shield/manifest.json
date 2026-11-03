@@ -1,0 +1,82 @@
+{
+  "manifest_version": 3,
+  "name": "Lite Shield",
+  "version": "0.2.0",
+  "description": "Chặn quảng cáo & trình theo dõi bằng declarativeNetRequest — nhẹ, riêng tư, giao diện Material 3 Expressive.",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Lite Shield",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "options_page": "options/options.html",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "storage",
+    "scripting",
+    "activeTab",
+    "webRequest",
+    "webNavigation",
+    "alarms",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ads",
+        "enabled": true,
+        "path": "rulesets/ads.json"
+      },
+      {
+        "id": "trackers",
+        "enabled": true,
+        "path": "rulesets/trackers.json"
+      },
+      {
+        "id": "annoyances",
+        "enabled": false,
+        "path": "rulesets/annoyances.json"
+      }
+    ]
+  },
+  "commands": {
+    "start-picker": {
+      "suggested_key": {
+        "default": "Alt+Shift+X",
+        "mac": "Alt+Shift+X"
+      },
+      "description": "Chọn & ẩn phần tử trên trang"
+    }
+  }
+}

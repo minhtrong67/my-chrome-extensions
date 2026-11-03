@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lite Shield</title>
+  <link rel="stylesheet" href="../shared/m3.css" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="pop">
+    <header>
+      <div class="avatar" id="avatar">L</div>
+      <div class="grow">
+        <div class="title-m ellipsis" id="host">Đang tải…</div>
+        <div class="label-m muted" id="sub">Lite Shield</div>
+      </div>
+      <button class="icon-btn tonal" id="open-options" title="Cài đặt" aria-label="Cài đặt" data-icon="settings"></button>
+    </header>
+
+    <section class="hero" id="hero">
+      <svg class="cookie" viewBox="-100 -100 200 200" aria-hidden="true"><path id="cookie-path" /></svg>
+      <button class="power" id="power" aria-pressed="true" aria-label="Bật/tắt bảo vệ cho trang này" data-icon="power"></button>
+    </section>
+
+    <div class="status">
+      <div class="headline-s" id="status">&nbsp;</div>
+      <div class="body-m muted" id="hint">&nbsp;</div>
+    </div>
+
+    <section class="stats">
+      <div class="stat primary">
+        <div class="display-s num" id="blocked">0</div>
+        <div class="label-m">Yêu cầu đã chặn</div>
+      </div>
+      <div class="stat tertiary">
+        <div class="display-s num" id="hidden">0</div>
+        <div class="label-m">Phần tử đã ẩn</div>
+      </div>
+    </section>
+
+    <nav class="btn-group" aria-label="Thao tác nhanh">
+      <button class="btn" id="pick" data-icon="target"><span>Chọn &amp; ẩn</span></button>
+      <button class="btn" id="restore" data-icon="undo"><span id="restore-label">Khôi phục</span></button>
+      <button class="btn" id="log-open" data-icon="list"><span>Nhật ký</span></button>
+      <button class="btn" id="reload" data-icon="refresh"><span>Tải lại</span></button>
+    </nav>
+  </main>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Nhật ký chặn" aria-hidden="true">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <header class="sheet-head">
+      <div class="grow">
+        <div class="title-l">Nhật ký chặn</div>
+        <div class="body-m muted" id="log-sub">Các tên miền bị chặn trên trang này</div>
+      </div>
+      <button class="icon-btn tonal" id="log-close" aria-label="Đóng" data-icon="close"></button>
+    </header>
+    <div class="sheet-body" id="log-list"></div>
+  </aside>
+
+  <div class="snackbar" id="snack" role="status"></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
