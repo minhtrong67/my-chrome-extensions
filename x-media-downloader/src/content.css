@@ -3,12 +3,14 @@
 .xmd-btn:hover,.xmd-btn:focus-visible{color:var(--xmd-accent,#65558f);background:color-mix(in srgb,var(--xmd-accent,#65558f) 16%,transparent)}
 .xmd-btn:active{transform:scale(.85)}
 .xmd-btn:focus-visible{outline:2px solid var(--xmd-accent,#65558f);outline-offset:1px}
-.xmd-btn svg{width:18.75px;height:18.75px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.xmd-btn svg{width:18.75px;height:18.75px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.xmd-btn{position:relative}
+.xmd-btn::before{content:"";position:absolute;inset:0;border-radius:50%;opacity:0;pointer-events:none;background:conic-gradient(var(--xmd-accent,#65558f) calc(var(--p,0)*1%),color-mix(in srgb,var(--xmd-accent,#65558f) 20%,transparent) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));transition:opacity .2s}
+.xmd-btn.xmd-prog::before{opacity:1}
+.xmd-btn.xmd-prog{pointer-events:none;color:var(--xmd-accent,#65558f)}
+.xmd-btn.xmd-prog svg{animation:xmd-bob .9s ease-in-out infinite}
+.xmd-btn.xmd-busy{pointer-events:none;color:var(--xmd-accent,#65558f)}
 .xmd-btn.xmd-busy svg{animation:xmd-bob .7s ease-in-out infinite}
 .xmd-btn.xmd-ok{color:var(--xmd-accent,#65558f)}
 @keyframes xmd-bob{50%{transform:translateY(3px)}}
-.xmd-toast{position:fixed;left:50%;bottom:28px;z-index:2147483647;display:flex;align-items:center;gap:12px;max-width:min(92vw,420px);padding:14px 22px;border-radius:20px;background:var(--xmd-inv-surface);color:var(--xmd-inv-on);font:500 var(--xmd-fs,14px)/1.35 var(--xmd-font,system-ui,sans-serif);box-shadow:0 8px 28px rgba(0,0,0,.32);opacity:0;transform:translate(-50%,28px) scale(.94);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .2s;pointer-events:none}
-.xmd-toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
-.xmd-toast .xmd-dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--xmd-inv-primary)}
-.xmd-toast.err .xmd-dot{background:#ffb4ab;border-radius:3px}
-@media (prefers-reduced-motion:reduce){.xmd-btn,.xmd-toast{transition:none}.xmd-btn.xmd-busy svg{animation:none}}
+@media (prefers-reduced-motion:reduce){.xmd-btn{transition:none}.xmd-btn.xmd-busy svg,.xmd-btn.xmd-prog svg{animation:none}}

@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Video Downloader</title>
+<style>
+:root{--p:#6750A4;--pc:#EADDFF;--on:#21005D;--s:#FEF7FF;--t:#1D1B20;--sc:#F3EDF7;--sec:#E8DEF8;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root{--p:#D0BCFF;--pc:#4F378B;--on:#EADDFF;--s:#141218;--t:#E6E0E9;--sc:#211F26;--sec:#4A4458}}
+*{box-sizing:border-box;margin:0}body{font-family:var(--font);background:var(--s);color:var(--t);line-height:1.5}
+.w{max-width:960px;margin:auto;padding:24px}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.logo{display:flex;gap:12px;align-items:center;font-weight:700;font-size:1.2rem}.logo i{display:grid;place-items:center;width:44px;height:44px;background:var(--p);color:var(--s);border-radius:50% 50% 50% 18%;font-style:normal;font-size:1.3rem}
+.lang{display:flex;gap:3px}.lang button{border:0;padding:10px 16px;background:var(--sec);color:var(--t);font:inherit;font-weight:600;cursor:pointer;border-radius:12px;transition:border-radius .4s cubic-bezier(.34,1.56,.64,1)}
+.lang button[aria-pressed=true]{background:var(--p);color:var(--s);border-radius:999px}
+.hero{margin:48px 0;padding:48px 32px;background:var(--pc);color:var(--on);border-radius:48px 48px 48px 12px}
+h1{font-size:clamp(2rem,6vw,3.6rem);letter-spacing:-.02em;line-height:1.1}.hero p{margin:16px 0 28px;font-size:1.15rem;max-width:560px}
+.btn{display:inline-block;padding:16px 28px;background:var(--p);color:var(--s);text-decoration:none;font-weight:700;border-radius:999px;transition:border-radius .4s cubic-bezier(.34,1.56,.64,1)}.btn:hover{border-radius:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:3px;margin-bottom:48px}
+.card{background:var(--sc);padding:24px;border-radius:8px}.card:first-child{border-top-left-radius:36px}.card:last-child{border-bottom-right-radius:36px}
+.card h3{margin-bottom:6px;color:var(--p)}footer{padding:24px 0;text-align:center;opacity:.8}footer b{color:var(--p)}
+</style></head><body><div class="w">
+<header><div class="logo"><i>↓</i>Video Downloader</div><div class="lang"><button data-l="en" aria-pressed="true">English</button><button data-l="vi" aria-pressed="false">Tiếng Việt</button></div></header>
+<section class="hero"><h1 data-k="h">Hover. Click. Download.</h1><p data-k="p">A floating download icon appears on any video. One click saves the video you are watching.</p><a class="btn" href="https://github.com/" data-k="b">Get the extension</a></section>
+<section class="grid"><div class="card"><h3 data-k="a1">Works on many sites</h3><p data-k="a2">Facebook, Instagram, Threads, TikTok, X, Vimeo and any site with direct or HLS video.</p></div>
+<div class="card"><h3 data-k="b1">Sound included</h3><p data-k="b2">Separate video and sound tracks are merged for you.</p></div>
+<div class="card"><h3 data-k="c1">Your style</h3><p data-k="c2">Material 3 Expressive, 12 theme colors, 7 fonts, English and Vietnamese.</p></div></section>
+<footer><span data-k="f">Author</span> <b>minhtrong67</b> · <span data-k="f2">built with the help of Claude AI</span></footer></div>
+<script>
+const D={en:{h:'Hover. Click. Download.',p:'A floating download icon appears on any video. One click saves the video you are watching.',b:'Get the extension',a1:'Works on many sites',a2:'Facebook, Instagram, TikTok, X and any site with direct or HLS video.',b1:'Sound included',b2:'Separate video and sound tracks are merged for you.',c1:'Your style',c2:'Material 3 Expressive, 12 theme colors, 7 fonts, English and Vietnamese.',f:'Author',f2:'built with the help of Claude AI'},
+vi:{h:'Rê chuột. Bấm. Tải về.',p:'Icon tải nổi hiện trên mọi video. Một cú bấm là lưu video bạn đang xem.',b:'Lấy extension',a1:'Chạy trên nhiều trang',a2:'Facebook, Instagram, Threads, TikTok, X, Vimeo và mọi trang có video trực tiếp hoặc HLS.',b1:'Có cả tiếng',b2:'Video và âm thanh tách riêng được ghép lại giúp bạn.',c1:'Phong cách của bạn',c2:'Material 3 Expressive, 12 màu chủ đề, 7 font, tiếng Anh và tiếng Việt.',f:'Tác giả',f2:'với sự hỗ trợ của AI Claude'}};
+function set(l){document.documentElement.lang=l;document.querySelectorAll('[data-k]').forEach(e=>e.textContent=D[l][e.dataset.k]);document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>set(b.dataset.l));set(navigator.language.startsWith('vi')?'vi':'en');
+</script></body></html>

@@ -9,7 +9,10 @@ const DEFAULTS = {
   lang: (navigator.language || 'en').toLowerCase().startsWith('vi') ? 'vi' : 'en',
   showButton: true,
   btnPos: 'right',            // left | right
-  btnShow: 'hover'            // hover | always
+  btnShow: 'hover',           // hover | always
+  nameTpl: '',                // empty = automatic; tokens {title} {site} {id} {date} {quality}
+  siteFolder: false,          // save into a sub-folder per website
+  quality: 'hd'               // hd | sd (sites that offer both)
 };
 function getSettings() { return chrome.storage.local.get(DEFAULTS); }
 
@@ -39,7 +42,7 @@ const I18N = {
     appearance: 'Appearance', mode: 'Theme mode', light: 'Light', dark: 'Dark', system: 'System',
     themeColor: 'Theme color', text: 'Text', fontSize: 'Text size', small: 'Small', medium: 'Medium', large: 'Large',
     font: 'Font', fontSystem: 'System', downloads: 'Downloads', saveFolder: 'Save folder',
-    saveFolderHint: 'A subfolder inside Downloads, e.g. Videos/Web. Leave empty to save directly in Downloads.', saveTo: 'Saves to', btnShow: 'Button visibility', hoverOnly: 'On hover', always: 'Always', openChromeDl: 'Change Chrome’s default download location',
+    saveFolderHint: 'A subfolder inside Downloads, e.g. Videos/Web. Leave empty to save directly in Downloads.', saveTo: 'Saves to', downloading: 'Downloading…', downloadingPct: 'Downloading… {n}%', savedNoAudio: 'Saved without sound', ctxDownload: 'Download this video', nameTpl: 'File name', nameTplHint: 'Leave empty for automatic. Tokens: {title} {site} {id} {date} {quality}', siteFolder: 'Save into a folder per website', quality: 'Preferred quality', cancel: 'Cancel', reset: 'Reset all settings', showMore: 'Show {n} more', showLess: 'Show less', showInFolder: 'Show in folder', btnShow: 'Button visibility', hoverOnly: 'On hover', always: 'Always', openChromeDl: 'Change Chrome’s default download location',
     askWhere: 'Ask where to save each time', showButton: 'Show button on videos', btnPos: 'Button position',
     left: 'Top left', right: 'Top right', language: 'Language', author: 'Author', poweredBy: 'Built with the help of Claude AI',
     colors: { '#6750A4': 'Purple', '#3F51B5': 'Indigo', '#0B57D0': 'Blue', '#00838F': 'Cyan', '#00796B': 'Teal', '#2E7D32': 'Green', '#9E9D24': 'Lime', '#F9A825': 'Yellow', '#E65100': 'Orange', '#B3261E': 'Red', '#C2185B': 'Pink', '#546E7A': 'Blue grey' }
@@ -54,7 +57,7 @@ const I18N = {
     appearance: 'Giao diện', mode: 'Chế độ giao diện', light: 'Sáng', dark: 'Tối', system: 'Hệ thống',
     themeColor: 'Màu chủ đề', text: 'Chữ', fontSize: 'Cỡ chữ', small: 'Nhỏ', medium: 'Vừa', large: 'Lớn',
     font: 'Font chữ', fontSystem: 'Hệ thống', downloads: 'Tải xuống', saveFolder: 'Thư mục lưu',
-    saveFolderHint: 'Thư mục con trong Downloads, ví dụ: Videos/Web. Để trống để lưu thẳng vào Downloads.', saveTo: 'Sẽ lưu vào', btnShow: 'Hiển thị nút', hoverOnly: 'Khi rê chuột', always: 'Luôn hiện', openChromeDl: 'Đổi thư mục tải mặc định của Chrome',
+    saveFolderHint: 'Thư mục con trong Downloads, ví dụ: Videos/Web. Để trống để lưu thẳng vào Downloads.', saveTo: 'Sẽ lưu vào', downloading: 'Đang tải…', downloadingPct: 'Đang tải… {n}%', savedNoAudio: 'Đã lưu (không có tiếng)', ctxDownload: 'Tải video này', nameTpl: 'Tên file', nameTplHint: 'Để trống để tự động. Mẫu: {title} {site} {id} {date} {quality}', siteFolder: 'Lưu vào thư mục theo từng website', quality: 'Chất lượng ưu tiên', cancel: 'Hủy', reset: 'Khôi phục cài đặt mặc định', showMore: 'Xem thêm {n} video', showLess: 'Thu gọn', showInFolder: 'Mở thư mục chứa file', btnShow: 'Hiển thị nút', hoverOnly: 'Khi rê chuột', always: 'Luôn hiện', openChromeDl: 'Đổi thư mục tải mặc định của Chrome',
     askWhere: 'Hỏi nơi lưu mỗi lần tải', showButton: 'Hiện nút tải trên video', btnPos: 'Vị trí nút',
     left: 'Trên trái', right: 'Trên phải', language: 'Ngôn ngữ', author: 'Tác giả', poweredBy: 'Với sự hỗ trợ của AI Claude',
     colors: { '#6750A4': 'Tím', '#3F51B5': 'Chàm', '#0B57D0': 'Xanh dương', '#00838F': 'Xanh lơ', '#00796B': 'Xanh ngọc', '#2E7D32': 'Xanh lá', '#9E9D24': 'Xanh chanh', '#F9A825': 'Vàng', '#E65100': 'Cam', '#B3261E': 'Đỏ', '#C2185B': 'Hồng', '#546E7A': 'Xám xanh' }

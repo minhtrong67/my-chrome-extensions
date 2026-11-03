@@ -3,8 +3,9 @@
   if (window.__vdlPage) return; window.__vdlPage = true;
   const H = location.hostname;
   const SITE = /(^|\.)facebook\.com$/.test(H) ? 'facebook' : /(^|\.)instagram\.com$/.test(H) ? 'instagram'
-    : /(^|\.)tiktok\.com$/.test(H) ? 'tiktok' : /(^|\.)(x|twitter)\.com$/.test(H) ? 'x' : '';
+    : /(^|\.)tiktok\.com$/.test(H) ? 'tiktok' : /(^|\.)(x|twitter)\.com$/.test(H) ? 'x' : /(^|\.)threads\.(net|com)$/.test(H) ? 'threads' : /(^|\.)vimeo\.com$/.test(H) ? 'vimeo' : '';
   if (!SITE) return;
+  const KIND = SITE === 'threads' ? 'instagram' : SITE;     // Threads uses the same data shape as Instagram
 
   const seen = new Set();
   const un = s => { try { return JSON.parse('"' + s + '"'); } catch { return ''; } };
@@ -28,15 +29,24 @@
       return out;
     },
     x(t) {
-      const out = [], re = /\{[^{}]*"content_type"\s*:\s*"video\/mp4"[^{}]*\}/g; let m;
+      const out = [], re = /\{[^{}]*"content_type"\s*:\s*"video\\?\/mp4"[^{}]*\}/g; let m;
       while ((m = re.exec(t))) {
         const u = m[0].match(/"url"\s*:\s*"(https:[^"]+)"/), b = +((m[0].match(/"bitrate"\s*:\s*(\d+)/) || [])[1] || 0);
         if (u) out.push({ raw: u[1], idx: m.index, q: b >= 800000 ? 'hd' : 'sd', b });
       }
       return out;
+    },
+    vimeo(t) {
+      const out = [], re = /"progressive"\s*:\s*\[([^\]]*)\]/g; let m;
+      while ((m = re.exec(t))) for (const o of m[1].match(/\{[^{}]*\}/g) || []) {
+        const u = o.match(/"url"\s*:\s*"(https:[^"]+)"/), w = +((o.match(/"width"\s*:\s*(\d+)/) || [])[1] || 0);
+        if (u) out.push({ raw: u[1], idx: m.index, q: w >= 1280 ? 'hd' : 'sd', b: w });
+      }
+      return out;
     }
   };
   const VID = {
+    vimeo: (t, i) => lastIn(/"id"\s*:\s*(\d{6,})/g, t.slice(Math.max(0, i - 6000), i)) || ((t.slice(i, i + 20000).match(/"id"\s*:\s*(\d{6,})/) || [])[1] || ''),
     facebook: (t, i) => lastIn(/"(?:id|video_id|videoId)"\s*:\s*"(\d{8,})"/g, t.slice(Math.max(0, i - 4000), i)),
     instagram: (t, i) => lastIn(/"code"\s*:\s*"([\w-]{5,})"/g, t.slice(Math.max(0, i - 4000), i)) || ((t.slice(i, i + 2500).match(/"code"\s*:\s*"([\w-]{5,})"/) || [])[1] || ''),
     tiktok: (t, i) => lastIn(/"id"\s*:\s*"(\d{15,})"/g, t.slice(Math.max(0, i - 5000), i)),
@@ -44,18 +54,18 @@
   };
 
   function scan(text) {
-    if (!text || text.length < 50 || !/playable_url|progressive_url|browser_native|video_versions|playAddr|downloadAddr|video\\?\/mp4/.test(text)) return;
+    if (!text || text.length < 50 || !/playable_url|progressive_url|browser_native|video_versions|playAddr|downloadAddr|"progressive"|video\\?\/mp4/.test(text)) return;
     const out = [];
-    for (const f of EXTRACT[SITE](text)) {
+    for (const f of EXTRACT[KIND](text)) {
       const url = un(f.raw);
       if (!GOOD.test(url) || seen.has(url)) continue;
       seen.add(url);
-      out.push({ url, site: SITE, vid: VID[SITE](text, f.idx), q: f.q, b: f.b || 0 });
+      out.push({ url, site: SITE, vid: VID[KIND](text, f.idx), q: f.q, b: f.b || 0 });
     }
     if (out.length) window.postMessage({ vdl: 'pagesrc', items: out }, location.origin);
   }
 
-  const API = /graphql|\/api\/|ajax|item_list/;
+  const API = /graphql|\/api\/|ajax|item_list|config/;
   const of = window.fetch;
   window.fetch = function (...a) {
     const p = of.apply(this, a);

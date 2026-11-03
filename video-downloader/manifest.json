@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Video Downloader",
-  "version": "1.2.0",
+  "version": "1.4.1",
   "description": "Download videos from most websites with one click on the floating download button.",
   "minimum_chrome_version": "116",
   "icons": {
@@ -22,6 +22,7 @@
     "service_worker": "background.js"
   },
   "permissions": [
+    "contextMenus",
     "declarativeNetRequest",
     "downloads",
     "offscreen",
@@ -40,6 +41,7 @@
       "js": [
         "shared/icons.js",
         "shared/core.js",
+        "shared/logic.js",
         "shared/theme.js",
         "content.js"
       ],
@@ -52,12 +54,16 @@
         "https://*.instagram.com/*",
         "https://*.tiktok.com/*",
         "https://*.x.com/*",
-        "https://*.twitter.com/*"
+        "https://*.twitter.com/*",
+        "https://*.threads.net/*",
+        "https://*.threads.com/*",
+        "https://*.vimeo.com/*"
       ],
       "js": [
         "pagebridge.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "all_frames": true
     },
     {
       "matches": [
@@ -65,13 +71,28 @@
         "https://*.instagram.com/*",
         "https://*.tiktok.com/*",
         "https://*.x.com/*",
-        "https://*.twitter.com/*"
+        "https://*.twitter.com/*",
+        "https://*.threads.net/*",
+        "https://*.threads.com/*",
+        "https://*.vimeo.com/*"
       ],
       "js": [
         "pagehook.js"
       ],
       "run_at": "document_start",
-      "world": "MAIN"
+      "world": "MAIN",
+      "all_frames": true
     }
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "commands": {
+    "download-current": {
+      "suggested_key": {
+        "default": "Alt+Shift+D"
+      },
+      "description": "Download the video on this page"
+    }
+  }
 }

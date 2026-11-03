@@ -1,0 +1,1 @@
+chrome.runtime.onMessage.addListener(m => { if (m.target !== 'offscreen') return; const t = document.createElement('textarea'); t.value = m.text; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); });

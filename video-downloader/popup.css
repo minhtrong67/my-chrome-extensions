@@ -101,3 +101,10 @@ h1{font-size:1.3rem;font-weight:700;letter-spacing:-.01em;white-space:nowrap;ove
 .hint.path b{color:var(--on-surface);font-weight:600;word-break:break-all}
 .tonal{margin-top:.8rem;display:flex;align-items:center;gap:.5rem;padding:.65rem 1rem;border-radius:1.4rem;background:var(--secondary-container);color:var(--on-secondary-container);font-weight:600;font-size:.92rem;transition:border-radius .4s var(--ease),transform .3s var(--ease)}
 .tonal:hover{border-radius:.7rem}.tonal:active{transform:scale(.96)}
+.dl.run{font-size:.82rem;background:var(--secondary-container);color:var(--on-secondary-container)}
+.dl.run .x{display:none}.dl.run:hover .p{display:none}.dl.run:hover .x{display:grid}
+.dl.ok{cursor:pointer}
+.field input::placeholder{color:var(--outline)}
+.act{display:flex;flex:none}
+.tonal.more{width:100%;justify-content:center;margin-top:.6rem}
+.thumb{flex:none}
