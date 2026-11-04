@@ -84,7 +84,7 @@ export function buildScheme(hue, dark) {
 
 const kebab = (s) => s.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
-export const DEFAULT_THEME = { hue: 295, mode: 'auto' };
+export const DEFAULT_THEME = { hue: 150, mode: 'auto' };
 
 export function applyTheme(theme = DEFAULT_THEME, root = document.documentElement) {
   const { hue, mode } = { ...DEFAULT_THEME, ...theme };

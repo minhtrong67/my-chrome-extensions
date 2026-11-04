@@ -28,7 +28,8 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => toggle(tab));
 
 /* ---- per-tab header rules (mobile User-Agent + allow embedding) ---- */
-const ids = (tabId) => [tabId * 2, tabId * 2 + 1];
+// Chrome tab ids can be huge; rule ids must fit in int32.
+const ids = (tabId) => { const base = Math.abs(Math.trunc(tabId)) % 1000000000; return [base * 2 + 1, base * 2 + 2]; };
 async function clearRules(tabId) {
   try { await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: ids(tabId) }); } catch (e) {}
 }

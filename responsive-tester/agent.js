@@ -68,6 +68,7 @@
     }
     whenRoot(() => {
       if (!styleEl) { styleEl = document.createElement('style'); styleEl.setAttribute('data-rt', ''); (document.head || document.documentElement).appendChild(styleEl); }
+      try { document.documentElement.style.setProperty('scrollbar-width', c.hideScroll ? 'none' : '', 'important'); } catch (e) {}
       styleEl.textContent = c.hideScroll ? '*{scrollbar-width:none!important}*::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}' : '';
     });
   }
@@ -132,6 +133,21 @@
   }, true);
   addEventListener('dragstart', (e) => { if (cfg && cfg.touch) e.preventDefault(); }, true);
 
+  /* ---------- page colour -> status bar colour ---------- */
+  function sendTheme() {
+    try {
+      let bg = '';
+      const m = document.querySelector('meta[name="theme-color"]');
+      if (m && m.content) bg = m.content;
+      else for (const el of [document.body, document.documentElement]) {
+        if (!el) continue;
+        const c = getComputedStyle(el).backgroundColor;
+        if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') { bg = c; break; }
+      }
+      post({ type: 'theme', bg: bg || '#ffffff' });
+    } catch (e) {}
+  }
+
   /* ---------- messaging ---------- */
   function ratio() {
     const el = document.scrollingElement || document.documentElement;
@@ -154,8 +170,8 @@
   });
   addEventListener('popstate', sendNav);
   addEventListener('hashchange', sendNav);
-  addEventListener('DOMContentLoaded', sendNav);
-  addEventListener('load', sendNav);
+  addEventListener('DOMContentLoaded', () => { sendNav(); sendTheme(); });
+  addEventListener('load', () => { sendNav(); sendTheme(); setTimeout(sendTheme, 900); setTimeout(sendTheme, 2500); });
 
   addEventListener('message', (e) => {
     const d = e.data;

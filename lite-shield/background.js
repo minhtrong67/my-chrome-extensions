@@ -9,7 +9,7 @@ const RULESET_IDS = ['ads', 'trackers', 'annoyances'];
 const UPDATABLE = ['ads', 'trackers'];
 
 const DEFAULT_SETTINGS = {
-  theme: { hue: 295, mode: 'auto' },
+  theme: { hue: 150, mode: 'auto' },
   rulesets: { ads: true, trackers: true, annoyances: false },
   genericCosmetic: true,
   autoUpdate: true,
@@ -253,7 +253,12 @@ async function init() {
   await applyBadge(data.settings);
 }
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async (details) => {
+  // Bản trước 0.2.1 mặc định màu tím (hue 295): chuyển sang xanh lá mới nếu người dùng chưa tự đổi.
+  if (details.reason === 'update') {
+    const { settings } = await chrome.storage.local.get('settings');
+    if (settings?.theme?.hue === 295) await chrome.storage.local.set({ settings: { ...settings, theme: { ...settings.theme, hue: 150 } } });
+  }
   init();
   chrome.contextMenus.removeAll(() =>
     chrome.contextMenus.create({ id: 'ls-pick', title: 'Lite Shield: Chọn & ẩn phần tử…', contexts: ['page', 'frame', 'link', 'image', 'video', 'selection'] }),

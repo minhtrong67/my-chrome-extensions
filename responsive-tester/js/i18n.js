@@ -15,7 +15,7 @@
     appearance: 'Appearance', themeMode: 'Theme', system: 'System', light: 'Light', dark: 'Dark', color: 'Color', language: 'Language',
     simulation: 'Simulation', capture: 'Capture', shortcuts: 'Shortcuts', about: 'About',
     touchDefault: 'Touch emulation', touchHint: 'Drag to scroll and fire touch events',
-    hideScroll: 'Hide scrollbars', hideScrollHint: 'Mobile browsers use overlay scrollbars',
+    hideScroll: 'Hide scrollbar in the preview', hideScrollHint: 'Mobile browsers use overlay scrollbars',
     spoofUA: 'Send a mobile User-Agent', spoofUAHint: 'For sites that detect devices on the server',
     bypass: 'Allow sites that block embedding', bypassHint: 'Removes X-Frame-Options and CSP frame rules for this tab',
     syncScroll: 'Sync scrolling and navigation', syncScrollHint: 'In compare mode, every device follows',
@@ -28,7 +28,9 @@
     encoding: 'Encoding GIF…', recAutoStop: 'Stopped after 60 seconds', needUrl: 'Enter a URL first', cantEmbed: 'Browser pages cannot be previewed',
     deviceSaved: 'Device saved', deviceDeleted: 'Device deleted', maxCompare: 'Compare up to 6 devices', minCompare: 'Keep at least one device',
     uaNote: 'Server-side detection follows the first device', zoom: 'Zoom', selected: 'selected', noResults: 'No devices match', favorites: 'Compare set',
-    resetView: 'Reset view', closeSim: 'Close simulator', rulesFail: 'Could not set request rules', blockedHint: 'This page did not respond inside the frame. The site may forbid embedding itself (CSP frame-src).', iframeHint: 'Some sites refuse to be embedded. Turn on “Allow sites that block embedding” in settings.'
+    resetView: 'Reset view', colorTheme: 'Theme color', fontFamily: 'Font', textSize: 'Text size', toTop: 'Back to top', kbTools: 'Tools panel', kbClose: 'Close simulator',
+    c_red: 'Red', c_pink: 'Pink', c_purple: 'Purple', c_deepPurple: 'Deep Purple', c_indigo: 'Indigo', c_blue: 'Blue', c_lightBlue: 'Light Blue', c_cyan: 'Cyan', c_teal: 'Teal', c_green: 'Green', c_lightGreen: 'Light Green', c_lime: 'Lime', c_yellow: 'Yellow', c_amber: 'Amber', c_orange: 'Orange', c_deepOrange: 'Deep Orange', c_brown: 'Brown', c_grey: 'Grey', c_blueGrey: 'Blue Grey',
+    slowHint: 'This page is slow to load or refuses to be framed. Try Reload.', scrollbar: 'Scrollbar', typography: 'Font & text size', small: 'Small', medium: 'Medium', large: 'Large', authorBy: 'Created by', aiHelp: 'Built with the help of Claude (AI by Anthropic)', closeSim: 'Close simulator', rulesFail: 'Could not set request rules', blockedHint: 'This page did not respond inside the frame. The site may forbid embedding itself (CSP frame-src).', iframeHint: 'Some sites refuse to be embedded. Turn on “Allow sites that block embedding” in settings.'
   };
   const VI = {
     appName: 'Responsive Tester', responsive: 'Responsive', responsiveSub: 'Kéo cạnh để đổi kích thước tự do',
@@ -45,7 +47,7 @@
     appearance: 'Giao diện', themeMode: 'Chủ đề', system: 'Theo hệ thống', light: 'Sáng', dark: 'Tối', color: 'Màu sắc', language: 'Ngôn ngữ',
     simulation: 'Mô phỏng', capture: 'Ghi hình', shortcuts: 'Phím tắt', about: 'Giới thiệu',
     touchDefault: 'Giả lập cảm ứng', touchHint: 'Kéo chuột để cuộn và gửi sự kiện touch',
-    hideScroll: 'Ẩn thanh cuộn', hideScrollHint: 'Trình duyệt di động dùng thanh cuộn nổi',
+    hideScroll: 'Ẩn thanh cuộn trong bản xem trước', hideScrollHint: 'Trình duyệt di động dùng thanh cuộn nổi',
     spoofUA: 'Gửi User-Agent di động', spoofUAHint: 'Cho các trang nhận diện thiết bị phía máy chủ',
     bypass: 'Cho phép trang chặn nhúng', bypassHint: 'Gỡ X-Frame-Options và quy tắc frame của CSP trong tab này',
     syncScroll: 'Đồng bộ cuộn và điều hướng', syncScrollHint: 'Ở chế độ so sánh, mọi thiết bị cùng di chuyển',
@@ -58,7 +60,9 @@
     encoding: 'Đang mã hóa GIF…', recAutoStop: 'Tự dừng sau 60 giây', needUrl: 'Hãy nhập URL trước', cantEmbed: 'Không thể xem trước trang của trình duyệt',
     deviceSaved: 'Đã lưu thiết bị', deviceDeleted: 'Đã xóa thiết bị', maxCompare: 'So sánh tối đa 6 thiết bị', minCompare: 'Cần giữ ít nhất một thiết bị',
     uaNote: 'Nhận diện phía máy chủ theo thiết bị đầu tiên', zoom: 'Thu phóng', selected: 'đã chọn', noResults: 'Không có thiết bị phù hợp', favorites: 'Bộ so sánh',
-    resetView: 'Đặt lại', closeSim: 'Đóng trình mô phỏng', rulesFail: 'Không thể đặt quy tắc yêu cầu', blockedHint: 'Trang không phản hồi trong khung. Có thể trang này cấm tự nhúng (CSP frame-src).', iframeHint: 'Một số trang từ chối bị nhúng. Hãy bật “Cho phép trang chặn nhúng” trong cài đặt.'
+    resetView: 'Đặt lại', colorTheme: 'Màu sắc chủ đề', fontFamily: 'Phông chữ', textSize: 'Cỡ chữ', toTop: 'Lên đầu trang', kbTools: 'Bảng công cụ', kbClose: 'Đóng trình mô phỏng',
+    c_red: 'Đỏ', c_pink: 'Hồng', c_purple: 'Tím', c_deepPurple: 'Tím đậm', c_indigo: 'Chàm', c_blue: 'Xanh dương', c_lightBlue: 'Xanh da trời', c_cyan: 'Lục lam', c_teal: 'Xanh mòng két', c_green: 'Xanh lá', c_lightGreen: 'Xanh lá nhạt', c_lime: 'Xanh chanh', c_yellow: 'Vàng', c_amber: 'Hổ phách', c_orange: 'Cam', c_deepOrange: 'Cam đậm', c_brown: 'Nâu', c_grey: 'Xám', c_blueGrey: 'Xám xanh',
+    slowHint: 'Trang tải chậm hoặc từ chối bị nhúng. Hãy thử Tải lại.', scrollbar: 'Thanh cuộn', typography: 'Phông & cỡ chữ', small: 'Nhỏ', medium: 'Vừa', large: 'Lớn', authorBy: 'Tác giả', aiHelp: 'Với sự hỗ trợ của AI Claude (Anthropic)', closeSim: 'Đóng trình mô phỏng', rulesFail: 'Không thể đặt quy tắc yêu cầu', blockedHint: 'Trang không phản hồi trong khung. Có thể trang này cấm tự nhúng (CSP frame-src).', iframeHint: 'Một số trang từ chối bị nhúng. Hãy bật “Cho phép trang chặn nhúng” trong cài đặt.'
   };
   let cur = EN;
   window.RT_I18N = {

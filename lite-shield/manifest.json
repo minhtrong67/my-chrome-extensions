@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lite Shield",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Chặn quảng cáo & trình theo dõi bằng declarativeNetRequest — nhẹ, riêng tư, giao diện Material 3 Expressive.",
   "minimum_chrome_version": "120",
   "icons": {
