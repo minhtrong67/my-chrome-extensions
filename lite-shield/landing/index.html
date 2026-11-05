@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lite Shield</title>
+  <link rel="icon" href="../icons/icon32.png" />
+  <link rel="stylesheet" href="../shared/m3.css" />
+  <link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+  <header class="top" id="top">
+    <a class="logo" href="#hero" aria-label="Lite Shield"><span class="logo-mark" data-icon="shield-check"></span><span class="logo-text">Lite Shield</span></a>
+    <nav class="links">
+      <a href="#features" data-i18n="land.navFeatures"></a>
+      <a href="#privacy" data-i18n="land.navPrivacy"></a>
+      <a href="#author" data-i18n="land.navAbout"></a>
+    </nav>
+    <div class="segmented lang-switch" id="lang" role="radiogroup" aria-label="Language">
+      <label><input type="radio" name="lang" value="vi" /><span>VI</span></label>
+      <label><input type="radio" name="lang" value="en" /><span>EN</span></label>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-copy">
+        <span class="chip tertiary" data-icon="zap"><span data-i18n="land.heroBadge"></span></span>
+        <h1 class="hero-title" data-i18n="land.heroTitle"></h1>
+        <p class="hero-sub body-l" data-i18n="land.heroSub"></p>
+        <div class="hero-cta">
+          <a class="btn filled lg" href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer" data-icon="code"><span data-i18n="land.ctaSource"></span></a>
+          <a class="btn tonal lg" href="../options/options.html" data-icon="settings"><span data-i18n="land.ctaSettings"></span></a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg class="art-cookie c1" viewBox="-100 -100 200 200"><path class="cookie-path" /></svg>
+        <svg class="art-cookie c2" viewBox="-100 -100 200 200"><path class="cookie-path" /></svg>
+        <div class="art-shield" data-icon="shield-check"></div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <h2 class="headline-m section-title" data-i18n="land.featuresH"></h2>
+      <div class="grid">
+        <article class="feature"><div class="f-ico" data-icon="block"></div><h3 class="title-m" data-i18n="land.f1t"></h3><p class="body-m muted" data-i18n="land.f1d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="eye"></div><h3 class="title-m" data-i18n="land.f2t"></h3><p class="body-m muted" data-i18n="land.f2d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="target"></div><h3 class="title-m" data-i18n="land.f3t"></h3><p class="body-m muted" data-i18n="land.f3d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="list"></div><h3 class="title-m" data-i18n="land.f4t"></h3><p class="body-m muted" data-i18n="land.f4d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="refresh"></div><h3 class="title-m" data-i18n="land.f5t"></h3><p class="body-m muted" data-i18n="land.f5d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="play"></div><h3 class="title-m" data-i18n="land.f6t"></h3><p class="body-m muted" data-i18n="land.f6d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="palette"></div><h3 class="title-m" data-i18n="land.f7t"></h3><p class="body-m muted" data-i18n="land.f7d"></p></article>
+        <article class="feature"><div class="f-ico" data-icon="languages"></div><h3 class="title-m" data-i18n="land.f8t"></h3><p class="body-m muted" data-i18n="land.f8d"></p></article>
+      </div>
+    </section>
+
+    <section class="section privacy" id="privacy">
+      <div class="privacy-card">
+        <div class="privacy-ico" data-icon="lock"></div>
+        <h2 class="headline-m" data-i18n="land.privacyH"></h2>
+        <p class="body-l" data-i18n="land.privacyD"></p>
+        <div class="chips">
+          <span class="chip primary" data-icon="shield-check"><span data-i18n="land.p1"></span></span>
+          <span class="chip primary" data-icon="app"><span data-i18n="land.p2"></span></span>
+          <span class="chip primary" data-icon="code"><span data-i18n="land.p3"></span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="author">
+      <h2 class="headline-m section-title" data-i18n="land.aboutH"></h2>
+      <div class="author-card">
+        <div class="author-glow" aria-hidden="true"></div>
+        <div class="author-row">
+          <div class="author-avatar" aria-hidden="true" data-icon="user"></div>
+          <div class="grow">
+            <div class="label-m author-label" data-i18n="ab.authorLabel"></div>
+            <div class="headline-m author-name">minhtrong67</div>
+          </div>
+        </div>
+        <div class="author-ai"><div class="ai-chip"><span data-icon="sparkles"></span><span data-i18n="ab.aiLabel"></span> · <strong>Claude</strong></div></div>
+        <p class="body-l author-note" data-i18n-html="ab.authorNote"></p>
+        <div class="hero-cta" style="margin-top: 18px">
+          <a class="btn filled" href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer" data-icon="code"><span data-i18n="ab.source"></span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot body-m muted" data-i18n="land.footer"></footer>
+
+  <button class="fab" id="to-top" type="button" data-icon="up" data-i18n-attr="aria-label:scroll.top"></button>
+  <script type="module" src="landing.js"></script>
+</body>
+</html>

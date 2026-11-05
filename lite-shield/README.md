@@ -1,65 +1,110 @@
+<div align="center">
+
+<img src="icons/icon128.png" width="96" alt="Lite Shield logo" />
+
 # Lite Shield
 
-Extension Chrome (Manifest V3) chặn quảng cáo & trình theo dõi, lấy cảm hứng từ uBlock Origin Lite, viết lại từ đầu cho mục đích cá nhân. Giao diện theo **Material 3 Expressive** với màu động chọn được.
+**A lightweight, privacy-first content blocker for Chrome (Manifest V3) — styled in Material 3 Expressive.**
 
-## Cài đặt
+[Tiếng Việt](README.vi.md) · English
 
-1. Giải nén thư mục `lite-shield`.
-2. Mở `chrome://extensions` → bật **Chế độ nhà phát triển**.
-3. Bấm **Tải tiện ích đã giải nén** → chọn thư mục `lite-shield`.
-4. Ghim biểu tượng lên thanh công cụ để dùng popup.
+![Manifest V3](https://img.shields.io/badge/Manifest-V3-4CAF50) ![Version](https://img.shields.io/badge/version-0.4.1-4CAF50) ![No tracking](https://img.shields.io/badge/telemetry-none-4CAF50) ![i18n](https://img.shields.io/badge/languages-EN%20%7C%20VI-4CAF50)
 
-Yêu cầu Chrome 120 trở lên.
+</div>
 
-## Tính năng
+Lite Shield is a personal take on [uBlock Origin Lite](https://github.com/uBlockOrigin/uBOL-home): it blocks ads and trackers using Chrome's `declarativeNetRequest` engine, so it never reads your pages' network traffic and needs no always-on background process. The interface is rebuilt from scratch with Material 3 Expressive — dynamic color, springy shape morphing and a lot of small, purposeful motion.
 
-- **Chặn mạng** bằng `declarativeNetRequest` (quảng cáo ≈2.250 quy tắc, theo dõi ≈6.500, phiền toái; dựng từ EasyList + EasyPrivacy) — chạy trong trình duyệt, không có tiến trình nền đọc dữ liệu duyệt web.
-- **Ẩn phần tử** (cosmetic): ~22.000 selector từ EasyList. Selector chung biên dịch thành CSS tĩnh và Chrome tự áp dụng (`registerContentScripts`) nên rất nhanh; selector riêng theo trang gửi qua content script.
-- **Nhật ký chặn** (popup → *Nhật ký*): xem tên miền nào bị chặn trên trang hiện tại và bấm **Cho phép** để mở khoá riêng tên miền đó (quản lý lại ở *Cài đặt → Trang web*).
-- **Tự cập nhật danh sách**: tải EasyList + EasyPrivacy mới mỗi ngày (hoặc bấm *Cập nhật ngay*), nạp vào quy tắc động thay cho bản đi kèm. Phần ẩn phần tử *chung* vẫn lấy từ bản đi kèm.
-- **Quảng cáo YouTube (thử nghiệm)**: scriptlet chạy trong `MAIN world` cắt dữ liệu quảng cáo khỏi phản hồi của YouTube, tự bỏ qua quảng cáo còn sót và ẩn khung quảng cáo. YouTube đổi cấu trúc thường xuyên nên có thể cần chỉnh `scriptlets/youtube.js`.
-- **Chọn & ẩn** (zapper): bấm một phần tử trên trang — bằng popup, phím tắt **Alt+Shift+X** hoặc chuột phải → *Lite Shield: Chọn & ẩn phần tử…*; chọn “chỉ phần tử này” hoặc “tất cả tương tự”, kết quả lưu thành dòng `trang##selector` trong *Bộ lọc của tôi*.
-- **Bật/tắt theo trang** bằng nút nguồn lớn trong popup (áp dụng cả tên miền phụ, cả CSS ẩn chung và scriptlet).
-- **Thống kê**: số yêu cầu đã chặn hôm nay và tổng cộng.
-- **Bộ lọc của tôi**: viết bộ lọc cú pháp ABP/uBlock, có báo lỗi theo từng dòng.
-- **Giao diện** Material 3 Expressive: sáng/tối/tự động, chọn màu hạt (bảng màu sinh bằng OKLCH, đã kiểm tra tương phản AA), tôn trọng *giảm chuyển động*. Logo xanh lá Material.
-- **Sao lưu / khôi phục** toàn bộ cài đặt (gồm tên miền được cho phép) bằng một tệp JSON.
+<p align="center">
+  <img src="docs/screenshots/popup.png" height="420" alt="Popup" />
+  <img src="docs/screenshots/appearance-light.png" height="420" alt="Appearance settings, light" />
+</p>
 
-## Cấu trúc
+## Features
+
+**Protection**
+- Network blocking with EasyList + EasyPrivacy compiled to static DNR rulesets (Ads, Trackers, Annoyances).
+- Cosmetic filtering: generic element hiding plus per-site rules, with a validated selector engine (`:is()` batching for loose selectors, nested `:has()` rejected).
+- YouTube ad scriptlet running in the page's main world (can be switched off).
+- **Element zapper** — pick any element and hide it permanently (`Alt+Shift+X` or right-click menu).
+- **Block log** for the current tab with one-click per-domain *Allow*.
+- Per-site on/off, custom filters (ABP/uBO syntax) with line-by-line error reporting.
+- Lists auto-update on a schedule, or on demand.
+- Block statistics (today / all time).
+- Backup & restore everything as one JSON file.
+
+**Personalization** (Settings → Appearance)
+
+| Option | Choices |
+|---|---|
+| Mode | Light · Dark · System (circular reveal transition) |
+| Theme color | 19 Material colors — Red, Pink, Purple, Deep Purple, Indigo, Blue, Light Blue, Cyan, Teal, **Green (default)**, Light Green, Lime, Yellow, Amber, Orange, Deep Orange, Brown, Grey, Blue Grey |
+| Text size | Small · Medium · Large |
+| Language | English · Tiếng Việt |
+| Typeface | System (default) · Google Sans Flex · Roboto Flex · Roboto · Arial · Inter · Be Vietnam Pro |
+
+The full light/dark palette is generated from the chosen color in OKLCH; all 19 colors keep ≥ 4.5 : 1 contrast on every text/surface pair (checked in both schemes). Fonts are bundled, so they work offline and nothing is fetched from a CDN.
+
+<p align="center">
+  <img src="docs/screenshots/font-dropdown-dark.png" width="48%" alt="Custom dropdown, dark" />
+  <img src="docs/screenshots/toast-dark.png" width="48%" alt="Toast, dark" />
+</p>
+
+**UI details**
+- Custom dropdown (ARIA combobox/listbox) with a capped height, scrolling and full keyboard support — it follows light/dark, unlike a native `<select>`.
+- Accordions for long sections (colors, preview, credits).
+- Toasts in four variants (`info`, `success`, `warning`, `error`) for both schemes, used only for outcomes that matter: saving filters, updating lists, backup, errors. Simple toggles and list edits give feedback in place, and invalid input is flagged inline.
+- Custom tooltips for icon buttons (hover and keyboard focus, with shortcut hints).
+- Scroll-to-top button with a scroll-progress ring and smooth scrolling.
+- Ripples, spring shape-morphing, scroll reveal, animated counters. Everything respects `prefers-reduced-motion`.
+- Lucide icons throughout.
+
+## Install (developer mode)
+
+1. Download or clone this folder.
+2. Open `chrome://extensions` and enable **Developer mode**.
+3. Click **Load unpacked** and select the folder that contains `manifest.json`.
+4. Pin the extension; set the zapper shortcut at `chrome://extensions/shortcuts` if you like.
+
+## Permissions
+
+| Permission | Why |
+|---|---|
+| `declarativeNetRequest`, `declarativeNetRequestFeedback` | Block requests; show the block log and counters |
+| `storage` | Your settings and filters (local only) |
+| `scripting`, `activeTab`, `<all_urls>` | Inject cosmetic CSS, the zapper and the YouTube scriptlet |
+| `webRequest`, `webNavigation` | Detect blocked requests for the log and badge (read-only) |
+| `alarms` | Scheduled list updates |
+| `contextMenus` | “Hide an element” menu item |
+
+No analytics, no remote code. The only network requests are the optional list updates to GitHub-hosted filter lists.
+
+## Project structure
 
 ```
-manifest.json
-background.js        service worker: ruleset, quy tắc động, thông điệp
-content.js           ẩn phần tử khi tải trang
-picker.js            trình chọn phần tử (chèn theo yêu cầu qua activeTab)
-shared/filters.js    bộ phân tích ABP → DNR + cosmetic (dùng cả trong Node)
-shared/theme.js      màu động M3
-shared/m3.css        token & thành phần Material 3 Expressive
-popup/  options/     giao diện
-lists/*.txt          danh sách bộ lọc gốc (sửa được)
-rulesets/*.json      kết quả biên dịch (sinh tự động)
-shared/selector.js   kiểm tra selector chặt + gom nhóm CSS
-shared/sources.js    nguồn danh sách (dùng cho fetch-lists và tự cập nhật)
-scriptlets/          youtube.js (MAIN world)
-tools/               fetch-lists.mjs, build-rulesets.mjs, test-filters.mjs, make-icons.py
+manifest.json  background.js  content.js  picker.js
+popup/      toolbar popup
+options/    settings (Protection · Filters · Sites · Appearance · Backup · About)
+landing/    introduction page
+shared/     theme (19-color OKLCH), i18n + lang/, toast, tooltip, select, effects,
+            filters (ABP compiler), selector (validator), icons (Lucide), ui.css
+scriptlets/ YouTube main-world scriptlet
+rulesets/   compiled DNR rulesets      lists/  vendored filter lists
+fonts/      bundled WOFF2 (OFL)        tools/  list fetch + ruleset build + tests
 ```
 
-## Cập nhật / thêm danh sách bộ lọc
+## Development
 
 ```bash
-node tools/fetch-lists.mjs        # tải EasyList + EasyPrivacy mới nhất vào lists/vendor/
-node tools/build-rulesets.mjs     # biên dịch lại rulesets/* (JSON + CSS chung)
-node tools/test-filters.mjs       # kiểm thử bộ phân tích
+npm run fetch      # download EasyList / EasyPrivacy into lists/vendor
+npm run build      # compile rulesets + generic cosmetic data
+npm test           # filter/selector unit tests + i18n key parity
 ```
 
-Danh sách tự viết của bạn nằm ở `lists/*.txt` (luôn được giữ); tệp trong `lists/vendor/<nhóm>/*.txt` được gộp thêm khi biên dịch. Muốn thêm nguồn khác, thả tệp `.txt` vào `lists/vendor/ads/`, `trackers/` hoặc `cosmetic-ads/`.
+Adding a language: copy `shared/lang/en.js` to `shared/lang/<code>.js`, translate it, and register it in `shared/i18n.js`.
 
-Sau đó vào `chrome://extensions` → bấm biểu tượng tải lại trên thẻ Lite Shield. Dòng nào chưa hỗ trợ sẽ được in ra và bỏ qua. Chrome đảm bảo 30.000 quy tắc tĩnh cho mỗi extension; các tên miền thuần (`||domain^`) được gộp thành ít quy tắc để tiết kiệm.
+## Credits
 
-## Khác với uBlock Origin Lite
+Designed and built by **minhtrong67**, with AI support from **Claude** (Anthropic).
+Source: <https://github.com/minhtrong67/my-chrome-extensions>
 
-Chưa có: scriptlet tổng quát (`+js`; chỉ có scriptlet YouTube viết riêng), bộ lọc thủ tục (`:has-text`, `:xpath`…), `redirect`/`removeparam`/`$csp`/`$popup`, ngoại lệ `#@#` và `$generichide` cho CSS ẩn chung, các mức lọc Cơ bản/Tối ưu/Đầy đủ. Đổi lại có zapper, nhật ký chặn, cho phép theo tên miền và giao diện riêng.
-
-## Giấy phép
-
-Mã nguồn ở đây được viết mới, không sao chép từ uBlock Origin Lite. uBOL dùng giấy phép GPLv3, nên nếu sau này bạn chép mã từ đó vào, phần được chép sẽ theo GPLv3; các danh sách như EasyList cũng có giấy phép riêng.
+Inspired by uBlock Origin Lite (code written from scratch). Filter lists © EasyList authors. Icons: [Lucide](https://lucide.dev) (ISC). Fonts: SIL OFL 1.1. See [THIRD_PARTY.md](THIRD_PARTY.md).

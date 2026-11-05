@@ -1,3 +1,4 @@
+import { setLang, applyI18n } from './i18n.js';
 // Màu động kiểu Material 3: sinh bảng tông (tonal palette) từ một màu hạt (hue) bằng OKLCH.
 // Tone M3 (CIE L*) được ánh xạ sang độ sáng OKLab nên các cặp tương phản gần giống HCT.
 
@@ -37,12 +38,14 @@ export function tone(hue, chroma, t) {
 }
 
 /** Trả về token màu (camelCase) cho sáng/tối. */
-export function buildScheme(hue, dark) {
-  const P = (t) => tone(hue, 0.17, t); // primary — rực rỡ hơn (expressive)
-  const S = (t) => tone(hue + 18, 0.07, t);
-  const T = (t) => tone(hue + 65, 0.12, t);
-  const N = (t) => tone(hue, 0.008, t);
-  const NV = (t) => tone(hue, 0.017, t);
+export function buildScheme(hue, dark, scale = 1) {
+  const k = Math.max(0, Math.min(1, scale)); // độ bão hòa tương đối của màu hạt (xám/nâu thấp hơn)
+  const kn = Math.max(k, 0.3); // bề mặt luôn giữ một chút sắc
+  const P = (t) => tone(hue, 0.17 * k, t); // primary — rực rỡ hơn (expressive)
+  const S = (t) => tone(hue + 18, 0.07 * k, t);
+  const T = (t) => tone(hue + 65, 0.12 * k, t);
+  const N = (t) => tone(hue, 0.008 * kn, t);
+  const NV = (t) => tone(hue, 0.017 * kn, t);
   const E = (t) => tone(27, 0.19, t);
   const pick = (light, dk) => (dark ? dk : light);
 
@@ -84,26 +87,105 @@ export function buildScheme(hue, dark) {
 
 const kebab = (s) => s.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
-export const DEFAULT_THEME = { hue: 150, mode: 'auto' };
+// ---------- 19 màu chủ đề Material (sắc 500) ----------
+const srgbToLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+/** '#rrggbb' → { L, C, h } trong OKLCH. */
+export function hexToOklch(hex) {
+  const [r, g, b] = [1, 3, 5].map((i) => srgbToLinear(parseInt(hex.slice(i, i + 2), 16) / 255));
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+  return { L, C: Math.hypot(A, B), h: ((Math.atan2(B, A) * 180) / Math.PI + 360) % 360 };
+}
+
+const HEX = {
+  red: '#F44336', pink: '#E91E63', purple: '#9C27B0', 'deep-purple': '#673AB7', indigo: '#3F51B5', blue: '#2196F3', 'light-blue': '#03A9F4',
+  cyan: '#00BCD4', teal: '#009688', green: '#4CAF50', 'light-green': '#8BC34A', lime: '#CDDC39', yellow: '#FFEB3B', amber: '#FFC107',
+  orange: '#FF9800', 'deep-orange': '#FF5722', brown: '#795548', grey: '#9E9E9E', 'blue-grey': '#607D8B',
+};
+export const COLORS = Object.entries(HEX).map(([key, hex]) => {
+  const { C, h } = hexToOklch(hex);
+  // Xám hầu như không có sắc: giữ chút xanh lạnh để bảng màu không "chết".
+  const chromatic = key !== 'grey';
+  return { key, hex, hue: chromatic ? Math.round(h) : 260, scale: chromatic ? Math.min(1, C / 0.15) : 0.03 };
+});
+const byKey = Object.fromEntries(COLORS.map((c) => [c.key, c]));
+
+export const DEFAULT_THEME = { color: 'green', mode: 'auto' };
+
+/** Màu cũ lưu theo hue → màu Material gần nhất (bỏ qua nhóm xám/nâu). */
+export function nearestColorKey(hue) {
+  let best = 'green';
+  let d = 1e9;
+  for (const c of COLORS) {
+    if (c.scale < 0.5) continue;
+    const dd = Math.min(Math.abs(c.hue - hue), 360 - Math.abs(c.hue - hue));
+    if (dd < d) ((d = dd), (best = c.key));
+  }
+  return best;
+}
+export const colorOf = (theme = {}) => byKey[theme.color] ?? byKey[theme.hue != null ? nearestColorKey(theme.hue) : 'green'];
+export const schemeFor = (theme, dark) => {
+  const c = colorOf(theme);
+  return buildScheme(c.hue, dark, c.scale);
+};
+
+// ---------- cỡ chữ & font chữ ----------
+export const FONT_SIZES = { small: 0.9, medium: 1, large: 1.12 };
+export const FONTS = {
+  system: { label: null, stack: 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif' },
+  'google-sans-flex': { label: 'Google Sans Flex', stack: '"Google Sans Flex", system-ui, sans-serif' },
+  'roboto-flex': { label: 'Roboto Flex', stack: '"Roboto Flex", system-ui, sans-serif' },
+  roboto: { label: 'Roboto', stack: 'Roboto, system-ui, sans-serif' },
+  arial: { label: 'Arial', stack: 'Arial, "Helvetica Neue", Helvetica, "Liberation Sans", Arimo, sans-serif' },
+  inter: { label: 'Inter', stack: 'Inter, system-ui, sans-serif' },
+  'be-vietnam-pro': { label: 'Be Vietnam Pro', stack: '"Be Vietnam Pro", system-ui, sans-serif' },
+};
+export const DEFAULT_LOOK = { fontSize: 'medium', fontFamily: 'system', language: 'vi' };
+
+export function applyTypography({ fontSize, fontFamily } = DEFAULT_LOOK, root = document.documentElement) {
+  const popup = typeof location !== 'undefined' && location.pathname.includes('/popup/');
+  let scale = FONT_SIZES[fontSize] ?? 1;
+  if (popup) scale = Math.min(scale, 1.06); // popup tối đa ~600px chiều cao
+  root.style.zoom = scale === 1 ? '' : String(scale);
+  root.style.setProperty('--font', (FONTS[fontFamily] ?? FONTS.system).stack);
+}
 
 export function applyTheme(theme = DEFAULT_THEME, root = document.documentElement) {
-  const { hue, mode } = { ...DEFAULT_THEME, ...theme };
+  const mode = theme?.mode ?? DEFAULT_THEME.mode;
   const dark = mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  const scheme = buildScheme(hue, dark);
+  const scheme = schemeFor(theme, dark);
   for (const [k, v] of Object.entries(scheme)) root.style.setProperty(`--md-sys-color-${kebab(k)}`, v);
   root.dataset.scheme = dark ? 'dark' : 'light';
   root.style.colorScheme = dark ? 'dark' : 'light';
 }
 
-/** Áp dụng ngay theme mặc định, rồi đồng bộ theo cài đặt đã lưu và theo hệ thống. */
-export function initTheme() {
+/**
+ * Áp dụng giao diện đã lưu (màu, cỡ chữ, font, ngôn ngữ) và theo dõi thay đổi.
+ * Trả về Promise hoàn tất sau lần áp dụng đầu tiên; onChange(settings) được gọi mỗi khi cài đặt đổi.
+ */
+export function initTheme(onChange) {
   let current = DEFAULT_THEME;
+  let lastLang;
+  const apply = (settings) => {
+    if (settings?.theme) current = settings.theme;
+    applyTheme(current);
+    applyTypography({ ...DEFAULT_LOOK, ...settings });
+    const lang = settings?.language ?? DEFAULT_LOOK.language;
+    setLang(lang);
+    if (lang !== lastLang) applyI18n();
+    lastLang = lang;
+    document.documentElement.dataset.ready = '';
+    onChange?.(settings ?? {}, current);
+  };
   applyTheme(current);
-  chrome.storage.local.get('settings').then(({ settings }) => {
-    if (settings?.theme) applyTheme((current = settings.theme));
-  });
+  const ready = chrome.storage.local.get('settings').then(({ settings }) => apply(settings));
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'local' && changes.settings?.newValue?.theme) applyTheme((current = changes.settings.newValue.theme));
+    if (area === 'local' && changes.settings?.newValue) apply(changes.settings.newValue);
   });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => applyTheme(current));
+  return ready;
 }

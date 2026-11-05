@@ -1,3 +1,5 @@
+@import url("fonts.css");
+@import url("ui.css");
 /* Material 3 Expressive — token & thành phần dùng chung.
    Màu (--md-sys-color-*) được theme.js bơm vào :root theo màu hạt người dùng chọn. */
 
@@ -26,7 +28,7 @@
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --dur-s: 220ms; --dur-m: 420ms; --dur-l: 640ms;
 
-  --font: "Google Sans Flex", "Google Sans", "Roboto Flex", Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-mono: ui-monospace, "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
 
@@ -146,3 +148,9 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .snackbar.show { transform: translate(-50%, 0) scale(1); opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; } }
+
+/* Ẩn giao diện tới khi áp dụng xong ngôn ngữ/phông (tránh nháy chữ sai ngôn ngữ). */
+html:not([data-ready]) body { visibility: hidden; }
+
+/* Không bao giờ để hiệu ứng tràn gây thanh cuộn ngang */
+html, body { overflow-x: clip; }

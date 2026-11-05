@@ -58,12 +58,12 @@ function parseDomainList(str, sep) {
 
 function parseCosmetic(line, m) {
   const [, domainStr, op, selector] = m;
-  if (op !== '##' && op !== '#@#') return { kind: 'error', msg: 'Bộ lọc thủ tục (#?#, #$#, #%#) chưa được hỗ trợ' };
+  if (op !== '##' && op !== '#@#') return { kind: 'error', msg: 'Bộ lọc thủ tục (#?#, #$#, #%#) chưa được hỗ trợ', key: 'err.procedural' };
   const sel = selector.trim();
-  if (!sel) return { kind: 'error', msg: 'Selector trống' };
-  if (/[{}\n]/.test(sel)) return { kind: 'error', msg: 'Selector chứa ký tự không hợp lệ' };
-  if (sel.startsWith('+js(')) return { kind: 'error', msg: 'Scriptlet (+js) chưa được hỗ trợ' };
-  if (PROCEDURAL_RE.test(sel)) return { kind: 'error', msg: 'Toán tử thủ tục (:has-text, :xpath…) chưa được hỗ trợ' };
+  if (!sel) return { kind: 'error', msg: 'Selector trống', key: 'err.emptySelector' };
+  if (/[{}\n]/.test(sel)) return { kind: 'error', msg: 'Selector chứa ký tự không hợp lệ', key: 'err.badSelector' };
+  if (sel.startsWith('+js(')) return { kind: 'error', msg: 'Scriptlet (+js) chưa được hỗ trợ', key: 'err.scriptlet' };
+  if (PROCEDURAL_RE.test(sel)) return { kind: 'error', msg: 'Toán tử thủ tục (:has-text, :xpath…) chưa được hỗ trợ', key: 'err.procOperator' };
   return {
     kind: 'cosmetic',
     exception: op === '#@#',
@@ -114,7 +114,7 @@ function parseNetwork(raw) {
       if (!exception) priority = PRIORITY.important;
     } else if (key === 'match-case') condition.isUrlFilterCaseSensitive = true;
     else if (TYPE_MAP[key]) (neg ? notTypes : types).add(TYPE_MAP[key]);
-    else return { kind: 'error', msg: `Tuỳ chọn chưa hỗ trợ: ${key}` };
+    else return { kind: 'error', msg: `Tuỳ chọn chưa hỗ trợ: ${key}`, key: 'err.option', args: { key } };
   }
 
   let action = { type: exception ? 'allow' : 'block' };
@@ -126,15 +126,15 @@ function parseNetwork(raw) {
   }
   if (types.size) {
     const list = [...types].filter((t) => !notTypes.has(t));
-    if (!list.length) return { kind: 'error', msg: 'Loại tài nguyên mâu thuẫn' };
+    if (!list.length) return { kind: 'error', msg: 'Loại tài nguyên mâu thuẫn', key: 'err.typeConflict' };
     condition.resourceTypes = list;
   } else if (notTypes.size) condition.excludedResourceTypes = [...notTypes];
 
   if (isRegex) condition.regexFilter = pattern.slice(1, -1);
   else if (pattern === '' || pattern === '*') {
-    if (!condition.initiatorDomains && !condition.resourceTypes) return { kind: 'error', msg: 'Mẫu URL trống' };
+    if (!condition.initiatorDomains && !condition.resourceTypes) return { kind: 'error', msg: 'Mẫu URL trống', key: 'err.emptyPattern' };
   } else {
-    if (!/^[\x21-\x7e]+$/.test(pattern)) return { kind: 'error', msg: 'Mẫu URL phải là ASCII, không có khoảng trắng' };
+    if (!/^[\x21-\x7e]+$/.test(pattern)) return { kind: 'error', msg: 'Mẫu URL phải là ASCII, không có khoảng trắng', key: 'err.asciiPattern' };
     condition.urlFilter = pattern;
   }
 
@@ -185,7 +185,7 @@ export function compile(text, opts = {}) {
     const p = parseLine(line);
     if (p.kind === 'empty') return;
     if (p.kind === 'error') {
-      errors.push({ line: idx + 1, text: line.trim(), msg: p.msg });
+      errors.push({ line: idx + 1, text: line.trim(), msg: p.msg, key: p.key, args: p.args });
       return;
     }
     if (p.kind === 'cosmetic') {

@@ -3,31 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lite Shield — Cài đặt</title>
+  <title>Lite Shield</title>
   <link rel="stylesheet" href="../shared/m3.css" />
   <link rel="stylesheet" href="options.css" />
 </head>
 <body>
   <div class="shell">
-    <nav class="rail" aria-label="Điều hướng">
-      <div class="brand" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="m9 12 2 2 4-4"/></svg></div>
-      <a class="nav" href="#protection" data-panel="protection"><span class="pill" data-icon="shield"></span><span class="label-m">Bảo vệ</span></a>
-      <a class="nav" href="#filters" data-panel="filters"><span class="pill" data-icon="list"></span><span class="label-m">Bộ lọc</span></a>
-      <a class="nav" href="#sites" data-panel="sites"><span class="pill" data-icon="globe"></span><span class="label-m">Trang web</span></a>
-      <a class="nav" href="#appearance" data-panel="appearance"><span class="pill" data-icon="palette"></span><span class="label-m">Giao diện</span></a>
-      <a class="nav" href="#backup" data-panel="backup"><span class="pill" data-icon="download"></span><span class="label-m">Sao lưu</span></a>
+    <nav class="rail" data-i18n-attr="aria-label:nav.aria">
+      <div class="brand" aria-hidden="true" data-icon="shield-check"></div>
+      <a class="nav" href="#protection" data-panel="protection"><span class="pill" data-icon="shield"></span><span class="label-m" data-i18n="nav.protection"></span></a>
+      <a class="nav" href="#filters" data-panel="filters"><span class="pill" data-icon="list"></span><span class="label-m" data-i18n="nav.filters"></span></a>
+      <a class="nav" href="#sites" data-panel="sites"><span class="pill" data-icon="globe"></span><span class="label-m" data-i18n="nav.sites"></span></a>
+      <a class="nav" href="#appearance" data-panel="appearance"><span class="pill" data-icon="palette"></span><span class="label-m" data-i18n="nav.appearance"></span></a>
+      <a class="nav" href="#backup" data-panel="backup"><span class="pill" data-icon="download"></span><span class="label-m" data-i18n="nav.backup"></span></a>
+      <a class="nav" href="#about" data-panel="about"><span class="pill" data-icon="info"></span><span class="label-m" data-i18n="nav.about"></span></a>
     </nav>
 
     <main class="content">
       <!-- ===== Bảo vệ ===== -->
       <section class="panel" id="p-protection">
         <header class="ph">
-          <h1 class="display-s">Bảo vệ</h1>
-          <p class="body-l muted">Chọn các danh sách chặn đang hoạt động. Mọi thứ chạy cục bộ bằng declarativeNetRequest — không gửi dữ liệu ra ngoài.</p>
+          <h1 class="display-s" data-i18n="prot.title"></h1>
+          <p class="body-l muted" data-i18n="prot.desc"></p>
         </header>
+
         <div class="stats-row">
-          <div class="stat-card a"><div class="display-s num" id="stat-today">0</div><div class="label-m">Đã chặn hôm nay</div></div>
-          <div class="stat-card b"><div class="display-s num" id="stat-total">0</div><div class="label-m">Tổng đã chặn</div></div>
+          <div class="stat-card a"><div class="display-s num" id="stat-today">0</div><div class="label-m" data-i18n="prot.today"></div></div>
+          <div class="stat-card b"><div class="display-s num" id="stat-total">0</div><div class="label-m" data-i18n="prot.total"></div></div>
         </div>
 
         <div class="list" id="rulesets"></div>
@@ -35,36 +37,36 @@
         <div class="list" style="margin-top: 24px">
           <div class="list-item">
             <div class="lead" data-icon="layout"></div>
-            <div class="grow"><div class="title-m">Ẩn khung quảng cáo trống</div><div class="body-m muted">Dùng selector chung (.adsbygoogle, div-gpt-ad…) để xoá khoảng trắng còn lại sau khi chặn.</div></div>
-            <label class="switch"><input type="checkbox" id="generic-cosmetic" aria-label="Ẩn khung quảng cáo trống" /></label>
+            <div class="grow"><div class="title-m" data-i18n="prot.generic.title"></div><div class="body-m muted" data-i18n="prot.generic.desc"></div></div>
+            <label class="switch"><input type="checkbox" id="generic-cosmetic" data-i18n-attr="aria-label:prot.generic.title" /></label>
           </div>
           <div class="list-item">
             <div class="lead" data-icon="play"></div>
-            <div class="grow"><div class="title-m">Chặn quảng cáo YouTube <span class="chip tertiary beta">Thử nghiệm</span></div><div class="body-m muted">Cắt dữ liệu quảng cáo và tự bỏ qua quảng cáo còn sót. YouTube đổi cấu trúc thường xuyên nên có thể cần cập nhật.</div></div>
-            <label class="switch"><input type="checkbox" id="yt-scriptlet" aria-label="Chặn quảng cáo YouTube" /></label>
+            <div class="grow"><div class="title-m"><span data-i18n="prot.yt.title"></span> <span class="chip tertiary beta" data-i18n="prot.yt.beta"></span></div><div class="body-m muted" data-i18n="prot.yt.desc"></div></div>
+            <label class="switch"><input type="checkbox" id="yt-scriptlet" data-i18n-attr="aria-label:prot.yt.title" /></label>
           </div>
         </div>
 
-        <h2 class="title-l section-h">Cập nhật danh sách</h2>
+        <h2 class="title-l section-h" data-i18n="prot.upd.h"></h2>
         <div class="list">
           <div class="list-item">
             <div class="lead" data-icon="refresh"></div>
-            <div class="grow"><div class="title-m" id="upd-title">Danh sách đi kèm bản cài</div><div class="body-m muted" id="upd-sub">Chưa cập nhật lần nào.</div></div>
-            <button class="btn tonal" id="upd-now"><span>Cập nhật ngay</span></button>
+            <div class="grow"><div class="title-m" id="upd-title"></div><div class="body-m muted" id="upd-sub"></div></div>
+            <button class="btn tonal" id="upd-now"><span data-i18n="upd.now"></span></button>
           </div>
           <div class="list-item">
             <div class="lead" data-icon="clock"></div>
-            <div class="grow"><div class="title-m">Tự động cập nhật mỗi ngày</div><div class="body-m muted">Tải EasyList &amp; EasyPrivacy mới từ GitHub. Quy tắc chặn mạng và ẩn phần tử riêng theo trang được làm mới.</div></div>
-            <label class="switch"><input type="checkbox" id="auto-update" aria-label="Tự động cập nhật" /></label>
+            <div class="grow"><div class="title-m" data-i18n="prot.auto.title"></div><div class="body-m muted" data-i18n="prot.auto.desc"></div></div>
+            <label class="switch"><input type="checkbox" id="auto-update" data-i18n-attr="aria-label:prot.auto.title" /></label>
           </div>
         </div>
 
-        <h2 class="title-l section-h">Chọn &amp; ẩn nhanh</h2>
+        <h2 class="title-l section-h" data-i18n="prot.pick.h"></h2>
         <div class="list">
           <div class="list-item">
             <div class="lead" data-icon="target"></div>
-            <div class="grow"><div class="title-m">Phím tắt <kbd id="kbd">Alt + Shift + X</kbd></div><div class="body-m muted">Hoặc bấm chuột phải trên trang → “Lite Shield: Chọn &amp; ẩn phần tử…”.</div></div>
-            <button class="btn tonal" id="shortcuts"><span>Đổi phím tắt</span></button>
+            <div class="grow"><div class="title-m"><span data-i18n="prot.pick.shortcut"></span> <kbd id="kbd">Alt + Shift + X</kbd></div><div class="body-m muted" data-i18n="prot.pick.desc"></div></div>
+            <button class="btn tonal" id="shortcuts"><span data-i18n="prot.pick.change"></span></button>
           </div>
         </div>
       </section>
@@ -72,28 +74,28 @@
       <!-- ===== Bộ lọc của tôi ===== -->
       <section class="panel" id="p-filters">
         <header class="ph">
-          <h1 class="display-s">Bộ lọc của tôi</h1>
-          <p class="body-l muted">Mỗi dòng một bộ lọc theo cú pháp ABP / uBlock. Các phần tử bạn chọn bằng nút “Chọn &amp; ẩn” cũng được ghi vào đây.</p>
+          <h1 class="display-s" data-i18n="flt.title"></h1>
+          <p class="body-l muted" data-i18n="flt.desc"></p>
         </header>
         <div class="editor card hi">
-          <textarea id="filters" class="field mono" spellcheck="false" rows="14" placeholder="! Ví dụ&#10;||ads.example.com^&#10;example.com###banner-top&#10;@@||cdn.example.com^$script"></textarea>
+          <textarea id="filters" class="field mono" spellcheck="false" rows="14" data-i18n-attr="placeholder:flt.placeholder"></textarea>
           <div class="editor-bar">
             <div class="chips" id="stats"></div>
             <span class="grow"></span>
-            <button class="btn filled lg" id="save-filters" data-icon="save"><span>Lưu bộ lọc</span></button>
+            <button class="btn filled lg" id="save-filters" data-icon="save"><span data-i18n="flt.save"></span></button>
           </div>
         </div>
         <div class="card errors" id="errors" hidden></div>
         <details class="card help">
-          <summary class="title-m">Cú pháp hỗ trợ</summary>
+          <summary class="title-m" data-i18n="flt.help"></summary>
           <ul class="body-m">
-            <li><code>||example.com^</code> — chặn mọi yêu cầu tới miền và tên miền phụ</li>
-            <li><code>||example.com/ads/*$script,third-party</code> — kèm loại tài nguyên và bên thứ ba</li>
-            <li><code>$domain=a.com|~b.com</code> · <code>$important</code> · <code>$match-case</code></li>
-            <li><code>@@||example.com^</code> — ngoại lệ (cho phép) · <code>@@…$document</code> tắt hoàn toàn cho trang</li>
-            <li><code>example.com##.banner</code> — ẩn phần tử · <code>##.ad</code> trên mọi trang · <code>example.com#@#.ad</code> ngoại lệ</li>
-            <li><code>0.0.0.0 tracker.net</code> — định dạng hosts</li>
-            <li class="muted">Chưa hỗ trợ: scriptlet (+js), :has-text, :xpath, redirect, removeparam, $csp.</li>
+            <li data-i18n-html="flt.help1"></li>
+            <li data-i18n-html="flt.help2"></li>
+            <li data-i18n-html="flt.help3"></li>
+            <li data-i18n-html="flt.help4"></li>
+            <li data-i18n-html="flt.help5"></li>
+            <li data-i18n-html="flt.help6"></li>
+            <li class="muted" data-i18n="flt.help7"></li>
           </ul>
         </details>
       </section>
@@ -101,89 +103,172 @@
       <!-- ===== Trang web ===== -->
       <section class="panel" id="p-sites">
         <header class="ph">
-          <h1 class="display-s">Trang web</h1>
-          <p class="body-l muted">Các trang đã tắt bảo vệ. Cũng có thể bật/tắt nhanh từ nút nguồn trên popup.</p>
+          <h1 class="display-s" data-i18n="sites.title"></h1>
+          <p class="body-l muted" data-i18n="sites.desc"></p>
         </header>
         <form class="add-site" id="add-site">
-          <input class="field" id="site-input" placeholder="example.com" autocomplete="off" spellcheck="false" aria-label="Tên miền cần tắt bảo vệ" />
-          <button class="btn tonal lg" type="submit" data-icon="plus"><span>Thêm</span></button>
+          <input class="field" id="site-input" placeholder="example.com" autocomplete="off" spellcheck="false" data-i18n-attr="aria-label:sites.inputAria" />
+          <button class="btn tonal lg" type="submit" data-icon="plus"><span data-i18n="sites.add"></span></button>
         </form>
         <div class="list" id="sites-list"></div>
         <div class="empty" id="sites-empty">
           <svg viewBox="-100 -100 200 200" aria-hidden="true"><path id="empty-cookie" /></svg>
-          <div class="title-m">Chưa có trang nào bị tắt</div>
-          <div class="body-m muted">Lite Shield đang bảo vệ mọi trang.</div>
+          <div class="title-m" data-i18n="sites.emptyTitle"></div>
+          <div class="body-m muted" data-i18n="sites.emptyDesc"></div>
         </div>
 
-        <h2 class="title-l section-h">Tên miền được cho phép</h2>
-        <p class="body-m muted" style="margin: 0 0 16px">Yêu cầu tới các tên miền này không bị chặn trên bất kỳ trang nào. Thêm nhanh từ nút “Cho phép” trong nhật ký chặn ở popup.</p>
+        <h2 class="title-l section-h" data-i18n="dom.h"></h2>
+        <p class="body-m muted" style="margin: 0 0 16px" data-i18n="dom.desc"></p>
         <form class="add-site" id="add-domain">
-          <input class="field" id="domain-input" placeholder="cdn.example.com" autocomplete="off" spellcheck="false" aria-label="Tên miền cần cho phép" />
-          <button class="btn tonal lg" type="submit" data-icon="plus"><span>Thêm</span></button>
+          <input class="field" id="domain-input" placeholder="cdn.example.com" autocomplete="off" spellcheck="false" data-i18n-attr="aria-label:dom.inputAria" />
+          <button class="btn tonal lg" type="submit" data-icon="plus"><span data-i18n="sites.add"></span></button>
         </form>
         <div class="list" id="domains-list"></div>
-        <div class="body-m muted" id="domains-empty" style="padding: 8px 4px">Chưa cho phép tên miền nào.</div>
+        <div class="body-m muted" id="domains-empty" style="padding: 8px 4px" data-i18n="dom.empty"></div>
       </section>
 
       <!-- ===== Giao diện ===== -->
       <section class="panel" id="p-appearance">
         <header class="ph">
-          <h1 class="display-s">Giao diện</h1>
-          <p class="body-l muted">Màu động Material 3 — chọn một màu hạt, toàn bộ bảng màu sáng/tối được sinh theo.</p>
+          <h1 class="display-s" data-i18n="app.title"></h1>
+          <p class="body-l muted" data-i18n="app.desc"></p>
         </header>
 
         <div class="card hi group">
-          <div class="title-m">Chế độ</div>
-          <div class="segmented" id="mode">
-            <label><input type="radio" name="mode" value="auto" /><span>Tự động</span></label>
-            <label><input type="radio" name="mode" value="light" /><span>Sáng</span></label>
-            <label><input type="radio" name="mode" value="dark" /><span>Tối</span></label>
+          <div><div class="title-m" data-i18n="app.mode"></div><div class="body-m muted" data-i18n="app.modeDesc"></div></div>
+          <div class="segmented icons" id="mode" role="radiogroup" data-i18n-attr="aria-label:app.mode">
+            <label><input type="radio" name="mode" value="light" /><span><i data-icon="sun"></i><b data-i18n="mode.light"></b></span></label>
+            <label><input type="radio" name="mode" value="dark" /><span><i data-icon="moon"></i><b data-i18n="mode.dark"></b></span></label>
+            <label><input type="radio" name="mode" value="auto" /><span><i data-icon="monitor"></i><b data-i18n="mode.auto"></b></span></label>
+          </div>
+        </div>
+
+        <section class="acc" id="acc-color">
+          <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-color-body">
+            <span class="acc-title"><span class="title-m" data-i18n="app.color"></span><span class="body-m muted" style="display:block" data-i18n="app.colorDesc"></span></span>
+            <span class="acc-value"><span class="acc-dot" id="color-dot"></span><span id="color-name"></span></span>
+            <span class="acc-chevron" data-icon="chevron"></span>
+          </button>
+          <div class="acc-body" id="acc-color-body" role="region"><div class="acc-inner"><div class="swatches" id="swatches" role="radiogroup" data-i18n-attr="aria-label:app.color"></div></div></div>
+        </section>
+
+        <div class="card hi group">
+          <div><div class="title-m" data-i18n="app.size"></div><div class="body-m muted" data-i18n="app.sizeDesc"></div></div>
+          <div class="segmented" id="fsize" role="radiogroup" data-i18n-attr="aria-label:app.size">
+            <label><input type="radio" name="fsize" value="small" /><span data-i18n="size.small"></span></label>
+            <label><input type="radio" name="fsize" value="medium" /><span data-i18n="size.medium"></span></label>
+            <label><input type="radio" name="fsize" value="large" /><span data-i18n="size.large"></span></label>
           </div>
         </div>
 
         <div class="card hi group">
-          <div class="title-m">Màu hạt</div>
-          <div class="swatches" id="swatches"></div>
-          <input type="range" id="hue" min="0" max="359" step="1" aria-label="Sắc độ màu" />
-        </div>
-
-        <div class="preview card">
-          <div class="label-m muted">Xem trước</div>
-          <div class="preview-row">
-            <button class="btn filled" tabindex="-1">Nút chính</button>
-            <button class="btn tonal" tabindex="-1">Nút tonal</button>
-            <button class="btn outlined" tabindex="-1">Viền</button>
-            <label class="switch"><input type="checkbox" checked tabindex="-1" aria-label="Mẫu công tắc" /></label>
-            <span class="chip primary">Chip</span>
-            <span class="chip tertiary">Tertiary</span>
+          <div><div class="title-m" data-i18n="app.lang"></div><div class="body-m muted" data-i18n="app.langDesc"></div></div>
+          <div class="segmented" id="lang" role="radiogroup" data-i18n-attr="aria-label:app.lang">
+            <label><input type="radio" name="lang" value="vi" /><span>Tiếng Việt</span></label>
+            <label><input type="radio" name="lang" value="en" /><span>English</span></label>
           </div>
         </div>
+
+        <div class="card hi group">
+          <div><div class="title-m" data-i18n="app.font"></div><div class="body-m muted" data-i18n="app.fontDesc"></div></div>
+          <div id="font-select"></div>
+          <div class="font-sample" id="font-sample"></div>
+        </div>
+
+        <section class="acc" id="acc-preview">
+          <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-preview-body">
+            <span class="acc-title"><span class="title-m" data-i18n="app.preview"></span></span>
+            <span class="acc-chevron" data-icon="chevron"></span>
+          </button>
+          <div class="acc-body" id="acc-preview-body" role="region"><div class="acc-inner">
+            <div class="preview-row">
+              <button class="btn filled" tabindex="-1" data-i18n="preview.primary"></button>
+              <button class="btn tonal" tabindex="-1" data-i18n="preview.tonal"></button>
+              <button class="btn outlined" tabindex="-1" data-i18n="preview.outlined"></button>
+              <label class="switch"><input type="checkbox" checked tabindex="-1" data-i18n-attr="aria-label:preview.switch" /></label>
+              <span class="chip primary" data-i18n="preview.chip"></span>
+              <span class="chip tertiary" data-i18n="preview.tertiary"></span>
+            </div>
+          </div></div>
+        </section>
       </section>
 
       <!-- ===== Sao lưu ===== -->
       <section class="panel" id="p-backup">
         <header class="ph">
-          <h1 class="display-s">Sao lưu</h1>
-          <p class="body-l muted">Xuất toàn bộ cài đặt, bộ lọc và danh sách trang đã tắt ra một tệp JSON để dùng trên máy khác.</p>
+          <h1 class="display-s" data-i18n="bk.title"></h1>
+          <p class="body-l muted" data-i18n="bk.desc"></p>
         </header>
         <div class="list">
           <div class="list-item">
             <div class="lead" data-icon="download"></div>
-            <div class="grow"><div class="title-m">Xuất cài đặt</div><div class="body-m muted">Tải về lite-shield-backup.json</div></div>
-            <button class="btn filled" id="export">Xuất</button>
+            <div class="grow"><div class="title-m" data-i18n="bk.exportTitle"></div><div class="body-m muted" data-i18n="bk.exportDesc"></div></div>
+            <button class="btn filled" id="export" data-i18n="bk.exportBtn"></button>
           </div>
           <div class="list-item">
             <div class="lead" data-icon="upload"></div>
-            <div class="grow"><div class="title-m">Nhập cài đặt</div><div class="body-m muted">Ghi đè cài đặt hiện tại bằng tệp sao lưu</div></div>
-            <button class="btn tonal" id="import">Nhập…</button>
+            <div class="grow"><div class="title-m" data-i18n="bk.importTitle"></div><div class="body-m muted" data-i18n="bk.importDesc"></div></div>
+            <button class="btn tonal" id="import" data-i18n="bk.importBtn"></button>
             <input type="file" id="import-file" accept="application/json,.json" hidden />
           </div>
         </div>
       </section>
+
+      <!-- ===== Giới thiệu ===== -->
+      <section class="panel" id="p-about">
+        <header class="ph">
+          <h1 class="display-s" data-i18n="ab.title"></h1>
+          <p class="body-l muted" data-i18n="ab.desc"></p>
+        </header>
+
+        <div class="about-app card hi">
+          <div class="about-logo" aria-hidden="true" data-icon="shield-check"></div>
+          <div class="grow">
+            <div class="headline-m">Lite Shield</div>
+            <div class="body-m muted" id="ab-version"></div>
+            <div class="body-m" style="margin-top: 6px" data-i18n="ab.tagline"></div>
+          </div>
+        </div>
+
+        <div class="author-card" id="author-card">
+          <div class="author-glow" aria-hidden="true"></div>
+          <div class="author-row">
+            <div class="author-avatar" aria-hidden="true" data-icon="user"></div>
+            <div class="grow">
+              <div class="label-m author-label" data-i18n="ab.authorLabel"></div>
+              <div class="headline-m author-name">minhtrong67</div>
+            </div>
+          </div>
+          <div class="author-ai">
+            <div class="ai-chip"><span data-icon="sparkles"></span><span data-i18n="ab.aiLabel"></span> · <strong>Claude</strong></div>
+          </div>
+          <p class="body-l author-note" data-i18n-html="ab.authorNote"></p>
+        </div>
+
+        <div class="about-actions">
+          <a class="btn filled lg" id="landing-link" href="../landing/index.html" target="_blank" rel="noopener" data-icon="rocket"><span data-i18n="ab.landing"></span></a>
+          <a class="btn tonal lg" id="source-link" href="https://github.com/minhtrong67/my-chrome-extensions" target="_blank" rel="noopener noreferrer" data-icon="code"><span data-i18n="ab.source"></span></a>
+        </div>
+
+        <section class="acc" id="acc-credits">
+          <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-credits-body">
+            <span class="acc-title"><span class="title-m" data-i18n="ab.credits"></span></span>
+            <span class="acc-chevron" data-icon="chevron"></span>
+          </button>
+          <div class="acc-body" id="acc-credits-body" role="region"><div class="acc-inner">
+            <ul class="credits body-m muted">
+              <li data-i18n="ab.credit1"></li>
+              <li data-i18n="ab.credit2"></li>
+              <li data-i18n="ab.credit3"></li>
+              <li data-i18n="ab.credit4"></li>
+            </ul>
+          </div></div>
+        </section>
+      </section>
     </main>
   </div>
 
-  <div class="snackbar" id="snack" role="status"></div>
+  <button class="fab" id="to-top" type="button" data-icon="up" data-i18n-attr="aria-label:scroll.top"></button>
   <script type="module" src="options.js"></script>
 </body>
 </html>

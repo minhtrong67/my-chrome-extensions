@@ -1,16 +1,26 @@
-import { initTheme, applyTheme, tone } from '../shared/theme.js';
+import { initTheme, applyTheme, applyTypography, FONTS, COLORS, colorOf, schemeFor, DEFAULT_LOOK } from '../shared/theme.js';
 import { hydrateIcons, icon } from '../shared/icons.js';
-
-initTheme();
-hydrateIcons();
+import { t } from '../shared/i18n.js';
+import { toast } from '../shared/toast.js';
+import { createSelect } from '../shared/select.js';
+import { initRipple, initScrollTop, initAccordions, themeTransition } from '../shared/effects.js';
+import { initTooltips } from '../shared/tooltip.js';
 
 const $ = (id) => document.getElementById(id);
 const send = (msg) => chrome.runtime.sendMessage(msg);
 
-let data; // { settings, userFilters, disabledSites, compiled }
+let data; // { settings, userFilters, disabledSites, allowedDomains, compiled, updateInfo }
+
+hydrateIcons();
+// Mỗi khi cài đặt đổi (kể cả ngôn ngữ), vẽ lại các phần chữ động.
+const ready = initTheme((settings) => {
+  if (!data) return;
+  data.settings = { ...data.settings, ...settings };
+  rerender();
+});
 
 // ---------- điều hướng ----------
-const PANELS = ['protection', 'filters', 'sites', 'appearance', 'backup'];
+const PANELS = ['protection', 'filters', 'sites', 'appearance', 'backup', 'about'];
 function show(name) {
   if (!PANELS.includes(name)) name = 'protection';
   for (const p of PANELS) $(`p-${p}`).classList.toggle('active', p === name);
@@ -21,67 +31,93 @@ function show(name) {
     else a.removeAttribute('aria-current');
   }
 }
-addEventListener('hashchange', () => show(location.hash.slice(1)));
+addEventListener('hashchange', () => {
+  show(location.hash.slice(1));
+  scrollTo({ top: 0, behavior: 'instant' });
+});
 
-let snackTimer;
-function snack(text) {
-  const s = $('snack');
-  s.textContent = text;
-  s.classList.add('show');
-  clearTimeout(snackTimer);
-  snackTimer = setTimeout(() => s.classList.remove('show'), 2600);
+// Toast chỉ dành cho kết quả quan trọng (lưu bộ lọc, cập nhật, sao lưu, lỗi).
+// Lỗi nhập liệu hiện ngay tại ô nhập; công tắc và danh sách tự phản hồi bằng giao diện.
+function hint(form, input, msg) {
+  let el = form.nextElementSibling;
+  if (!el?.classList.contains('field-hint')) {
+    el = document.createElement('div');
+    el.className = 'field-hint';
+    el.setAttribute('role', 'alert');
+    form.after(el);
+  }
+  el.textContent = msg ?? '';
+  if (msg) {
+    input.setAttribute('aria-invalid', 'true');
+    form.classList.remove('shake');
+    void form.offsetWidth;
+    form.classList.add('shake');
+  } else input.removeAttribute('aria-invalid');
+}
+for (const [formId, inputId] of [['add-site', 'site-input'], ['add-domain', 'domain-input']]) {
+  $(inputId).addEventListener('input', () => hint($(formId), $(inputId), ''));
 }
 
+initScrollTop($('to-top'));
+initRipple();
+initTooltips();
+initAccordions();
+
 // ---------- Bảo vệ ----------
-const RULESET_META = {
-  ads: { icon: 'block', title: 'Quảng cáo', desc: 'Mạng quảng cáo, máy chủ ad và selector ẩn khung quảng cáo.' },
-  trackers: { icon: 'eye', title: 'Theo dõi & phân tích', desc: 'Pixel, analytics và nền tảng dữ liệu người dùng.' },
-  annoyances: { icon: 'shield', title: 'Phiền toái', desc: 'Popunder, push-spam, banner cookie và popup đăng ký.' },
-};
+const RULESET_ICONS = { ads: 'block', trackers: 'eye', annoyances: 'shield' };
+const ruleCounts = {};
 
 async function countRules(id) {
+  if (ruleCounts[id] != null) return ruleCounts[id];
   try {
     const rules = await (await fetch(chrome.runtime.getURL(`rulesets/${id}.json`))).json();
-    return rules.reduce((n, r) => n + (r.condition.requestDomains?.length ?? 1), 0);
+    return (ruleCounts[id] = rules.reduce((n, r) => n + (r.condition.requestDomains?.length ?? 1), 0));
   } catch {
-    return 0;
+    return (ruleCounts[id] = 0);
   }
 }
 
 async function renderRulesets() {
   const box = $('rulesets');
-  box.innerHTML = '';
-  for (const id of Object.keys(RULESET_META)) {
-    const m = RULESET_META[id];
+  const rows = [];
+  for (const id of Object.keys(RULESET_ICONS)) {
+    const title = t(`rs.${id}.title`);
     const n = await countRules(id);
     const row = document.createElement('div');
     row.className = 'list-item';
     row.innerHTML = `
-      <div class="lead">${icon(m.icon)}</div>
-      <div class="grow"><div class="title-m">${m.title}</div><div class="body-m muted">${m.desc} <span class="count">· ${n} quy tắc</span></div></div>
-      <label class="switch"><input type="checkbox" aria-label="${m.title}" ${data.settings.rulesets[id] ? 'checked' : ''}></label>`;
+      <div class="lead">${icon(RULESET_ICONS[id])}</div>
+      <div class="grow"><div class="title-m"></div><div class="body-m muted"><span class="d"></span> <span class="count"></span></div></div>
+      <label class="switch"><input type="checkbox" ${data.settings.rulesets[id] ? 'checked' : ''}></label>`;
+    row.querySelector('.title-m').textContent = title;
+    row.querySelector('.d').textContent = t(`rs.${id}.desc`);
+    row.querySelector('.count').textContent = t('rs.count', { n });
+    row.querySelector('input').setAttribute('aria-label', title);
     row.querySelector('input').addEventListener('change', async (e) => {
       data.settings.rulesets[id] = e.target.checked;
       await send({ type: 'set-settings', settings: { rulesets: { [id]: e.target.checked } } });
-      snack(`${m.title}: ${e.target.checked ? 'đã bật' : 'đã tắt'}`);
     });
-    box.append(row);
+    rows.push(row);
   }
+  box.replaceChildren(...rows);
   $('generic-cosmetic').checked = data.settings.genericCosmetic;
   $('yt-scriptlet').checked = data.settings.scriptlets.youtube;
   $('auto-update').checked = data.settings.autoUpdate;
-  renderUpdate();
 }
+$('generic-cosmetic').addEventListener('change', async (e) => {
+  data.settings.genericCosmetic = e.target.checked;
+  await send({ type: 'set-settings', settings: { genericCosmetic: e.target.checked } });
+});
 
 // ---------- thống kê, cập nhật, phím tắt ----------
 function countUp(el, to) {
   const from = Number(el.dataset.v ?? 0);
   el.dataset.v = to;
-  if (from === to || matchMedia('(prefers-reduced-motion: reduce)').matches) return (el.textContent = to.toLocaleString('vi-VN'));
+  if (from === to || matchMedia('(prefers-reduced-motion: reduce)').matches) return (el.textContent = to.toLocaleString());
   const t0 = performance.now();
   const step = (now) => {
     const p = Math.min(1, (now - t0) / 700);
-    el.textContent = Math.round(from + (to - from) * (1 - (1 - p) ** 3)).toLocaleString('vi-VN');
+    el.textContent = Math.round(from + (to - from) * (1 - (1 - p) ** 3)).toLocaleString();
     if (p < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -94,62 +130,63 @@ async function renderTotals() {
 
 function renderUpdate() {
   const u = data.updateInfo;
-  $('upd-title').textContent = u ? 'Danh sách đã được cập nhật' : 'Danh sách đi kèm bản cài';
+  $('upd-title').textContent = t(u ? 'upd.titleDone' : 'upd.titleDefault');
   $('upd-sub').textContent = u
-    ? `${new Date(u.at).toLocaleString('vi-VN')} · ${u.ads} quy tắc quảng cáo · ${u.trackers} quy tắc theo dõi · ${u.cosmetic} selector ẩn`
-    : 'Chưa cập nhật lần nào.';
+    ? t('upd.info', { date: new Date(u.at).toLocaleString(), ads: u.ads, trackers: u.trackers, cosmetic: u.cosmetic })
+    : t('upd.never');
 }
+const updateError = (e) => (e === 'busy' ? t('upd.running') : e === 'invalid-list' ? t('upd.invalid') : e);
 $('upd-now').addEventListener('click', async () => {
   const btn = $('upd-now');
+  const label = btn.querySelector('span');
   btn.classList.add('busy');
-  btn.querySelector('span').textContent = 'Đang tải…';
+  label.textContent = t('upd.busy');
   const r = await send({ type: 'update-lists' });
   btn.classList.remove('busy');
-  btn.querySelector('span').textContent = 'Cập nhật ngay';
-  if (r.error) return snack('Cập nhật thất bại: ' + r.error);
+  label.textContent = t('upd.now');
+  if (r.error) return toast.error(t('upd.fail', { msg: updateError(r.error) }));
   data.updateInfo = r.updateInfo;
   renderUpdate();
-  snack('Đã cập nhật danh sách — tải lại trang để áp dụng');
+  toast.success(t('upd.done'));
 });
 $('auto-update').addEventListener('change', async (e) => {
   data.settings.autoUpdate = e.target.checked;
   await send({ type: 'set-settings', settings: { autoUpdate: e.target.checked } });
-  snack(e.target.checked ? 'Sẽ tự cập nhật mỗi ngày' : 'Đã tắt tự cập nhật');
 });
 $('yt-scriptlet').addEventListener('change', async (e) => {
   data.settings.scriptlets.youtube = e.target.checked;
   await send({ type: 'set-settings', settings: { scriptlets: { youtube: e.target.checked } } });
-  snack('Đã lưu — tải lại YouTube để áp dụng');
 });
 $('shortcuts').addEventListener('click', () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
-chrome.commands?.getAll().then((cmds) => {
-  const c = cmds.find((x) => x.name === 'start-picker');
-  $('kbd').textContent = c?.shortcut ? c.shortcut.replace(/\+/g, ' + ') : 'Chưa gán';
-});
-$('generic-cosmetic').addEventListener('change', async (e) => {
-  data.settings.genericCosmetic = e.target.checked;
-  await send({ type: 'set-settings', settings: { genericCosmetic: e.target.checked } });
-  snack('Đã lưu — tải lại trang để áp dụng');
-});
+async function renderShortcut() {
+  const cmds = await chrome.commands?.getAll();
+  const c = cmds?.find((x) => x.name === 'start-picker');
+  $('kbd').textContent = c?.shortcut ? c.shortcut.replace(/\+/g, ' + ') : t('prot.pick.unset');
+}
 
 // ---------- Bộ lọc của tôi ----------
 function renderStats(compiled) {
   const c = compiled?.counts ?? { network: 0, exceptions: 0, cosmetic: 0 };
   const errs = compiled?.errors ?? [];
   $('stats').innerHTML = `
-    <span class="chip primary">${c.network} chặn</span>
-    <span class="chip">${c.exceptions} ngoại lệ</span>
-    <span class="chip tertiary">${c.cosmetic} ẩn phần tử</span>
-    ${errs.length ? `<span class="chip error">${errs.length} lỗi</span>` : ''}`;
+    <span class="chip primary">${t('flt.chip.block', { n: c.network })}</span>
+    <span class="chip">${t('flt.chip.exceptions', { n: c.exceptions })}</span>
+    <span class="chip tertiary">${t('flt.chip.cosmetic', { n: c.cosmetic })}</span>
+    ${errs.length ? `<span class="chip error">${t('flt.chip.errors', { n: errs.length })}</span>` : ''}`;
   const box = $('errors');
   box.hidden = !errs.length;
   if (errs.length) {
-    box.innerHTML = '<div class="title-m">Một số dòng bị bỏ qua</div><ul class="body-m"></ul>';
+    box.innerHTML = `<div class="title-m">${t('flt.errors.title')}</div><ul class="body-m"></ul>`;
     const ul = box.querySelector('ul');
     for (const e of errs.slice(0, 50)) {
       const li = document.createElement('li');
-      li.innerHTML = `Dòng ${e.line}: ${e.msg}${e.text ? ' — <code></code>' : ''}`;
-      if (e.text) li.querySelector('code').textContent = e.text.slice(0, 90);
+      const msg = e.key ? t(e.key, e.args) : e.msg;
+      li.textContent = t('flt.errors.line', { line: e.line, msg });
+      if (e.text) {
+        const code = document.createElement('code');
+        code.textContent = e.text.slice(0, 90);
+        li.append(' — ', code);
+      }
       ul.append(li);
     }
   }
@@ -163,7 +200,8 @@ $('save-filters').addEventListener('click', async () => {
   data.compiled = res;
   renderStats(res);
   btn.disabled = false;
-  snack(res.errors?.length ? `Đã lưu — ${res.errors.length} dòng bị bỏ qua` : 'Đã lưu bộ lọc');
+  if (res.errors?.length) toast.warning(t('flt.savedSkipped', { n: res.errors.length }));
+  else toast.success(t('flt.saved'));
 });
 $('filters').addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -176,9 +214,9 @@ $('filters').addEventListener('keydown', (e) => {
 function drawEmptyCookie() {
   let d = '';
   for (let i = 0; i <= 240; i++) {
-    const t = (i / 240) * Math.PI * 2;
-    const r = 90 * (1 + 0.065 * Math.cos(12 * t));
-    d += `${i ? 'L' : 'M'}${(r * Math.cos(t)).toFixed(1)} ${(r * Math.sin(t)).toFixed(1)}`;
+    const a = (i / 240) * Math.PI * 2;
+    const r = 90 * (1 + 0.065 * Math.cos(12 * a));
+    d += `${i ? 'L' : 'M'}${(r * Math.cos(a)).toFixed(1)} ${(r * Math.sin(a)).toFixed(1)}`;
   }
   $('empty-cookie').setAttribute('d', d + 'Z');
 }
@@ -191,13 +229,15 @@ function renderSites() {
     row.className = 'list-item';
     row.style.minHeight = '64px';
     row.innerHTML = `<div class="lead">${icon('globe')}</div><div class="grow title-m"></div>
-      <button class="icon-btn" aria-label="Bật lại bảo vệ cho ${site}" title="Bật lại">${icon('trash')}</button>`;
+      <button class="icon-btn">${icon('trash')}</button>`;
     row.querySelector('.grow').textContent = site;
-    row.querySelector('button').addEventListener('click', async () => {
+    const btn = row.querySelector('button');
+    btn.setAttribute('aria-label', t('sites.restoreAria', { site }));
+    btn.dataset.tip = t('sites.restoreTitle');
+    btn.addEventListener('click', async () => {
       data.disabledSites = data.disabledSites.filter((s) => s !== site);
       await send({ type: 'set-disabled-sites', sites: data.disabledSites });
       renderSites();
-      snack(`Đã bật lại bảo vệ cho ${site}`);
     });
     list.append(row);
   }
@@ -213,13 +253,13 @@ $('add-site').addEventListener('submit', async (e) => {
     /* giữ nguyên */
   }
   v = v.replace(/^www\./, '').replace(/\/.*$/, '');
-  if (!/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(v) || (!v.includes('.') && v !== 'localhost')) return snack('Tên miền không hợp lệ');
-  if (data.disabledSites.includes(v)) return snack('Trang này đã có trong danh sách');
+  if (!/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(v) || (!v.includes('.') && v !== 'localhost')) return hint($('add-site'), $('site-input'), t('sites.invalid'));
+  if (data.disabledSites.includes(v)) return hint($('add-site'), $('site-input'), t('sites.dup'));
+  hint($('add-site'), $('site-input'), '');
   data.disabledSites = [...data.disabledSites, v];
   await send({ type: 'set-disabled-sites', sites: data.disabledSites });
   $('site-input').value = '';
   renderSites();
-  snack(`Đã tắt bảo vệ cho ${v}`);
 });
 
 // ---------- Tên miền được cho phép ----------
@@ -231,13 +271,15 @@ function renderDomains() {
     row.className = 'list-item';
     row.style.minHeight = '64px';
     row.innerHTML = `<div class="lead">${icon('check')}</div><div class="grow title-m"></div>
-      <button class="icon-btn" aria-label="Chặn lại ${d}" title="Chặn lại">${icon('trash')}</button>`;
+      <button class="icon-btn">${icon('trash')}</button>`;
     row.querySelector('.grow').textContent = d;
-    row.querySelector('button').addEventListener('click', async () => {
+    const btn = row.querySelector('button');
+    btn.setAttribute('aria-label', t('dom.blockAria', { d }));
+    btn.dataset.tip = t('dom.blockTitle');
+    btn.addEventListener('click', async () => {
       data.allowedDomains = data.allowedDomains.filter((x) => x !== d);
       await send({ type: 'set-allowed-domains', domains: data.allowedDomains });
       renderDomains();
-      snack(`Đã chặn lại ${d}`);
     });
     list.append(row);
   }
@@ -252,67 +294,102 @@ $('add-domain').addEventListener('submit', async (e) => {
     /* giữ nguyên */
   }
   v = v.replace(/\/.*$/, '');
-  if (!/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(v) || !v.includes('.')) return snack('Tên miền không hợp lệ');
-  if (data.allowedDomains.includes(v)) return snack('Tên miền này đã được cho phép');
+  if (!/^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(v) || !v.includes('.')) return hint($('add-domain'), $('domain-input'), t('sites.invalid'));
+  if (data.allowedDomains.includes(v)) return hint($('add-domain'), $('domain-input'), t('dom.dup'));
+  hint($('add-domain'), $('domain-input'), '');
   data.allowedDomains = [...data.allowedDomains, v];
   await send({ type: 'set-allowed-domains', domains: data.allowedDomains });
   $('domain-input').value = '';
   renderDomains();
-  snack(`Đã cho phép ${v}`);
 });
 
 // ---------- Giao diện ----------
-const SWATCHES = [
-  { hue: 295, name: 'Tím' }, { hue: 265, name: 'Chàm' }, { hue: 245, name: 'Xanh dương' }, { hue: 200, name: 'Xanh ngọc' },
-  { hue: 150, name: 'Xanh lá' }, { hue: 105, name: 'Vàng chanh' }, { hue: 60, name: 'Cam' }, { hue: 25, name: 'Đỏ' }, { hue: 350, name: 'Hồng' },
-];
+const look = () => ({ ...DEFAULT_LOOK, ...data.settings });
+let saveTimer;
+let fontSelect;
 
-let themeTimer;
-function saveTheme(patch) {
-  data.settings.theme = { ...data.settings.theme, ...patch };
-  applyTheme(data.settings.theme);
-  syncAppearance();
-  clearTimeout(themeTimer);
-  themeTimer = setTimeout(() => send({ type: 'set-settings', settings: { theme: data.settings.theme } }), 150);
+function saveSettings(patch, evt) {
+  const apply = () => {
+    data.settings = { ...data.settings, ...patch, theme: { ...data.settings.theme, ...patch.theme } };
+    applyTheme(data.settings.theme);
+    applyTypography(look());
+    syncAppearance();
+  };
+  if (patch.theme) themeTransition(apply, evt);
+  else apply();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => send({ type: 'set-settings', settings: patch }), 120);
 }
 
 function syncAppearance() {
-  const { hue, mode } = data.settings.theme;
-  $('hue').value = hue;
+  const { mode } = data.settings.theme;
+  const key = colorOf(data.settings.theme).key;
+  const { language, fontSize, fontFamily } = look();
   for (const r of document.querySelectorAll('input[name="mode"]')) r.checked = r.value === mode;
-  const near = SWATCHES.reduce((a, b) => (Math.abs(b.hue - hue) < Math.abs(a.hue - hue) ? b : a));
-  for (const s of document.querySelectorAll('.swatch')) s.setAttribute('aria-checked', String(s.dataset.hue === String(hue) && near.hue === hue));
+  for (const r of document.querySelectorAll('input[name="lang"]')) r.checked = r.value === language;
+  for (const r of document.querySelectorAll('input[name="fsize"]')) r.checked = r.value === fontSize;
+  for (const s of document.querySelectorAll('.swatch')) s.setAttribute('aria-checked', String(s.dataset.key === key));
+  $('color-name').textContent = t(`color.${key}`);
+  $('color-dot').style.background = schemeFor(data.settings.theme, false).primary;
+  fontSelect?.setValue(fontFamily);
+  $('font-sample').style.fontFamily = FONTS[fontFamily]?.stack ?? '';
+}
+
+function fontOptions() {
+  return Object.entries(FONTS).map(([value, f]) => ({ value, label: f.label ?? t('font.system'), fontFamily: f.stack }));
 }
 
 function buildAppearance() {
   const box = $('swatches');
-  box.setAttribute('role', 'radiogroup');
-  for (const s of SWATCHES) {
+  for (const c of COLORS) {
     const b = document.createElement('button');
+    b.type = 'button';
     b.className = 'swatch';
-    b.dataset.hue = s.hue;
+    b.dataset.key = c.key;
     b.setAttribute('role', 'radio');
-    b.setAttribute('aria-label', s.name);
-    b.title = s.name;
-    b.style.background = tone(s.hue, 0.17, 50);
+    b.style.background = c.hex;
+    const n = parseInt(c.hex.slice(1), 16);
+    const lum = (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+    b.style.color = lum > 0.62 ? '#1b1b1b' : '#fff';
     b.innerHTML = icon('check');
-    b.addEventListener('click', () => saveTheme({ hue: s.hue }));
+    b.addEventListener('click', (e) => saveSettings({ theme: { color: c.key } }, e));
     box.append(b);
   }
-  $('hue').addEventListener('input', (e) => saveTheme({ hue: Number(e.target.value) }));
-  for (const r of document.querySelectorAll('input[name="mode"]')) r.addEventListener('change', () => saveTheme({ mode: r.value }));
+  for (const r of document.querySelectorAll('input[name="mode"]')) r.addEventListener('click', (e) => saveSettings({ theme: { mode: r.value } }, e));
+  for (const r of document.querySelectorAll('input[name="lang"]')) r.addEventListener('change', () => saveSettings({ language: r.value }));
+  for (const r of document.querySelectorAll('input[name="fsize"]')) r.addEventListener('change', () => saveSettings({ fontSize: r.value }));
+  fontSelect = createSelect($('font-select'), { label: t('app.fontPick'), options: fontOptions(), value: 'system', onChange: (v) => saveSettings({ fontFamily: v }) });
+}
+
+function labelAppearance() {
+  for (const s of document.querySelectorAll('.swatch')) {
+    const name = t(`color.${s.dataset.key}`);
+    s.setAttribute('aria-label', name);
+    s.dataset.tip = name;
+  }
+  fontSelect?.setLabel(t('app.fontPick'));
+  fontSelect?.setOptions(fontOptions());
+  $('font-sample').textContent = t('font.sample');
+}
+
+// ---------- Giới thiệu ----------
+function renderAbout() {
+  $('ab-version').textContent = t('ab.version', { v: chrome.runtime.getManifest().version });
 }
 
 // ---------- Sao lưu ----------
 $('export').addEventListener('click', async () => {
   const d = await send({ type: 'get-options' });
-  const blob = new Blob([JSON.stringify({ app: 'lite-shield', version: 1, settings: d.settings, userFilters: d.userFilters, disabledSites: d.disabledSites, allowedDomains: d.allowedDomains }, null, 2)], { type: 'application/json' });
+  const blob = new Blob(
+    [JSON.stringify({ app: 'lite-shield', version: 1, settings: d.settings, userFilters: d.userFilters, disabledSites: d.disabledSites, allowedDomains: d.allowedDomains }, null, 2)],
+    { type: 'application/json' },
+  );
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'lite-shield-backup.json';
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  snack('Đã xuất tệp sao lưu');
+  toast.success(t('bk.exported'));
 });
 $('import').addEventListener('click', () => $('import-file').click());
 $('import-file').addEventListener('change', async (e) => {
@@ -320,32 +397,42 @@ $('import-file').addEventListener('change', async (e) => {
   if (!file) return;
   try {
     const j = JSON.parse(await file.text());
-    if (j.app !== 'lite-shield') throw new Error('Không phải tệp sao lưu Lite Shield');
+    if (j.app !== 'lite-shield') throw new Error(t('bk.notBackup'));
     await send({ type: 'set-settings', settings: j.settings ?? {} });
     await send({ type: 'set-disabled-sites', sites: Array.isArray(j.disabledSites) ? j.disabledSites : [] });
     await send({ type: 'set-allowed-domains', domains: Array.isArray(j.allowedDomains) ? j.allowedDomains : [] });
     await send({ type: 'save-user-filters', text: j.userFilters ?? '' });
     await load();
-    snack('Đã nhập cài đặt');
+    toast.success(t('bk.imported'));
   } catch (err) {
-    snack('Nhập thất bại: ' + err.message);
+    toast.error(t('bk.importFail', { msg: err.message }));
   }
   e.target.value = '';
 });
 
 // ---------- khởi động ----------
-async function load() {
-  data = await send({ type: 'get-options' });
-  $('filters').value = data.userFilters;
-  await renderRulesets();
+function rerender() {
+  renderRulesets();
   renderStats(data.compiled);
   renderSites();
   renderDomains();
-  renderTotals();
+  renderUpdate();
+  renderShortcut();
+  renderAbout();
+  labelAppearance();
   syncAppearance();
+}
+
+async function load() {
+  data = await send({ type: 'get-options' });
+  data.settings = { ...DEFAULT_LOOK, ...data.settings };
+  $('filters').value = data.userFilters;
+  await renderRulesets();
+  rerender();
+  renderTotals();
 }
 
 drawEmptyCookie();
 buildAppearance();
 show(location.hash.slice(1));
-load();
+ready.then(load);

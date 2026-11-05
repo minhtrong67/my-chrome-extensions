@@ -48,7 +48,6 @@ header { display: flex; align-items: center; gap: 12px; padding: 4px 2px 0 4px; 
 
 .btn-group { animation: rise var(--dur-l) 180ms var(--spring-spatial) both; }
 
-.snackbar { bottom: 14px; }
 
 @keyframes rise { from { opacity: 0; transform: translateY(18px) scale(0.96); } }
 @keyframes spin { to { transform: rotate(360deg); } }

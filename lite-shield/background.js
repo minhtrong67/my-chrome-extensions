@@ -1,7 +1,8 @@
 import { compile, resolveCosmetic, hostChain, PRIORITY } from './shared/filters.js';
-import { buildScheme } from './shared/theme.js';
+import { schemeFor, nearestColorKey } from './shared/theme.js';
 import { toSelectorChunks } from './shared/selector.js';
 import { BASE, SOURCES } from './shared/sources.js';
+import { translate } from './shared/i18n.js';
 
 // Phân vùng ID của quy tắc động (mỗi vùng do một chức năng quản lý).
 const ID = { siteAllow: 1, domainAllow: 5000, user: 10000, ads: 100000, trackers: 200000, end: 300000 };
@@ -9,11 +10,14 @@ const RULESET_IDS = ['ads', 'trackers', 'annoyances'];
 const UPDATABLE = ['ads', 'trackers'];
 
 const DEFAULT_SETTINGS = {
-  theme: { hue: 150, mode: 'auto' },
+  theme: { color: 'green', mode: 'auto' },
   rulesets: { ads: true, trackers: true, annoyances: false },
   genericCosmetic: true,
   autoUpdate: true,
   scriptlets: { youtube: true },
+  language: 'vi',
+  fontSize: 'medium',
+  fontFamily: 'system',
 };
 
 // ---------- tiện ích ----------
@@ -39,11 +43,15 @@ function chain(fn) {
 async function getData() {
   const d = await chrome.storage.local.get(['settings', 'userFilters', 'disabledSites', 'allowedDomains', 'compiled', 'updateInfo']);
   const s = d.settings ?? {};
+  // Cài đặt cũ lưu màu theo hue → đổi sang màu Material gần nhất.
+  const theme = { ...s.theme };
+  if (theme.color == null && theme.hue != null) theme.color = theme.hue === 295 ? 'green' : nearestColorKey(theme.hue);
+  delete theme.hue;
   return {
     settings: {
       ...DEFAULT_SETTINGS,
       ...s,
-      theme: { ...DEFAULT_SETTINGS.theme, ...s.theme },
+      theme: { ...DEFAULT_SETTINGS.theme, ...theme },
       rulesets: { ...DEFAULT_SETTINGS.rulesets, ...s.rulesets },
       scriptlets: { ...DEFAULT_SETTINGS.scriptlets, ...s.scriptlets },
     },
@@ -180,7 +188,7 @@ const syncScripts = () =>
 // ---------- tự cập nhật danh sách ----------
 let updating = false;
 async function updateLists() {
-  if (updating) return { error: 'Đang cập nhật…' };
+  if (updating) return { error: 'busy' };
   updating = true;
   try {
     const text = {};
@@ -201,7 +209,7 @@ async function updateLists() {
     const trackers = compile(`${sTrackers}\n${text.trackers}`, { startId: ID.trackers, optimize: true });
     const cos = compile(`${sCos}\n${text['cosmetic-ads']}`);
     cos.cosmetic.generic = []; // phần chung đã nằm trong CSS tĩnh của gói cài đặt
-    if (ads.rules.length < 50 || trackers.rules.length < 50) throw new Error('Danh sách tải về có vẻ không hợp lệ');
+    if (ads.rules.length < 50 || trackers.rules.length < 50) throw new Error('invalid-list');
 
     const prev = await chrome.storage.local.get(['updateInfo', 'updRules', 'updCosmetic']);
     const updateInfo = { at: Date.now(), ads: ads.rules.length, trackers: trackers.rules.length, cosmetic: cos.counts.cosmetic };
@@ -236,7 +244,7 @@ chrome.alarms.onAlarm.addListener((a) => {
 
 // ---------- khởi tạo ----------
 async function applyBadge(settings) {
-  const scheme = buildScheme(settings.theme.hue, false);
+  const scheme = schemeFor(settings.theme, false);
   chrome.action.setBadgeBackgroundColor({ color: scheme.primary });
   chrome.action.setBadgeTextColor?.({ color: scheme.onPrimary });
   chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: true });
@@ -253,17 +261,14 @@ async function init() {
   await applyBadge(data.settings);
 }
 
-chrome.runtime.onInstalled.addListener(async (details) => {
-  // Bản trước 0.2.1 mặc định màu tím (hue 295): chuyển sang xanh lá mới nếu người dùng chưa tự đổi.
-  if (details.reason === 'update') {
-    const { settings } = await chrome.storage.local.get('settings');
-    if (settings?.theme?.hue === 295) await chrome.storage.local.set({ settings: { ...settings, theme: { ...settings.theme, hue: 150 } } });
-  }
+chrome.runtime.onInstalled.addListener(async () => {
   init();
-  chrome.contextMenus.removeAll(() =>
-    chrome.contextMenus.create({ id: 'ls-pick', title: 'Lite Shield: Chọn & ẩn phần tử…', contexts: ['page', 'frame', 'link', 'image', 'video', 'selection'] }),
-  );
+  chrome.contextMenus.removeAll(async () => {
+    const { settings } = await getData();
+    chrome.contextMenus.create({ id: 'ls-pick', title: translate(settings.language, 'menu.pick'), contexts: ['page', 'frame', 'link', 'image', 'video', 'selection'] });
+  });
 });
+const syncMenuTitle = (language) => chrome.contextMenus.update('ls-pick', { title: translate(language, 'menu.pick') }).catch(() => {});
 chrome.runtime.onStartup.addListener(init);
 
 // ---------- chọn & ẩn: menu chuột phải + phím tắt ----------
@@ -500,6 +505,7 @@ async function handle(msg, sender) {
       await syncScripts();
       await syncAlarm(settings);
       await applyBadge(settings);
+      syncMenuTitle(settings.language);
       return { ok: true };
     }
 
@@ -518,7 +524,7 @@ async function handle(msg, sender) {
 
     case 'theme-tokens': {
       const { settings } = await getData();
-      return { mode: settings.theme.mode, light: buildScheme(settings.theme.hue, false), dark: buildScheme(settings.theme.hue, true) };
+      return { mode: settings.theme.mode, language: settings.language, light: schemeFor(settings.theme, false), dark: schemeFor(settings.theme, true) };
     }
 
     default:

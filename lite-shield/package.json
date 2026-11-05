@@ -1,0 +1,14 @@
+{
+  "name": "lite-shield",
+  "version": "0.4.1",
+  "private": true,
+  "type": "module",
+  "description": "Lite Shield — Chrome MV3 content blocker, Material 3 Expressive",
+  "author": "minhtrong67",
+  "repository": "https://github.com/minhtrong67/my-chrome-extensions",
+  "scripts": {
+    "fetch": "node tools/fetch-lists.mjs",
+    "build": "node tools/build-rulesets.mjs",
+    "test": "node tools/test-filters.mjs && node tools/test-i18n.mjs"
+  }
+}

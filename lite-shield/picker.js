@@ -13,6 +13,14 @@
     secondaryContainer: '#e8def8', onSecondaryContainer: '#1d192b',
   };
 
+  const DICT = {
+    vi: { title: 'Chọn phần tử cần ẩn', hover: 'Di chuột lên trang rồi bấm vào phần tử…', up: '↑ Rộng hơn', down: '↓ Hẹp hơn', one: 'Chỉ phần tử này', many: 'Tất cả tương tự', cancel: 'Hủy', ok: 'Ẩn',
+      hint: 'Phím tắt: ↑ ↓ đổi phạm vi · Enter xác nhận · Esc hủy', done: 'Đã ẩn phần tử ✓' },
+    en: { title: 'Pick an element to hide', hover: 'Hover over the page, then click an element…', up: '↑ Wider', down: '↓ Narrower', one: 'Only this element', many: 'All similar', cancel: 'Cancel', ok: 'Hide',
+      hint: 'Shortcuts: ↑ ↓ change scope · Enter confirm · Esc cancel', done: 'Element hidden ✓' },
+  };
+  const L = DICT[tokens?.language] ?? DICT.vi;
+
   const BAD_ID = /\d{4,}|^[a-f0-9]{8,}$|^(ember|react|:r)/i;
   const BAD_CLASS = /\d{2,}|^(css|jsx|sc|svelte|styled)[-_]|^(active|open|show|hide|hidden|visible|hover|focus|selected|loading)$/i;
   const goodClasses = (el) =>
@@ -101,20 +109,20 @@
   </style>
   <div class="hl"><div class="tag"></div></div>
   <div class="bar">
-    <div class="title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg><span>Chọn phần tử cần ẩn</span></div>
+    <div class="title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/></svg><span>${L.title}</span></div>
     <div class="main">
-      <div class="sel">Di chuột lên trang rồi bấm vào phần tử…</div>
+      <div class="sel">${L.hover}</div>
       <div class="row">
-        <button class="up" disabled>↑ Rộng hơn</button>
-        <button class="down" disabled>↓ Hẹp hơn</button>
-        <div class="seg"><button class="one sel-on">Chỉ phần tử này</button><button class="many">Tất cả tương tự</button></div>
+        <button class="up" disabled>${L.up}</button>
+        <button class="down" disabled>${L.down}</button>
+        <div class="seg"><button class="one sel-on">${L.one}</button><button class="many">${L.many}</button></div>
         <span class="sp"></span>
-        <button class="txt cancel">Hủy</button>
-        <button class="pri ok" disabled>Ẩn</button>
+        <button class="txt cancel">${L.cancel}</button>
+        <button class="pri ok" disabled>${L.ok}</button>
       </div>
-      <div class="hint">Phím tắt: ↑ ↓ đổi phạm vi · Enter xác nhận · Esc hủy</div>
+      <div class="hint">${L.hint}</div>
     </div>
-    <div class="done">Đã ẩn phần tử ✓</div>
+    <div class="done">${L.done}</div>
   </div>`;
   document.documentElement.appendChild(host);
 
@@ -152,7 +160,7 @@
     const showSeg = locked && loose && looseCount > 1 && looseCount <= 60;
     seg.classList.toggle('on', showSeg);
     if (!showSeg) useLoose = false;
-    btn.many.textContent = `Tất cả tương tự (${looseCount})`;
+    btn.many.textContent = `${L.many} (${looseCount})`;
     btn.one.classList.toggle('sel-on', !useLoose);
     btn.many.classList.toggle('sel-on', useLoose);
     selBox.textContent = currentSelector();

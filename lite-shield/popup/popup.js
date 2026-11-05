@@ -1,8 +1,18 @@
 import { initTheme } from '../shared/theme.js';
 import { hydrateIcons } from '../shared/icons.js';
+import { t } from '../shared/i18n.js';
+import { toast } from '../shared/toast.js';
+import { initRipple } from '../shared/effects.js';
+import { initTooltips } from '../shared/tooltip.js';
 
-initTheme();
 hydrateIcons();
+initRipple();
+initTooltips();
+// Khi đổi ngôn ngữ ở trang cài đặt, vẽ lại phần chữ động.
+initTheme(() => {
+  if (state) render();
+  if (document.body.classList.contains('sheet-open') && tab) openLog();
+});
 
 const $ = (id) => document.getElementById(id);
 const send = (msg) => chrome.runtime.sendMessage(msg);
@@ -18,8 +28,8 @@ const send = (msg) => chrome.runtime.sendMessage(msg);
   $('cookie-path').setAttribute('d', d + 'Z');
 })();
 
-let tab;
-let state;
+var tab;
+var state;
 
 function countTo(el, to) {
   const from = Number(el.dataset.v ?? 0);
@@ -35,15 +45,6 @@ function countTo(el, to) {
   requestAnimationFrame(step);
 }
 
-let snackTimer;
-function snack(text) {
-  const s = $('snack');
-  s.textContent = text;
-  s.classList.add('show');
-  clearTimeout(snackTimer);
-  snackTimer = setTimeout(() => s.classList.remove('show'), 2200);
-}
-
 function render() {
   const hero = $('hero');
   const ok = state.supported;
@@ -51,21 +52,21 @@ function render() {
   hero.classList.toggle('off', !ok || !state.enabled);
   $('power').setAttribute('aria-pressed', String(ok && state.enabled));
 
-  $('host').textContent = ok ? state.host : 'Trang hệ thống';
+  $('host').textContent = ok ? state.host : t('popup.systemPage');
   $('avatar').textContent = ok ? state.host.replace(/^www\./, '')[0] : '·';
 
   if (!ok) {
-    $('sub').textContent = 'Không áp dụng';
-    $('status').textContent = 'Không khả dụng';
-    $('hint').textContent = 'Lite Shield không chạy trên trang này.';
+    $('sub').textContent = t('popup.na');
+    $('status').textContent = t('popup.statusNa');
+    $('hint').textContent = t('popup.hintNa');
   } else if (state.enabled) {
-    $('sub').textContent = 'Đang bảo vệ';
-    $('status').textContent = 'Đã bật bảo vệ';
-    $('hint').textContent = 'Nhấn nút nguồn để tắt cho trang này.';
+    $('sub').textContent = t('popup.protecting');
+    $('status').textContent = t('popup.statusOn');
+    $('hint').textContent = t('popup.hintOn');
   } else {
-    $('sub').textContent = 'Đã tắt cho trang này';
-    $('status').textContent = 'Đã tắt bảo vệ';
-    $('hint').textContent = 'Nhấn nút nguồn để bật lại.';
+    $('sub').textContent = t('popup.subOff');
+    $('status').textContent = t('popup.statusOff');
+    $('hint').textContent = t('popup.hintOff');
   }
 
   countTo($('blocked'), ok && state.enabled ? state.blocked : 0);
@@ -74,7 +75,7 @@ function render() {
   for (const id of ['pick', 'reload', 'log-open']) $(id).disabled = !ok;
   $('pick').disabled = !ok || !state.enabled;
   $('restore').disabled = !ok || !state.hiddenByMe;
-  $('restore-label').textContent = state.hiddenByMe ? `Khôi phục (${state.hiddenByMe})` : 'Khôi phục';
+  $('restore-label').textContent = state.hiddenByMe ? t('popup.restoreN', { n: state.hiddenByMe }) : t('popup.restore');
 }
 
 async function load() {
@@ -88,7 +89,6 @@ $('power').addEventListener('click', async () => {
   state.enabled = !state.enabled;
   render();
   await send({ type: 'set-site-enabled', host: state.host, enabled: state.enabled });
-  snack(state.enabled ? 'Đã bật — đang tải lại trang' : 'Đã tắt cho trang này — đang tải lại');
   setTimeout(() => chrome.tabs.reload(tab.id), 450);
 });
 
@@ -99,7 +99,6 @@ $('pick').addEventListener('click', async () => {
 
 $('restore').addEventListener('click', async () => {
   const r = await send({ type: 'restore-site', host: state.host.replace(/^www\./, '') });
-  snack(`Đã khôi phục ${r.removed} phần tử`);
   setTimeout(() => chrome.tabs.reload(tab.id), 450);
   state.hiddenByMe = 0;
   render();
@@ -111,8 +110,6 @@ $('reload').addEventListener('click', () => {
 });
 
 // ---------- nhật ký chặn ----------
-const TYPE_VI = { script: 'script', image: 'ảnh', xmlhttprequest: 'XHR', sub_frame: 'khung', ping: 'ping', stylesheet: 'CSS', font: 'phông', media: 'media', other: 'khác', websocket: 'websocket' };
-
 function emptyCookieSvg() {
   let d = '';
   for (let i = 0; i <= 120; i++) {
@@ -126,21 +123,21 @@ function emptyCookieSvg() {
 function rowFor(e) {
   const row = document.createElement('div');
   row.className = 'log-row';
-  const types = e.types.map((t) => TYPE_VI[t] ?? t).join(', ');
+  const types = e.types.map((ty) => { const k = `type.${ty}`; const v = t(k); return v === k ? ty : v; }).join(', ');
   row.innerHTML = `<div class="grow"><div class="title-m"></div><div class="body-m muted ellipsis"></div></div><button class="btn tonal"></button>`;
   row.querySelector('.title-m').textContent = e.host;
   row.querySelector('.title-m').title = e.host;
-  row.querySelector('.body-m').textContent = `${e.n} yêu cầu · ${types}`;
+  row.querySelector('.body-m').textContent = t('log.meta', { n: e.n, types });
   const btn = row.querySelector('button');
   const set = (allowed) => {
-    btn.textContent = allowed ? 'Đã cho phép' : 'Cho phép';
+    btn.textContent = allowed ? t('log.allowed') : t('log.allow');
     btn.disabled = allowed;
   };
   set(e.allowed);
   btn.addEventListener('click', async () => {
     set(true);
     await send({ type: 'set-domain-allowed', domain: e.host, allowed: true });
-    snack(`Đã cho phép ${e.host} — tải lại trang để áp dụng`);
+    toast.success(t('log.allowedSnack', { host: e.host }), { duration: 2600 });
   });
   return row;
 }
@@ -152,9 +149,9 @@ async function openLog() {
   const box = $('log-list');
   box.innerHTML = '';
   const total = entries.reduce((n, e) => n + e.n, 0);
-  $('log-sub').textContent = entries.length ? `${total} yêu cầu từ ${entries.length} tên miền` : 'Các tên miền bị chặn trên trang này';
+  $('log-sub').textContent = entries.length ? t('log.sub', { n: total, m: entries.length }) : t('log.subDefault');
   if (!entries.length) {
-    box.innerHTML = `<div class="log-empty">${emptyCookieSvg()}<div class="title-m">Chưa chặn yêu cầu nào</div><div class="body-m">Tải lại trang rồi mở lại nhật ký.</div></div>`;
+    box.innerHTML = `<div class="log-empty">${emptyCookieSvg()}<div class="title-m">${t('log.empty')}</div><div class="body-m">${t('log.emptyHint')}</div></div>`;
     return;
   }
   for (const e of entries) box.append(rowFor(e));
