@@ -4,43 +4,73 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>X Media Downloader</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="src/ui.css">
+  <link rel="stylesheet" href="src/content.css">
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
 <div class="app">
   <nav class="rail" role="tablist" aria-orientation="vertical">
     <img class="rail-logo" src="icons/icon48.png" alt="" width="44" height="44">
-    <button class="rail-item" role="tab" data-pane="download">
+    <button class="rail-item" role="tab" id="tab-download" aria-controls="pane-download" data-pane="download">
       <span class="pill"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span>
       <span class="lbl" data-i18n="nav.download"></span>
     </button>
-    <button class="rail-item" role="tab" data-pane="appearance">
+    <button class="rail-item" role="tab" id="tab-appearance" aria-controls="pane-appearance" data-pane="appearance">
       <span class="pill"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.5 1.5-1.5H16c3 0 5.5-2.5 5.5-5.5C21.5 6 17.5 2 12 2Z"/></svg></span>
       <span class="lbl" data-i18n="nav.appearance"></span>
     </button>
-    <button class="rail-item" role="tab" data-pane="activity">
+    <button class="rail-item" role="tab" id="tab-activity" aria-controls="pane-activity" data-pane="activity">
       <span class="pill"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
       <span class="lbl" data-i18n="nav.activity"></span>
     </button>
-    <button class="rail-item" role="tab" data-pane="about">
+    <button class="rail-item" role="tab" id="tab-about" aria-controls="pane-about" data-pane="about">
       <span class="pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
       <span class="lbl" data-i18n="nav.about"></span>
     </button>
   </nav>
 
   <main>
+    <div class="autosave" id="autosave" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span data-i18n="autosave"></span></div>
     <!-- DOWNLOAD -->
-    <section class="pane" id="pane-download" role="tabpanel">
+    <section class="pane" id="pane-download" role="tabpanel" aria-labelledby="tab-download">
       <header class="page-head"><h1 data-i18n="dl.title"></h1><p data-i18n="dl.subtitle"></p></header>
-
+      <div class="card onboard" id="onboard" hidden>
+        <h2 data-i18n="ob.title"></h2>
+        <ol class="ob-steps">
+          <li><span class="ob-n">1</span><span data-i18n="ob.s1"></span></li>
+          <li><span class="ob-n">2</span><span data-i18n="ob.s2"></span></li>
+          <li><span class="ob-n">3</span><span id="ob3"></span></li>
+        </ol>
+        <div class="actions left"><button type="button" class="btn filled" id="obOpen" data-i18n="ob.open"></button><button type="button" class="btn text" id="obDone" data-i18n="ob.done"></button></div>
+      </div>
+      <details class="sec" open>
+        <summary><span data-i18n="sec.save"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+      <div class="card" id="pathCard">
+        <h2 data-i18n="path.title"></h2>
+        <p class="muted" data-i18n="path.desc"></p>
+        <label class="field">
+          <span class="field-label" data-i18n="path.label"></span>
+          <input id="saveFolder" type="text" spellcheck="false" autocomplete="off" placeholder="X Media/{username}">
+        </label>
+        <p class="hint" id="folderHint" aria-live="polite"></p>
+        <div class="chips" id="folderChips"></div>
+        <div class="preview-line"><span class="muted" data-i18n="path.full"></span><code id="fullPath"></code></div>
+      </div>
+      <div class="tiles">
+        <label class="tile">
+          <span class="tile-text"><span class="tile-title" data-i18n="ask.title"></span><span class="tile-desc" data-i18n="ask.desc"></span></span>
+          <span class="switch"><input type="checkbox" id="askWhere"><span class="track"><span class="handle"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span></span></span>
+        </label>
+        <div class="tile">
+          <span class="tile-text"><span class="tile-title" data-i18n="dlset.title"></span><span class="tile-desc" data-i18n="dlset.desc"></span></span>
+          <button type="button" class="btn outlined" id="openChromeDl" data-i18n="dlset.btn"></button>
+        </div>
+      </div>
+      </details>
+      <details class="sec" open>
+        <summary><span data-i18n="sec.name"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <div class="card">
         <h2 data-i18n="file.title"></h2>
         <p class="muted" data-i18n="file.desc"></p>
@@ -60,7 +90,9 @@
         </div>
         <div class="actions"><button class="btn text" id="resetTemplate" data-i18n="file.reset" data-tip-i18n="tip.reset"></button></div>
       </div>
-
+      </details>
+      <details class="sec" open>
+        <summary><span data-i18n="sec.behavior"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <div class="tiles">
         <label class="tile">
           <span class="tile-text"><span class="tile-title" data-i18n="reveal.title"></span><span class="tile-desc" data-i18n="reveal.desc"></span></span>
@@ -82,7 +114,9 @@
           </div>
         </div>
       </div>
-
+      </details>
+      <details class="sec" open>
+        <summary><span data-i18n="sec.shortcut"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
       <div class="tiles">
         <label class="tile">
           <span class="tile-text"><span class="tile-title" data-i18n="sc.title"></span><span class="tile-desc" data-i18n="sc.desc"></span></span>
@@ -97,20 +131,45 @@
           <button class="btn outlined" id="openShortcuts" data-i18n="sc.open" data-tip-i18n="tip.open"></button>
         </div>
       </div>
+      </details>
     </section>
 
     <!-- APPEARANCE -->
-    <section class="pane" id="pane-appearance" role="tabpanel">
+    <section class="pane" id="pane-appearance" role="tabpanel" aria-labelledby="tab-appearance">
       <header class="page-head"><h1 data-i18n="ap.title"></h1><p data-i18n="ap.subtitle"></p></header>
 
-      <div class="card preview">
+      <div class="card preview" id="previewCard">
         <span class="muted" data-i18n="ap.preview"></span>
         <h3 data-i18n="pv.head"></h3>
         <p data-i18n="pv.body"></p>
         <div class="actions left">
-          <button class="btn filled" data-i18n="pv.filled"></button>
-          <button class="btn tonal" data-i18n="pv.tonal"></button>
-          <button class="btn outlined" data-i18n="pv.outlined"></button>
+          <button type="button" class="btn filled" data-i18n="pv.filled"></button>
+          <button type="button" class="btn tonal" data-i18n="pv.tonal"></button>
+          <button type="button" class="btn outlined" data-i18n="pv.outlined"></button>
+        </div>
+        <div class="mock">
+          <div class="mock-av" aria-hidden="true">m</div>
+          <div class="mock-main">
+            <div class="mock-name"><b data-i18n="pvm.name"></b><span>@minhtrong67</span></div>
+            <div class="mock-text" data-i18n="pvm.text"></div>
+            <div class="mock-media" aria-hidden="true"></div>
+            <div class="mock-bar" aria-hidden="true">
+              <span class="mi"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></span>
+              <span class="mi"><svg viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span>
+              <span class="mi"><svg viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></svg></span>
+              <span class="mi"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></span>
+              <div class="xmd-wrap"><button type="button" class="xmd-btn" id="mockBtn" aria-label="Download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></button></div>
+            </div>
+          </div>
+        </div>
+        <p class="muted" data-i18n="pvm.hint"></p>
+        <div class="pv-toasts"><span class="muted" data-i18n="pvm.toasts"></span>
+          <div class="chips" id="toastDemo">
+            <button type="button" class="chip" data-variant="info" data-i18n="lvl.info"></button>
+            <button type="button" class="chip" data-variant="success">OK</button>
+            <button type="button" class="chip" data-variant="warning" data-i18n="lvl.warning"></button>
+            <button type="button" class="chip" data-variant="error" data-i18n="lvl.error"></button>
+          </div>
         </div>
       </div>
 
@@ -148,12 +207,19 @@
 
       <div class="card">
         <h2 id="lblFont" data-i18n="ap.font"></h2>
-        <div class="fonts" id="font" role="radiogroup" aria-labelledby="lblFont"></div>
+        <div class="dd" id="fontDD">
+          <button type="button" class="dd-btn" id="fontBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="fontList" aria-labelledby="lblFont fontVal">
+            <span class="dd-aa" id="fontAa" aria-hidden="true">Aa</span>
+            <span class="dd-val" id="fontVal"></span>
+            <svg class="dd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <ul class="dd-list" id="fontList" role="listbox" tabindex="-1" aria-labelledby="lblFont" hidden></ul>
+        </div>
       </div>
     </section>
 
     <!-- ACTIVITY -->
-    <section class="pane" id="pane-activity" role="tabpanel">
+    <section class="pane" id="pane-activity" role="tabpanel" aria-labelledby="tab-activity">
       <header class="page-head"><h1 data-i18n="act.title"></h1><p data-i18n="act.subtitle"></p></header>
       <div class="actions left">
         <button class="btn tonal" id="copyLog" data-i18n="act.copy"></button>
@@ -164,7 +230,7 @@
     </section>
 
     <!-- ABOUT -->
-    <section class="pane" id="pane-about" role="tabpanel">
+    <section class="pane" id="pane-about" role="tabpanel" aria-labelledby="tab-about">
       <div class="hero">
         <img src="icons/icon128.png" alt="" width="88" height="88">
         <div>

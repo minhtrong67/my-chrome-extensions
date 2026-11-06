@@ -108,6 +108,9 @@ export function initAccordions(root = document) {
   for (const acc of root.querySelectorAll('.acc')) {
     const head = acc.querySelector('.acc-head');
     const inner = acc.querySelector('.acc-inner');
+    const body = acc.querySelector('.acc-body');
+    head.id ||= `${acc.id || 'acc'}-head`;
+    body?.setAttribute('aria-labelledby', head.id);
     const set = (open) => {
       acc.toggleAttribute('data-open', open);
       head.setAttribute('aria-expanded', String(open));

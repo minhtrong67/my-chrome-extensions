@@ -43,8 +43,9 @@ sidebar lists every device with search and filters.
 | **System bars** | Status bar and home indicator are drawn per device and the page viewport shrinks accordingly, like a real browser. The bar colour follows the page. |
 | **Responsive mode** | Drag the edges, type W×H, or tap Tailwind-style breakpoints (320 to 1536). |
 | **Compare** | Up to 6 devices side by side with synced scrolling and navigation. |
-| **Emulation** | Mobile User-Agent and client hints, touch emulation (drag to scroll with inertia, touch events), device pixel ratio, optional scrollbar. |
-| **Capture** | PNG screenshots with transparent rounded corners; recording to GIF, WebM or MP4 (up to 60 s). |
+| **Emulation** | Mobile User-Agent and client hints, `<meta viewport>` (980px layout when absent), touch emulation (drag with inertia, long press, Shift + drag pinch, CSS `hover` / `pointer` rules), device pixel ratio, optional scrollbar. |
+| **Capture** | PNG screenshots (visible area, full page, or one image of all compared devices); recording to GIF (adaptive palette), WebM or MP4 (up to 60 s). |
+| **Device tools** | Favourites, recent devices, saved compare sets, device remembered per site, 12-column grid overlay, QR code to open the page on a real phone, pop-out window. |
 | **Interface** | Material 3 Expressive, light / dark / system, 19 Material colour themes plus a custom colour, three text sizes, seven fonts, English and Vietnamese. |
 | **Polish** | Resizable and collapsible sidebars, custom tooltips with shortcut hints, themed dropdowns, toasts (info, success, warning, error), ripple and shape-morph animations, scroll-to-top. |
 
@@ -76,6 +77,9 @@ Both sidebars collapse with their toggle buttons and can be resized by dragging 
 | `C` | Toggle compare mode |
 | `S` | Screenshot |
 | `P` / `L` | Toggle the devices panel / tools panel |
+| `D` | Search devices |
+| `G` | Toggle the grid overlay |
+| `?` | Show the welcome tour |
 | `/` | Focus the URL field |
 | `+` / `-` | Zoom in / out (also `Ctrl` + mouse wheel) |
 | `Esc` | Close the simulator |
@@ -109,7 +113,17 @@ Open the gear icon in the left sidebar.
 | `storage` | Save settings, custom devices and sidebar widths locally. |
 | `contextMenus` | The "Open page in Responsive Tester" entry. |
 
-Nothing is sent to any server. There is no analytics, and all data stays in `chrome.storage.local`.
+Nothing is sent to any server. There is no analytics, and all data stays in `chrome.storage.local`. See [PRIVACY.md](PRIVACY.md).
+
+## Fidelity: what is and is not emulated
+
+| Emulated | Not emulated |
+| --- | --- |
+| Viewport size, status bar and home indicator insets, orientation | Real iOS / Android rendering engines (use a real device or cloud lab for final checks) |
+| `User-Agent`, client hints, `navigator`, `screen`, pixel ratio, touch detection | Pixel density in rendering and CSS `resolution` queries |
+| `<meta viewport>`, `matchMedia` and same-origin CSS `hover` / `pointer` rules | Cross-origin stylesheet `hover` / `pointer` rules, `prefers-color-scheme`, network or CPU throttling |
+
+The extension intentionally does not use `chrome.debugger`: it would show a permanent warning bar and can only emulate a whole tab, not the simulator frames.
 
 ## Limitations
 
@@ -130,6 +144,14 @@ Nothing is sent to any server. There is no analytics, and all data stays in `chr
 | Screenshot fails | Zoom out so the whole device is visible, then try again. |
 | Recording does not start | Allow screen sharing for the current tab in the Chrome prompt. |
 
+## Testing
+
+```bash
+npm install && npm test                          # unit tests
+CHROME_PATH=/path/to/chrome npm run test:e2e     # real-Chrome end-to-end checks
+```
+See [docs/TESTING.md](docs/TESTING.md) for the manual checklist (header rules, capture and recording need a real extension context).
+
 ## Project structure
 
 ```
@@ -144,9 +166,13 @@ responsive-tester/
 │   ├── devices.js       Device database and breakpoints
 │   ├── i18n.js          English and Vietnamese strings
 │   ├── icons.js         Material Symbols (Rounded) sprite
+│   ├── qr.js            Bundled QR code generator
 │   └── gif.js           GIF89a encoder
 ├── lib/theme.js         Bundled material-color-utilities
+├── _locales/            English and Vietnamese store strings
 ├── fonts/               Roboto Flex, Roboto, Inter, Be Vietnam Pro, Google Sans Flex
+├── tests/               Unit tests and real-Chrome end-to-end suite
+├── docs/                Testing guide and Web Store notes
 └── icons/               Extension icons
 ```
 

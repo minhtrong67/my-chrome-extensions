@@ -1,0 +1,5 @@
+! Bổ sung thủ công cho ABPVN: hạ tầng quảng cáo/đo lường của các mạng quảng cáo Việt Nam.
+! Quy tắc ngoại lệ trong ABPVN (ví dụ media1.admicro.vn/cms/ cho tuoitre.vn) vẫn được ưu tiên.
+||admicro.vn^$third-party
+||logging.admicro.vn^
+||eclick.vn^$third-party

@@ -1,5 +1,5 @@
 importScripts('src/shared.js');
-const { DEFAULTS, buildFilename, slimMedia } = XMD;
+const { DEFAULTS, buildFilename, buildFolder, slimMedia } = XMD;
 
 const MAX_ACTIVE = 3;       // số tệp tải đồng thời tối đa
 const LOG_MAX = 60;
@@ -24,11 +24,20 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 // ---------- nhật ký ----------
 async function log(entry) {
   try {
-    const { log: arr = [] } = await chrome.storage.local.get('log');
+    const { log: arr = [], unread = 0 } = await chrome.storage.local.get(['log', 'unread']);
     arr.unshift({ ts: Date.now(), ...entry });
-    await chrome.storage.local.set({ log: arr.slice(0, LOG_MAX) });
+    const patch = { log: arr.slice(0, LOG_MAX) };
+    if (entry.level === 'error') patch.unread = unread + 1;   // hiện huy hiệu đỏ trên icon extension
+    await chrome.storage.local.set(patch);
   } catch (_) { /* bỏ qua */ }
 }
+
+function updateBadge(n) {
+  chrome.action.setBadgeText({ text: n > 0 ? (n > 9 ? '9+' : String(n)) : '' });
+  if (n > 0) chrome.action.setBadgeBackgroundColor({ color: '#BA1A1A' });
+}
+chrome.storage.onChanged.addListener((ch, area) => { if (area === 'local' && ch.unread) updateBadge(ch.unread.newValue || 0); });
+chrome.storage.local.get('unread').then((r) => updateBadge(r.unread || 0)).catch(() => {});
 
 // ---------- theo dõi lượt tải (lưu ở storage.session để sống sót khi service worker ngủ) ----------
 const getDl = async () => (await chrome.storage.session.get('dl')).dl || {};
@@ -88,11 +97,14 @@ function photoInfo(u) {
 }
 const urlFor = (m, thumb) => (thumb ? photoInfo(m.thumb) : m.type === 'photo' ? photoInfo(m.url) : { url: m.url });
 
-async function dl(url, filename, fallback) {
+async function dl(url, filename, fallback, saveAs) {
+  const opts = { conflictAction: 'uniquify', saveAs: !!saveAs };
   try {
-    return await chrome.downloads.download({ url, filename, conflictAction: 'uniquify', saveAs: false });
-  } catch (_) {
-    return chrome.downloads.download({ url, filename: fallback, conflictAction: 'uniquify', saveAs: false });
+    return await chrome.downloads.download({ url, filename, ...opts });
+  } catch (e) {
+    // người dùng đóng hộp thoại "Lưu như" → dừng hẳn, không thử tên dự phòng
+    if (saveAs && /cancel/i.test(String(e && e.message))) { const err = new Error('USER_CANCELED'); err.canceled = true; throw err; }
+    return chrome.downloads.download({ url, filename: fallback, ...opts });
   }
 }
 
@@ -116,10 +128,9 @@ async function doDownload(jobs, tabId, tid) {
       const m = tw.media[i];
       const p = m.type === 'photo' ? photoInfo(m.url)
         : { url: m.url, ext: 'mp4', base: (m.url.split('?')[0].split('/').pop() || 'video').replace(/\.\w+$/, '') };
-      const base = buildFilename(s.filenameTemplate, {
-        username: tw.screenName, name: tw.name, tweetId: tw.id, index, createdAt: tw.createdAt,
-        text: tw.text, type: m.type, filename: p.base
-      });
+      const c = { username: tw.screenName, name: tw.name, tweetId: tw.id, index, createdAt: tw.createdAt, text: tw.text, type: m.type, filename: p.base };
+      const folder = buildFolder(s.saveFolder, c);
+      const base = (folder ? folder + '/' : '') + buildFilename(s.filenameTemplate, c);
       const fb = `${tw.id}-${index}`;
       const files = [{ url: p.url, name: `${base}.${p.ext}`, fb: `${fb}.${p.ext}`, thumb: false }];
       if (m.type !== 'photo' && s.downloadThumbnail && m.thumb) {
@@ -128,8 +139,13 @@ async function doDownload(jobs, tabId, tid) {
       }
       for (const f of files) {
         await waitSlot();
-        const id = await dl(f.url, f.name, f.fb);
-        await addDl(id, { tweetId: tw.id, index, thumb: f.thumb, filename: f.name, fallback: f.fb, tabId, tid, retried: false });
+        let id;
+        try { id = await dl(f.url, f.name, (folder ? folder + '/' : '') + f.fb, s.askWhere); }
+        catch (e) {
+          if (e && e.canceled) { await log({ level: 'info', code: 'USER_CANCELED', tweetId: tw.id, index }); return { ok: false, count, canceled: true }; }
+          throw e;
+        }
+        await addDl(id, { tweetId: tw.id, index, thumb: f.thumb, filename: f.name, fallback: (folder ? folder + '/' : '') + f.fb, tabId, tid, retried: false });
         count++;
       }
     }
@@ -176,7 +192,7 @@ chrome.downloads.onChanged.addListener(async (d) => {
     const m = fresh && fresh.media && fresh.media[meta.index - 1];
     if (m) {
       try {
-        const id = await dl_(urlFor(m, meta.thumb).url, meta.filename, meta.fallback);
+        const id = await dl_(urlFor(m, meta.thumb).url, meta.filename, meta.fallback, false);
         await addDl(id, { ...meta, retried: true });
         await log({ level: 'info', code: 'RETRY_OK', tweetId: meta.tweetId, index: meta.index });
         return;

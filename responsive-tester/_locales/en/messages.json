@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "Responsive Tester"
+  },
+  "extDesc": {
+    "message": "Open the page you are viewing in a phone, tablet or desktop frame right on the tab. 79 devices, compare mode, screenshots and recording."
+  },
+  "actionTitle": {
+    "message": "Open in Responsive Tester"
+  },
+  "cmdDesc": {
+    "message": "Open the current page in Responsive Tester"
+  },
+  "ctxOpen": {
+    "message": "Open page in Responsive Tester"
+  }
+}

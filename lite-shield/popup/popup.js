@@ -1,5 +1,5 @@
 import { initTheme } from '../shared/theme.js';
-import { hydrateIcons } from '../shared/icons.js';
+import { hydrateIcons, icon } from '../shared/icons.js';
 import { t } from '../shared/i18n.js';
 import { toast } from '../shared/toast.js';
 import { initRipple } from '../shared/effects.js';
@@ -11,7 +11,7 @@ initTooltips();
 // Khi đổi ngôn ngữ ở trang cài đặt, vẽ lại phần chữ động.
 initTheme(() => {
   if (state) render();
-  if (document.body.classList.contains('sheet-open') && tab) openLog();
+  if (document.body.classList.contains('sheet-open') && tab) (sheetKind === 'fix' ? openFix() : openLog());
 });
 
 const $ = (id) => document.getElementById(id);
@@ -72,8 +72,9 @@ function render() {
   countTo($('blocked'), ok && state.enabled ? state.blocked : 0);
   countTo($('hidden'), ok && state.enabled ? state.hidden : 0);
 
-  for (const id of ['pick', 'reload', 'log-open']) $(id).disabled = !ok;
+  for (const id of ['pick', 'reload', 'log-open', 'fix']) $(id).disabled = !ok;
   $('pick').disabled = !ok || !state.enabled;
+  if (state.mode === 'network' && ok) $('hint').textContent = t('fix.networkD');
   $('restore').disabled = !ok || !state.hiddenByMe;
   $('restore-label').textContent = state.hiddenByMe ? t('popup.restoreN', { n: state.hiddenByMe }) : t('popup.restore');
 }
@@ -142,11 +143,35 @@ function rowFor(e) {
   return row;
 }
 
-async function openLog() {
+let sheetKind = '';
+function openSheet(kind, title, sub) {
+  sheetKind = kind;
+  $('sheet-title').textContent = title;
+  $('log-sub').textContent = sub;
   document.body.classList.add('sheet-open');
   $('sheet').setAttribute('aria-hidden', 'false');
-  const { entries } = await send({ type: 'get-log', tabId: tab.id });
+}
+
+async function openLog() {
+  openSheet('log', t('log.title'), t('log.subDefault'));
   const box = $('log-list');
+  const { granted } = await send({ type: 'log-status' });
+  if (!granted) {
+    box.innerHTML = `<div class="perm-box"><div class="title-m"></div><div class="body-m muted"></div><button class="btn filled" type="button">${icon('check')}<span></span></button></div>`;
+    box.querySelector('.title-m').textContent = t('log.needPerm');
+    box.querySelector('.body-m').textContent = t('log.needPermHint');
+    const b = box.querySelector('button');
+    b.querySelector('span').textContent = t('log.enable');
+    b.addEventListener('click', async () => {
+      const ok = await chrome.permissions.request({ permissions: ['webRequest'] });
+      if (ok) {
+        await chrome.runtime.sendMessage({ type: 'log-status' });
+        openLog();
+      } else toast.warning(t('log.denied'));
+    });
+    return;
+  }
+  const { entries } = await send({ type: 'get-log', tabId: tab.id });
   box.innerHTML = '';
   const total = entries.reduce((n, e) => n + e.n, 0);
   $('log-sub').textContent = entries.length ? t('log.sub', { n: total, m: entries.length }) : t('log.subDefault');
@@ -157,10 +182,55 @@ async function openLog() {
   for (const e of entries) box.append(rowFor(e));
 }
 function closeLog() {
+  $('log-list').removeAttribute('role');
   document.body.classList.remove('sheet-open');
   $('sheet').setAttribute('aria-hidden', 'true');
 }
 $('log-open').addEventListener('click', openLog);
+
+// ---------- Trang bị lỗi? ----------
+function openFix() {
+  openSheet('fix', t('fix.title'), t('fix.sub'));
+  const box = $('log-list');
+  box.innerHTML = '';
+  for (const m of ['full', 'network', 'off']) {
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'fix-row';
+    row.setAttribute('role', 'radio');
+    row.setAttribute('aria-checked', String(state.mode === m));
+    row.innerHTML = '<span class="fix-dot"></span><span class="grow"><span class="title-m" style="display:block"></span><span class="body-m muted" style="display:block"></span></span>';
+    row.querySelector('.title-m').textContent = t(`fix.${m}`);
+    row.querySelector('.body-m').textContent = t(`fix.${m}D`);
+    row.addEventListener('click', async () => {
+      if (state.mode === m) return;
+      await send({ type: 'set-site-mode', host: state.host, mode: m });
+      state.mode = m;
+      state.enabled = m !== 'off';
+      for (const r of box.querySelectorAll('.fix-row')) r.setAttribute('aria-checked', String(r === row));
+      render();
+      toast.info(t('fix.applied'), { duration: 1600 });
+      setTimeout(() => { chrome.tabs.reload(tab.id); closeLog(); }, 700);
+    });
+    box.append(row);
+  }
+  box.setAttribute('role', 'radiogroup');
+  const act = document.createElement('div');
+  act.className = 'fix-actions';
+  act.innerHTML = `<button class="btn tonal" type="button">${icon('copy')}<span></span></button>`;
+  act.querySelector('span').textContent = t('fix.report');
+  act.querySelector('button').addEventListener('click', async () => {
+    try {
+      const { text } = await send({ type: 'get-report', tabId: tab.id, url: tab.url });
+      await navigator.clipboard.writeText(text);
+      toast.success(t('fix.copied'), { duration: 2200 });
+    } catch {
+      toast.error(t('fix.copyFail'));
+    }
+  });
+  box.append(act);
+}
+$('fix').addEventListener('click', openFix);
 $('log-close').addEventListener('click', closeLog);
 $('scrim').addEventListener('click', closeLog);
 addEventListener('keydown', (e) => e.key === 'Escape' && closeLog());

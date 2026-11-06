@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "X Media Downloader",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "description": "Download videos and images from X (Twitter) and TweetDeck with one click. For personal use.",
   "minimum_chrome_version": "111",
   "icons": {

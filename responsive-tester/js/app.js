@@ -11,18 +11,28 @@
   const ALL_TYPES = ['sub_frame', 'stylesheet', 'script', 'image', 'font', 'object', 'xmlhttprequest', 'ping', 'media', 'websocket', 'other'];
   const TYPE_ICON = { phone: 'mobile', tablet: 'tablet_mac', foldable: 'devices_fold', watch: 'watch', desktop: 'laptop_mac', responsive: 'responsive_layout' };
 
-  const DEF_SETTINGS = { theme: 'system', seed: '#3F5BF6', lang: 'auto', font: 'roboto-flex', fontSize: 'md', hideScroll: true, spoofUA: true, bypass: true, sync: true, copyShot: false };
-  const DEF_STATE = { mode: 'single', deviceId: 'iphone-16', resp: { w: 390, h: 844, dpr: 2 }, landscape: false, zoom: 'fit', compare: ['iphone-16', 'pixel-9', 'ipad-air-11'], touch: true, frame: true, filter: 'all', lw: 300, rw: 340 };
+  const DEF_SETTINGS = { theme: 'system', seed: '#2196F3', lang: 'auto', font: 'roboto-flex', fontSize: 'md', hideScroll: true, metaViewport: true, escClose: true, rememberSite: true, spoofUA: true, bypass: true, sync: true, copyShot: false };
+  const DEF_STATE = { mode: 'single', deviceId: 'iphone-16', resp: { w: 390, h: 844, dpr: 2 }, landscape: false, zoom: 'fit', compare: ['iphone-16', 'pixel-9', 'ipad-air-11'], touch: true, frame: true, filter: 'all', lw: 300, rw: 340, lc: false, rc: false, fav: [], recent: [], grid: false };
 
   let settings, state, custom = [], isOpen = false, cleanup = [];
-  let dprSel = null, typeSel = null, osSel = null, settingsTop = null, animNext = false;
+  let fullShot = null, syncHits = [], sites = {}, dprSel = null, typeSel = null, osSel = null, settingsTop = null, animNext = false;
   let slots = [], curZoom = 1, zoomOverride = 0, syncLock = 0, query = '', prevOverflow = '';
   const TOKEN = Math.random().toString(36).slice(2) + Date.now().toString(36);
 
   /* ---------------- storage ---------------- */
   const sGet = async (k) => (await chrome.storage.local.get(k))[k];
   let saveTimer = 0;
-  const saveState = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => chrome.storage.local.set({ rt_state: state }), 200); };
+  const saveState = () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      chrome.storage.local.set({ rt_state: state });
+      if (settings && settings.rememberSite && state.mode === 'single') {
+        sites[location.origin] = { deviceId: state.deviceId, landscape: state.landscape, resp: state.resp };
+        const keys = Object.keys(sites); if (keys.length > 60) delete sites[keys[0]];
+        chrome.storage.local.set({ rt_sites: sites });
+      }
+    }, 200);
+  };
   const saveSettings = () => chrome.storage.local.set({ settings });
   const saveCustom = () => chrome.storage.local.set({ rt_custom: custom });
 
@@ -34,7 +44,7 @@
     return allDevices().find((d) => d.id === id) || DEVICES[0];
   }
   const curIds = () => (state.mode === 'single' ? [state.deviceId] : state.compare);
-  const dimsOf = (dev) => (dev.type === 'responsive' || !state.landscape ? { w: dev.w, h: dev.h } : { w: dev.h, h: dev.w });
+  const dimsOf = (dev) => { if (fullShot && slots[0] && dev.id === slots[0].devId) return { w: fullShot.w, h: fullShot.h }; return dev.type === 'responsive' || !state.landscape ? { w: dev.w, h: dev.h } : { w: dev.h, h: dev.w }; };
 
   function insetsFor(dev, land) {
     let t = 0, b = 0, l = 0, r = 0;
@@ -97,6 +107,7 @@
     return sk;
   }
   function metrics(dev) {
+    if (fullShot && slots[0] && dev.id === slots[0].devId) return { bz: ZERO, rIn: 0, rOut: 0, bare: true, inset: ZERO, extraH: 0 };
     const land = state.landscape && dev.type !== 'responsive';
     if (dev.type === 'responsive') return { bz: ZERO, rIn: 8, rOut: 8, bare: true, inset: ZERO, extraH: 0 };
     if (!state.frame) { const r = Math.min(dev.r, 28); return { bz: ZERO, rIn: r, rOut: r, bare: true, inset: ZERO, extraH: 0 }; }
@@ -349,7 +360,7 @@
     const el = document.createElement('div');
     el.className = 'slot';
     el.innerHTML = '<div class="cap"><span class="nm"></span><span class="sz"></span><button class="rm" type="button"></button></div>' +
-      '<div class="devwrap"><div class="device"><div class="screen"><div class="loader"><i></i></div></div></div></div>';
+      '<div class="devwrap"><div class="device"><div class="screen"><div class="gridov">' + '<span></span>'.repeat(12) + '</div><div class="loader"><i></i></div></div></div></div>';
     // The frame name must exist when the iframe is created: Chrome does not apply later changes.
     const iframe = document.createElement('iframe');
     const dev0 = getDev(devId);
@@ -357,13 +368,13 @@
     iframe.setAttribute('allow', 'clipboard-write; fullscreen; geolocation; autoplay; camera; microphone');
     iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-pointer-lock allow-presentation');
     $('.screen', el).insertBefore(iframe, $('.loader', el));
-    const s = { el, cap: $('.cap', el), nm: $('.nm', el), sz: $('.sz', el), rm: $('.rm', el), wrap: $('.devwrap', el), device: $('.device', el), screen: $('.screen', el), iframe, loader: $('.loader', el), devId, sig: '', alive: false, href: '', key: '' };
+    const s = { el, cap: $('.cap', el), nm: $('.nm', el), sz: $('.sz', el), rm: $('.rm', el), wrap: $('.devwrap', el), device: $('.device', el), screen: $('.screen', el), iframe, loader: $('.loader', el), gridEl: $('.gridov', el), devId, sig: '', alive: false, href: '', key: '' };
     s.rm.innerHTML = ic('close'); s.rm.dataset.tip = t('remove');
     s.rm.onclick = () => toggleCompare(s.devId);
     iframe.addEventListener('load', () => {
       s.loader.classList.add('done');
       clearTimeout(s.hintTimer);
-      if (iframe.getAttribute('src')) s.hintTimer = setTimeout(() => { if (isOpen && !s.alive && !s.hinted) { s.hinted = true; toast(t('blockedHint'), 'warning'); } }, 5000);
+      if (iframe.getAttribute('src')) s.hintTimer = setTimeout(() => { if (isOpen && !s.alive && !s.hinted) { s.hinted = true; toast(t('blockedHint'), 'warning', { label: t('popout'), action: popout }); } }, 5000);
     });
     canvas.appendChild(el);
     return s;
@@ -428,6 +439,33 @@
     const aw = stage.clientWidth - 24 - (n - 1) * 24 - extra, ah = stage.clientHeight - 24 - (state.mode === 'compare' ? 42 : 0) - extra;
     return clamp(Math.min(1.5, aw / sumW, ah / maxH), 0.05, 1.5);
   }
+  const bpName = (w) => (w >= 1536 ? '2xl' : w >= 1280 ? 'xl' : w >= 1024 ? 'lg' : w >= 768 ? 'md' : w >= 640 ? 'sm' : 'base');
+  function layoutWidthFor(content, vw) {
+    if (content == null) return 980;
+    const m = {};
+    String(content).split(/[,;]/).forEach((p) => { const kv = p.split('='); if (kv.length > 1) m[kv[0].trim().toLowerCase()] = kv[1].trim().toLowerCase(); });
+    const w = m.width, is = parseFloat(m['initial-scale']);
+    if (w === 'device-width') return vw;
+    if (w && !isNaN(+w)) return clamp(+w, 200, 10000);
+    if (!isNaN(is) && is > 0) return vw / is;
+    return vw;
+  }
+  function iframeGeom(s, dev, dm, m) {
+    const vw = Math.max(1, dm.w - m.inset.l - m.inset.r), vh = Math.max(1, dm.h - m.inset.t - m.inset.b);
+    const mobile = (dev.os === 'ios' || dev.os === 'android') && dev.type !== 'desktop' && dev.type !== 'responsive' && !m.bare;
+    const lw = settings.metaViewport && mobile && s.vpMeta !== undefined ? layoutWidthFor(s.vpMeta, vw) : vw;
+    const k = vw / lw;
+    s.vw = vw; s.vh = vh; s.layoutW = lw;
+    Object.assign(s.iframe.style, { left: m.inset.l + 'px', top: m.inset.t + 'px', width: lw + 'px', height: vh / k + 'px', transform: Math.abs(k - 1) > 0.001 ? `scale(${k})` : '', transformOrigin: '0 0' });
+    Object.assign(s.gridEl.style, { left: m.inset.l + 'px', top: m.inset.t + 'px', width: vw + 'px', height: vh + 'px' });
+    s.gridEl.dataset.cols = vw < 640 ? '4' : vw < 1024 ? '8' : '12';
+    s.gridEl.style.setProperty('--gut', (vw < 640 ? 16 : 24) + 'px');
+  }
+  function viewportText(s) {
+    if (!s || !s.vw) return '';
+    if (Math.abs(s.layoutW - s.vw) < 1) return `${t('viewport')} ${Math.round(s.vw)} × ${Math.round(s.vh)} · ${bpName(s.vw)}`;
+    return `${t('layoutPx')} ${Math.round(s.layoutW)} × ${Math.round(s.vh / (s.vw / s.layoutW))} · ${bpName(s.layoutW)}`;
+  }
   function layout() {
     if (!slots.length) return;
     const infos = slots.map((s) => { const dev = getDev(s.devId), dm = dimsOf(dev), m = metrics(dev); return { s, dev, dm, m, ow: dm.w + m.bz.l + m.bz.r, oh: dm.h + m.bz.t + m.bz.b }; });
@@ -439,7 +477,8 @@
       s.wrap.style.width = ow * z + 'px'; s.wrap.style.height = (oh + (m.extraH || 0)) * z + 'px'; s.extraH = m.extraH || 0;
       Object.assign(s.device.style, { width: ow + 'px', height: oh + 'px', borderRadius: m.rOut + 'px', transform: `scale(${z})` });
       Object.assign(s.screen.style, { left: m.bz.l + 'px', top: m.bz.t + 'px', width: dm.w + 'px', height: dm.h + 'px', borderRadius: m.rIn + 'px' });
-      Object.assign(s.iframe.style, { left: m.inset.l + 'px', top: m.inset.t + 'px', width: Math.max(1, dm.w - m.inset.l - m.inset.r) + 'px', height: Math.max(1, dm.h - m.inset.t - m.inset.b) + 'px' });
+      iframeGeom(s, dev, dm, m);
+      s.screen.classList.toggle('grid', !!state.grid);
       s.nm.textContent = dev.name; s.sz.textContent = `${dm.w}×${dm.h}`;
       s.rm.style.display = state.mode === 'compare' ? '' : 'none';
     });
@@ -464,6 +503,8 @@
     $('#btnTouch').setAttribute('aria-pressed', !!state.touch);
     $('#btnFrame').setAttribute('aria-pressed', !!state.frame);
     $('#btnScroll').setAttribute('aria-pressed', !settings.hideScroll);
+    $('#btnGrid').setAttribute('aria-pressed', !!state.grid);
+    $('#vpInfo').textContent = single ? viewportText(slots[0]) : '';
     $$('#modeSeg button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.mode === state.mode));
   }
   function setZoom(z) { state.zoom = z === 'fit' ? 'fit' : clamp(Math.round(z * 100) / 100, 0.1, 3); layout(); saveState(); }
@@ -481,8 +522,8 @@
     s.loader.classList.remove('done'); s.alive = false; s.hinted = false; s.href = url;
     clearTimeout(s.loadTimer); clearTimeout(s.slowTimer);
     s.loadTimer = setTimeout(() => s.loader.classList.add('done'), 3000);
-    s.slowTimer = setTimeout(() => { if (isOpen && !s.alive && !s.hinted) { s.hinted = true; toast(t('slowHint'), 'warning'); } }, 12000);
-    s.screen.style.removeProperty('--bar-bg'); s.screen.style.removeProperty('--bar-fg');
+    s.slowTimer = setTimeout(() => { if (isOpen && !s.alive && !s.hinted) { s.hinted = true; toast(t('slowHint'), 'warning', { label: t('popout'), action: popout }); } }, 12000);
+    s.screen.style.removeProperty('--bar-bg'); s.screen.style.removeProperty('--bar-fg'); s.screen.style.removeProperty('--bar-bg-b'); s.screen.style.removeProperty('--bar-fg-b'); s.vpMeta = undefined;
     s.key = pushConfig(s);
     s.iframe.src = url;
   }
@@ -510,7 +551,9 @@
     const s = slots.find((x) => x.iframe.contentWindow === e.source);
     if (!s) return;
     if (d.type === 'hello') { s.alive = true; s.loader.classList.add('done'); pushConfig(s); }
-    else if (d.type === 'theme' && typeof d.bg === 'string') applyBars(s, d.bg);
+    else if (d.type === 'theme' && typeof d.bg === 'string') applyBars(s, d.bg, d.bgb);
+    else if (d.type === 'size' && sizeWait[d.key]) { sizeWait[d.key](d); delete sizeWait[d.key]; }
+    else if (d.type === 'viewport' && (d.content === null || typeof d.content === 'string')) { s.vpMeta = d.content; layout(); }
     else if (d.type === 'nav' && typeof d.href === 'string') {
       s.alive = true; s.href = d.href; s.loader.classList.add('done');
       if (s === slots[0]) {
@@ -518,6 +561,8 @@
         if (root.activeElement !== $('#urlInput')) $('#urlInput').value = d.href;
       }
       if (state.mode === 'compare' && settings.sync && Date.now() > syncLock) {
+        const now = Date.now(); syncHits = syncHits.filter((x) => now - x < 6000); syncHits.push(now);
+        if (syncHits.length > 4) { settings.sync = false; saveSettings(); toast(t('syncOff'), 'warning'); return; }
         syncLock = Date.now() + 1500;
         slots.forEach((o) => { if (o !== s && o.href !== d.href) { o.loader.classList.remove('done'); o.href = d.href; o.iframe.src = d.href; } });
       }
@@ -537,7 +582,7 @@
     });
     layout(); renderDevices(); saveState();
   }
-  function setDevice(id) { state.deviceId = id; applyDevices(); }
+  function setDevice(id) { state.deviceId = id; if (id !== 'responsive') { state.recent = [id].concat((state.recent || []).filter((x) => x !== id)).slice(0, 6); } applyDevices(); }
   function toggleCompare(id) {
     const i = state.compare.indexOf(id);
     if (i >= 0) { if (state.compare.length <= 1) return toast(t('minCompare'), 'warning'); state.compare.splice(i, 1); }
@@ -547,7 +592,7 @@
   }
   async function setMode(m) {
     if (m === state.mode) return;
-    state.mode = m; animNext = true;
+    state.mode = m; animNext = true; renderSets();
     if (m === 'compare') {
       state.compare = state.compare.filter((id) => id !== 'responsive');
       if (state.deviceId !== 'responsive' && !state.compare.includes(state.deviceId)) state.compare.unshift(state.deviceId);
@@ -599,32 +644,45 @@
       const size = dev.type === 'responsive' ? t('responsiveSub') : `${dev.w} × ${dev.h} · ${dev.dpr}x`;
       b.innerHTML = lead + '<div class="meta"><div class="nm"></div><div class="sz"></div></div>';
       $('.nm', b).textContent = dev.name; $('.sz', b).textContent = size;
+      if (dev.id !== 'responsive') {
+        const fv = (state.fav || []).includes(dev.id), fb = document.createElement('button'); fb.type = 'button'; fb.className = 'favb'; fb.setAttribute('aria-pressed', String(fv));
+        fb.innerHTML = ic(fv ? 'star-fill' : 'star'); fb.dataset.tip = t(fv ? 'unfav' : 'fav'); fb.setAttribute('aria-label', t(fv ? 'unfav' : 'fav'));
+        fb.onclick = (ev) => { ev.stopPropagation(); const a = state.fav || (state.fav = []), i = a.indexOf(dev.id); if (i >= 0) a.splice(i, 1); else a.push(dev.id); saveState(); renderDevices(false); };
+        b.appendChild(fb);
+      }
       if (isCustom) { const eb = document.createElement('button'); eb.className = 'edit'; eb.innerHTML = ic('edit'); eb.dataset.tip = t('editDevice'); eb.onclick = (ev) => { ev.stopPropagation(); openDeviceDialog(dev); }; b.appendChild(eb); }
       const act = () => { if (single) { if (dev.id === 'responsive') { toResponsive(); applyDevices(); } else setDevice(dev.id); if (innerWidth <= 900) app.classList.add('rc'); } else toggleCompare(dev.id); };
       b.onclick = act; b.onkeydown = (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); act(); } };
       return b;
     };
     if (single && (f === 'all') && (!q || 'responsive'.includes(q))) list.appendChild(item(getDev('responsive'), false));
+    if (f === 'all' && !q && single) {
+      const rec = (state.recent || []).map((id) => allDevices().find((d) => d.id === id)).filter(Boolean).slice(0, 4);
+      if (rec.length) { const h = document.createElement('div'); h.className = 'group-title'; h.textContent = t('recent'); list.appendChild(h); rec.forEach((d) => list.appendChild(item(d, !!d.custom))); }
+    }
     const groups = new Map();
     allDevices().forEach((d) => {
       const isC = !!d.custom;
-      const hit = f === 'all' || (f === 'custom' ? isC : f === 'ios' ? d.type === 'phone' && d.os === 'ios' : f === 'android' ? d.type === 'phone' && d.os === 'android' : d.type === f);
+      const hit = f === 'all' || (f === 'fav' ? (state.fav || []).includes(d.id) : f === 'custom' ? isC : f === 'ios' ? d.type === 'phone' && d.os === 'ios' : f === 'android' ? d.type === 'phone' && d.os === 'android' : d.type === f);
       if (!hit) return;
       if (q && !d.name.toLowerCase().includes(q) && !d.group.toLowerCase().includes(q)) return;
-      const g = isC ? t('custom') : d.group;
+      const g = isC ? t('custom') : groupLabel(d.group);
       if (!groups.has(g)) groups.set(g, []);
       groups.get(g).push(d);
     });
     const order = [...groups.keys()].sort((a, b) => (a === t('custom') ? -1 : b === t('custom') ? 1 : 0));
+    if (f === 'fav' && !groups.size) { const n = document.createElement('div'); n.className = 'empty-list'; n.textContent = t('noFav'); list.appendChild(n); return; }
     order.forEach((g) => {
       const h = document.createElement('div'); h.className = 'group-title'; h.textContent = g; list.appendChild(h);
       groups.get(g).forEach((d) => list.appendChild(item(d, !!d.custom)));
     });
     if (!list.children.length) { const n = document.createElement('div'); n.className = 'empty-list'; n.textContent = t('noResults'); list.appendChild(n); }
   }
+  const GROUP_KEY = { 'Apple iPhone': 'g_iphone', 'Google Pixel': 'g_pixel', 'Samsung Galaxy': 'g_samsung', 'Other Android': 'g_otherAndroid', 'Foldables': 'g_fold', 'Apple iPad': 'g_ipad', 'Android tablets': 'g_atab', 'Watches': 'g_watch', 'Laptops & desktops': 'g_desktop' };
+  const groupLabel = (g) => (GROUP_KEY[g] ? t(GROUP_KEY[g]) : g);
   function renderChips() {
     const fc = $('#filterChips'); fc.innerHTML = '';
-    [['all', 'all'], ['ios', 'ios'], ['android', 'android'], ['tablet', 'tablets'], ['foldable', 'foldables'], ['watch', 'watches'], ['desktop', 'desktops'], ['custom', 'custom']].forEach(([v, k]) => {
+    [['all', 'all'], ['fav', 'favs'], ['ios', 'ios'], ['android', 'android'], ['tablet', 'tablets'], ['foldable', 'foldables'], ['watch', 'watches'], ['desktop', 'desktops'], ['custom', 'custom']].forEach(([v, k]) => {
       const b = document.createElement('button'); b.className = 'chip'; b.textContent = t(k); b.setAttribute('aria-pressed', state.filter === v);
       b.onclick = () => { state.filter = v; renderChips(); renderDevices(true); saveState(); }; fc.appendChild(b);
     });
@@ -634,6 +692,52 @@
       b.onclick = async () => { state.mode = 'single'; toResponsive(w); await applyDevices(true); };
       bc.appendChild(b);
     });
+  }
+
+  /* ---------------- saved compare sets ---------------- */
+  let sets = [];
+  function renderSets() {
+    const row = $('#setRow'); row.innerHTML = '';
+    row.hidden = state.mode !== 'compare';
+    if (state.mode !== 'compare') return;
+    const add = document.createElement('button'); add.className = 'chip'; add.type = 'button'; add.innerHTML = ic('bookmark_add') + '<span></span>'; $('span', add).textContent = t('saveSet');
+    add.onclick = () => { $('#setName').value = ''; $('#dlgSet').showModal(); setTimeout(() => $('#setName').focus(), 50); };
+    row.appendChild(add);
+    sets.forEach((st, i) => {
+      const c = document.createElement('div'); c.className = 'chip setchip';
+      c.innerHTML = '<button type="button" class="sn"></button><button type="button" class="sx"></button>'; $('.sn', c).textContent = st.name; $('.sx', c).innerHTML = ic('close');
+      $('.sx', c).dataset.tip = t('remove'); $('.sn', c).dataset.tip = st.ids.map((id) => getDev(id).name).join(', ');
+      $('.sn', c).onclick = () => { state.compare = st.ids.filter((id) => allDevices().some((d) => d.id === id)).slice(0, MAX_COMPARE); if (!state.compare.length) return; applyDevices(false).then(() => { if (state.url) slots.forEach((x) => loadSlot(x, state.url)); }); };
+      $('.sx', c).onclick = () => { sets.splice(i, 1); chrome.storage.local.set({ rt_sets: sets }); renderSets(); };
+      row.appendChild(c);
+    });
+  }
+  function bindSets() {
+    $('#setForm').addEventListener('submit', () => {
+      const name = $('#setName').value.trim(); if (!name) return;
+      sets = sets.filter((x) => x.name !== name); sets.push({ name, ids: state.compare.slice() }); if (sets.length > 12) sets.shift();
+      chrome.storage.local.set({ rt_sets: sets }); renderSets();
+    });
+  }
+
+  /* ---------------- QR code (open on a real phone) ---------------- */
+  function openQr() {
+    const url = (slots[0] && slots[0].href) || state.url || location.href;
+    $('#qrBox').innerHTML = window.RT_QR(url);
+    $('#qrUrl').textContent = url;
+    const local = /^(https?:\/\/)?(localhost|127\.|0\.0\.0\.0|\[::1\]|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/i.test(url) || /^file:/i.test(url);
+    $('#qrNote').textContent = local ? t('qrLocal') : t('qrNote');
+    $('#dlgQr').showModal();
+  }
+
+  /* ---------------- first-run tour ---------------- */
+  function openTour() {
+    const body = $('#tourBody'); body.innerHTML = '';
+    [['devices', 'tour1t', 'tour1'], ['compare', 'tour2t', 'tour2'], ['photo_camera', 'tour3t', 'tour3'], ['keyboard', 'tour4t', 'tour4'], ['qr_code_2', 'tour5t', 'tour5']].forEach(([icn, tt, tb], i) => {
+      const r = document.createElement('div'); r.className = 'tour-i'; r.style.setProperty('--i', i);
+      r.innerHTML = '<span class="ti">' + ic(icn) + '</span><div><b></b><p></p></div>'; $('b', r).textContent = t(tt); $('p', r).textContent = t(tb); body.appendChild(r);
+    });
+    $('#dlgTour').showModal();
   }
 
   /* ---------------- custom device dialog ---------------- */
@@ -757,10 +861,13 @@
     /* simulation (accordion) */
     acc('sim', 'simulation', (pad) => {
       sw(pad, 'hideScroll', 'hideScroll', 'hideScrollHint', () => { slots.forEach(pushConfig); layout(); });
+      sw(pad, 'metaViewport', 'metaViewport', 'metaViewportHint', () => layout());
       sw(pad, 'spoofUA', 'spoofUA', 'spoofUAHint', async () => { await updateRules(); slots.forEach(pushConfig); if (state.url) reload(); });
       sw(pad, 'bypass', 'bypass', 'bypassHint', async () => { await updateRules(); if (state.url) reload(); });
       sw(pad, 'sync', 'syncScroll', 'syncScrollHint');
       sw(pad, 'copyShot', 'copyShot', 'copyShotHint');
+      sw(pad, 'rememberSite', 'rememberSite', 'rememberSiteHint');
+      sw(pad, 'escClose', 'escClose', 'escCloseHint');
     });
 
     /* shortcuts (accordion) */
@@ -785,8 +892,69 @@
   function download(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
   const slugOf = (s) => (getDev(s.devId).name || 'device').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+  async function grab() {
+    const cap = await chrome.runtime.sendMessage({ type: 'capture' });
+    if (!cap || !cap.ok) throw new Error(cap && cap.error);
+    return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = cap.url; });
+  }
+  const sizeWait = {};
+  function measure(s) {
+    return new Promise((res) => { const key = Math.random().toString(36).slice(2); sizeWait[key] = res; send(s, { type: 'measure', key }); setTimeout(() => { if (sizeWait[key]) { delete sizeWait[key]; res(null); } }, 1500); });
+  }
+  async function compareShot() {
+    app.classList.add('capturing');
+    try {
+      await nextFrames(3);
+      const sr = stage.getBoundingClientRect();
+      let l = 1e9, tp = 1e9, r = -1e9, b = -1e9;
+      slots.forEach((s) => { const q = s.el.getBoundingClientRect(); l = Math.min(l, q.left); tp = Math.min(tp, q.top); r = Math.max(r, q.right); b = Math.max(b, q.bottom); });
+      if (l < sr.left - 1 || r > sr.right + 1 || tp < sr.top - 1 || b > sr.bottom + 1) { toast(t('shotCrop'), 'warning'); return; }
+      const img = await grab(), k = img.naturalWidth / innerWidth;
+      const c = document.createElement('canvas'); c.width = Math.round((r - l) * k); c.height = Math.round((b - tp) * k);
+      c.getContext('2d').drawImage(img, l * k, tp * k, (r - l) * k, (b - tp) * k, 0, 0, c.width, c.height);
+      const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+      download(blob, `compare_${stamp()}.png`); toast(t('shotSaved'), 'success');
+    } catch (e) { console.warn(e); toast(t('shotFail'), 'error'); }
+    finally { app.classList.remove('capturing'); }
+  }
+  async function fullPageShot() {
+    if (!state.url) return toast(t('needUrl'), 'warning');
+    if (state.mode !== 'single') return screenshot();
+    const s = slots[0]; if (!s || !s.alive) return toast(t('fullNeedsAgent'), 'warning');
+    const size = await measure(s); if (!size) return toast(t('shotFail'), 'error');
+    const dev = getDev(s.devId), dm0 = dimsOf(dev), m0 = metrics(dev);
+    const vpW = dm0.w - m0.inset.l - m0.inset.r;
+    const k0 = innerWidth ? 1 : 1;
+    app.classList.add('capturing');
+    const prevZoom = state.zoom;
+    try {
+      fullShot = { h: Math.min(Math.ceil(size.h), 14000), w: vpW };
+      zoomOverride = 1; layout(); await nextFrames(3); await new Promise((r) => setTimeout(r, 700));
+      const total = fullShot.h, scr = s.screen;
+      const sr0 = stage.getBoundingClientRect();
+      const top0 = scr.getBoundingClientRect().top - sr0.top + stage.scrollTop;
+      let img = await grab(); const k = img.naturalWidth / innerWidth;
+      const c = document.createElement('canvas'); c.width = Math.round(vpW * k); c.height = Math.round(total * k);
+      const ctx = c.getContext('2d');
+      for (let y = 0; y < total; ) {
+        stage.scrollTop = top0 + y; await nextFrames(3); await new Promise((r) => setTimeout(r, 620));
+        const sr = stage.getBoundingClientRect(), r = scr.getBoundingClientRect();
+        const srcTop = Math.max(sr.top, r.top), srcBottom = Math.min(sr.bottom, r.bottom, r.top + (total - 0));
+        const h = srcBottom - srcTop; if (h < 2) break;
+        img = await grab();
+        const destY = (srcTop - r.top);
+        ctx.drawImage(img, r.left * k, srcTop * k, vpW * k, h * k, 0, destY * k, vpW * k, h * k);
+        y = Math.round(destY + h);
+      }
+      const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+      download(blob, `${slugOf(s)}_fullpage_${stamp()}.png`); toast(t('shotSaved'), 'success');
+    } catch (e) { console.warn(e); toast(t('shotFail'), 'error'); }
+    finally { fullShot = null; zoomOverride = 0; state.zoom = prevZoom; stage.scrollTop = 0; app.classList.remove('capturing'); layout(); }
+  }
+
   async function screenshot() {
     if (!state.url) return toast(t('needUrl'), 'warning');
+    if (slots.length > 1) return compareShot();
     const jobs = slots.slice();
     app.classList.add('capturing');
     try {
@@ -880,10 +1048,17 @@
     rec = null;
   }
 
+  function popout() {
+    const s = slots[0]; if (!s) return;
+    const dev = getDev(s.devId), prof = settings.spoofUA ? uaProfile(dev) : null;
+    chrome.runtime.sendMessage({ type: 'popout', url: s.href || state.url, w: Math.round(s.vw || dimsOf(dev).w), h: Math.round(s.vh || dimsOf(dev).h), prof: prof && { ua: prof.ua, os: prof.os, mobile: prof.mobile } }).catch(() => {});
+  }
+
   /* ---------------- panels (left tools / right devices) ---------------- */
   function setPanel(side, open) {
     app.classList.toggle(side === 'l' ? 'lc' : 'rc', !open);
     if (open && innerWidth <= 900) app.classList.add(side === 'l' ? 'rc' : 'lc');
+    if (innerWidth > 900) { state.lc = app.classList.contains('lc'); state.rc = app.classList.contains('rc'); saveState(); }
   }
   const togglePanel = (side) => setPanel(side, app.classList.contains(side === 'l' ? 'lc' : 'rc'));
   function applyWidths() { app.style.setProperty('--lw', state.lw + 'px'); app.style.setProperty('--rw', state.rw + 'px'); }
@@ -901,14 +1076,17 @@
       h.addEventListener('pointermove', mv); h.addEventListener('pointerup', up);
     }));
   }
-  function applyBars(s, bg) {
+  function parseColor(bg) {
+    if (!CSS.supports('color', bg)) return null;
+    const c = document.createElement('canvas'); c.width = c.height = 1;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = '#ffffff'; x.fillStyle = bg; x.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = x.getImageData(0, 0, 1, 1).data; return a < 200 ? null : { r, g, b, dark: (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.55 };
+  }
+  function applyBars(s, bg, bgb) {
     try {
-      if (!CSS.supports('color', bg)) return;
-      const c = document.createElement('canvas'); c.width = c.height = 1;
-      const x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = '#ffffff'; x.fillStyle = bg; x.fillRect(0, 0, 1, 1);
-      const [r, g, b, a] = x.getImageData(0, 0, 1, 1).data; if (a < 200) return;
-      s.screen.style.setProperty('--bar-bg', `rgb(${r},${g},${b})`);
-      s.screen.style.setProperty('--bar-fg', (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.55 ? '#fff' : '#111');
+      const top = parseColor(bg), bot = parseColor(bgb || bg);
+      if (top) { s.screen.style.setProperty('--bar-bg', `rgb(${top.r},${top.g},${top.b})`); s.screen.style.setProperty('--bar-fg', top.dark ? '#fff' : '#111'); }
+      if (bot) { s.screen.style.setProperty('--bar-bg-b', `rgb(${bot.r},${bot.g},${bot.b})`); s.screen.style.setProperty('--bar-fg-b', bot.dark ? '#fff' : '#111'); }
     } catch (e) {}
   }
 
@@ -924,15 +1102,26 @@
     osSel = makeSelect($('#dOs'), { options: o.os, value: 'android', label: t('os') });
   }
   function refreshSelectLabels() { const o = selOptions(); typeSel.setOptions(o.type); osSel.setOptions(o.os); }
-  function renderAll() { renderChips(); renderDevices(); layout(); }
+  function renderAll() {
+    renderSets(); renderChips(); renderDevices(); layout(); }
   function bind() {
-    bindDeviceForm();
+    bindDeviceForm(); bindSets();
     $('#btnPanel').onclick = () => setPanel('l', false);
     $('#btnPanelR').onclick = () => setPanel('r', false);
     $('#btnReopenL').onclick = () => setPanel('l', true);
     $('#btnReopenR').onclick = () => setPanel('r', true);
     $('#panelScrim').onclick = () => app.classList.add('lc', 'rc');
     $('#btnScroll').onclick = () => { settings.hideScroll = !settings.hideScroll; saveSettings(); slots.forEach(pushConfig); layout(); };
+    $('#btnGrid').onclick = () => { state.grid = !state.grid; layout(); saveState(); };
+    $('#btnPop').onclick = popout;
+    $('#btnQr').onclick = openQr;
+    $('#btnShotFull').onclick = fullPageShot;
+    $('#devList').addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      const items = $$('.dev', $('#devList')), i = items.indexOf(e.target.closest('.dev'));
+      e.preventDefault(); const n = items[clamp((i < 0 ? 0 : i) + (e.key === 'ArrowDown' ? 1 : -1), 0, items.length - 1)]; if (n) { n.focus(); n.scrollIntoView({ block: 'nearest' }); }
+    });
+    $('#devSearch').addEventListener('keydown', (e) => { if (e.key === 'ArrowDown') { e.preventDefault(); const f = $('#devList .dev'); if (f) f.focus(); } if (e.key === 'Escape') { e.target.value = ''; query = ''; renderDevices(true); e.target.blur(); e.stopPropagation(); } });
     bindResizers(); bindTooltip(); bindRipple();
     attachToTop($('#devList'), $('.list-wrap'), false);
     attachToTop($('#panelL'), $('#panelL'), true);
@@ -967,11 +1156,11 @@
     stage.addEventListener('wheel', (e) => { if (!e.ctrlKey) return; e.preventDefault(); setZoom(curZoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08)); }, { passive: false });
     ['keydown', 'keyup', 'keypress'].forEach((n) => host.addEventListener(n, (e) => e.stopPropagation()));
     root.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !root.querySelector('dialog[open]') && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { close(); return; }
+      if (e.key === 'Escape' && !root.querySelector('dialog[open]') && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { if (!settings.escClose) return; if (rec) { toast(t('stopFirst'), 'warning'); return; } close(); return; }
       if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName) || root.querySelector('dialog[open]')) return;
       const k = e.key.toLowerCase();
       if (k === 'r') rotate(); else if (k === 'f') setZoom('fit'); else if (k === 'c') setMode(state.mode === 'single' ? 'compare' : 'single');
-      else if (k === 's') screenshot(); else if (k === 'p') togglePanel('r'); else if (k === 'l') togglePanel('l');
+      else if (k === 's') screenshot(); else if (k === 'p') togglePanel('r'); else if (k === 'l') togglePanel('l'); else if (k === 'd') { setPanel('r', true); setTimeout(() => $('#devSearch').focus(), 60); } else if (k === 'g') { state.grid = !state.grid; layout(); saveState(); } else if (k === '?') openTour();
       else if (k === '+' || k === '=') setZoom(curZoom * 1.15); else if (k === '-') setZoom(curZoom / 1.15);
       else if (k === '/') { e.preventDefault(); $('#urlInput').focus(); } else return;
       if (k !== '/') e.preventDefault();
@@ -991,13 +1180,18 @@
     if (isOpen) return;
     isOpen = true;
     settings = Object.assign({}, DEF_SETTINGS, (await chrome.storage.local.get('settings')).settings);
+    if (settings.seed === '#3F5BF6') settings.seed = '#2196F3';
     const st = (await chrome.storage.local.get('rt_state')).rt_state || {};
     state = Object.assign({}, DEF_STATE, st, { resp: Object.assign({}, DEF_STATE.resp, st.resp) });
     custom = (await chrome.storage.local.get('rt_custom')).rt_custom || [];
+    sets = (await chrome.storage.local.get('rt_sets')).rt_sets || [];
     if (state.deviceId !== 'responsive' && !allDevices().some((d) => d.id === state.deviceId)) state.deviceId = 'iphone-16';
     state.compare = (state.compare || []).filter((id) => allDevices().some((d) => d.id === id));
     if (!state.compare.length) state.compare = DEF_STATE.compare.slice();
     state.landscape = !!state.landscape;
+    sites = (await chrome.storage.local.get('rt_sites')).rt_sites || {};
+    const mem = settings.rememberSite && sites[location.origin];
+    if (mem && (mem.deviceId === 'responsive' || allDevices().some((d) => d.id === mem.deviceId))) { state.mode = 'single'; state.deviceId = mem.deviceId; state.landscape = !!mem.landscape; if (mem.resp) state.resp = Object.assign({}, state.resp, mem.resp); }
     const startUrl = location.href;
 
     // media on the host page keeps playing underneath otherwise
@@ -1020,7 +1214,7 @@
 
     RT_I18N.set(lang());
     applyTheme(); applyTypography(); hydrate(); applyWidths();
-    if (innerWidth <= 900) app.classList.add('lc', 'rc');
+    if (innerWidth <= 900) app.classList.add('lc', 'rc'); else { if (state.lc) app.classList.add('lc'); if (state.rc) app.classList.add('rc'); }
     slots = []; zoomOverride = 0; syncLock = 0; query = '';
     bind();
     window.addEventListener('message', onMessage); cleanup.push(() => window.removeEventListener('message', onMessage));
@@ -1029,6 +1223,9 @@
     $('#urlInput').value = startUrl;
     go(startUrl);
     app.focus();
+    const dirty = [...document.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=checkbox]):not([type=radio]):not([type=search]),textarea')].some((i) => i.value && i.value !== i.defaultValue);
+    if (dirty) setTimeout(() => isOpen && toast(t('formWarn'), 'warning'), 700);
+    if (!(await chrome.storage.local.get('rt_seen')).rt_seen) { chrome.storage.local.set({ rt_seen: 1 }); setTimeout(() => isOpen && openTour(), 900); }
   }
 
   async function close() {

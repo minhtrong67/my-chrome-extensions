@@ -86,3 +86,5 @@ section, header, footer { box-sizing: border-box; }
   .grid { grid-template-columns: 1fr; }
   .privacy-card, .author-card { padding: 28px 22px; }
 }
+
+:root[data-scheme="light"] .privacy-card .chip { background: color-mix(in srgb, #000 24%, var(--md-sys-color-primary)); }

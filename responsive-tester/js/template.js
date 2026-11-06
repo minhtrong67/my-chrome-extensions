@@ -19,7 +19,7 @@ window.RT_TEMPLATE = `<div id="app" class="app">
     </div>
 
     <section class="ctl">
-      <div class="cur"><span class="cur-ic" id="chipIcon" data-icon="mobile"></span><b id="chipName"></b></div>
+      <div class="cur"><span class="cur-ic" id="chipIcon" data-icon="mobile"></span><div class="cur-t"><b id="chipName"></b><span class="vpi" id="vpInfo"></span></div></div>
       <div class="btn-group seg" id="modeSeg">
         <button data-mode="single"><span data-icon="mobile"></span><span data-i18n="single"></span></button>
         <button data-mode="compare" data-key="C"><span data-icon="compare"></span><span data-i18n="compare"></span></button>
@@ -50,7 +50,9 @@ window.RT_TEMPLATE = `<div id="app" class="app">
         <button class="tbtn toggle" id="btnTouch"><span data-icon="touch_app"></span><span class="lbl" data-i18n="touch"></span></button>
         <button class="tbtn toggle" id="btnFrame"><span data-icon="devices_fold"></span><span class="lbl" data-i18n="frame"></span></button>
         <button class="tbtn toggle" id="btnScroll"><span data-icon="swap_vert"></span><span class="lbl" data-i18n="scrollbar"></span></button>
+        <button class="tbtn toggle" id="btnGrid"><span data-icon="grid_view"></span><span class="lbl" data-i18n="gridOverlay"></span></button>
         <button class="tbtn" id="btnShot" data-key="S"><span data-icon="photo_camera"></span><span class="lbl" data-i18n="screenshot"></span></button>
+        <button class="tbtn" id="btnShotFull"><span data-icon="fullscreen"></span><span class="lbl" data-i18n="fullPage"></span></button>
         <div class="rec-wrap">
           <button class="tbtn rec" id="btnRec"><span data-icon="videocam"></span><span class="lbl" data-i18n="record"></span></button>
           <div class="menu" id="recMenu" hidden>
@@ -60,6 +62,8 @@ window.RT_TEMPLATE = `<div id="app" class="app">
             <button data-fmt="mp4"><span data-icon="movie"></span>MP4</button>
           </div>
         </div>
+        <button class="tbtn" id="btnQr"><span data-icon="qr_code_2"></span><span class="lbl" data-i18n="qrTitle"></span></button>
+        <button class="tbtn" id="btnPop"><span data-icon="open_in_new"></span><span class="lbl" data-i18n="popout"></span></button>
       </div>
     </section>
     <div class="rz" data-side="l"></div>
@@ -86,6 +90,7 @@ window.RT_TEMPLATE = `<div id="app" class="app">
     </div>
     <label class="search"><span data-icon="search"></span><input id="devSearch" type="search" data-i18n-ph="search" autocomplete="off"></label>
     <div class="chips" id="filterChips"></div>
+    <div class="chips sets" id="setRow" hidden></div>
     <div class="list-wrap"><div class="dev-list" id="devList"></div></div>
     <div class="rz" data-side="r"></div>
   </aside>
@@ -94,6 +99,24 @@ window.RT_TEMPLATE = `<div id="app" class="app">
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
+    <dialog id="dlgSet" class="dialog sm">
+    <form method="dialog" id="setForm" class="dlg-form">
+      <div class="dlg-head"><h2 data-i18n="saveSet"></h2><button type="button" class="icon-btn" data-close data-icon="close" data-i18n-title="close"></button></div>
+      <label class="field"><span data-i18n="name"></span><input id="setName" required maxlength="28"></label>
+      <div class="dlg-actions"><span class="grow"></span><button type="button" class="btn text" data-close><span data-i18n="cancel"></span></button><button type="submit" class="btn filled"><span data-i18n="save"></span></button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgQr" class="dialog sm">
+    <div class="dlg-head"><h2 data-i18n="qrTitle"></h2><button type="button" class="icon-btn" data-close data-icon="close" data-i18n-title="close"></button></div>
+    <div class="qr-body"><div class="qr-box" id="qrBox"></div><p class="qr-url" id="qrUrl"></p><p class="qr-note" id="qrNote"></p></div>
+  </dialog>
+
+  <dialog id="dlgTour" class="dialog">
+    <div class="dlg-head"><h2 data-i18n="tourTitle"></h2><button type="button" class="icon-btn" data-close data-icon="close" data-i18n-title="close"></button></div>
+    <div class="tour-body" id="tourBody"></div>
+    <div class="dlg-actions tour-act"><span class="grow"></span><button type="button" class="btn filled" data-close><span data-i18n="gotIt"></span></button></div>
+  </dialog>
   <dialog id="dlgSettings" class="dialog">
     <div class="dlg-head"><h2 data-i18n="settings"></h2><button class="icon-btn" data-close data-icon="close" data-i18n-title="close"></button></div>
     <div class="dlg-body" id="settingsBody"></div>

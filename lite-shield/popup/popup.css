@@ -37,6 +37,18 @@ header { display: flex; align-items: center; gap: 12px; padding: 4px 2px 0 4px; 
 
 .status { text-align: center; margin-top: -2px; animation: rise var(--dur-l) 60ms var(--spring-spatial) both; }
 .status .headline-s { transition: color var(--dur-s); }
+.status #fix { height: 36px; margin-top: 4px; font-size: 13px; }
+.status #fix .i { width: 16px; height: 16px; }
+.status #fix:disabled { display: none; }
+.fix-row { all: unset; box-sizing: border-box; cursor: pointer; position: relative; display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px; border-radius: 20px; background: var(--md-sys-color-surface-container-high); transition: background var(--dur-s), border-radius var(--dur-m) var(--spring-spatial); }
+.fix-row:hover { border-radius: 26px; }
+.fix-row[aria-checked="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.fix-row:focus-visible { outline: 3px solid color-mix(in srgb, var(--md-sys-color-primary) 55%, transparent); outline-offset: 2px; }
+.fix-row .fix-dot { flex: none; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--md-sys-color-outline); display: grid; place-items: center; transition: box-shadow var(--dur-s); }
+.fix-row[aria-checked="true"] .fix-dot { box-shadow: inset 0 0 0 7px var(--md-sys-color-primary); }
+.fix-actions { margin-top: 10px; display: flex; }
+.fix-actions .btn { flex: 1; }
+.perm-box { text-align: center; padding: 28px 16px; display: grid; gap: 10px; justify-items: center; }
 
 /* ----- thống kê ----- */
 .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; animation: rise var(--dur-l) 120ms var(--spring-spatial) both; }

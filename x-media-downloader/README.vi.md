@@ -2,7 +2,7 @@
 
 > Tải video và ảnh từ X (Twitter) và TweetDeck chỉ với một cú nhấp — không dịch vụ bên thứ ba, không crawl.
 
-**Phiên bản** 1.2.0 · **Nền tảng** Chrome (Manifest V3, Chrome 111+) · **Ngôn ngữ** English, Tiếng Việt · **Thiết kế** Material 3 Expressive
+**Phiên bản** 1.4.0 · **Nền tảng** Chrome (Manifest V3, Chrome 111+) · **Ngôn ngữ** English, Tiếng Việt · **Thiết kế** Material 3 Expressive
 
 *English: see [README.md](README.md).*
 
@@ -17,13 +17,15 @@
 | Chọn từng media | Bấm chuột phải vào nút (hoặc chọn “Cho tôi chọn” trong Cài đặt) để chọn một ảnh/video trong bài nhiều media. |
 | Chất lượng gốc | MP4 bitrate cao nhất cho video/GIF, `name=orig` cho ảnh. |
 | Tên tệp tuỳ chỉnh | Mẫu có token và thư mục con, xem trước trực tiếp trong Cài đặt. |
+| Đường dẫn lưu | Chọn thư mục con trong Downloads (có token), hoặc để Chrome hỏi nơi lưu cho từng tệp. |
 | Tự hiện nội dung nhạy cảm | Tự bấm “Xem” trên media bị ẩn sau cảnh báo nhạy cảm — theo nhãn (tiếng Anh/Việt và từ bạn thêm) và theo bố cục cảnh báo, nên dùng được cả ngôn ngữ khác. |
 | Phím tắt | Phím trong trang (mặc định `D`) và lệnh toàn trình duyệt (`Alt+Shift+D`). |
 | Ảnh bìa video | Tuỳ chọn lưu thêm ảnh bìa cạnh video. |
 | Popup nhanh | Popup trên thanh công cụ có công tắc cho nút tải, tự hiện nhạy cảm, ảnh bìa và phím tắt. |
 | Nhật ký | Các lỗi gần đây và lần tự thử lại, có nút “Sao chép báo cáo”. |
-| Sao lưu | Xuất / nhập / đặt lại toàn bộ cài đặt. |
-| Cá nhân hoá | Giao diện sáng/tối/hệ thống, bảng màu Material, cỡ chữ, ngôn ngữ và font. |
+| Sao lưu | Xuất / nhập / đặt lại toàn bộ cài đặt (đặt lại có hộp thoại xác nhận kiểu Material). |
+| Hướng dẫn | Thẻ “Chào mừng” lần đầu, các nhóm cài đặt thu gọn được, khung xem trước nút/tooltip/menu/thông báo và huy hiệu đỏ trên icon khi tải lỗi. |
+| Cá nhân hoá | Giao diện sáng/tối/hệ thống, đủ 19 màu Material cùng màu tuỳ chọn, cỡ chữ, ngôn ngữ và dropdown font tuỳ chỉnh. |
 
 **Cố ý không có:** crawl bài đăng, tải hàng loạt, nén tệp.
 
@@ -59,12 +61,13 @@ Cài đặt có sẵn các mẫu, và mục **Thử với liên kết bài đăn
 
 ## Cài đặt
 
-- **Giao diện:** chế độ sáng/tối/hệ thống, 12 màu Material, cỡ chữ (nhỏ/vừa/lớn), ngôn ngữ (English/Tiếng Việt) và font (System, Google Sans Flex, Roboto Flex, Roboto, Arial, Inter, Be Vietnam Pro).
+- **Giao diện:** chế độ sáng/tối/hệ thống; màu chủ đề chọn trong 19 màu Material (Red, Pink, Purple, Deep Purple, Indigo, Blue, Light Blue, Cyan, Teal, Green, Light Green, Lime, Yellow, Amber, Orange, Deep Orange, Brown, Grey, Blue Grey) xếp thành lưới cân đối, kèm ô thứ 20 để chọn màu tuỳ ý; cỡ chữ (nhỏ/vừa/lớn); ngôn ngữ (English/Tiếng Việt); font (System, Google Sans Flex, Roboto Flex, Roboto, Arial, Inter, Be Vietnam Pro) chọn bằng dropdown tuỳ chỉnh hỗ trợ đầy đủ bàn phím (mũi tên, Home/End, gõ chữ để nhảy, Esc).
+- **Đường dẫn lưu:** Chrome chỉ cho extension ghi bên trong thư mục Downloads, nên cài đặt này là *thư mục con* (ví dụ `X Media/{username}`), có xem trước đường dẫn cuối cùng. Đường dẫn tuyệt đối như `D:/Pics` sẽ bị từ chối kèm gợi ý. Muốn lưu thư mục khác hãy bật **Hỏi nơi lưu cho từng tệp** (Chrome hiện hộp thoại Lưu cho mỗi tệp), hoặc đổi thư mục Downloads chính tại `chrome://settings/downloads`.
 - **Tải xuống:** mẫu tên tệp và mẫu có sẵn, tự hiện nhạy cảm (kèm nhãn “Xem” bổ sung), ảnh bìa video, cách xử lý bài nhiều media, phím tắt.
 - **Nhật ký:** các sự cố và lần thử lại gần đây (lưu cục bộ, tối đa 60 mục).
 - **Giới thiệu → Sao lưu:** xuất/nhập cài đặt dạng JSON hoặc đặt lại tất cả.
 - **Đồng bộ:** cài đặt lưu bằng `chrome.storage.sync`; nhật ký chỉ nằm trên máy này.
-- **Font:** font web nạp từ Google Fonts khi có mạng, offline sẽ dùng font hệ thống.
+- **Font:** cả bảy font được đóng gói sẵn (subset Latin + Việt) nên dùng được offline và không tải gì từ máy chủ ngoài. Trên x.com, toast/tooltip/menu chỉ dùng font bạn chọn nếu font đó đã cài trong hệ thống, nếu không sẽ dùng font hệ thống.
 
 ## Cách hoạt động
 
@@ -97,6 +100,7 @@ Không có analytics, không máy chủ bên ngoài; không có dữ liệu nào
 | Không thấy nút | Tải lại extension và tab. Nút chỉ hiện ở bài có ảnh/video. |
 | “Không tìm thấy media để tải” | Mở bài đăng một lần để X tải dữ liệu rồi thử lại. Bài bị khoá/giới hạn tuổi cần đăng nhập. |
 | Không tự hiện nội dung nhạy cảm | Thêm từ “Xem” của ngôn ngữ bạn (cách nhau bằng dấu phẩy) tại *Cài đặt → Tải xuống → Nhãn “Xem” bổ sung*. Nhận diện theo bố cục là heuristic, có thể cần chỉnh nếu X đổi giao diện. |
+| Tệp lưu sai chỗ | Kiểm tra *Cài đặt → Tải xuống → Đường dẫn lưu*. Thư mục luôn tính từ thư mục Downloads của Chrome. |
 | Tải xuống bị lỗi | Tắt các extension quản lý tải xuống khác trên X vì có thể xung đột. |
 | Một lượt tải bị lỗi | Mở *Cài đặt → Nhật ký* để xem lý do (liên kết hết hạn, mạng, hệ thống tệp) và dùng **Sao chép báo cáo** khi cần hỗ trợ. |
 | Trình duyệt chậm | Mở `chrome://extensions` → *Errors* của extension và Task Manager của Chrome để xem tab nào đang nặng, rồi báo lại. |

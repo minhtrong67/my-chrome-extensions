@@ -1,14 +1,14 @@
 // Áp dụng theme Material 3 (cần src/mcu.js và src/shared.js nạp trước)
 (() => {
   const X = globalThis.XMD;
-  const KEYS = ['primary', 'primaryContainer', 'onPrimaryContainer', 'secondaryContainer', 'onSecondaryContainer', 'surfaceContainerHigh', 'onSurface', 'outlineVariant', 'inverseSurface', 'inverseOnSurface', 'inversePrimary'];
+  const KEYS = ['primary', 'onPrimary', 'onSurfaceVariant', 'primaryContainer', 'onPrimaryContainer', 'secondaryContainer', 'onSecondaryContainer', 'surfaceContainerHigh', 'onSurface', 'outlineVariant', 'inverseSurface', 'inverseOnSurface', 'inversePrimary'];
   const kebab = (k) => k.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
   X.buildCache = (hex) => {
     const pick = (sc) => Object.fromEntries(KEYS.map((k) => [k, sc[k]]));
     return { light: pick(MCU.scheme(hex, false)), dark: pick(MCU.scheme(hex, true)) };
   };
-  X.hasFullCache = (S) => !!(S.themeCache && S.themeCache.light && S.themeCache.light.surfaceContainerHigh);
+  X.hasFullCache = (S) => !!(S.themeCache && S.themeCache.light && S.themeCache.light.onPrimary);
   X.applyTheme = (S, root = document.documentElement) => {
     const dark = X.isDarkMode(S);
     const vars = MCU.scheme(S.themeColor, dark);

@@ -58,6 +58,14 @@ The full light/dark palette is generated from the chosen color in OKLCH; all 19 
 - Ripples, spring shape-morphing, scroll reveal, animated counters. Everything respects `prefers-reduced-motion`.
 - Lucide icons throughout.
 
+## Performance
+
+- Network blocking runs inside Chrome (`declarativeNetRequest`), not in JavaScript.
+- Generic element hiding is applied *on demand*: each page reports only the class/id names it contains and Lite Shield hides the matches, instead of loading ~13,000 CSS rules into every tab (≈ 1 MB per tab instead of ≈ 5 MB).
+- The service worker sleeps when idle and keeps under 3 MB of JavaScript heap; enabling the optional block log keeps it awake while pages load.
+- AdGuard Base is off by default (it adds ~18,000 network rules). Turn off lists you don't need in Settings → Protection.
+- Measure it yourself: `npm run test:memory`.
+
 ## Install (developer mode)
 
 1. Download or clone this folder.

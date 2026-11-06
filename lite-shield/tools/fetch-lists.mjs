@@ -5,7 +5,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BASE, SOURCES } from '../shared/sources.js';
+import { BASE, SOURCES, EXTRA } from '../shared/sources.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'lists', 'vendor');
 for (const [group, files] of Object.entries(SOURCES)) {
@@ -17,6 +17,17 @@ for (const [group, files] of Object.entries(SOURCES)) {
     const text = await res.text();
     writeFileSync(join(dir, f.split('/').pop()), text);
     console.log(`${group.padEnd(13)} ${f.split('/').pop().padEnd(36)} ${(text.length / 1024).toFixed(0)} KB`);
+  }
+}
+for (const [id, cfg] of Object.entries(EXTRA)) {
+  const dir = join(root, id);
+  mkdirSync(dir, { recursive: true });
+  for (const [name, url] of Object.entries(cfg.files)) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+    const text = await res.text();
+    writeFileSync(join(dir, name), text);
+    console.log(`${id.padEnd(13)} ${name.padEnd(36)} ${(text.length / 1024).toFixed(0)} KB`);
   }
 }
 console.log('Xong. Chạy tiếp: node tools/build-rulesets.mjs');

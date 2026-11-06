@@ -15,22 +15,21 @@
     enabled: true,
     multiMode: 'all',
     revealKeywords: '',
+    saveFolder: '',
+    askWhere: false,
+    onboarded: false,
     themeCache: null
   };
 
+  // 19 màu Material Design (Purple dùng tông tím chuẩn của Material 3 baseline)
   const COLORS = [
-    { id: 'purple', hex: '#6750A4' },
-    { id: 'indigo', hex: '#3F51B5' },
-    { id: 'blue', hex: '#2196F3' },
-    { id: 'cyan', hex: '#00BCD4' },
-    { id: 'teal', hex: '#009688' },
-    { id: 'green', hex: '#4CAF50' },
-    { id: 'lime', hex: '#CDDC39' },
-    { id: 'yellow', hex: '#FFEB3B' },
-    { id: 'orange', hex: '#FF9800' },
-    { id: 'deepOrange', hex: '#FF5722' },
-    { id: 'red', hex: '#F44336' },
-    { id: 'pink', hex: '#E91E63' }
+    { id: 'red', hex: '#F44336' }, { id: 'pink', hex: '#E91E63' }, { id: 'purple', hex: '#6750A4' },
+    { id: 'deepPurple', hex: '#673AB7' }, { id: 'indigo', hex: '#3F51B5' }, { id: 'blue', hex: '#2196F3' },
+    { id: 'lightBlue', hex: '#03A9F4' }, { id: 'cyan', hex: '#00BCD4' }, { id: 'teal', hex: '#009688' },
+    { id: 'green', hex: '#4CAF50' }, { id: 'lightGreen', hex: '#8BC34A' }, { id: 'lime', hex: '#CDDC39' },
+    { id: 'yellow', hex: '#FFEB3B' }, { id: 'amber', hex: '#FFC107' }, { id: 'orange', hex: '#FF9800' },
+    { id: 'deepOrange', hex: '#FF5722' }, { id: 'brown', hex: '#795548' }, { id: 'grey', hex: '#9E9E9E' },
+    { id: 'blueGrey', hex: '#607D8B' }
   ];
 
   const SYS = 'system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -81,6 +80,29 @@
       'ab.race': 'Other download-manager extensions running at the same time can cause race conditions. Turn them off for X if downloads misbehave.',
       'ab.version': 'Version',
       'sc.current': 'Current shortcut',
+      'tip.rightClick': 'Right-click to choose items',
+      'dlg.resetTitle': 'Reset all settings?', 'dlg.resetBody': 'Every option goes back to its default value. Your activity log is kept.', 'dlg.cancel': 'Cancel',
+      'ob.title': 'Welcome — you’re set in 3 steps',
+      'ob.s1': 'Open x.com or TweetDeck and scroll to a post with a photo or video.',
+      'ob.s2': 'Click the download icon in the post’s action bar. A ring shows the progress.',
+      'ob.s3': 'Hover a post and press {key} for a one-key download. Right-click the icon to pick single items.',
+      'ob.open': 'Open x.com', 'ob.done': 'Got it',
+      'sec.save': 'Where to save', 'sec.name': 'File name', 'sec.behavior': 'Behavior', 'sec.shortcut': 'Shortcut',
+      'autosave': 'Changes are saved automatically',
+      'pvm.name': 'Sample account', 'pvm.text': 'This is how the download button looks on a post.',
+      'pvm.hint': 'Hover for the tooltip, click to see progress, right-click for the menu.', 'pvm.toasts': 'Notification styles',
+      'pvm.t.info': 'This is an info message.', 'pvm.t.success': 'This is a success message.', 'pvm.t.warning': 'This is a warning message.', 'pvm.t.error': 'This is an error message.',
+      'popup.errors': '{n} recent error(s)', 'popup.view': 'View',
+      'color.deepPurple': 'Deep purple', 'color.lightBlue': 'Light blue', 'color.lightGreen': 'Light green', 'color.amber': 'Amber',
+      'color.brown': 'Brown', 'color.grey': 'Grey', 'color.blueGrey': 'Blue grey', 'color.custom': 'Custom',
+      'path.title': 'Save location',
+      'path.desc': 'Chrome only lets extensions save inside its Downloads folder, so choose a sub-folder here. Tokens such as {username} and {date} work too.',
+      'path.label': 'Sub-folder inside Downloads', 'path.full': 'Saved to',
+      'path.hint': 'Leave empty to save straight into Downloads. Use / to nest folders.',
+      'path.abs': 'Chrome doesn’t allow absolute paths like C:/Pictures. Use a sub-folder, or turn on “Ask where to save”.',
+      'ask.title': 'Ask where to save each file', 'ask.desc': 'Chrome shows its Save dialog for every file, so you can pick any folder on your computer.',
+      'dlset.title': 'Default Downloads folder', 'dlset.desc': 'To move the main Downloads folder itself, change it in Chrome’s settings.', 'dlset.btn': 'Open Chrome settings',
+      'warn.chromeSettings': 'Couldn’t open the page. Go to chrome://settings/downloads manually.',
       'nav.activity': 'Activity',
       'file.presets': 'Presets', 'file.try': 'Try with a post link', 'file.tryBtn': 'Preview', 'file.tryBusy': 'Looking up…',
       'file.tryNone': 'No media found for this link.', 'file.tryBad': 'That doesn’t look like a post link.',
@@ -146,6 +168,29 @@
       'ab.race': 'Các extension quản lý tải xuống khác chạy cùng lúc có thể gây xung đột (race condition). Hãy tắt chúng trên X nếu việc tải bị lỗi.',
       'ab.version': 'Phiên bản',
       'sc.current': 'Phím tắt hiện tại',
+      'tip.rightClick': 'Chuột phải để chọn từng mục',
+      'dlg.resetTitle': 'Đặt lại toàn bộ cài đặt?', 'dlg.resetBody': 'Mọi tuỳ chọn trở về giá trị mặc định. Nhật ký hoạt động vẫn được giữ lại.', 'dlg.cancel': 'Huỷ',
+      'ob.title': 'Chào mừng — chỉ cần 3 bước',
+      'ob.s1': 'Mở x.com hoặc TweetDeck và cuộn tới một bài có ảnh hoặc video.',
+      'ob.s2': 'Bấm biểu tượng tải trong thanh hành động của bài. Vòng tròn cho biết tiến độ.',
+      'ob.s3': 'Rê chuột lên bài rồi nhấn {key} để tải bằng một phím. Bấm chuột phải vào biểu tượng để chọn từng mục.',
+      'ob.open': 'Mở x.com', 'ob.done': 'Đã hiểu',
+      'sec.save': 'Nơi lưu', 'sec.name': 'Tên tệp', 'sec.behavior': 'Hành vi', 'sec.shortcut': 'Phím tắt',
+      'autosave': 'Thay đổi được lưu tự động',
+      'pvm.name': 'Tài khoản mẫu', 'pvm.text': 'Đây là giao diện nút tải trên một bài đăng.',
+      'pvm.hint': 'Rê chuột để xem tooltip, bấm để xem tiến độ, bấm chuột phải để mở menu.', 'pvm.toasts': 'Kiểu thông báo',
+      'pvm.t.info': 'Đây là thông báo thông tin.', 'pvm.t.success': 'Đây là thông báo thành công.', 'pvm.t.warning': 'Đây là thông báo cảnh báo.', 'pvm.t.error': 'Đây là thông báo lỗi.',
+      'popup.errors': '{n} lỗi gần đây', 'popup.view': 'Xem',
+      'color.deepPurple': 'Tím đậm', 'color.lightBlue': 'Xanh dương nhạt', 'color.lightGreen': 'Xanh lá nhạt', 'color.amber': 'Hổ phách',
+      'color.brown': 'Nâu', 'color.grey': 'Xám', 'color.blueGrey': 'Xám xanh', 'color.custom': 'Tuỳ chọn',
+      'path.title': 'Đường dẫn lưu',
+      'path.desc': 'Chrome chỉ cho extension lưu bên trong thư mục Downloads, nên hãy chọn thư mục con tại đây. Có thể dùng token như {username} và {date}.',
+      'path.label': 'Thư mục con trong Downloads', 'path.full': 'Lưu tại',
+      'path.hint': 'Để trống để lưu thẳng vào Downloads. Dùng / để lồng thư mục.',
+      'path.abs': 'Chrome không cho dùng đường dẫn tuyệt đối như C:/Pictures. Hãy dùng thư mục con hoặc bật “Hỏi nơi lưu”.',
+      'ask.title': 'Hỏi nơi lưu cho từng tệp', 'ask.desc': 'Chrome hiện hộp thoại Lưu cho mỗi tệp để bạn chọn bất kỳ thư mục nào trên máy.',
+      'dlset.title': 'Thư mục Downloads mặc định', 'dlset.desc': 'Muốn đổi chính thư mục Downloads, hãy đổi trong cài đặt của Chrome.', 'dlset.btn': 'Mở cài đặt Chrome',
+      'warn.chromeSettings': 'Không mở được trang. Hãy vào chrome://settings/downloads thủ công.',
       'nav.activity': 'Nhật ký',
       'file.presets': 'Mẫu có sẵn', 'file.try': 'Thử với liên kết bài đăng', 'file.tryBtn': 'Xem thử', 'file.tryBusy': 'Đang tra cứu…',
       'file.tryNone': 'Không tìm thấy media cho liên kết này.', 'file.tryBad': 'Đây không giống liên kết bài đăng.',
@@ -196,7 +241,7 @@
   const sanitize = (s) =>
     String(s ?? '').replace(/\s+/g, ' ').replace(/[<>:"\\|?*\u0000-\u001f]/g, '_').trim();
 
-  function buildFilename(tpl, c) {
+  function renderParts(tpl, c) {
     let d = c.createdAt ? new Date(c.createdAt) : new Date();
     if (isNaN(d)) d = new Date();
     const p = (n) => String(n).padStart(2, '0');
@@ -208,10 +253,17 @@
       type: c.type, filename: c.filename
     };
     const raw = String(tpl || '').replace(/\{(\w+)\}/g, (_, k) =>
-      k in map ? sanitize(map[k]).replace(/\//g, '_') : '');
-    const parts = raw.split('/').map((x) => sanitize(x).replace(/^\.+|[. ]+$/g, '')).filter(Boolean);
+      k in map ? sanitize(map[k]).replace(/[\\/]/g, '_') : '');
+    return raw.replace(/^\s*[a-zA-Z]:/, '').split(/[\\/]+/)
+      .map((x) => sanitize(x).replace(/^\.+|[. ]+$/g, '')).filter(Boolean);
+  }
+  const isAbsolutePath = (v) => /^\s*([a-zA-Z]:|[\\/]|~)/.test(String(v || ''));
+  function buildFilename(tpl, c) {
+    const parts = renderParts(tpl, c);
     return parts.length ? parts.join('/') : `${c.username || 'x'}-${c.tweetId}-${c.index}`;
   }
+  // Thư mục con bên trong Downloads ('' nếu để trống); luôn là đường dẫn tương đối
+  const buildFolder = (tpl, c) => renderParts(tpl, c).join('/');
 
   // Chuẩn hoá media entry của X/syndication về dạng gọn
   function slimMedia(m) {
@@ -224,8 +276,8 @@
 
   // ---------- theme tokens ----------
   const FALLBACK = {
-    light: { primary: '#65558f', primaryContainer: '#e9ddff', onPrimaryContainer: '#201047', secondaryContainer: '#e8def8', onSecondaryContainer: '#1d192b', surfaceContainerHigh: '#ece6ee', onSurface: '#1d1b20', outlineVariant: '#cac4cf', inverseSurface: '#322f35', inverseOnSurface: '#f5eff7', inversePrimary: '#cfbdfe' },
-    dark: { primary: '#cfbdfe', primaryContainer: '#4d3d76', onPrimaryContainer: '#e9ddff', secondaryContainer: '#4a4458', onSecondaryContainer: '#e8def8', surfaceContainerHigh: '#2b2930', onSurface: '#e6e0e9', outlineVariant: '#49454f', inverseSurface: '#e6e0e9', inverseOnSurface: '#322f35', inversePrimary: '#65558f' }
+    light: { primary: '#65558f', onPrimary: '#ffffff', onSurfaceVariant: '#49454f', primaryContainer: '#e9ddff', onPrimaryContainer: '#201047', secondaryContainer: '#e8def8', onSecondaryContainer: '#1d192b', surfaceContainerHigh: '#ece6ee', onSurface: '#1d1b20', outlineVariant: '#cac4cf', inverseSurface: '#322f35', inverseOnSurface: '#f5eff7', inversePrimary: '#cfbdfe' },
+    dark: { primary: '#cfbdfe', onPrimary: '#36275d', onSurfaceVariant: '#cac4cf', primaryContainer: '#4d3d76', onPrimaryContainer: '#e9ddff', secondaryContainer: '#4a4458', onSecondaryContainer: '#e8def8', surfaceContainerHigh: '#2b2930', onSurface: '#e6e0e9', outlineVariant: '#49454f', inverseSurface: '#e6e0e9', inverseOnSurface: '#322f35', inversePrimary: '#65558f' }
   };
   const getTokens = (s, dark) => ({ ...FALLBACK[dark ? 'dark' : 'light'], ...((s && s.themeCache && s.themeCache[dark ? 'dark' : 'light']) || {}) });
   const isDarkMode = (s) => s.themeMode === 'dark' || (s.themeMode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
@@ -321,5 +373,104 @@
     window.addEventListener('blur', hide);
   }
 
-  globalThis.XMD = { DEFAULTS, COLORS, FONTS, SIZES, I18N, t, sanitize, buildFilename, slimMedia, getTokens, isDarkMode, logKey, toastPalette, fmtShortcut, createToaster, initTooltips };
+  // ---------- menu (M3) dùng chung cho trang X và trang cài đặt ----------
+  const MENU_FILE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>';
+  function createMenu(getCtx) {
+    let el = null;
+    const close = () => {
+      if (!el) return;
+      el.remove(); el = null;
+      document.removeEventListener('pointerdown', onOutside, true);
+      document.removeEventListener('keydown', onKey, true);
+    };
+    const onOutside = (e) => { if (el && !el.contains(e.target)) close(); };
+    const onKey = (e) => {
+      if (!el) return;
+      const its = [...el.querySelectorAll('.xmd-mi')];
+      const i = its.indexOf(document.activeElement);
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); its[(i + 1) % its.length].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); its[(i - 1 + its.length) % its.length].focus(); }
+    };
+    // rows: [{ label, sub?, thumb?, onPick }]
+    function open(anchor, rows) {
+      close();
+      const c = getCtx(), tk = c.tokens;
+      el = document.createElement('div');
+      el.className = 'xmd-menu';
+      el.setAttribute('role', 'menu');
+      const st = el.style;
+      st.setProperty('--mn-bg', tk.surfaceContainerHigh); st.setProperty('--mn-fg', tk.onSurface);
+      st.setProperty('--mn-sel', tk.secondaryContainer); st.setProperty('--mn-on-sel', tk.onSecondaryContainer);
+      st.setProperty('--mn-line', tk.outlineVariant); st.setProperty('--xmd-font', c.font); st.setProperty('--xmd-fs', c.fs);
+      for (const r of rows) {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'xmd-mi'; b.setAttribute('role', 'menuitem');
+        if (r.thumb) { const im = document.createElement('img'); im.src = r.thumb; im.alt = ''; im.referrerPolicy = 'no-referrer'; b.append(im); }
+        else { const ic = document.createElement('span'); ic.className = 'xmd-mi-ic'; ic.innerHTML = MENU_FILE; b.append(ic); }
+        const tx = document.createElement('span'); tx.className = 'xmd-mi-tx';
+        const l1 = document.createElement('span'); l1.textContent = r.label; tx.append(l1);
+        if (r.sub) { const l2 = document.createElement('small'); l2.textContent = r.sub; tx.append(l2); }
+        b.append(tx);
+        b.addEventListener('click', (e) => { e.stopPropagation(); close(); r.onPick(); });
+        el.append(b);
+      }
+      (document.body || document.documentElement).append(el);
+      const rc = anchor.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
+      const x = Math.min(innerWidth - w - 8, Math.max(8, rc.right - w));
+      let y = rc.bottom + 6, below = true;
+      if (y + h > innerHeight - 8) { y = rc.top - h - 6; below = false; }
+      el.style.left = x + 'px'; el.style.top = Math.max(8, y) + 'px';
+      el.style.transformOrigin = `${Math.round(rc.right - x)}px ${below ? '0' : '100%'}`;
+      requestAnimationFrame(() => { if (el) { el.classList.add('show'); const f = el.querySelector('.xmd-mi'); if (f) f.focus(); } });
+      document.addEventListener('pointerdown', onOutside, true);
+      document.addEventListener('keydown', onKey, true);
+    }
+    return { open, close, isOpen: () => !!el };
+  }
+
+  // ---------- hộp thoại xác nhận M3: trả về Promise<boolean> ----------
+  function confirmDialog(getCtx, { title, body, ok, cancel }) {
+    return new Promise((resolve) => {
+      const c = getCtx(), tk = c.tokens, prev = document.activeElement;
+      const scrim = document.createElement('div');
+      scrim.className = 'xmd-scrim';
+      const dlg = document.createElement('div');
+      dlg.className = 'xmd-dialog';
+      dlg.setAttribute('role', 'alertdialog'); dlg.setAttribute('aria-modal', 'true');
+      dlg.setAttribute('aria-labelledby', 'xmd-dlg-t'); dlg.setAttribute('aria-describedby', 'xmd-dlg-b');
+      const st = dlg.style;
+      st.setProperty('--dg-bg', tk.surfaceContainerHigh); st.setProperty('--dg-fg', tk.onSurface); st.setProperty('--dg-sub', tk.onSurfaceVariant);
+      st.setProperty('--dg-pri', tk.primary); st.setProperty('--dg-on-pri', tk.onPrimary);
+      st.setProperty('--xmd-font', c.font); st.setProperty('--xmd-fs', c.fs);
+      dlg.innerHTML = '<h2 id="xmd-dlg-t"></h2><p id="xmd-dlg-b"></p><div class="xmd-dlg-actions"><button type="button" class="xmd-dlg-btn text"></button><button type="button" class="xmd-dlg-btn filled"></button></div>';
+      dlg.querySelector('h2').textContent = title;
+      dlg.querySelector('p').textContent = body;
+      const [bNo, bYes] = dlg.querySelectorAll('button');
+      bNo.textContent = cancel; bYes.textContent = ok;
+      const done = (v) => {
+        document.removeEventListener('keydown', onKey, true);
+        scrim.classList.remove('show');
+        setTimeout(() => scrim.remove(), 200);
+        if (prev && prev.focus) prev.focus();
+        resolve(v);
+      };
+      const onKey = (e) => {
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); done(false); }
+        else if (e.key === 'Tab') {   // giữ focus trong hộp thoại
+          e.preventDefault();
+          (document.activeElement === bNo ? bYes : bNo).focus();
+        }
+      };
+      bNo.addEventListener('click', () => done(false));
+      bYes.addEventListener('click', () => done(true));
+      scrim.addEventListener('pointerdown', (e) => { if (e.target === scrim) done(false); });
+      scrim.append(dlg);
+      document.body.append(scrim);
+      document.addEventListener('keydown', onKey, true);
+      requestAnimationFrame(() => { scrim.classList.add('show'); bYes.focus(); });
+    });
+  }
+
+  globalThis.XMD = { DEFAULTS, COLORS, FONTS, SIZES, I18N, t, sanitize, buildFilename, buildFolder, isAbsolutePath, slimMedia, getTokens, isDarkMode, logKey, toastPalette, fmtShortcut, createToaster, initTooltips, createMenu, confirmDialog };
 })();

@@ -2,7 +2,7 @@
 
 > Download videos and images from X (Twitter) and TweetDeck with a single click — no third-party service, no crawling.
 
-**Version** 1.2.0 · **Platform** Chrome (Manifest V3, Chrome 111+) · **Languages** English, Tiếng Việt · **Design** Material 3 Expressive
+**Version** 1.4.0 · **Platform** Chrome (Manifest V3, Chrome 111+) · **Languages** English, Tiếng Việt · **Design** Material 3 Expressive
 
 *Tiếng Việt: xem [README.vi.md](README.vi.md).*
 
@@ -17,13 +17,15 @@
 | Pick individual media | Right-click the button (or set “Let me choose”) to pick a single photo/video from a multi-media post. |
 | Original quality | Highest-bitrate MP4 for videos/GIFs, `name=orig` for images. |
 | Custom filename | Template with tokens and sub-folders, live preview in Settings. |
+| Save location | Choose a sub-folder inside Downloads (tokens allowed), or let Chrome ask where to save each file. |
 | Auto reveal sensitive content | Clicks “View” on media hidden behind a sensitive-content warning — by label (English/Vietnamese plus your own words) and by the warning’s layout, so it works in other languages too. |
 | Keyboard shortcut | In-page key (default `D`) plus a browser-wide command (`Alt+Shift+D`). |
 | Video thumbnail | Optionally saves the cover image next to the video. |
 | Quick popup | Toolbar popup with switches for the button, auto reveal, thumbnails and shortcut. |
 | Activity log | Recent failures and automatic retries, with a one-click “Copy report”. |
-| Backup | Export / import / reset all settings. |
-| Personalisation | Light / dark / system theme, Material colour palettes, text size, language and font. |
+| Backup | Export / import / reset all settings (reset asks for confirmation in a Material dialog). |
+| Guidance | A first-run “Welcome” card, collapsible settings sections, a live preview of the button/tooltip/menu/notifications, and a red badge on the toolbar icon when a download fails. |
+| Personalisation | Light / dark / system theme, all 19 Material colours plus a custom colour, text size, language and a custom font dropdown. |
 
 **Out of scope by design:** tweet crawling, batch download and file compression.
 
@@ -59,12 +61,13 @@ Presets are available in Settings, and **Try with a post link** previews the exa
 
 ## Settings
 
-- **Appearance:** theme (light / dark / system), 12 Material colours, text size (small / medium / large), language (English / Tiếng Việt) and font (System, Google Sans Flex, Roboto Flex, Roboto, Arial, Inter, Be Vietnam Pro).
+- **Appearance:** theme (light / dark / system); theme colour from the 19 Material colours (Red, Pink, Purple, Deep Purple, Indigo, Blue, Light Blue, Cyan, Teal, Green, Light Green, Lime, Yellow, Amber, Orange, Deep Orange, Brown, Grey, Blue Grey) laid out in a balanced grid, with a 20th tile for any custom colour; text size (small / medium / large); language (English / Tiếng Việt); font (System, Google Sans Flex, Roboto Flex, Roboto, Arial, Inter, Be Vietnam Pro) chosen from a custom dropdown with full keyboard support (arrows, Home/End, type-ahead, Esc).
+- **Save location:** Chrome only lets extensions write inside its Downloads folder, so the setting is a *sub-folder* (e.g. `X Media/{username}`), with a live preview of the final path. Absolute paths such as `D:/Pics` are rejected with a hint. For any other folder turn on **Ask where to save each file** (Chrome’s Save dialog appears for every file), or move the main Downloads folder in `chrome://settings/downloads`.
 - **Download:** filename template and presets, auto reveal (plus extra “View” labels), video thumbnail, behaviour for posts with several media, shortcut.
 - **Activity:** recent problems and retries (stored locally, up to 60 entries).
 - **About → Backup:** export/import settings as JSON, or reset everything.
 - **Sync:** settings are stored with `chrome.storage.sync`; the activity log stays on this device.
-- **Fonts:** web fonts load from Google Fonts when online and fall back to system fonts offline.
+- **Fonts:** all seven fonts are bundled (Latin + Vietnamese subsets), so they work offline and nothing is fetched from external servers. On x.com the toast, tooltip and menu use the chosen font only if it is installed on your system; otherwise they fall back to your system font.
 
 ## How it works
 
@@ -97,6 +100,7 @@ No analytics, no remote servers, no data leaves your browser except the requests
 | No button on a post | Reload the extension and the tab. The button only appears on posts with photos/video. |
 | “No downloadable media found” | Open the post once so X loads it, then retry. Protected/age-restricted posts need you to be logged in. |
 | Sensitive media is not revealed | Add the local word for “View” (comma-separated) under *Settings → Download → Extra “View” labels*. The layout-based detection is a heuristic and may need adjusting if X changes its markup. |
+| Files land in the wrong place | Check *Settings → Download → Save location*. The folder is always relative to Chrome’s Downloads folder. |
 | Downloads misbehave | Disable other download-manager extensions on X — they can race with this one. |
 | A download failed | Open *Settings → Activity* to see the reason (expired link, network, file system) and use **Copy report** when asking for help. |
 | Browser feels slow | Open `chrome://extensions` → *Errors* for this extension and Chrome’s Task Manager (Shift+Esc) to see which tab is busy, then report it. |
@@ -130,7 +134,8 @@ src/inject.js        MAIN-world hook for X’s GraphQL responses
 src/content.js       button, menu, shortcut, auto reveal, toast, tooltip (all X selectors live in `SEL`)
 src/shared.js        defaults, i18n, filename builder, toast/tooltip helpers
 src/theme.js         applies Material 3 theme tokens
-src/ui.css           shared toast, tooltip and menu styles
+src/ui.css           shared toast, tooltip, menu and dialog styles
+fonts.css, fonts/    bundled web fonts (woff2, Latin + Vietnamese)
 src/content.css      download button styles
 src/mcu.js           bundled Material colour utilities
 icons/               extension icons

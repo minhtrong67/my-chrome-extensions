@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lite Shield",
-  "version": "0.4.1",
+  "version": "0.5.2",
   "description": "Chặn quảng cáo & trình theo dõi bằng declarativeNetRequest — nhẹ, riêng tư, giao diện Material 3 Expressive. / Light, private ad & tracker blocker with a Material 3 Expressive UI.",
   "minimum_chrome_version": "120",
   "icons": {
@@ -28,9 +28,6 @@
     "declarativeNetRequestFeedback",
     "storage",
     "scripting",
-    "activeTab",
-    "webRequest",
-    "webNavigation",
     "alarms",
     "contextMenus"
   ],
@@ -64,9 +61,24 @@
         "path": "rulesets/trackers.json"
       },
       {
+        "id": "vn",
+        "enabled": true,
+        "path": "rulesets/vn.json"
+      },
+      {
+        "id": "ubo",
+        "enabled": true,
+        "path": "rulesets/ubo.json"
+      },
+      {
         "id": "annoyances",
         "enabled": false,
         "path": "rulesets/annoyances.json"
+      },
+      {
+        "id": "adguard",
+        "enabled": false,
+        "path": "rulesets/adguard.json"
       }
     ]
   },
@@ -78,5 +90,18 @@
       },
       "description": "Chọn & ẩn phần tử trên trang"
     }
-  }
+  },
+  "optional_permissions": [
+    "webRequest"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "res/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
 }

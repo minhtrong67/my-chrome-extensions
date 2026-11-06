@@ -30,7 +30,18 @@
     uaNote: 'Server-side detection follows the first device', zoom: 'Zoom', selected: 'selected', noResults: 'No devices match', favorites: 'Compare set',
     resetView: 'Reset view', colorTheme: 'Theme color', fontFamily: 'Font', textSize: 'Text size', toTop: 'Back to top', kbTools: 'Tools panel', kbClose: 'Close simulator',
     c_red: 'Red', c_pink: 'Pink', c_purple: 'Purple', c_deepPurple: 'Deep Purple', c_indigo: 'Indigo', c_blue: 'Blue', c_lightBlue: 'Light Blue', c_cyan: 'Cyan', c_teal: 'Teal', c_green: 'Green', c_lightGreen: 'Light Green', c_lime: 'Lime', c_yellow: 'Yellow', c_amber: 'Amber', c_orange: 'Orange', c_deepOrange: 'Deep Orange', c_brown: 'Brown', c_grey: 'Grey', c_blueGrey: 'Blue Grey',
-    slowHint: 'This page is slow to load or refuses to be framed. Try Reload.', scrollbar: 'Scrollbar', typography: 'Font & text size', small: 'Small', medium: 'Medium', large: 'Large', authorBy: 'Created by', aiHelp: 'Built with the help of Claude (AI by Anthropic)', closeSim: 'Close simulator', rulesFail: 'Could not set request rules', blockedHint: 'This page did not respond inside the frame. The site may forbid embedding itself (CSP frame-src).', iframeHint: 'Some sites refuse to be embedded. Turn on “Allow sites that block embedding” in settings.'
+    slowHint: 'This page is slow to load or refuses to be framed. Try Reload.', favs: 'Favorites', gridOverlay: 'Grid', fullPage: 'Full page', qrTitle: 'Open on phone', popout: 'Open in window', fav: 'Add to favorites', unfav: 'Remove from favorites', recent: 'Recent', noFav: 'No favorites yet. Tap the star on a device.',
+    saveSet: 'Save set', tourTitle: 'Welcome to Responsive Tester', gotIt: 'Got it', viewport: 'Viewport', layoutPx: 'Layout', syncOff: 'Sync turned off: the pages keep redirecting each other.', stopFirst: 'Stop the recording first.',
+    formWarn: 'Unsaved form data in this tab is not copied to the preview.', metaViewport: 'Emulate meta viewport', metaViewportHint: 'Pages without a viewport tag render at 980px, like mobile browsers',
+    escClose: 'Esc closes the simulator', escCloseHint: 'Turn off to avoid closing by accident', rememberSite: 'Remember device per site', rememberSiteHint: 'Reopens each site with the device you used last',
+    qrNote: 'Scan with your phone camera to open this page on a real device.', qrLocal: 'This address is local (localhost or a private network). Your phone can only open it when it is on the same network.', fullNeedsAgent: 'Wait for the page to finish loading first.',
+    tour1t: 'Pick a device', tour1: 'Choose from 79 phones, tablets, watches and desktops on the right, or drag the edges in Responsive mode.',
+    tour2t: 'Compare side by side', tour2: 'Switch to Compare to see up to 6 devices at once with synced scrolling.',
+    tour3t: 'Capture', tour3: 'Take screenshots (visible, full page or all devices) and record GIF, WebM or MP4.',
+    tour4t: 'Shortcuts', tour4: 'R rotate, F fit, C compare, D search devices, G grid, S screenshot, Esc close. Press ? to see this again.',
+    tour5t: 'Test on a real phone', tour5: 'Scan the QR code to open the page on your own device.',
+    g_iphone: 'Apple iPhone', g_pixel: 'Google Pixel', g_samsung: 'Samsung Galaxy', g_otherAndroid: 'Other Android', g_fold: 'Foldables', g_ipad: 'Apple iPad', g_atab: 'Android tablets', g_watch: 'Watches', g_desktop: 'Laptops & desktops',
+    scrollbar: 'Scrollbar', typography: 'Font & text size', small: 'Small', medium: 'Medium', large: 'Large', authorBy: 'Created by', aiHelp: 'Built with the help of Claude (AI by Anthropic)', closeSim: 'Close simulator', rulesFail: 'Could not set request rules', blockedHint: 'This page did not respond inside the frame. The site may forbid embedding itself (CSP frame-src).', iframeHint: 'Some sites refuse to be embedded. Turn on “Allow sites that block embedding” in settings.'
   };
   const VI = {
     appName: 'Responsive Tester', responsive: 'Responsive', responsiveSub: 'Kéo cạnh để đổi kích thước tự do',
@@ -62,7 +73,18 @@
     uaNote: 'Nhận diện phía máy chủ theo thiết bị đầu tiên', zoom: 'Thu phóng', selected: 'đã chọn', noResults: 'Không có thiết bị phù hợp', favorites: 'Bộ so sánh',
     resetView: 'Đặt lại', colorTheme: 'Màu sắc chủ đề', fontFamily: 'Phông chữ', textSize: 'Cỡ chữ', toTop: 'Lên đầu trang', kbTools: 'Bảng công cụ', kbClose: 'Đóng trình mô phỏng',
     c_red: 'Đỏ', c_pink: 'Hồng', c_purple: 'Tím', c_deepPurple: 'Tím đậm', c_indigo: 'Chàm', c_blue: 'Xanh dương', c_lightBlue: 'Xanh da trời', c_cyan: 'Lục lam', c_teal: 'Xanh mòng két', c_green: 'Xanh lá', c_lightGreen: 'Xanh lá nhạt', c_lime: 'Xanh chanh', c_yellow: 'Vàng', c_amber: 'Hổ phách', c_orange: 'Cam', c_deepOrange: 'Cam đậm', c_brown: 'Nâu', c_grey: 'Xám', c_blueGrey: 'Xám xanh',
-    slowHint: 'Trang tải chậm hoặc từ chối bị nhúng. Hãy thử Tải lại.', scrollbar: 'Thanh cuộn', typography: 'Phông & cỡ chữ', small: 'Nhỏ', medium: 'Vừa', large: 'Lớn', authorBy: 'Tác giả', aiHelp: 'Với sự hỗ trợ của AI Claude (Anthropic)', closeSim: 'Đóng trình mô phỏng', rulesFail: 'Không thể đặt quy tắc yêu cầu', blockedHint: 'Trang không phản hồi trong khung. Có thể trang này cấm tự nhúng (CSP frame-src).', iframeHint: 'Một số trang từ chối bị nhúng. Hãy bật “Cho phép trang chặn nhúng” trong cài đặt.'
+    slowHint: 'Trang tải chậm hoặc từ chối bị nhúng. Hãy thử Tải lại.', favs: 'Yêu thích', gridOverlay: 'Lưới', fullPage: 'Cả trang', qrTitle: 'Mở trên điện thoại', popout: 'Mở cửa sổ riêng', fav: 'Thêm vào yêu thích', unfav: 'Bỏ khỏi yêu thích', recent: 'Gần đây', noFav: 'Chưa có thiết bị yêu thích. Bấm ngôi sao trên thiết bị.',
+    saveSet: 'Lưu bộ', tourTitle: 'Chào mừng đến Responsive Tester', gotIt: 'Đã hiểu', viewport: 'Viewport', layoutPx: 'Layout', syncOff: 'Đã tắt đồng bộ: các trang liên tục chuyển hướng lẫn nhau.', stopFirst: 'Hãy dừng quay video trước.',
+    formWarn: 'Dữ liệu biểu mẫu chưa lưu trong tab này không được sao chép sang bản xem trước.', metaViewport: 'Giả lập meta viewport', metaViewportHint: 'Trang không có thẻ viewport sẽ hiển thị ở 980px như trình duyệt di động',
+    escClose: 'Esc đóng trình mô phỏng', escCloseHint: 'Tắt để tránh đóng nhầm', rememberSite: 'Nhớ thiết bị theo từng trang', rememberSiteHint: 'Mở lại mỗi trang với thiết bị bạn dùng lần trước',
+    qrNote: 'Quét bằng camera điện thoại để mở trang này trên thiết bị thật.', qrLocal: 'Địa chỉ này là nội bộ (localhost hoặc mạng riêng). Điện thoại chỉ mở được khi cùng mạng.', fullNeedsAgent: 'Hãy chờ trang tải xong trước.',
+    tour1t: 'Chọn thiết bị', tour1: 'Chọn trong 79 điện thoại, máy tính bảng, đồng hồ và máy tính ở bên phải, hoặc kéo cạnh ở chế độ Responsive.',
+    tour2t: 'So sánh cạnh nhau', tour2: 'Chuyển sang So sánh để xem tối đa 6 thiết bị cùng lúc, cuộn đồng bộ.',
+    tour3t: 'Ghi lại', tour3: 'Chụp ảnh (màn hình, cả trang hoặc mọi thiết bị) và quay GIF, WebM, MP4.',
+    tour4t: 'Phím tắt', tour4: 'R xoay, F vừa khung, C so sánh, D tìm thiết bị, G lưới, S chụp ảnh, Esc đóng. Nhấn ? để xem lại.',
+    tour5t: 'Thử trên điện thoại thật', tour5: 'Quét mã QR để mở trang trên thiết bị của bạn.',
+    g_iphone: 'Apple iPhone', g_pixel: 'Google Pixel', g_samsung: 'Samsung Galaxy', g_otherAndroid: 'Android khác', g_fold: 'Màn hình gập', g_ipad: 'Apple iPad', g_atab: 'Máy tính bảng Android', g_watch: 'Đồng hồ', g_desktop: 'Laptop & máy tính để bàn',
+    scrollbar: 'Thanh cuộn', typography: 'Phông & cỡ chữ', small: 'Nhỏ', medium: 'Vừa', large: 'Lớn', authorBy: 'Tác giả', aiHelp: 'Với sự hỗ trợ của AI Claude (Anthropic)', closeSim: 'Đóng trình mô phỏng', rulesFail: 'Không thể đặt quy tắc yêu cầu', blockedHint: 'Trang không phản hồi trong khung. Có thể trang này cấm tự nhúng (CSP frame-src).', iframeHint: 'Một số trang từ chối bị nhúng. Hãy bật “Cho phép trang chặn nhúng” trong cài đặt.'
   };
   let cur = EN;
   window.RT_I18N = {

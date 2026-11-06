@@ -1,0 +1,17 @@
+{
+  "extName": {
+    "message": "Responsive Tester"
+  },
+  "extDesc": {
+    "message": "Mở trang bạn đang xem trong khung điện thoại, máy tính bảng hoặc máy tính ngay trên tab. 79 thiết bị, chế độ so sánh, chụp ảnh và quay video."
+  },
+  "actionTitle": {
+    "message": "Mở trong Responsive Tester"
+  },
+  "cmdDesc": {
+    "message": "Mở trang hiện tại trong Responsive Tester"
+  },
+  "ctxOpen": {
+    "message": "Mở trang trong Responsive Tester"
+  }
+}

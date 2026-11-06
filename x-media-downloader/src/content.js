@@ -17,13 +17,12 @@
 
   const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>';
   const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
-  const FILE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>';
 
   const cache = new Map();
   const recent = new Map();
   const pending = new Set();
   let S = { ...DEFAULTS };
-  let hovered = null, full = true, timer = 0, lastAccent = 0, lastHref = location.href, menuEl = null;
+  let hovered = null, full = true, timer = 0, lastAccent = 0, lastHref = location.href;
 
   // ---- ngữ cảnh giao diện cho toast / tooltip / menu ----
   const ctx = () => {
@@ -34,6 +33,14 @@
   };
   const toast = X.createToaster(ctx);
   X.initTooltips(ctx);
+  const mediaCount = (article) => {
+    const id = tweetId(article);
+    const tw = id && cacheGet(id);
+    if (!tw) return article ? article.querySelectorAll('[data-testid="tweetPhoto"]').length : 0;
+    const q = tw.quotedId && cacheGet(tw.quotedId);
+    return tw.media.length + (q ? q.media.length : 0);
+  };
+  const tipFor = (article) => tipText() + (mediaCount(article) > 1 ? '\n' + t(S.language, 'tip.rightClick') : '');
   const tipText = () => t(S.language, 'btn.download') + (S.shortcutEnabled && S.shortcut ? ` (${X.fmtShortcut(S.shortcut)})` : '');
 
   // ---- bộ nhớ đệm có hạn dùng ----
@@ -60,7 +67,7 @@
   const load = () => safe(() => chrome.storage.sync.get(DEFAULTS).then((v) => {
     S = v;
     if (!S.enabled) document.querySelectorAll('.xmd-wrap').forEach((n) => n.remove());
-    document.querySelectorAll('.xmd-btn').forEach((b) => b.setAttribute('data-xmd-tip', tipText()));
+    document.querySelectorAll('.xmd-btn').forEach((b) => b.setAttribute('data-xmd-tip', tipFor(b.closest(SEL.article))));
     accent(true);
     queue();
   }));
@@ -165,9 +172,8 @@
     if (btn) btn.classList.add('xmd-busy');
     try {
       const res = await send({ type: 'download', jobs, tid: id });
-      if (res && res.dup) { finishBtn(btn); return; }
+      if (res && (res.dup || res.canceled)) { finishBtn(btn); return; }
       if (res && res.ok) {
-        toast(t(lang, 'toast.start', { n: res.count }), 'success');
         if (btn) {
           btn.dataset.tid = id;
           btn.classList.remove('xmd-busy'); btn.classList.add('xmd-prog'); setState(btn, 'prog');
@@ -181,57 +187,16 @@
     }
   }
 
-  // ---- menu chọn media (M3 menu) ----
+  // ---- menu chọn media (M3 menu dùng chung) ----
+  const menu = X.createMenu(ctx);
   const thumbUrl = (u) => (u ? u.replace(/\.\w+(\?.*)?$/, '') + '?format=jpg&name=small' : '');
-  function closeMenu() {
-    if (menuEl) { menuEl.remove(); menuEl = null; document.removeEventListener('pointerdown', onOutside, true); document.removeEventListener('keydown', onMenuKey, true); }
-  }
-  const onOutside = (e) => { if (menuEl && !menuEl.contains(e.target)) closeMenu(); };
-  const onMenuKey = (e) => {
-    if (!menuEl) return;
-    const its = [...menuEl.querySelectorAll('.xmd-mi')];
-    const i = its.indexOf(document.activeElement);
-    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeMenu(); }
-    else if (e.key === 'ArrowDown') { e.preventDefault(); its[(i + 1) % its.length].focus(); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); its[(i - 1 + its.length) % its.length].focus(); }
-  };
   function openMenu(anchor, items, onPick) {
-    closeMenu();
-    const c = ctx(), tk = c.tokens;
-    menuEl = document.createElement('div');
-    menuEl.className = 'xmd-menu';
-    menuEl.setAttribute('role', 'menu');
-    const st = menuEl.style;
-    st.setProperty('--mn-bg', tk.surfaceContainerHigh); st.setProperty('--mn-fg', tk.onSurface);
-    st.setProperty('--mn-sel', tk.secondaryContainer); st.setProperty('--mn-on-sel', tk.onSecondaryContainer);
-    st.setProperty('--mn-line', tk.outlineVariant); st.setProperty('--xmd-font', c.font); st.setProperty('--xmd-fs', c.fs);
-    const row = (label, sub, thumb, fn) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'xmd-mi'; b.setAttribute('role', 'menuitem');
-      if (thumb) { const im = document.createElement('img'); im.src = thumb; im.alt = ''; im.referrerPolicy = 'no-referrer'; b.append(im); }
-      else { const ic = document.createElement('span'); ic.className = 'xmd-mi-ic'; ic.innerHTML = FILE; b.append(ic); }
-      const tx = document.createElement('span'); tx.className = 'xmd-mi-tx';
-      const l1 = document.createElement('span'); l1.textContent = label; tx.append(l1);
-      if (sub) { const l2 = document.createElement('small'); l2.textContent = sub; tx.append(l2); }
-      b.append(tx);
-      b.addEventListener('click', (e) => { e.stopPropagation(); closeMenu(); fn(); });
-      return b;
-    };
-    menuEl.append(row(t(S.language, 'menu.all', { n: items.length }), '', '', () => onPick(items)));
+    const rows = [{ label: t(S.language, 'menu.all', { n: items.length }), onPick: () => onPick(items) }];
     items.forEach((it) => {
       const key = it.media.type === 'photo' ? 'menu.photo' : it.media.type === 'gif' ? 'menu.gif' : 'menu.video';
-      menuEl.append(row(t(S.language, key, { n: it.index }), it.quote ? t(S.language, 'menu.quote') : '', thumbUrl(it.media.thumb), () => onPick([it])));
+      rows.push({ label: t(S.language, key, { n: it.index }), sub: it.quote ? t(S.language, 'menu.quote') : '', thumb: thumbUrl(it.media.thumb), onPick: () => onPick([it]) });
     });
-    document.body.append(menuEl);
-    const r = anchor.getBoundingClientRect(), w = menuEl.offsetWidth, h = menuEl.offsetHeight;
-    let x = Math.min(innerWidth - w - 8, Math.max(8, r.right - w));
-    let y = r.bottom + 6, below = true;
-    if (y + h > innerHeight - 8) { y = r.top - h - 6; below = false; }
-    menuEl.style.left = x + 'px'; menuEl.style.top = Math.max(8, y) + 'px';
-    menuEl.style.transformOrigin = `${Math.round(r.right - x)}px ${below ? '0' : '100%'}`;
-    requestAnimationFrame(() => { if (menuEl) { menuEl.classList.add('show'); menuEl.querySelector('.xmd-mi').focus(); } });
-    document.addEventListener('pointerdown', onOutside, true);
-    document.addEventListener('keydown', onMenuKey, true);
+    menu.open(anchor, rows);
   }
 
   // ---- chèn nút vào thanh hành động ----
@@ -248,8 +213,9 @@
     btn.type = 'button';
     btn.className = 'xmd-btn';
     btn.innerHTML = ICON;
-    btn.setAttribute('data-xmd-tip', tipText());
+    btn.setAttribute('data-xmd-tip', tipFor(a));
     btn.setAttribute('aria-label', t(S.language, 'btn.download'));
+    btn.addEventListener('pointerenter', () => btn.setAttribute('data-xmd-tip', tipFor(a)));
     btn.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); activate(a, btn, 'default'); });
     btn.addEventListener('contextmenu', (ev) => { ev.preventDefault(); ev.stopPropagation(); activate(a, btn, 'menu'); });
     wrap.append(btn);
@@ -301,7 +267,7 @@
       for (const n of r.addedNodes) {
         if (n.nodeType !== 1) continue;
         const c = n.classList;
-        if (c && (c.contains('xmd-wrap') || c.contains('xmd-toast') || c.contains('xmd-tip') || c.contains('xmd-menu'))) continue;
+        if (c && (c.contains('xmd-wrap') || c.contains('xmd-toast') || c.contains('xmd-tip') || c.contains('xmd-menu') || c.contains('xmd-scrim'))) continue;
         const own = n.closest(SEL.article);
         if (own) { queue(own); continue; }
         for (const a of n.querySelectorAll(SEL.article)) queue(a);
@@ -310,7 +276,7 @@
   }).observe(document.documentElement, { childList: true, subtree: true });
 
   document.addEventListener('DOMContentLoaded', () => queue());
-  setInterval(() => { if (location.href !== lastHref) { lastHref = location.href; closeMenu(); queue(); } }, 800);
+  setInterval(() => { if (location.href !== lastHref) { lastHref = location.href; menu.close(); queue(); } }, 800);
 
   // ---- phím tắt ----
   document.addEventListener('mouseover', (e) => {

@@ -1,5 +1,5 @@
 'use strict';
-const FILES = ['js/icons.js', 'lib/theme.js', 'js/i18n.js', 'js/devices.js', 'js/template.js', 'js/gif.js', 'js/app.js'];
+const FILES = ['js/icons.js', 'lib/theme.js', 'js/i18n.js', 'js/devices.js', 'js/template.js', 'js/gif.js', 'js/qr.js', 'js/app.js'];
 const ALL_TYPES = ['sub_frame', 'stylesheet', 'script', 'image', 'font', 'object', 'xmlhttprequest', 'ping', 'media', 'websocket', 'other'];
 
 async function toggle(tab) {
@@ -22,7 +22,7 @@ chrome.commands.onCommand.addListener(async (cmd) => {
 });
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({ id: 'rt-page', title: 'Open page in Responsive Tester', contexts: ['page'] });
+    chrome.contextMenus.create({ id: 'rt-page', title: chrome.i18n.getMessage('ctxOpen') || 'Open page in Responsive Tester', contexts: ['page'] });
   });
 });
 chrome.contextMenus.onClicked.addListener((info, tab) => toggle(tab));
@@ -64,12 +64,23 @@ chrome.runtime.onMessage.addListener((m, sender, send) => {
   if (!tab || !m) return;
   if (m.type === 'rules') { setRules(tab.id, m).then(send); return true; }
   if (m.type === 'clearRules') { clearRules(tab.id).then(() => send({ ok: true })); return true; }
+  if (m.type === 'popout' && typeof m.url === 'string' && /^https?:/i.test(m.url)) {
+    const w = Math.max(320, Math.min(2000, (m.w | 0) + 16)), h = Math.max(320, Math.min(1600, (m.h | 0) + 88));
+    chrome.windows.create({ url: m.url, type: 'popup', width: w, height: h }).then(async (win) => {
+      const t0 = win.tabs && win.tabs[0]; if (!t0) return;
+      popTabs.add(t0.id);
+      await setRules(t0.id, { prof: m.prof, bypass: false });
+      send({ ok: true });
+    }).catch(() => send({ ok: false }));
+    return true;
+  }
   if (m.type === 'capture') {
     chrome.tabs.captureVisibleTab(tab.windowId, { format: 'png' }).then((url) => send({ ok: true, url })).catch((e) => send({ ok: false, error: String(e) }));
     return true;
   }
 });
 
-// A real navigation of the tab ends the simulation: drop its header rules.
-chrome.tabs.onUpdated.addListener((tabId, info) => { if (info.status === 'loading' && info.url) clearRules(tabId); });
-chrome.tabs.onRemoved.addListener((tabId) => clearRules(tabId));
+// A real navigation of the tab ends the simulation: drop its header rules (pop-out windows keep theirs).
+const popTabs = new Set();
+chrome.tabs.onUpdated.addListener((tabId, info) => { if (info.status === 'loading' && info.url && !popTabs.has(tabId)) clearRules(tabId); });
+chrome.tabs.onRemoved.addListener((tabId) => { popTabs.delete(tabId); clearRules(tabId); });

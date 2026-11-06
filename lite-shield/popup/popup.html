@@ -12,7 +12,7 @@
     <header>
       <div class="avatar" id="avatar">L</div>
       <div class="grow">
-        <div class="title-m ellipsis" id="host" data-i18n="popup.loading"></div>
+        <h1 class="title-m ellipsis" id="host" style="margin:0" data-i18n="popup.loading"></h1>
         <div class="label-m muted" id="sub">Lite Shield</div>
       </div>
       <button class="icon-btn tonal" id="open-options" data-i18n-attr="title:popup.settings;aria-label:popup.settings" data-icon="settings"></button>
@@ -26,6 +26,7 @@
     <div class="status">
       <div class="headline-s" id="status">&nbsp;</div>
       <div class="body-m muted" id="hint">&nbsp;</div>
+      <button class="btn text" id="fix" type="button" data-icon="wrench"><span data-i18n="popup.fix"></span></button>
     </div>
 
     <section class="stats">
@@ -48,12 +49,12 @@
   </main>
 
   <div class="scrim" id="scrim"></div>
-  <aside class="sheet" id="sheet" role="dialog" aria-modal="true" data-i18n-attr="aria-label:log.title" aria-hidden="true">
+  <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden="true">
     <div class="sheet-handle" aria-hidden="true"></div>
     <header class="sheet-head">
       <div class="grow">
-        <div class="title-l" data-i18n="log.title"></div>
-        <div class="body-m muted" id="log-sub" data-i18n="log.subDefault"></div>
+        <div class="title-l" id="sheet-title"></div>
+        <div class="body-m muted" id="log-sub"></div>
       </div>
       <button class="icon-btn tonal" id="log-close" data-i18n-attr="aria-label:log.close" data-icon="close"></button>
     </header>

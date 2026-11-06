@@ -42,54 +42,144 @@
   function applyI18n() {
     $$('[data-i18n]').forEach((el) => { el.textContent = L(el.dataset.i18n); });
     $$('[data-tip-i18n]').forEach((el) => setTip(el, L(el.dataset.tipI18n)));
+    const okChip = $('#toastDemo [data-variant="success"]'); if (okChip) okChip.textContent = S.language === 'vi' ? 'Thành công' : 'Success';
     $$('#tokenChips .chip').forEach((c) => setTip(c, L('tok.' + c.dataset.token)));
     const col = COLORS.find((c) => c.hex.toLowerCase() === S.themeColor.toLowerCase());
-    $('#colorName').textContent = L('color.' + (col ? col.id : 'purple'));
+    $('#colorName').textContent = col ? L('color.' + col.id) : `${L('color.custom')} · ${S.themeColor.toUpperCase()}`;
     $('#multiMode').setAttribute('aria-label', L('multi.title'));
     renderFonts();
     renderKeys();
+    $('#ob3').textContent = L('ob.s3', { key: X.fmtShortcut(S.shortcut) });
     renderLog();
   }
 
   // ---------- render ----------
+  const PICKER_ICO = '<svg class="picker-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>';
+  const isPreset = (hex) => COLORS.some((c) => c.hex.toLowerCase() === hex.toLowerCase());
+
+  function swatch(hex, label, checked) {
+    const sc = MCU.scheme(hex, isDark());
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'swatch';
+    b.setAttribute('role', 'radio');
+    b.setAttribute('aria-label', label);
+    b.setAttribute('aria-checked', String(checked));
+    setTip(b, label);
+    b.style.background = sc.primaryContainer;
+    b.style.color = sc.onPrimaryContainer;
+    b.style.boxShadow = `inset 0 0 0 6px ${sc.primary}`;
+    b.innerHTML = CHECK;
+    return b;
+  }
+
   function renderSwatches() {
     const box = $('#themeColor');
     box.replaceChildren();
     for (const c of COLORS) {
-      const sc = MCU.scheme(c.hex, isDark());
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'swatch';
-      b.setAttribute('role', 'radio');
-      b.setAttribute('aria-label', L('color.' + c.id));
-      b.setAttribute('aria-checked', String(c.hex.toLowerCase() === S.themeColor.toLowerCase()));
-      setTip(b, L('color.' + c.id));
-      b.style.background = sc.primaryContainer;
-      b.style.color = sc.onPrimaryContainer;
-      b.style.boxShadow = `inset 0 0 0 6px ${sc.primary}`;
-      b.innerHTML = CHECK;
+      const b = swatch(c.hex, L('color.' + c.id), c.hex.toLowerCase() === S.themeColor.toLowerCase());
       b.addEventListener('click', () => change({ themeColor: c.hex }));
       box.append(b);
     }
+    // ô thứ 20: màu tuỳ chọn (làm đủ lưới 5 x 4 / 10 x 2)
+    const custom = !isPreset(S.themeColor);
+    const b = swatch(custom ? S.themeColor : '#6750A4', L('color.custom'), custom);
+    b.classList.add('custom');
+    if (!custom) {
+      b.style.background = 'conic-gradient(#f44336,#ffc107,#8bc34a,#00bcd4,#3f51b5,#e91e63,#f44336)';
+      b.style.color = 'var(--md-on-surface)';
+      b.style.boxShadow = 'inset 0 0 0 14px var(--md-surface-container)';
+    }
+    b.insertAdjacentHTML('beforeend', PICKER_ICO);
+    const pick = document.createElement('input');
+    pick.type = 'color'; pick.tabIndex = -1; pick.setAttribute('aria-hidden', 'true');
+    pick.value = /^#[0-9a-f]{6}$/i.test(S.themeColor) ? S.themeColor.toLowerCase() : '#6750a4';
+    pick.addEventListener('input', () => X.applyTheme({ ...S, themeColor: pick.value }));      // xem trước trực tiếp
+    pick.addEventListener('change', () => change({ themeColor: pick.value.toUpperCase() }));   // chốt khi đóng bảng chọn
+    pick.addEventListener('blur', () => setTimeout(() => X.applyTheme(S), 200));              // huỷ → trả về màu đang lưu
+    b.addEventListener('click', () => { try { pick.showPicker(); } catch (_) { pick.click(); } });
+    b.append(pick);
+    box.append(b);
     roving(box);
   }
 
+  // ---------- dropdown font tuỳ chỉnh (listbox, không dùng <select> mặc định) ----------
+  const dd = { open: false, active: -1 };
+  const fdOpts = () => $$('[role="option"]', $('#fontList'));
+  function fdSetActive(i) {
+    const o = fdOpts();
+    if (!o.length) return;
+    dd.active = (i + o.length) % o.length;
+    o.forEach((el, k) => el.classList.toggle('active', k === dd.active));
+    $('#fontList').setAttribute('aria-activedescendant', o[dd.active].id);
+    o[dd.active].scrollIntoView({ block: 'nearest' });
+  }
+  function fdOpen() {
+    if (dd.open) return;
+    dd.open = true;
+    const list = $('#fontList'), btn = $('#fontBtn');
+    list.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    const r = btn.getBoundingClientRect();
+    const below = innerHeight - r.bottom, above = r.top;
+    list.classList.toggle('up', below < 360 && above > below);
+    requestAnimationFrame(() => list.classList.add('show'));
+    fdSetActive(Math.max(0, FONTS.findIndex((f) => f.id === S.font)));
+    list.focus({ preventScroll: true });
+  }
+  function fdClose(refocus) {
+    if (!dd.open) return;
+    dd.open = false;
+    const list = $('#fontList');
+    list.classList.remove('show');
+    $('#fontBtn').setAttribute('aria-expanded', 'false');
+    setTimeout(() => { if (!dd.open) list.hidden = true; }, 180);
+    if (refocus) $('#fontBtn').focus();
+  }
+  function fdChoose(id) { fdClose(true); if (id !== S.font) change({ font: id }); }
+  function bindFontDropdown() {
+    const btn = $('#fontBtn'), list = $('#fontList');
+    btn.addEventListener('click', () => (dd.open ? fdClose(true) : fdOpen()));
+    btn.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); fdOpen(); } });
+    list.addEventListener('keydown', (e) => {
+      const k = e.key;
+      if (k === 'ArrowDown') { e.preventDefault(); fdSetActive(dd.active + 1); }
+      else if (k === 'ArrowUp') { e.preventDefault(); fdSetActive(dd.active - 1); }
+      else if (k === 'Home') { e.preventDefault(); fdSetActive(0); }
+      else if (k === 'End') { e.preventDefault(); fdSetActive(FONTS.length - 1); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); fdChoose(FONTS[dd.active].id); }
+      else if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); fdClose(true); }
+      else if (k === 'Tab') fdClose(false);
+      else if (k.length === 1) {   // gõ chữ để nhảy tới mục bắt đầu bằng ký tự đó
+        const names = FONTS.map((f) => (f.name || L('font.system')).toLowerCase());
+        const n = names.length;
+        for (let step = 1; step <= n; step++) { const i = (dd.active + step) % n; if (names[i].startsWith(k.toLowerCase())) { fdSetActive(i); break; } }
+      }
+    });
+    document.addEventListener('pointerdown', (e) => { if (dd.open && !$('#fontDD').contains(e.target)) fdClose(false); }, true);
+  }
+
   function renderFonts() {
-    const box = $('#font');
-    box.replaceChildren();
-    for (const f of FONTS) {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.setAttribute('role', 'radio');
-      b.setAttribute('aria-checked', String(S.font === f.id));
-      b.style.fontFamily = f.stack;
-      const aa = document.createElement('span'); aa.className = 'aa'; aa.textContent = 'Aa';
-      const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = f.name || L('font.system');
-      b.append(aa, nm);
-      b.addEventListener('click', () => change({ font: f.id }));
-      box.append(b);
-    }
-    roving(box);
+    const cur = fontOf();
+    const btn = $('#fontBtn');
+    btn.style.fontFamily = cur.stack;
+    $('#fontVal').textContent = cur.name || L('font.system');
+    const list = $('#fontList');
+    list.replaceChildren();
+    FONTS.forEach((f, i) => {
+      const li = document.createElement('li');
+      li.id = 'fo-' + f.id;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', String(S.font === f.id));
+      li.style.fontFamily = f.stack;
+      const aa = document.createElement('span'); aa.className = 'o-aa'; aa.textContent = 'Aa';
+      const nm = document.createElement('span'); nm.className = 'o-nm'; nm.textContent = f.name || L('font.system');
+      li.append(aa, nm);
+      li.insertAdjacentHTML('beforeend', CHECK.replace('<svg ', '<svg class="o-ck" '));
+      li.addEventListener('click', () => fdChoose(f.id));
+      li.addEventListener('mousemove', () => { if (dd.active !== i) fdSetActive(i); });
+      list.append(li);
+    });
   }
 
   function renderKeys(recording) {
@@ -114,6 +204,17 @@
     const base = buildFilename(S.filenameTemplate, SAMPLE());
     $('#fnPreview').textContent = `${base}.mp4` + (S.downloadThumbnail ? `  +  ${base}-thumb.jpg` : '');
     $$('#presetChips .chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.tpl === S.filenameTemplate)));
+    renderPath();
+  }
+  function renderPath() {
+    const abs = X.isAbsolutePath(S.saveFolder);
+    const hint = $('#folderHint');
+    hint.textContent = L(abs ? 'path.abs' : 'path.hint');
+    hint.classList.toggle('bad', abs);
+    const sm = SAMPLE();
+    const parts = ['Downloads', X.buildFolder(S.saveFolder, sm), buildFilename(S.filenameTemplate, sm) + '.mp4'].filter(Boolean);
+    $('#fullPath').textContent = parts.join('/');
+    $$('#folderChips .chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.folder === S.saveFolder)));
   }
 
   function renderAll() {
@@ -121,6 +222,10 @@
     if (document.activeElement !== input) input.value = S.filenameTemplate;
     const kw = $('#revealKeywords');
     if (document.activeElement !== kw) kw.value = S.revealKeywords;
+    const sf = $('#saveFolder');
+    if (document.activeElement !== sf) sf.value = S.saveFolder;
+    $('#askWhere').checked = S.askWhere;
+    $('#onboard').hidden = !!S.onboarded;
     $('#autoReveal').checked = S.autoReveal;
     $('#downloadThumbnail').checked = S.downloadThumbnail;
     $('#shortcutEnabled').checked = S.shortcutEnabled;
@@ -162,8 +267,15 @@
   }
 
   // ---------- lưu / thông báo ----------
+  let flashTimer;
+  function flashSaved() {
+    const el = $('#autosave');
+    el.classList.add('flash');
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => el.classList.remove('flash'), 900);
+  }
   async function persist(patch) {
-    try { await chrome.storage.sync.set(patch); return true; }
+    try { await chrome.storage.sync.set(patch); flashSaved(); return true; }
     catch (_) { toast(L('err.save'), 'error'); return false; }
   }
   async function change(patch) {
@@ -206,25 +318,74 @@
 
   // ---------- wiring ----------
   function wire() {
-    const show = (id) => {
+    const tabs = $$('.rail-item');
+    const show = (id, focus) => {
       if (!['download', 'appearance', 'activity', 'about'].includes(id)) id = 'download';
       $$('.pane').forEach((p) => p.classList.toggle('active', p.id === 'pane-' + id));
-      $$('.rail-item').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.pane === id)));
+      tabs.forEach((b) => { const on = b.dataset.pane === id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
       history.replaceState(null, '', '#' + id);
-      if (id === 'activity') loadLog();
+      if (id === 'activity') { loadLog(); chrome.storage.local.set({ unread: 0 }); }
     };
-    $$('.rail-item').forEach((b) => b.addEventListener('click', () => show(b.dataset.pane)));
+    tabs.forEach((b) => b.addEventListener('click', () => show(b.dataset.pane)));
+    $('.rail').addEventListener('keydown', (e) => {
+      const i = tabs.indexOf(document.activeElement);
+      if (i < 0) return;
+      const move = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      if (move) { e.preventDefault(); show(tabs[(i + move + tabs.length) % tabs.length].dataset.pane, true); }
+      else if (e.key === 'Home') { e.preventDefault(); show(tabs[0].dataset.pane, true); }
+      else if (e.key === 'End') { e.preventDefault(); show(tabs[tabs.length - 1].dataset.pane, true); }
+    });
     show(location.hash.slice(1));
+    const dot = (n) => $('#tab-activity').classList.toggle('has-dot', n > 0);
+    chrome.storage.local.get('unread').then((r) => dot(r.unread || 0)).catch(() => {});
+    chrome.storage.onChanged.addListener((ch, area) => { if (area === 'local' && ch.unread) dot(ch.unread.newValue || 0); });
+
+    // thẻ hướng dẫn lần đầu
+    $('#obDone').addEventListener('click', () => change({ onboarded: true }));
+    $('#obOpen').addEventListener('click', async () => { try { await chrome.tabs.create({ url: 'https://x.com/home' }); } catch (_) { /* bỏ qua */ } });
+
+    // khung xem trước: nút tải mô phỏng + kiểu thông báo
+    const mb = $('#mockBtn');
+    let mockT;
+    const mockRun = () => {
+      if (mb.classList.contains('xmd-prog')) return;
+      let p = 0;
+      mb.classList.add('xmd-prog');
+      clearInterval(mockT);
+      mockT = setInterval(() => {
+        p += 7;
+        mb.style.setProperty('--p', Math.min(p, 100));
+        if (p >= 100) {
+          clearInterval(mockT);
+          mb.classList.remove('xmd-prog'); mb.style.removeProperty('--p');
+          mb.classList.add('xmd-ok');
+          setTimeout(() => mb.classList.remove('xmd-ok'), 1200);
+        }
+      }, 100);
+    };
+    mb.addEventListener('click', mockRun);
+    mb.addEventListener('pointerenter', () => setTip(mb, L('btn.download') + (S.shortcutEnabled ? ` (${X.fmtShortcut(S.shortcut)})` : '') + '\n' + L('tip.rightClick')));
+    const mockMenu = X.createMenu(ctx);
+    mb.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      mockMenu.open(mb, [
+        { label: L('menu.all', { n: 2 }), onPick: mockRun },
+        { label: L('menu.photo', { n: 1 }), onPick: mockRun },
+        { label: L('menu.video', { n: 2 }), sub: L('menu.quote'), onPick: mockRun }
+      ]);
+    });
+    $$('#toastDemo .chip').forEach((c) => c.addEventListener('click', () => toast(L('pvm.t.' + c.dataset.variant), c.dataset.variant)));
 
     for (const id of GROUPS) {
       const box = $('#' + id);
       $$('button', box).forEach((b) => b.addEventListener('click', () => change({ [id]: b.dataset.value })));
       bindRadioKeys(box);
     }
-    bindRadioKeys($('#themeColor')); bindRadioKeys($('#font'));
+    bindRadioKeys($('#themeColor'));
+    bindFontDropdown();
     mq.addEventListener('change', () => { if (S.themeMode === 'system') { X.applyTheme(S); renderSwatches(); } });
 
-    for (const id of ['autoReveal', 'downloadThumbnail', 'shortcutEnabled']) {
+    for (const id of ['autoReveal', 'downloadThumbnail', 'shortcutEnabled', 'askWhere']) {
       $('#' + id).addEventListener('change', (e) => change({ [id]: e.target.checked }));
     }
 
@@ -234,6 +395,26 @@
       S.revealKeywords = e.target.value;
       clearTimeout(tk);
       tk = setTimeout(() => persist({ revealKeywords: S.revealKeywords }), 350);
+    });
+
+    // đường dẫn lưu (thư mục con trong Downloads)
+    const folderInput = $('#saveFolder');
+    let tf;
+    folderInput.addEventListener('input', () => {
+      S.saveFolder = folderInput.value;
+      renderPath();
+      clearTimeout(tf);
+      tf = setTimeout(() => persist({ saveFolder: S.saveFolder }), 350);
+    });
+    for (const f of ['X Media', 'X Media/{username}', 'X Media/{date}', '{username}']) {
+      const c = document.createElement('button');
+      c.type = 'button'; c.className = 'chip'; c.dataset.folder = f; c.textContent = f;
+      c.addEventListener('click', () => { folderInput.value = f; change({ saveFolder: f }); });
+      $('#folderChips').append(c);
+    }
+    $('#openChromeDl').addEventListener('click', async () => {
+      try { await chrome.tabs.create({ url: 'chrome://settings/downloads' }); }
+      catch (_) { toast(L('warn.chromeSettings'), 'warning'); }
     });
 
     // mẫu tên tệp
@@ -281,7 +462,8 @@
       for (const g of groups) g.media.forEach((m, i) => {
         const ext = m.type === 'photo' ? ((m.url.match(/\.(\w+)(?:\?.*)?$/) || [])[1] || 'jpg') : 'mp4';
         const base = buildFilename(S.filenameTemplate, { username: g.screenName, name: g.name, tweetId: g.id || id, index: i + 1, createdAt: g.createdAt, text: g.text, type: m.type, filename: (m.url.split('?')[0].split('/').pop() || '').replace(/\.\w+$/, '') });
-        const code = document.createElement('code'); code.textContent = `${base}.${ext}`; tryOut.append(code);
+        const folder = X.buildFolder(S.saveFolder, { username: g.screenName, name: g.name, tweetId: g.id || id, index: i + 1, createdAt: g.createdAt, text: g.text, type: m.type });
+        const code = document.createElement('code'); code.textContent = `${folder ? folder + '/' : ''}${base}.${ext}`; tryOut.append(code);
       });
     }
     $('#tryBtn').addEventListener('click', tryLink);
@@ -340,7 +522,8 @@
       } catch (_) { toast(L('err.import'), 'error'); }
     });
     $('#resetAll').addEventListener('click', async () => {
-      if (!confirm(L('reset.confirm'))) return;
+      const yes = await X.confirmDialog(ctx, { title: L('dlg.resetTitle'), body: L('dlg.resetBody'), ok: L('ab.resetBtn'), cancel: L('dlg.cancel') });
+      if (!yes) return;
       try {
         await chrome.storage.sync.clear();
         S = await chrome.storage.sync.get(DEFAULTS);

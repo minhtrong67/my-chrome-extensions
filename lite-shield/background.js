@@ -1,20 +1,22 @@
 import { compile, resolveCosmetic, hostChain, PRIORITY } from './shared/filters.js';
 import { schemeFor, nearestColorKey } from './shared/theme.js';
 import { toSelectorChunks } from './shared/selector.js';
-import { BASE, SOURCES } from './shared/sources.js';
+import { BASE, SOURCES, EXTRA } from './shared/sources.js';
 import { translate } from './shared/i18n.js';
 
 // Phân vùng ID của quy tắc động (mỗi vùng do một chức năng quản lý).
-const ID = { siteAllow: 1, domainAllow: 5000, user: 10000, ads: 100000, trackers: 200000, end: 300000 };
-const RULESET_IDS = ['ads', 'trackers', 'annoyances'];
-const UPDATABLE = ['ads', 'trackers'];
+const ID = { siteAllow: 1, domainAllow: 5000, user: 10000, ads: 100000, trackers: 200000, vn: 300000, end: 400000 };
+const RULESET_IDS = ['ads', 'trackers', 'vn', 'ubo', 'annoyances', 'adguard'];
+const UPDATABLE = ['ads', 'trackers', 'vn']; // được thay bằng quy tắc động sau khi cập nhật
+const COSMETIC_KEYS = ['ads', 'vn', 'ubo', 'annoyances', 'adguard'];
+const SCRIPTLET_LISTS = ['ubo', 'vn', 'adguard'];
 
 const DEFAULT_SETTINGS = {
   theme: { color: 'green', mode: 'auto' },
-  rulesets: { ads: true, trackers: true, annoyances: false },
+  rulesets: { ads: true, trackers: true, vn: true, ubo: true, annoyances: false, adguard: false },
   genericCosmetic: true,
   autoUpdate: true,
-  scriptlets: { youtube: true },
+  scriptlets: { youtube: true, lists: true },
   language: 'vi',
   fontSize: 'medium',
   fontFamily: 'system',
@@ -41,7 +43,7 @@ function chain(fn) {
 }
 
 async function getData() {
-  const d = await chrome.storage.local.get(['settings', 'userFilters', 'disabledSites', 'allowedDomains', 'compiled', 'updateInfo']);
+  const d = await chrome.storage.local.get(['settings', 'userFilters', 'disabledSites', 'basicSites', 'allowedDomains', 'compiled', 'updateInfo']);
   const s = d.settings ?? {};
   // Cài đặt cũ lưu màu theo hue → đổi sang màu Material gần nhất.
   const theme = { ...s.theme };
@@ -57,24 +59,42 @@ async function getData() {
     },
     userFilters: d.userFilters ?? '',
     disabledSites: d.disabledSites ?? [],
+    basicSites: d.basicSites ?? [],
     allowedDomains: d.allowedDomains ?? [],
     compiled: d.compiled ?? null,
     updateInfo: d.updateInfo ?? null,
   };
 }
 
-// Dữ liệu ẩn phần tử dựng sẵn; nếu đã cập nhật danh sách thì dùng bản mới.
-let builtinPromise;
-const loadBuiltin = () =>
-  (builtinPromise ??= (async () => {
-    const { updateInfo, updCosmetic } = await chrome.storage.local.get(['updateInfo', 'updCosmetic']);
-    const base = await fetch(chrome.runtime.getURL('rulesets/cosmetic.json')).then((r) => r.json()).catch(() => ({ ads: null, annoyances: null }));
-    return updateInfo && updCosmetic ? { ...base, ads: updCosmetic } : base;
-  })());
+// Dữ liệu ẩn phần tử dựng sẵn theo từng danh sách (nạp khi cần); nếu đã cập nhật thì dùng bản mới.
+const cosmeticCache = new Map();
+const loadCosmetic = (key) => {
+  if (!cosmeticCache.has(key))
+    cosmeticCache.set(
+      key,
+      (async () => {
+        const { updateInfo, updCosmetic } = await chrome.storage.local.get(['updateInfo', 'updCosmetic']);
+        const upd = updCosmetic?.hosts ? { ads: updCosmetic } : updCosmetic; // định dạng cũ: chỉ có "ads"
+        if (updateInfo && upd?.[key]) return upd[key];
+        return fetch(chrome.runtime.getURL(`rulesets/cosmetic-${key}.json`)).then((r) => r.json()).catch(() => null);
+      })(),
+    );
+  return cosmeticCache.get(key);
+};
 
 let genericPromise;
 const loadGeneric = () =>
-  (genericPromise ??= fetch(chrome.runtime.getURL('rulesets/generic.json')).then((r) => r.json()).catch(() => ({ ads: [], annoyances: [] })));
+  (genericPromise ??= fetch(chrome.runtime.getURL('rulesets/generic.json')).then((r) => r.json()).catch(() => ({})));
+
+// Token class/id của selector chung (ví dụ ".ad-banner", "#top-ad"): content.js chỉ hỏi những token thật sự có trên trang.
+const tokenCache = new Map();
+const loadTokens = (key) => {
+  if (!tokenCache.has(key))
+    tokenCache.set(key, fetch(chrome.runtime.getURL(`rulesets/generic-${key}.tokens.json`)).then((r) => r.json()).then((a) => new Set(a)).catch(() => new Set()));
+  return tokenCache.get(key);
+};
+
+const isBasicOrOff = (d, host) => isDisabled(d.disabledSites, host) || isDisabled(d.basicSites, host);
 
 // ---------- quy tắc động theo vùng ID ----------
 async function replaceRange(lo, hi, addRules) {
@@ -128,7 +148,8 @@ const syncListRules = () =>
     const { settings } = await getData();
     const { updRules } = await chrome.storage.local.get('updRules');
     await replaceRange(ID.ads, ID.trackers, settings.rulesets.ads ? updRules?.ads ?? [] : []);
-    await replaceRange(ID.trackers, ID.end, settings.rulesets.trackers ? updRules?.trackers ?? [] : []);
+    await replaceRange(ID.trackers, ID.vn, settings.rulesets.trackers ? updRules?.trackers ?? [] : []);
+    await replaceRange(ID.vn, ID.end, settings.rulesets.vn ? updRules?.vn ?? [] : []);
   });
 
 async function applyRulesets(settings, updateInfo) {
@@ -137,23 +158,31 @@ async function applyRulesets(settings, updateInfo) {
   const disable = [];
   for (const id of RULESET_IDS) {
     // Đã cập nhật → quy tắc động thay thế ruleset tĩnh tương ứng.
-    const want = !!settings.rulesets[id] && !(UPDATABLE.includes(id) && updateInfo);
+    const want = !!settings.rulesets[id] && !(UPDATABLE.includes(id) && updateInfo?.[id] != null);
     if (want && !enabled.has(id)) enable.push(id);
     if (!want && enabled.has(id)) disable.push(id);
   }
   if (enable.length || disable.length)
     await chrome.declarativeNetRequest.updateEnabledRulesets({ enableRulesetIds: enable, disableRulesetIds: disable });
+  return { enable, disable };
 }
 
 // ---------- CSS ẩn phần tử chung + scriptlet: đăng ký như content script ----------
-const SCRIPT_IDS = ['generic-ads', 'generic-annoyances', 'scriptlet-youtube'];
+const SCRIPT_PREFIX = /^(generic-|scriptlet-|sl-)/;
+const indexCache = new Map();
+const loadScriptletIndex = (id) => {
+  if (!indexCache.has(id)) indexCache.set(id, fetch(chrome.runtime.getURL(`scriptlets/${id}.index.json`)).then((r) => r.json()).catch(() => ({ shards: [], generic: false })));
+  return indexCache.get(id);
+};
+const matchPattern = (d) => (/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) ? `*://*.${d}/*` : null);
+const appliedSig = new Map();
 
-const syncScripts = () =>
+const syncScripts = (force = false) =>
   serial(async () => {
-    const { settings, disabledSites } = await getData();
+    const { settings, disabledSites, basicSites } = await getData();
     const want = new Map();
     if (settings.genericCosmetic) {
-      for (const key of ['ads', 'annoyances']) if (settings.rulesets[key]) want.set(`generic-${key}`, { css: [`rulesets/generic-${key}.css`] });
+      for (const key of COSMETIC_KEYS) if (settings.rulesets[key]) want.set(`generic-${key}`, { css: [`rulesets/generic-${key}.css`] });
     }
     if (settings.scriptlets.youtube) {
       want.set('scriptlet-youtube', {
@@ -162,12 +191,29 @@ const syncScripts = () =>
         matches: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*'],
       });
     }
-    const excludeMatches = disabledSites.map((h) => `*://*.${h}/*`);
+    if (settings.scriptlets.lists) {
+      for (const id of SCRIPTLET_LISTS) {
+        if (!settings.rulesets[id]) continue;
+        const idx = await loadScriptletIndex(id);
+        for (const [n, sh] of idx.shards.entries()) {
+          const matches = sh.domains.map(matchPattern).filter(Boolean);
+          if (matches.length) want.set(`sl-${id}-${n}`, { js: ['scriptlets/engine.js', sh.file], world: 'MAIN', matches });
+        }
+        if (idx.generic) want.set(`sl-${id}-generic`, { js: ['scriptlets/engine.js', `scriptlets/${id}-generic.js`], world: 'MAIN' });
+      }
+    }
+    // Trang "tắt" và trang "chỉ chặn mạng" đều không nhận CSS ẩn phần tử và scriptlet.
+    const excludeMatches = [...new Set([...disabledSites, ...basicSites])].map((h) => `*://*.${h}/*`);
     const have = new Set((await chrome.scripting.getRegisteredContentScripts()).map((x) => x.id));
 
-    const drop = SCRIPT_IDS.filter((id) => have.has(id) && !want.has(id));
-    if (drop.length) await chrome.scripting.unregisterContentScripts({ ids: drop });
+    const drop = [...have].filter((id) => SCRIPT_PREFIX.test(id) && !want.has(id));
+    if (drop.length) {
+      await chrome.scripting.unregisterContentScripts({ ids: drop });
+      drop.forEach((id) => appliedSig.delete(id));
+    }
 
+    const toAdd = [];
+    const toUpdate = [];
     for (const [id, cfg] of want) {
       const script = {
         id,
@@ -178,11 +224,17 @@ const syncScripts = () =>
         persistAcrossSessions: true,
         ...cfg,
         // Luôn truyền (kể cả mảng rỗng): updateContentScripts giữ giá trị cũ nếu bỏ trống.
-        excludeMatches,
+        // Scriptlet YouTube riêng đã xử lý youtube.com đầy đủ hơn; để hai bên cùng móc một biến toàn cục sẽ giẫm chân nhau.
+        excludeMatches: id.startsWith('sl-') && settings.scriptlets.youtube ? [...excludeMatches, '*://*.youtube.com/*', '*://*.youtube-nocookie.com/*'] : excludeMatches,
       };
-      if (have.has(id)) await chrome.scripting.updateContentScripts([script]);
-      else await chrome.scripting.registerContentScripts([script]);
+      const sig = JSON.stringify(script);
+      if (have.has(id)) {
+        if (force || appliedSig.get(id) !== sig) toUpdate.push(script);
+      } else toAdd.push(script);
+      appliedSig.set(id, sig);
     }
+    if (toAdd.length) await chrome.scripting.registerContentScripts(toAdd);
+    if (toUpdate.length) await chrome.scripting.updateContentScripts(toUpdate);
   });
 
 // ---------- tự cập nhật danh sách ----------
@@ -192,6 +244,12 @@ async function updateLists() {
   updating = true;
   try {
     const text = {};
+    const fetchText = async (url, label) => {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error(`${label}: HTTP ${r.status}`);
+      return r.text();
+    };
+    text.vn = (await Promise.all(Object.entries(EXTRA.vn.files).map(([n, u]) => fetchText(u, n)))).join('\n');
     for (const [group, files] of Object.entries(SOURCES)) {
       const parts = await Promise.all(
         files.map(async (f) => {
@@ -209,11 +267,13 @@ async function updateLists() {
     const trackers = compile(`${sTrackers}\n${text.trackers}`, { startId: ID.trackers, optimize: true });
     const cos = compile(`${sCos}\n${text['cosmetic-ads']}`);
     cos.cosmetic.generic = []; // phần chung đã nằm trong CSS tĩnh của gói cài đặt
-    if (ads.rules.length < 50 || trackers.rules.length < 50) throw new Error('invalid-list');
+    const vn = compile(text.vn, { startId: ID.vn, optimize: true });
+    vn.cosmetic.generic = [];
+    if (ads.rules.length < 50 || trackers.rules.length < 50 || vn.rules.length < 20) throw new Error('invalid-list');
 
     const prev = await chrome.storage.local.get(['updateInfo', 'updRules', 'updCosmetic']);
-    const updateInfo = { at: Date.now(), ads: ads.rules.length, trackers: trackers.rules.length, cosmetic: cos.counts.cosmetic };
-    await chrome.storage.local.set({ updRules: { ads: ads.rules, trackers: trackers.rules }, updCosmetic: cos.cosmetic, updateInfo });
+    const updateInfo = { at: Date.now(), ads: ads.rules.length, trackers: trackers.rules.length, vn: vn.rules.length, cosmetic: cos.counts.cosmetic + vn.counts.cosmetic };
+    await chrome.storage.local.set({ updRules: { ads: ads.rules, trackers: trackers.rules, vn: vn.rules }, updCosmetic: { ads: cos.cosmetic, vn: vn.cosmetic }, updateInfo });
     try {
       await syncListRules();
     } catch (e) {
@@ -223,7 +283,8 @@ async function updateLists() {
       await syncListRules().catch(() => {});
       throw e;
     }
-    builtinPromise = undefined;
+    cosmeticCache.clear();
+    tokenCache.clear();
     await applyRulesets((await getData()).settings, updateInfo);
     return { ok: true, updateInfo };
   } catch (e) {
@@ -283,11 +344,12 @@ chrome.commands.onCommand.addListener(async (cmd) => {
 });
 
 // ---------- theo dõi tab ----------
-chrome.webNavigation.onBeforeNavigate.addListener((d) => {
-  if (d.frameId !== 0) return;
-  logBuf.delete(d.tabId);
-  chrome.storage.session.remove([`hidden:${d.tabId}`, `log:${d.tabId}`]);
-  chrome.storage.session.set({ [`nav:${d.tabId}`]: Date.now() });
+// Bắt đầu điều hướng mới trong tab → xoá nhật ký/bộ đếm của trang cũ (không cần quyền webNavigation).
+chrome.tabs.onUpdated.addListener((tabId, info) => {
+  if (info.status !== 'loading') return;
+  logBuf.delete(tabId);
+  chrome.storage.session.remove([`hidden:${tabId}`, `log:${tabId}`]);
+  chrome.storage.session.set({ [`nav:${tabId}`]: Date.now() });
 });
 chrome.tabs.onRemoved.addListener((tabId) => {
   logBuf.delete(tabId);
@@ -337,8 +399,9 @@ const writeStats = chain(async () => {
 
 const flushAll = () => Promise.all([writeLog(), writeStats()]);
 
-chrome.webRequest.onErrorOccurred.addListener(
-  (d) => {
+// Nhật ký + thống kê cần quyền webRequest (tuỳ chọn, người dùng cấp trong popup/cài đặt).
+let logAttached = false;
+const onBlockedRequest = (d) => {
     if (d.error !== 'net::ERR_BLOCKED_BY_CLIENT') return;
     pendingCount++;
     if (d.tabId >= 0) {
@@ -354,9 +417,31 @@ chrome.webRequest.onErrorOccurred.addListener(
     }
     clearTimeout(flushTimer);
     flushTimer = setTimeout(flushAll, 800);
-  },
-  { urls: ['<all_urls>'] },
-);
+};
+function setupLog() {
+  if (logAttached || !chrome.webRequest?.onErrorOccurred) return;
+  chrome.webRequest.onErrorOccurred.addListener(onBlockedRequest, { urls: ['<all_urls>'] });
+  logAttached = true;
+}
+setupLog();
+chrome.permissions.onAdded.addListener(setupLog);
+
+// full = chặn đầy đủ · network = chỉ chặn mạng (tắt ẩn phần tử + scriptlet) · off = tắt hẳn
+async function setSiteMode(host, mode) {
+  const d = await getData();
+  const off = new Set(d.disabledSites);
+  const basic = new Set(d.basicSites);
+  for (const h of hostChain(host)) {
+    off.delete(h);
+    basic.delete(h);
+  }
+  if (mode === 'off') off.add(host);
+  if (mode === 'network') basic.add(host);
+  await chrome.storage.local.set({ disabledSites: [...off], basicSites: [...basic] });
+  await rebuildDynamic();
+  await syncScripts();
+  return { ok: true };
+}
 
 // ---------- xử lý thông điệp ----------
 async function handle(msg, sender) {
@@ -366,20 +451,31 @@ async function handle(msg, sender) {
       const host = msg.host || topHost;
       if (!host) return { chunks: [] };
       const d = await getData();
-      if (isDisabled(d.disabledSites, topHost || host)) return { chunks: [] };
-      const b = await loadBuiltin();
+      // Chỉ chặn mạng / tắt hẳn → không ẩn phần tử, kể cả selector của người dùng.
+      if (isBasicOrOff(d, topHost || host)) return { chunks: [] };
       const out = new Set();
       // Selector chung của danh sách dựng sẵn đã nằm trong CSS tĩnh → chỉ lấy selector riêng theo trang.
-      if (d.settings.rulesets.ads) resolveCosmetic(b.ads, host, { generic: false }).forEach((s) => out.add(s));
-      if (d.settings.rulesets.annoyances) resolveCosmetic(b.annoyances, host, { generic: false }).forEach((s) => out.add(s));
+      for (const key of COSMETIC_KEYS) {
+        if (d.settings.rulesets[key]) resolveCosmetic(await loadCosmetic(key), host, { generic: false }).forEach((s) => out.add(s));
+      }
       resolveCosmetic(d.compiled?.cosmetic, host).forEach((s) => out.add(s));
-      const res = { chunks: toSelectorChunks([...out]) };
+      const res = { chunks: toSelectorChunks([...out]), lazy: d.settings.genericCosmetic && COSMETIC_KEYS.some((k) => d.settings.rulesets[k]) };
       // Frame trên cùng cũng nhận các nhóm chung để đếm số phần tử đã ẩn.
       if (msg.top && d.settings.genericCosmetic) {
         const g = await loadGeneric();
-        res.countChunks = [...(d.settings.rulesets.ads ? g.ads : []), ...(d.settings.rulesets.annoyances ? g.annoyances : [])];
+        res.countChunks = COSMETIC_KEYS.filter((k) => d.settings.rulesets[k]).flatMap((k) => g[k] ?? []);
       }
       return res;
+    }
+
+    case 'generic-match': {
+      const topHost = hostOf(sender.tab?.url);
+      const d = await getData();
+      if (!d.settings.genericCosmetic || !Array.isArray(msg.tokens) || (topHost && isBasicOrOff(d, topHost))) return { match: [] };
+      const sets = await Promise.all(COSMETIC_KEYS.filter((k) => d.settings.rulesets[k]).map(loadTokens));
+      const match = [];
+      for (const t of msg.tokens.slice(0, 3000)) if (typeof t === 'string' && sets.some((s) => s.has(t))) match.push(t);
+      return { match };
     }
 
     case 'hidden-count': {
@@ -405,7 +501,9 @@ async function handle(msg, sender) {
       }
       const bare = host.replace(/^www\./, '');
       const mine = host ? d.userFilters.split(/\r?\n/).filter((l) => l.startsWith(`${bare}##`) || l.startsWith(`${host}##`)).length : 0;
-      return { host, supported: !!host, enabled: !!host && !isDisabled(d.disabledSites, host), blocked, hidden, hiddenByMe: mine };
+      const off = isDisabled(d.disabledSites, host);
+      const mode = off ? 'off' : isDisabled(d.basicSites, host) ? 'network' : 'full';
+      return { host, supported: !!host, enabled: !!host && !off, mode, blocked, hidden, hiddenByMe: mine };
     }
 
     case 'get-log': {
@@ -444,16 +542,43 @@ async function handle(msg, sender) {
     case 'update-lists':
       return await updateLists();
 
-    case 'set-site-enabled': {
+    case 'set-site-enabled':
+      return await setSiteMode(msg.host, msg.enabled ? 'full' : 'off');
+
+    case 'set-site-mode':
+      return await setSiteMode(msg.host, msg.mode);
+
+    case 'get-report': {
       const d = await getData();
-      const set = new Set(d.disabledSites);
-      if (msg.enabled) hostChain(msg.host).forEach((h) => set.delete(h));
-      else set.add(msg.host);
-      await chrome.storage.local.set({ disabledSites: [...set] });
-      await rebuildDynamic();
-      await syncScripts();
-      return { ok: true };
+      const host = hostOf(msg.url);
+      const enabledRs = Object.entries(d.settings.rulesets).filter(([, v]) => v).map(([k]) => k);
+      let matched = [];
+      try {
+        const r = await chrome.declarativeNetRequest.getMatchedRules({ tabId: msg.tabId });
+        const by = {};
+        for (const x of r.rulesMatchedInfo) by[`${x.rule.rulesetId}#${x.rule.ruleId}`] = (by[`${x.rule.rulesetId}#${x.rule.ruleId}`] ?? 0) + 1;
+        matched = Object.entries(by).slice(0, 40).map(([k, n]) => `${k}${n > 1 ? ` ×${n}` : ''}`);
+      } catch {
+        /* giới hạn tần suất */
+      }
+      const key = `log:${msg.tabId}`;
+      const log = (await chrome.storage.session.get(key))[key] ?? {};
+      const blocked = Object.entries(log).sort((a, b) => b[1].n - a[1].n).slice(0, 20).map(([h, v]) => `${h} ×${v.n}`);
+      const mode = isDisabled(d.disabledSites, host) ? 'off' : isDisabled(d.basicSites, host) ? 'network' : 'full';
+      const text = [
+        `Lite Shield ${chrome.runtime.getManifest().version} — ${host || '(n/a)'}`,
+        `Chrome: ${navigator.userAgent.match(/Chrome\/[\d.]+/)?.[0] ?? '?'}`,
+        `Chế độ trang: ${mode}`,
+        `Danh sách bật: ${enabledRs.join(', ')}`,
+        `Scriptlet: youtube=${d.settings.scriptlets.youtube} lists=${d.settings.scriptlets.lists}; ẩn phần tử chung=${d.settings.genericCosmetic}`,
+        `Quy tắc đã khớp (ruleset#id): ${matched.join(', ') || '—'}`,
+        `Tên miền bị chặn: ${blocked.join(', ') || '— (nhật ký tắt hoặc trống)'}`,
+      ].join('\n');
+      return { text };
     }
+
+    case 'log-status':
+      return { granted: !!chrome.webRequest?.onErrorOccurred, attached: logAttached };
 
     case 'start-picker': {
       await chrome.scripting.executeScript({ target: { tabId: msg.tabId }, files: ['picker.js'] });
@@ -500,7 +625,14 @@ async function handle(msg, sender) {
         scriptlets: { ...d.settings.scriptlets, ...msg.settings?.scriptlets },
       };
       await chrome.storage.local.set({ settings });
-      await applyRulesets(settings, d.updateInfo);
+      try {
+        await applyRulesets(settings, d.updateInfo);
+      } catch (e) {
+        // Chrome từ chối bật ruleset (vượt giới hạn quy tắc) → hoàn tác công tắc.
+        await chrome.storage.local.set({ settings: d.settings });
+        await applyRulesets(d.settings, d.updateInfo).catch(() => {});
+        return { error: 'ruleset-limit', detail: String(e?.message || e) };
+      }
       await syncListRules();
       await syncScripts();
       await syncAlarm(settings);

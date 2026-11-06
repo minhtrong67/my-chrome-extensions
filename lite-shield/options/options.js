@@ -64,14 +64,15 @@ initTooltips();
 initAccordions();
 
 // ---------- Bảo vệ ----------
-const RULESET_ICONS = { ads: 'block', trackers: 'eye', annoyances: 'shield' };
+const RULESET_ICONS = { ads: 'block', trackers: 'eye', vn: 'globe', ubo: 'shield-check', adguard: 'layout', annoyances: 'shield' };
 const ruleCounts = {};
 
+let meta;
 async function countRules(id) {
   if (ruleCounts[id] != null) return ruleCounts[id];
   try {
-    const rules = await (await fetch(chrome.runtime.getURL(`rulesets/${id}.json`))).json();
-    return (ruleCounts[id] = rules.reduce((n, r) => n + (r.condition.requestDomains?.length ?? 1), 0));
+    meta ??= await (await fetch(chrome.runtime.getURL('rulesets/meta.json'))).json();
+    return (ruleCounts[id] = meta[id]?.units ?? 0);
   } catch {
     return (ruleCounts[id] = 0);
   }
@@ -94,14 +95,21 @@ async function renderRulesets() {
     row.querySelector('.count').textContent = t('rs.count', { n });
     row.querySelector('input').setAttribute('aria-label', title);
     row.querySelector('input').addEventListener('change', async (e) => {
-      data.settings.rulesets[id] = e.target.checked;
-      await send({ type: 'set-settings', settings: { rulesets: { [id]: e.target.checked } } });
+      const want = e.target.checked;
+      const r = await send({ type: 'set-settings', settings: { rulesets: { [id]: want } } });
+      if (r?.error) {
+        e.target.checked = !want;
+        toast.error(t(r.error === 'ruleset-limit' ? 'rs.limit' : 'upd.fail', { msg: r.error }));
+        return;
+      }
+      data.settings.rulesets[id] = want;
     });
     rows.push(row);
   }
   box.replaceChildren(...rows);
   $('generic-cosmetic').checked = data.settings.genericCosmetic;
   $('yt-scriptlet').checked = data.settings.scriptlets.youtube;
+  $('list-scriptlets').checked = data.settings.scriptlets.lists !== false;
   $('auto-update').checked = data.settings.autoUpdate;
 }
 $('generic-cosmetic').addEventListener('change', async (e) => {
@@ -156,6 +164,23 @@ $('auto-update').addEventListener('change', async (e) => {
 $('yt-scriptlet').addEventListener('change', async (e) => {
   data.settings.scriptlets.youtube = e.target.checked;
   await send({ type: 'set-settings', settings: { scriptlets: { youtube: e.target.checked } } });
+});
+$('list-scriptlets').addEventListener('change', async (e) => {
+  data.settings.scriptlets.lists = e.target.checked;
+  await send({ type: 'set-settings', settings: { scriptlets: { lists: e.target.checked } } });
+});
+
+// Nhật ký chặn: quyền webRequest tuỳ chọn.
+async function renderLogPerm() {
+  const { granted } = await send({ type: 'log-status' });
+  $('log-perm-sub').textContent = t(granted ? 'prot.log.enabled' : 'prot.log.disabled');
+  $('log-perm-btn').querySelector('span').textContent = t(granted ? 'prot.log.off' : 'prot.log.on');
+  $('log-perm-btn').dataset.on = granted ? '1' : '';
+}
+$('log-perm-btn').addEventListener('click', async () => {
+  if ($('log-perm-btn').dataset.on) await chrome.permissions.remove({ permissions: ['webRequest'] });
+  else if (!(await chrome.permissions.request({ permissions: ['webRequest'] }))) toast.warning(t('prot.log.denied'));
+  await renderLogPerm();
 });
 $('shortcuts').addEventListener('click', () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
 async function renderShortcut() {
@@ -418,6 +443,7 @@ function rerender() {
   renderDomains();
   renderUpdate();
   renderShortcut();
+  renderLogPerm();
   renderAbout();
   labelAppearance();
   syncAppearance();

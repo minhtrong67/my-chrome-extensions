@@ -1,6 +1,6 @@
 {
   "name": "lite-shield",
-  "version": "0.4.1",
+  "version": "0.5.2",
   "private": true,
   "type": "module",
   "description": "Lite Shield — Chrome MV3 content blocker, Material 3 Expressive",
@@ -9,6 +9,9 @@
   "scripts": {
     "fetch": "node tools/fetch-lists.mjs",
     "build": "node tools/build-rulesets.mjs",
-    "test": "node tools/test-filters.mjs && node tools/test-i18n.mjs"
+    "test": "node tools/test-filters.mjs && node tools/test-i18n.mjs && node tools/audit-rulesets.mjs",
+    "test:corpus": "node tests/corpus-url.cjs",
+    "test:lazy": "node tests/lazy-generic.cjs",
+    "test:memory": "node tests/memory-rss.cjs"
   }
 }
