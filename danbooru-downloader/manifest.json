@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Danbooru Downloader",
+  "version": "1.0.0",
+  "description": "Scan and bulk-download images from Danbooru with logo filtering, Material 3 Expressive UI, EN/VI.",
+  "minimum_chrome_version": "110",
+  "permissions": ["downloads", "storage", "activeTab", "scripting", "notifications"],
+  "host_permissions": ["*://*.donmai.us/*"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_title": "Danbooru Downloader",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "content_scripts": [
+    { "matches": ["*://*.donmai.us/*"], "js": ["content.js"], "run_at": "document_idle" }
+  ],
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+}

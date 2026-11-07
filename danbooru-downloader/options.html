@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Danbooru Downloader — Settings</title>
+  <link rel="stylesheet" href="shared/ui.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body class="options">
+  <header class="top">
+    <div class="top-in">
+      <div class="logo" id="logo"></div>
+      <div>
+        <h1 data-i18n="opt.title">Settings</h1>
+        <p id="subtitle"></p>
+      </div>
+    </div>
+  </header>
+
+  <main id="main"></main>
+
+  <div class="snackbar" id="toast" role="status"></div>
+  <dialog class="m3" id="dlgReset">
+    <h2 data-i18n="opt.reset.title"></h2>
+    <p data-i18n="opt.reset.body"></p>
+    <div class="actions">
+      <button class="btn text" id="resetCancel" data-i18n="opt.reset.cancel"></button>
+      <button class="btn danger" id="resetOk" data-i18n="opt.reset.confirm"></button>
+    </div>
+  </dialog>
+  <input type="file" id="importFile" accept="application/json" hidden>
+
+  <script src="shared/icons.js"></script>
+  <script src="shared/defaults.js"></script>
+  <script src="shared/i18n.js"></script>
+  <script src="shared/theme.js"></script>
+  <script src="shared/naming.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

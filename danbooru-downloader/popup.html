@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Danbooru Downloader</title>
+  <link rel="stylesheet" href="shared/ui.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body class="popup">
+  <div class="shell">
+    <header class="appbar">
+      <div class="logo" id="logo"></div>
+      <div class="titles">
+        <h1 data-i18n="app.name">Danbooru Downloader</h1>
+        <p id="subtitle"></p>
+      </div>
+      <button class="icon-btn tonal" id="btnSettings" data-i18n-title="popup.openOptions"></button>
+    </header>
+
+    <section id="viewEmpty" class="empty" hidden>
+      <div class="hero" id="hero"></div>
+      <h2 data-i18n="popup.notBooruTitle"></h2>
+      <p data-i18n="popup.notBooruBody"></p>
+      <button class="btn filled lg" id="btnOpenBooru"><span data-i18n="popup.openBooru"></span></button>
+    </section>
+
+    <section id="viewMain" class="main">
+      <div class="scan-card">
+        <div class="where">
+          <div class="where-label" id="pageLabel"></div>
+          <div class="where-sub" id="pageSub"></div>
+        </div>
+        <div class="scan-row">
+          <div class="stepper" role="group">
+            <button class="icon-btn" id="pgMinus" data-i18n-title="popup.pagesLess"></button>
+            <div class="stepper-val"><strong id="pgVal">1</strong><span data-i18n="popup.pages"></span></div>
+            <button class="icon-btn" id="pgPlus" data-i18n-title="popup.pagesMore"></button>
+          </div>
+          <button class="btn filled lg scan-btn" id="btnScan"></button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="chip" id="chipLogo" aria-pressed="true"></button>
+        <button class="chip" id="chipFiltered" aria-pressed="false" hidden></button>
+      </div>
+      <div class="selbar">
+        <span class="summary" id="summary"></span>
+        <span class="spacer"></span>
+        <button class="btn text sm" id="selAll" data-i18n="popup.all"></button>
+        <button class="btn text sm" id="selNone" data-i18n="popup.none"></button>
+        <button class="btn text sm" id="selInv" data-i18n="popup.invert"></button>
+      </div>
+
+      <div class="notice" id="notice" hidden></div>
+      <div class="gridwrap" id="gridwrap">
+        <div class="grid" id="grid"></div>
+        <div class="placeholder" id="placeholder"></div>
+      </div>
+    </section>
+
+    <footer class="dock">
+      <div class="dock-idle" id="dockIdle">
+        <button class="fab" id="btnDownload"></button>
+      </div>
+      <div class="dock-busy" id="dockBusy" hidden>
+        <div class="wavy" id="wavy"><div class="rest"></div><div class="fill"></div></div>
+        <div class="busy-row">
+          <span id="busyText"></span>
+          <button class="btn text sm" id="btnCancel" data-i18n="popup.cancel"></button>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <div class="snackbar" id="toast" role="status"></div>
+
+  <script src="shared/icons.js"></script>
+  <script src="shared/defaults.js"></script>
+  <script src="shared/i18n.js"></script>
+  <script src="shared/theme.js"></script>
+  <script src="shared/filter.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
