@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="16" y1="8" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4DA6FF"/>
+      <stop offset="1" stop-color="#0B57C7"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="8" x2="0" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity=".30"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="56" x2="0" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5CB0FF"/>
+      <stop offset="1" stop-color="#1D70DE"/>
+    </linearGradient>
+    <clipPath id="card"><rect x="26" y="34" width="62" height="52" rx="10"/></clipPath>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#052a66" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="30" fill="url(#bg)"/>
+  <rect x="6" y="6" width="116" height="116" rx="30" fill="url(#sheen)"/>
+  <rect x="6.5" y="6.5" width="115" height="115" rx="29.5" fill="none" stroke="#fff" stroke-opacity=".28"/>
+  <!-- back card -->
+  <g transform="rotate(-9 52 56)"><rect x="30" y="26" width="58" height="48" rx="10" fill="#fff" fill-opacity=".42"/></g>
+  <!-- front card -->
+  <g filter="url(#sh)"><rect x="26" y="34" width="62" height="52" rx="10" fill="#fff"/></g>
+  <g clip-path="url(#card)">
+    <circle cx="44" cy="51" r="6.5" fill="#FFB43A"/>
+    <path d="M20 90 L48 60 L62 74 L72 64 L96 90 Z" fill="url(#hill)"/>
+  </g>
+  <!-- download badge -->
+  <g filter="url(#sh)">
+    <circle cx="90" cy="88" r="21" fill="#0F6CBD" stroke="#fff" stroke-width="4"/>
+  </g>
+  <path d="M90 78v15M83 87l7 7 7-7M82 100h16" fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

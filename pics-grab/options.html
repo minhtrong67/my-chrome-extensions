@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pics Grab</title>
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- Navigation pane -->
+  <aside class="nav-pane">
+    <div class="nav-brand">
+      <img src="icons/icon48.png" alt="" width="32" height="32">
+      <div class="nav-brand-text">
+        <span class="nav-brand-name">Pics Grab</span>
+        <span class="caption" data-i18n="settings">Settings</span>
+      </div>
+    </div>
+    <nav class="nav-list" id="nav" role="tablist">
+      <button class="nav-item" role="tab" data-pane="saving"><i data-icon="folder-down" data-size="18"></i><span data-i18n="navSaving">Saving</span></button>
+      <button class="nav-item" role="tab" data-pane="images"><i data-icon="images" data-size="18"></i><span data-i18n="navImages">Images</span></button>
+      <button class="nav-item" role="tab" data-pane="appearance"><i data-icon="palette" data-size="18"></i><span data-i18n="navAppearance">Appearance</span></button>
+      <button class="nav-item" role="tab" data-pane="about"><i data-icon="info" data-size="18"></i><span data-i18n="navAbout">About</span></button>
+    </nav>
+  </aside>
+
+  <main class="page">
+
+    <!-- ① Saving -->
+    <section class="pane" id="pane-saving" role="tabpanel">
+      <h1 data-i18n="navSaving">Saving</h1>
+
+      <h2 data-i18n="saveLocation">Save location</h2>
+      <div class="card" id="modeGroup" role="radiogroup">
+        <button class="option" role="radio" data-mode="ask">
+          <span class="radio"></span>
+          <i data-icon="folder-open" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="saveModeAsk">Ask where to save</span><span class="row-desc" data-i18n="saveModeAskDesc"></span></span>
+        </button>
+        <button class="option" role="radio" data-mode="downloads">
+          <span class="radio"></span>
+          <i data-icon="download" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="saveModeDownloads">Downloads folder</span><span class="row-desc" data-i18n="saveModeDownloadsDesc"></span></span>
+        </button>
+        <button class="option" role="radio" data-mode="subfolder">
+          <span class="radio"></span>
+          <i data-icon="folder-plus" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="saveModeSubfolder">Subfolder in Downloads</span><span class="row-desc" data-i18n="saveModeSubfolderDesc"></span></span>
+        </button>
+
+        <!-- Only for "Subfolder" -->
+        <div class="reveal" id="subfolderReveal"><div class="reveal-inner">
+          <div class="setting stacked">
+            <label class="row-title" for="saveSubfolder" data-i18n="subfolderLabel">Subfolder name</label>
+            <input class="input" id="saveSubfolder" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="subfolderPlaceholder">
+            <span class="row-desc" id="subfolderHint" data-i18n="subfolderHint"></span>
+            <span class="field-error" id="subfolderError" role="alert"></span>
+          </div>
+        </div></div>
+
+        <!-- Hidden when the browser's Save As dialog decides -->
+        <div class="reveal" id="conflictReveal"><div class="reveal-inner">
+          <div class="setting">
+            <i data-icon="files" data-size="20" class="row-icon"></i>
+            <span class="row-text"><label class="row-title" for="conflictAction" data-i18n="conflictAction">If a file already exists</label></span>
+            <select class="select control-select" id="conflictAction">
+              <option value="uniquify" data-i18n="uniquify">Rename automatically</option>
+              <option value="overwrite" data-i18n="overwrite">Replace it</option>
+              <option value="prompt" data-i18n="prompt">Ask me</option>
+            </select>
+          </div>
+        </div></div>
+      </div>
+
+      <h2 data-i18n="filenameTemplate">File name</h2>
+      <div class="card">
+        <div class="setting stacked">
+          <input class="input" id="filenameTemplate" type="text" autocomplete="off" spellcheck="false" placeholder="{original}" aria-label="File name">
+          <div class="chips" id="varChips">
+            <button class="chip" data-var="{original}">{original}</button>
+            <button class="chip" data-var="{date}">{date}</button>
+            <button class="chip" data-var="{time}">{time}</button>
+            <button class="chip" data-var="{datetime}">{datetime}</button>
+          </div>
+          <span class="row-desc" data-i18n="filenameTemplateHint"></span>
+          <div class="preview">
+            <i data-icon="file-image" data-size="16"></i>
+            <span class="preview-label" data-i18n="previewLabel">Preview</span>
+            <code id="previewValue"></code>
+          </div>
+        </div>
+      </div>
+
+      <div class="card gap-top">
+        <div class="setting">
+          <i data-icon="bell" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="notifications">Show a notification after saving</span><span class="row-desc" data-i18n="notificationsHint"></span></span>
+          <label class="switch"><input type="checkbox" id="showNotification"><span class="track"><span class="thumb"></span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② Images -->
+    <section class="pane" id="pane-images" role="tabpanel" hidden>
+      <h1 data-i18n="navImages">Images</h1>
+
+      <h2 data-i18n="sectionConversion">JPG conversion</h2>
+      <div class="card">
+        <div class="setting stacked">
+          <div class="slider-head">
+            <i data-icon="sliders-horizontal" data-size="20" class="row-icon"></i>
+            <span class="row-text"><label class="row-title" for="quality" data-i18n="quality">JPEG quality</label></span>
+            <output class="value-badge" id="qualityBadge">92</output>
+          </div>
+          <input type="range" class="slider" id="quality" min="10" max="100" step="1" value="92">
+          <span class="row-desc" data-i18n="qualityHint"></span>
+        </div>
+        <div class="setting">
+          <i data-icon="image" data-size="20" class="row-icon"></i>
+          <span class="row-text"><label class="row-title" for="convertWebp" data-i18n="convertWebp">Convert WebP to JPG</label><span class="row-desc" data-i18n="convertWebpHint"></span></span>
+          <label class="switch"><input type="checkbox" id="convertWebp"><span class="track"><span class="thumb"></span></span></label>
+        </div>
+        <div class="setting">
+          <i data-icon="image" data-size="20" class="row-icon"></i>
+          <span class="row-text"><label class="row-title" for="convertPng" data-i18n="convertPng">Convert PNG to JPG</label><span class="row-desc" data-i18n="convertPngHint"></span></span>
+          <label class="switch"><input type="checkbox" id="convertPng"><span class="track"><span class="thumb"></span></span></label>
+        </div>
+        <div class="setting">
+          <i data-icon="image-play" data-size="20" class="row-icon"></i>
+          <span class="row-text"><label class="row-title" for="convertGif" data-i18n="convertGif">Convert GIF to JPG</label><span class="row-desc" data-i18n="convertGifHint"></span></span>
+          <label class="switch"><input type="checkbox" id="convertGif"><span class="track"><span class="thumb"></span></span></label>
+        </div>
+      </div>
+
+      <h2 data-i18n="sectionScanning">Scanning</h2>
+      <div class="card">
+        <div class="setting">
+          <i data-icon="badge-check" data-size="20" class="row-icon"></i>
+          <span class="row-text"><label class="row-title" for="hideLogos" data-i18n="hideLogos">Hide logo images</label><span class="row-desc" data-i18n="hideLogosHint"></span></span>
+          <label class="switch"><input type="checkbox" id="hideLogos"><span class="track"><span class="thumb"></span></span></label>
+        </div>
+        <div class="setting stacked">
+          <div class="slider-head">
+            <i data-icon="ruler" data-size="20" class="row-icon"></i>
+            <span class="row-text"><label class="row-title" for="minImageSize" data-i18n="minSize">Skip small images</label><span class="row-desc" data-i18n="minSizeHint"></span></span>
+            <output class="value-badge" id="minSizeBadge">32px</output>
+          </div>
+          <input type="range" class="slider" id="minImageSize" min="0" max="200" step="8" value="32">
+        </div>
+      </div>
+    </section>
+
+    <!-- ③ Appearance -->
+    <section class="pane" id="pane-appearance" role="tabpanel" hidden>
+      <h1 data-i18n="navAppearance">Appearance</h1>
+      <div class="card">
+        <div class="setting">
+          <i data-icon="sun" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="theme">App theme</span></span>
+          <div class="segmented" id="themeSegment" role="group">
+            <button data-val="light"><i data-icon="sun" data-size="15"></i><span data-i18n="themeLight">Light</span></button>
+            <button data-val="dark"><i data-icon="moon" data-size="15"></i><span data-i18n="themeDark">Dark</span></button>
+            <button data-val="system"><i data-icon="monitor" data-size="15"></i><span data-i18n="themeSystem">System</span></button>
+          </div>
+        </div>
+        <div class="setting">
+          <i data-icon="languages" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="language">Language</span></span>
+          <div class="segmented" id="langSegment" role="group">
+            <button data-val="system"><span data-i18n="langSystem">System default</span></button>
+            <button data-val="en"><span data-i18n="langEn">English</span></button>
+            <button data-val="vi"><span data-i18n="langVi">Tiếng Việt</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ About -->
+    <section class="pane" id="pane-about" role="tabpanel" hidden>
+      <h1 data-i18n="navAbout">About</h1>
+      <div class="card about-hero">
+        <img src="icons/icon128.png" alt="" width="72" height="72">
+        <div>
+          <div class="about-name">Pics Grab</div>
+          <p class="about-desc" data-i18n="appDesc"></p>
+        </div>
+      </div>
+      <div class="card gap-top">
+        <div class="setting">
+          <i data-icon="tag" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="aboutVersion">Version</span></span>
+          <span class="row-value" id="aboutVersion"></span>
+        </div>
+        <div class="setting">
+          <i data-icon="user" data-size="20" class="row-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="aboutAuthor">Author</span></span>
+          <span class="row-value" id="aboutAuthor">minhtrong67</span>
+        </div>
+        <div class="setting">
+          <i data-icon="sparkles" data-size="20" class="row-icon accent-icon"></i>
+          <span class="row-text"><span class="row-title" data-i18n="aboutAi">AI assistance</span><span class="row-desc" data-i18n="aboutAiHint"></span></span>
+          <span class="row-value" data-i18n="aboutAiValue">Claude, by Anthropic</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="toast-icon" id="toastIcon"></span>
+  <span id="toastMsg"></span>
+</div>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

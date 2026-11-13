@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pics Grab</title>
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Title bar -->
+  <header class="titlebar">
+    <img class="app-logo" src="icons/icon48.png" alt="" width="28" height="28">
+    <div class="titles">
+      <span class="app-name" id="appName">Pics Grab</span>
+      <span class="caption truncate" id="appSub"></span>
+    </div>
+    <button class="btn subtle icon-only" id="btnRescan" data-i18n-title="rescan"><i data-icon="rotate-cw" data-size="16"></i></button>
+    <button class="btn subtle icon-only" id="btnSettings" data-i18n-title="openSettings"><i data-icon="settings" data-size="16"></i></button>
+  </header>
+
+  <!-- Search + view switch -->
+  <div class="toolbar" id="toolbar" hidden>
+    <div class="search">
+      <i data-icon="search" data-size="16" class="search-icon"></i>
+      <input class="input" id="search" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="searchPlaceholder">
+      <button class="search-clear" id="searchClear" hidden data-i18n-title="clearSearch"><i data-icon="x" data-size="14"></i></button>
+    </div>
+    <div class="segmented" role="group">
+      <button id="viewGrid" aria-pressed="true" data-i18n-title="gridView"><i data-icon="layout-grid" data-size="16"></i></button>
+      <button id="viewList" aria-pressed="false" data-i18n-title="listView"><i data-icon="list" data-size="16"></i></button>
+    </div>
+  </div>
+
+  <!-- Format chips + logo toggle -->
+  <div class="filter-row" id="filterRow" hidden></div>
+
+  <!-- Content -->
+  <main class="content" id="content">
+    <div class="grid" id="loadingState" hidden aria-label="Loading">
+      <div class="skel-tile skeleton"></div><div class="skel-tile skeleton"></div><div class="skel-tile skeleton"></div>
+      <div class="skel-tile skeleton"></div><div class="skel-tile skeleton"></div><div class="skel-tile skeleton"></div>
+      <div class="skel-tile skeleton"></div><div class="skel-tile skeleton"></div><div class="skel-tile skeleton"></div>
+    </div>
+
+    <div class="empty" id="emptyState" hidden>
+      <div class="empty-icon" id="emptyIcon"></div>
+      <div class="empty-title" id="emptyTitle"></div>
+      <p class="empty-desc" id="emptyDesc"></p>
+      <button class="btn" id="emptyAction"></button>
+    </div>
+
+    <div id="imageList" role="group" hidden></div>
+  </main>
+
+  <!-- Command bar -->
+  <footer class="commandbar" id="commandbar" hidden>
+    <div class="progress" id="progress" hidden><div class="progress-bar" id="progressBar"></div></div>
+    <button class="btn subtle" id="btnSelectAll">
+      <i data-icon="square-check" data-size="16" id="selectAllIcon"></i>
+      <span id="selectAllLabel"></span>
+    </button>
+    <span class="caption truncate selection-text" id="selectionText"></span>
+    <button class="btn subtle icon-only" id="btnClear" hidden data-i18n-title="clearSelection"><i data-icon="x" data-size="16"></i></button>
+    <button class="btn subtle" id="btnCancel" hidden data-i18n="cancel"></button>
+    <button class="btn accent" id="btnSave">
+      <i data-icon="download" data-size="16" id="saveIcon"></i>
+      <span id="btnSaveLabel"></span>
+    </button>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon" id="toastIcon"></span>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script src="icons.js"></script>
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
