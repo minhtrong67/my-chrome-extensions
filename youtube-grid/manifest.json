@@ -3,7 +3,7 @@
   "name": "__MSG_extName__",
   "short_name": "YouTube Grid",
   "description": "__MSG_extDescription__",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "minhtrong67",
   "homepage_url": "https://github.com/minhtrong67/youtube-grid",
   "default_locale": "en",
@@ -50,13 +50,5 @@
   },
   "permissions": [
     "storage"
-  ],
-  "sandbox": {
-    "pages": [
-      "index.html"
-    ]
-  },
-  "content_security_policy": {
-    "sandbox": "sandbox allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads; script-src 'self' 'unsafe-inline'; child-src 'self';"
-  }
+  ]
 }

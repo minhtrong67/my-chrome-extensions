@@ -60,7 +60,7 @@
         return false;
 
       case "start-area-selection":
-        startAreaSelection(message.hint, message.accent, sendResponse);
+        startAreaSelection(message.hint, sendResponse);
         return true;
 
       default:
@@ -95,13 +95,7 @@
     hiddenFixed = [];
   }
 
-  function inkFor(hex) {
-    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-    return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? "#1C1B1F" : "#FFFFFF";
-  }
-
-  function startAreaSelection(hintText, accent, sendResponse) {
-    const color = /^#[0-9a-f]{6}$/i.test(accent) ? accent : "#03A9F4";
+  function startAreaSelection(hintText, sendResponse) {
     if (selecting) selecting(); // replace any stale selection
     const old = document.getElementById("__smartshot_host");
     if (old) old.remove();
@@ -111,19 +105,24 @@
     host.id = "__smartshot_host";
     host.style.cssText = "all:initial;position:fixed;inset:0;z-index:2147483647;";
     const root = host.attachShadow({ mode: "closed" });
+    // Fluent look: brand-blue selection with a white hairline for contrast on any page,
+    // an Fluent "toast"-style hint and a compact size badge.
     root.innerHTML = `
       <style>
-        :host { --accent: ${color}; --ink: ${inkFor(color)}; }
-        .overlay { position: fixed; inset: 0; cursor: crosshair; background: rgba(0,0,0,.38); user-select: none; touch-action: none; }
-        .box { position: fixed; display: none; border: 2px solid var(--accent); border-radius: 2px; pointer-events: none;
-               box-shadow: 0 0 0 100vmax rgba(0,0,0,.38); background: transparent; }
+        :host { --brand: #0F6CBD; --brand-light: #479EF5; }
+        .overlay { position: fixed; inset: 0; cursor: crosshair; background: rgba(0,0,0,.4); user-select: none; touch-action: none; }
         .overlay.has-box { background: transparent; }
-        .size { position: absolute; left: 0; top: -30px; padding: 3px 9px; border-radius: 12px; font: 600 12px system-ui, sans-serif;
-                color: var(--ink); background: var(--accent); white-space: nowrap; }
+        .box { position: fixed; display: none; pointer-events: none; box-sizing: border-box;
+               border: 2px solid var(--brand-light); border-radius: 2px;
+               box-shadow: 0 0 0 1px rgba(255,255,255,.85), 0 0 0 100vmax rgba(0,0,0,.4); background: transparent; }
+        .size { position: absolute; left: -2px; top: -34px; padding: 4px 10px; border-radius: 4px;
+                font: 600 12px/16px "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+                color: #fff; background: var(--brand); white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,.28); }
         .size.inside { top: 6px; left: 6px; }
-        .hint { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 16px;
-                font: 500 14px/1.3 system-ui, sans-serif; color: #F1F1F4; background: #2E3133; pointer-events: none;
-                box-shadow: 0 4px 14px rgba(0,0,0,.35); animation: in .22s cubic-bezier(.2,0,0,1); }
+        .hint { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 16px; border-radius: 8px;
+                font: 400 14px/20px "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color: #fff; background: #292929;
+                border: 1px solid rgba(255,255,255,.14); pointer-events: none;
+                box-shadow: 0 8px 16px rgba(0,0,0,.28), 0 0 2px rgba(0,0,0,.24); animation: in .2s cubic-bezier(.1,.9,.2,1); }
         @keyframes in { from { opacity: 0; transform: translate(-50%, -8px); } }
         @media (prefers-reduced-motion: reduce) { .hint { animation: none; } }
       </style>

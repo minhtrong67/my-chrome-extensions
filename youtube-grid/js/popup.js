@@ -1,6 +1,6 @@
 /**
  * popup.js — quick controls in the toolbar popup. The full set of options
- * lives in options.html; the popup exposes what people change most often.
+ * lives in options.html (shown inside the popup as an iframe, or in a tab).
  */
 const $ = (id) => document.getElementById(id);
 
@@ -25,7 +25,7 @@ function renderColumns(value) {
   }
   $("columnsSlider").value = value;
   UI.sliderFill($("columnsSlider"));
-  UI.renderPreview($("preview"), value);
+  UI.renderPreview($("preview"), value, 1);
   $("ticks").querySelectorAll("span").forEach((t) => t.classList.toggle("on", Number(t.textContent) === value));
 }
 
@@ -33,7 +33,8 @@ function render() {
   Appearance.apply(settings);
   i18n.setLang(settings.language);
   i18n.apply();
-  $("viewTitle").textContent = i18n.t($("app").classList.contains("view-settings") ? "settings" : "appName");
+  const inSettings = $("app").classList.contains("view-settings");
+  $("viewTitle").textContent = i18n.t(inSettings ? "settings" : "appName");
 
   $("themeBtn").dataset.mode = settings.theme;
 
@@ -44,7 +45,7 @@ function render() {
 
   $("optUseCustom").checked = settings.useCustomColumns;
   $("columnsCollapse").classList.toggle("open", settings.useCustomColumns);
-  // Collapsed content must not be reachable with Tab / screen readers.
+  // Collapsed content must not be reachable with Tab or a screen reader.
   $("columnsCollapse").firstElementChild.inert = !settings.useCustomColumns;
   $("defaultNote").hidden = settings.useCustomColumns;
   $("simpleBlock").hidden = settings.perPageColumns;
@@ -56,18 +57,18 @@ function render() {
 }
 
 /** Optimistic local update + persisted merge. */
-let pendingWrites = 0; // saves in flight; storage echoes of them are ignored
+let pendingWrites = 0; // saves in flight; their storage echoes are ignored
 function update(partial) {
   settings = { ...settings, ...partial };
   pendingWrites++;
   store.patch(partial).finally(() => { pendingWrites--; });
 }
 
-/* ---------- Settings view (an iframe of options.html inside the popup) ---------- */
+/* ---------- Settings view (options.html in an iframe) ---------- */
 
 function showSettings(open) {
   const frame = $("settingsFrame");
-  if (open && !frame.getAttribute("src")) frame.src = "options.html?embed=1#layout"; // lazy: only when first needed
+  if (open && !frame.getAttribute("src")) frame.src = "options.html?embed=1#layout"; // lazy
   $("app").classList.toggle("view-settings", open);
   frame.hidden = !open;
   $("backBtn").hidden = !open;
@@ -80,7 +81,6 @@ function showSettings(open) {
 $("settingsBtn").addEventListener("click", () => showSettings(true));
 $("noticeBtn").addEventListener("click", () => showSettings(true));
 $("backBtn").addEventListener("click", () => showSettings(false));
-$("landingBtn").addEventListener("click", () => chrome.tabs.create({ url: chrome.runtime.getURL("index.html") }));
 $("fullBtn").addEventListener("click", () => {
   chrome.runtime.openOptionsPage();
   window.close();
@@ -92,8 +92,7 @@ document.addEventListener("keydown", (e) => {
 /* ---------- Events ---------- */
 
 $("themeBtn").addEventListener("click", () => {
-  const theme = Appearance.nextMode(settings.theme);
-  update({ theme });
+  update({ theme: Appearance.nextMode(settings.theme) });
   render();
 });
 
@@ -125,7 +124,7 @@ for (const [id, key] of Object.entries(TOGGLES)) {
   $(id).addEventListener("change", (e) => update({ [key]: e.target.checked }));
 }
 
-/* Keep the popup in sync if settings change elsewhere (options page, shortcut). */
+/* Stay in sync when settings change elsewhere (options page, shortcut). */
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local" || !changes[SETTINGS_KEY] || pendingWrites > 0) return;
   settings = sanitize(changes[SETTINGS_KEY].newValue);
@@ -134,20 +133,18 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 /* ---------- Init ---------- */
 (async function init() {
-  const slider = $("columnsSlider");
-  slider.min = COLUMN_MIN;
-  slider.max = COLUMN_MAX;
+  $("columnsSlider").min = COLUMN_MIN;
+  $("columnsSlider").max = COLUMN_MAX;
   $("ticks").innerHTML = Array.from({ length: COLUMN_MAX - COLUMN_MIN + 1 }, (_, i) => `<span>${COLUMN_MIN + i}</span>`).join("");
 
-  $("versionLabel").textContent = "v" + chrome.runtime.getManifest().version;
   Appearance.watchSystem();
   Icons.hydrate();
 
   settings = await store.load();
   render();
 
-  // First paint is done: re-enable transitions, then preload the settings view in
-  // the background so opening it later is instant (no load flash, no layout shift).
+  // After the first paint: enable transitions, then preload the settings view
+  // so opening it later is instant.
   requestAnimationFrame(() => requestAnimationFrame(() => {
     document.documentElement.classList.remove("no-anim");
     setTimeout(() => {

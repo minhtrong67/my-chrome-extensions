@@ -1,104 +1,97 @@
-const T = {
-  en: {
-    title: 'Jump to any Chrome setting in one keystroke', subtitle: 'Assign keyboard shortcuts to Chrome settings pages like Downloads, Privacy or Extensions.',
-    tabPresets: 'Built-in', tabCustom: 'Custom', search: 'Search settings pages…', open: 'Open', assign: 'Set keys', notSet: 'Not set',
-    behavior: 'Open pages in', newTab: 'New tab', curTab: 'Current tab', howTitle: 'How shortcuts work',
-    howBody: 'Built-in pages use Chrome’s own extension shortcuts, so they work everywhere, even on chrome:// pages. Click “Set keys” on any card (or the button below) to assign or change a key.',
-    manageKeys: 'Manage in Chrome', add: 'Add shortcut', customEmpty: 'No custom shortcuts yet. Add your own URL and key combo.',
-    customNote: 'Custom shortcuts work on regular web pages only. Chrome blocks extensions from listening to keys on chrome:// pages and the New Tab page. A modifier (Ctrl, Alt, Shift) is required.',
-    newTitle: 'New shortcut', editTitle: 'Edit shortcut', fName: 'Name', fUrl: 'Page URL', fKeys: 'Key combo', recIdle: 'Click, then press keys', recLive: 'Press your keys… (Esc to cancel)',
-    cancel: 'Cancel', save: 'Save', eUrl: 'Enter a chrome://, http:// or https:// URL.', eKeys: 'Choose a combo with Ctrl, Alt or Shift.', eDup: 'This combo is already used by another custom shortcut.'
-  },
-  vi: {
-    title: 'Vào mọi trang cài đặt Chrome chỉ với một phím tắt', subtitle: 'Gán phím tắt cho các trang cài đặt của Chrome như Tải xuống, Quyền riêng tư hay Tiện ích.',
-    tabPresets: 'Có sẵn', tabCustom: 'Tùy chỉnh', search: 'Tìm trang cài đặt…', open: 'Mở', assign: 'Gán phím', notSet: 'Chưa gán',
-    behavior: 'Mở trang trong', newTab: 'Tab mới', curTab: 'Tab hiện tại', howTitle: 'Cách phím tắt hoạt động',
-    howBody: 'Các trang có sẵn dùng hệ thống phím tắt của Chrome nên hoạt động ở mọi nơi, kể cả trên trang chrome://. Bấm “Gán phím” ở thẻ bất kỳ (hoặc nút bên dưới) để gán hoặc đổi phím.',
-    manageKeys: 'Quản lý trong Chrome', add: 'Thêm phím tắt', customEmpty: 'Chưa có phím tắt tùy chỉnh. Hãy thêm URL và tổ hợp phím của riêng bạn.',
-    customNote: 'Phím tắt tùy chỉnh chỉ hoạt động trên trang web thông thường. Chrome không cho tiện ích bắt phím trên trang chrome:// và trang Tab mới. Cần có phím bổ trợ (Ctrl, Alt, Shift).',
-    newTitle: 'Phím tắt mới', editTitle: 'Sửa phím tắt', fName: 'Tên', fUrl: 'URL trang', fKeys: 'Tổ hợp phím', recIdle: 'Bấm vào đây rồi nhấn phím', recLive: 'Nhấn tổ hợp phím… (Esc để hủy)',
-    cancel: 'Hủy', save: 'Lưu', eUrl: 'Nhập URL dạng chrome://, http:// hoặc https://.', eKeys: 'Chọn tổ hợp có Ctrl, Alt hoặc Shift.', eDup: 'Tổ hợp này đã được dùng cho phím tắt tùy chỉnh khác.'
-  }
-};
-const $ = (s) => document.querySelector(s);
-let S = { lang: (navigator.language || '').startsWith('vi') ? 'vi' : 'en', theme: 'auto', openIn: 'new', customs: [] };
-let cmds = {}, tab = 'presets', editId = null, recorded = '', recording = false;
-const t = (k) => T[S.lang][k];
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const save = (o) => chrome.storage.sync.set(o);
+let cmds = {}, tab = 'presets', editId = null, recorded = '', recording = false, toastTimer = null;
 
-function combo(e) {
-  if (['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) return null;
-  const p = [];
-  if (e.ctrlKey) p.push('Ctrl'); if (e.altKey) p.push('Alt'); if (e.shiftKey) p.push('Shift'); if (e.metaKey) p.push('Meta');
-  let k = e.code || '';
-  if (/^Key[A-Z]$/.test(k)) k = k.slice(3); else if (/^Digit\d$/.test(k)) k = k.slice(5); else k = e.key.length === 1 ? e.key.toUpperCase() : e.key;
-  p.push(k);
-  return p.join('+');
-}
-const kbds = (sc) => {
-  if (!sc) return `<span class="unset">${t('notSet')}</span>`;
-  return (sc.includes('+') ? sc.split('+') : [...sc]).map((p) => `<kbd>${esc(p)}</kbd>`).join('');
-};
-const openUrl = (url) => chrome.runtime.sendMessage({ type: 'open', url });
-const openShortcutsPage = () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
-
-function applyTheme() {
-  const dark = S.theme === 'dark' || (S.theme === 'auto' && matchMedia('(prefers-color-scheme:dark)').matches);
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  $('#themeBtn').textContent = S.theme === 'auto' ? '◐' : dark ? '🌙' : '☀️';
-}
-function applyI18n() {
-  document.documentElement.lang = S.lang;
-  document.querySelectorAll('[data-i18n]').forEach((e) => (e.textContent = t(e.dataset.i18n)));
-  document.querySelectorAll('[data-i18n-ph]').forEach((e) => (e.placeholder = t(e.dataset.i18nPh)));
-  $('#langBtn').textContent = S.lang === 'vi' ? 'EN' : 'VI';
-  $('#rec').textContent = recorded ? '' : t('recIdle');
-  renderRec();
+/* ---------- views / routing ---------- */
+const currentView = () => (location.hash === '#settings' ? 'settings' : 'shortcuts');
+function renderView() {
+  const v = currentView();
+  $('#viewShortcuts').hidden = v !== 'shortcuts';
+  $('#viewSettings').hidden = v !== 'settings';
+  $$('.nav-item').forEach((b) => (b.dataset.nav === v ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current')));
 }
 
+/* ---------- shortcuts lists ---------- */
+function actionBtn(attr, ic, label, extra = '') {
+  return `<button class="btn subtle sq ${extra}" ${attr} title="${esc(label)}" aria-label="${esc(label)}">${icon(ic, 16)}</button>`;
+}
 function renderPresets() {
   const q = $('#q').value.trim().toLowerCase();
-  const list = PRESETS.filter((p) => !q || (p.en + p.vi + p.url).toLowerCase().includes(q));
+  const list = PRESETS.filter((p) => matches(q, p.en, p.vi, p.url));
   $('#presetGrid').innerHTML = list.map((p, i) => `
-    <article class="card" style="animation-delay:${Math.min(i, 12) * 30}ms">
-      <div class="shape">${p.emoji}</div>
-      <div class="info"><h3>${esc(p[S.lang])}</h3><code>${esc(p.url)}</code><div class="keys">${kbds(cmds['open_' + p.id])}</div></div>
-      <div class="card-actions">
-        <button class="btn tonal" data-open="${esc(p.url)}">${t('open')}</button>
-        <button class="btn text" data-assign>${t('assign')}</button>
+    <article class="card" style="animation-delay:${Math.min(i, 12) * 25}ms">
+      <div class="card-top"><div class="tile">${icon(p.icon, 20)}</div><div class="info"><h3>${esc(p[S.lang])}</h3><code>${esc(p.url)}</code></div></div>
+      <div class="card-bottom">
+        <div class="keys">${kbds(cmds['open_' + p.id])}</div>
+        <div class="card-actions">
+          ${actionBtn(`data-open="${esc(p.url)}"`, 'arrow-up-right', t('open'))}
+          <button class="btn subtle" data-assign>${icon('keyboard', 16)}<span>${esc(t('assign'))}</span></button>
+        </div>
       </div>
     </article>`).join('');
+  return list.length;
 }
 function renderCustoms() {
   const q = $('#q').value.trim().toLowerCase();
-  const list = S.customs.filter((c) => !q || (c.label + c.url).toLowerCase().includes(q));
-  $('#customEmpty').hidden = S.customs.length > 0;
+  const list = S.customs.filter((c) => matches(q, c.label, c.url));
   $('#customGrid').innerHTML = list.map((c) => `
     <article class="card">
-      <div class="shape">⭐</div>
-      <div class="info"><h3>${esc(c.label)}</h3><code>${esc(c.url)}</code><div class="keys">${kbds(c.combo)}</div></div>
-      <div class="card-actions"><div class="row-icons">
-        <button class="btn tonal" data-open="${esc(c.url)}" title="${t('open')}">↗</button>
-        <button class="btn tonal" data-edit="${c.id}">✏️</button>
-        <button class="btn danger" data-del="${c.id}">🗑</button>
-      </div></div>
+      <div class="card-top"><div class="tile">${icon('star', 20)}</div><div class="info"><h3>${esc(c.label)}</h3><code>${esc(c.url)}</code></div></div>
+      <div class="card-bottom">
+        <div class="keys">${kbds(c.combo)}</div>
+        <div class="card-actions">
+          ${actionBtn(`data-open="${esc(c.url)}"`, 'arrow-up-right', t('open'))}
+          ${actionBtn(`data-edit="${esc(c.id)}"`, 'pencil', t('edit'))}
+          ${actionBtn(`data-del="${esc(c.id)}"`, 'trash-2', t('del'), 'danger')}
+        </div>
+      </div>
     </article>`).join('');
+  return list.length;
+}
+function renderEmpty(count) {
+  const box = $('#empty');
+  const noCustoms = tab === 'custom' && !S.customs.length;
+  box.hidden = count > 0 && !noCustoms ? true : false;
+  if (box.hidden) return;
+  box.innerHTML = noCustoms
+    ? `<div class="tile">${icon('star', 28)}</div><b>${esc(t('customEmptyTitle'))}</b><span>${esc(t('customEmpty'))}</span><button class="btn primary" data-add style="margin-top:8px">${icon('plus', 16)}<span>${esc(t('add'))}</span></button>`
+    : `<div class="tile">${icon('search-x', 28)}</div><b>${esc(t('noResults'))}</b><span>${esc(t('noResultsHint'))}</span>`;
+}
+function renderLists() {
+  const n = tab === 'presets' ? renderPresets() : renderCustoms();
+  if (tab === 'presets') renderCustoms(); else renderPresets();
+  renderEmpty(n);
 }
 function renderTabs() {
-  document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
-  document.querySelectorAll('#openIn button').forEach((b) => b.classList.toggle('on', b.dataset.v === S.openIn));
-  $('#viewPresets').hidden = tab !== 'presets';
-  $('#viewCustom').hidden = tab !== 'custom';
-  $('#fab').hidden = tab !== 'custom';
+  $$('#tabs .tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  $('#panelPresets').hidden = tab !== 'presets';
+  $('#panelCustom').hidden = tab !== 'custom';
+  $('#addBtn').hidden = tab !== 'custom' || !S.customs.length;
+  $('#customGrid').hidden = !S.customs.length;
 }
-function renderAll() { applyTheme(); applyI18n(); renderTabs(); renderPresets(); renderCustoms(); }
+
+/* ---------- settings ---------- */
+function renderSettings() {
+  $('#langSel').value = S.lang;
+  $('#openInSel').value = S.openIn;
+  $$('#themes .theme-opt').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeV === S.theme)));
+}
+function renderAll() {
+  applyTheme(); applyI18n(); renderView(); renderTabs(); renderLists(); renderSettings(); renderRec();
+}
+
+/* ---------- toast ---------- */
+function toast(msg, actionLabel, onAction) {
+  clearTimeout(toastTimer);
+  const host = $('#toastHost');
+  host.innerHTML = `<div class="toast" role="status"><span>${esc(msg)}</span>${actionLabel ? `<button class="btn link" id="toastAct">${esc(actionLabel)}</button>` : ''}</div>`;
+  if (actionLabel) $('#toastAct').onclick = () => { host.innerHTML = ''; onAction(); };
+  toastTimer = setTimeout(() => (host.innerHTML = ''), 5000);
+}
 
 /* ---------- dialog ---------- */
 function renderRec() {
   const r = $('#rec');
   r.classList.toggle('live', recording);
-  r.innerHTML = recording ? t('recLive') : recorded ? kbds(recorded) : t('recIdle');
+  r.innerHTML = recording ? esc(t('recLive')) : recorded ? kbds(recorded) : esc(t('recIdle'));
 }
 function openDlg(item) {
   editId = item ? item.id : null;
@@ -106,7 +99,20 @@ function openDlg(item) {
   $('#fLabel').value = item ? item.label : '';
   $('#fUrl').value = item ? item.url : '';
   recorded = item ? item.combo : ''; recording = false; $('#err').textContent = '';
-  renderRec(); $('#dlg').showModal();
+  renderRec(); $('#dlg').showModal(); $('#fLabel').focus();
+}
+function submitDlg() {
+  const url = $('#fUrl').value.trim();
+  const label = $('#fLabel').value.trim() || url;
+  const fail = (k) => { $('#err').textContent = t(k); };
+  if (!/^(chrome|https?):\/\/\S+/i.test(url)) return fail('eUrl');
+  if (!/^(Ctrl|Alt|Shift|Meta)\+/.test(recorded)) return fail('eKeys');
+  if (S.customs.some((c) => c.combo === recorded && c.id !== editId)) return fail('eDup');
+  const item = { id: editId || 'c' + Date.now(), label, url, combo: recorded };
+  const wasEdit = !!editId;
+  save({ customs: wasEdit ? S.customs.map((c) => (c.id === editId ? item : c)) : [...S.customs, item] });
+  $('#dlg').close(); renderTabs(); renderLists();
+  toast(t(wasEdit ? 'toastSaved' : 'toastAdded'));
 }
 $('#rec').addEventListener('click', () => { recording = true; renderRec(); $('#rec').focus(); });
 $('#rec').addEventListener('blur', () => { recording = false; renderRec(); });
@@ -117,41 +123,57 @@ $('#rec').addEventListener('keydown', (e) => {
   const c = combo(e);
   if (c) { recorded = c; recording = false; renderRec(); }
 });
+$('#dlg').addEventListener('cancel', (e) => { if (recording) e.preventDefault(); });
+$('#dlg').addEventListener('click', (e) => { if (e.target === $('#dlg')) $('#dlg').close(); });
+['#fLabel', '#fUrl'].forEach((s) => $(s).addEventListener('keydown', (e) => { if (e.key === 'Enter') submitDlg(); }));
 $('#cancel').onclick = () => $('#dlg').close();
-$('#save').onclick = () => {
-  const url = $('#fUrl').value.trim();
-  const label = $('#fLabel').value.trim() || url;
-  const err = (k) => ($('#err').textContent = t(k));
-  if (!/^(chrome|https?):\/\/\S+/i.test(url)) return err('eUrl');
-  if (!/^(Ctrl|Alt|Shift|Meta)\+/.test(recorded)) return err('eKeys');
-  if (S.customs.some((c) => c.combo === recorded && c.id !== editId)) return err('eDup');
-  const item = { id: editId || 'c' + Date.now(), label, url, combo: recorded };
-  S.customs = editId ? S.customs.map((c) => (c.id === editId ? item : c)) : [...S.customs, item];
-  save({ customs: S.customs }); $('#dlg').close(); renderCustoms();
-};
+$('#save').onclick = submitDlg;
 
 /* ---------- events ---------- */
+const openChromeShortcuts = () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
 document.addEventListener('click', (e) => {
   const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.open) openUrl(b.dataset.open);
-  if ('assign' in b.dataset || b.id === 'openShortcuts') openShortcutsPage();
-  if (b.dataset.edit) openDlg(S.customs.find((c) => c.id === b.dataset.edit));
-  if (b.dataset.del) { S.customs = S.customs.filter((c) => c.id !== b.dataset.del); save({ customs: S.customs }); renderCustoms(); }
-  if (b.dataset.tab) { tab = b.dataset.tab; renderTabs(); }
-  if (b.dataset.v) { S.openIn = b.dataset.v; save({ openIn: S.openIn }); renderTabs(); }
+  const d = b.dataset;
+  if (d.open) openUrl(d.open);
+  else if ('assign' in d || b.id === 'openShortcuts' || b.id === 'openShortcuts2') openChromeShortcuts();
+  else if (d.edit) openDlg(S.customs.find((c) => c.id === d.edit));
+  else if (d.del) {
+    const idx = S.customs.findIndex((c) => c.id === d.del);
+    const item = S.customs[idx];
+    save({ customs: S.customs.filter((c) => c.id !== d.del) }); renderTabs(); renderLists();
+    toast(t('toastDeleted'), t('undo'), () => {
+      const next = [...S.customs]; next.splice(Math.min(idx, next.length), 0, item);
+      save({ customs: next }); renderTabs(); renderLists();
+    });
+  }
+  else if ('add' in d || b.id === 'addBtn') openDlg(null);
+  else if (d.tab) { tab = d.tab; renderTabs(); renderLists(); }
+  else if (d.nav) { location.hash = d.nav === 'settings' ? '#settings' : '#shortcuts'; }
+  else if (d.themeV) { save({ theme: d.themeV }); applyTheme(); renderSettings(); }
 });
-$('#fab').onclick = () => openDlg(null);
-$('#q').addEventListener('input', () => { renderPresets(); renderCustoms(); });
-$('#langBtn').onclick = () => { S.lang = S.lang === 'vi' ? 'en' : 'vi'; save({ lang: S.lang }); renderAll(); };
-$('#themeBtn').onclick = () => { S.theme = { auto: 'light', light: 'dark', dark: 'auto' }[S.theme]; save({ theme: S.theme }); applyTheme(); };
-matchMedia('(prefers-color-scheme:dark)').addEventListener('change', applyTheme);
+window.addEventListener('hashchange', renderView);
+$('#q').addEventListener('input', renderLists);
+$('#q').addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('#q').value) { $('#q').value = ''; renderLists(); e.stopPropagation(); } });
+document.addEventListener('keydown', (e) => {
+  const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+  if (((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey))) && currentView() === 'shortcuts' && !$('#dlg').open) {
+    e.preventDefault(); $('#q').focus(); $('#q').select();
+  }
+});
+$('#langSel').addEventListener('change', (e) => { save({ lang: e.target.value }); renderAll(); });
+$('#openInSel').addEventListener('change', (e) => save({ openIn: e.target.value }));
 
 async function refreshCmds() {
   cmds = Object.fromEntries((await chrome.commands.getAll()).map((c) => [c.name, c.shortcut]));
-  renderPresets();
+  renderLists();
 }
 window.addEventListener('focus', refreshCmds);
+watchSettings(() => renderAll());
+
 (async () => {
-  Object.assign(S, await chrome.storage.sync.get(S));
-  await refreshCmds(); renderAll();
+  hydrateIcons();
+  $('#ver').textContent = chrome.runtime.getManifest().version;
+  await loadSettings();
+  cmds = Object.fromEntries((await chrome.commands.getAll()).map((c) => [c.name, c.shortcut]));
+  renderAll();
 })();

@@ -1,13 +1,12 @@
 /**
  * i18n.js — tiny dependency-free English / Vietnamese dictionary.
  *
- * chrome.i18n cannot switch language at runtime, so the in-page strings live
- * here (instant switching, no reload). chrome.i18n + _locales/ is still used
- * for the two fields Chrome reads itself: the extension name and description.
+ * chrome.i18n can't switch language at runtime, so in-page strings live here
+ * (instant switching, no reload). chrome.i18n + _locales/ is only used for the
+ * fields Chrome reads itself: extension name, description, shortcut label.
  *
- * The language preference is "auto" | "en" | "vi". "auto" (the default) picks
- * Vietnamese when the browser / device UI language is Vietnamese and English
- * otherwise, so first-time users get their own language with no setup.
+ * Preference is "auto" | "en" | "vi". "auto" (the default) follows the browser
+ * language: Vietnamese if it is Vietnamese, English otherwise.
  */
 const I18N = {
   en: {
@@ -25,9 +24,8 @@ const I18N = {
     perPageActiveHint: "Fine-tune each page in Settings",
     openSettings: "Open settings",
     openFull: "Open in a new tab",
-    landingPage: "Landing page",
     back: "Back",
-    changeTheme: "Change theme mode",
+    changeTheme: "Change theme",
     gridColumns: "Grid columns",
 
     // Declutter
@@ -43,10 +41,9 @@ const I18N = {
     focusMode: "Focus mode",
     focusModeDesc: "Hide the related-videos sidebar on watch pages",
 
-    // Options navigation
+    // Navigation
     navLayout: "Layout",
-    navAppearance: "Appearance",
-    navBackup: "Backup",
+    navGeneral: "General",
     navAbout: "About",
 
     // Layout
@@ -57,36 +54,32 @@ const I18N = {
     columnsChannel: "Channel",
     showPreview: "Show grid preview",
 
-    // Appearance
-    themeSection: "Theme",
-    mode: "Mode",
+    // General
+    groupAppearance: "Appearance",
+    themeTitle: "App theme",
+    themeDesc: "Choose light, dark, or match your system",
     modeSystem: "System",
     modeLight: "Light",
     modeDark: "Dark",
-    themeColor: "Theme color",
-    typography: "Typography",
-    font: "Font",
-    fontSystem: "System default",
-    fontSize: "Font size",
-    sizeSmall: "Small",
-    sizeMedium: "Medium",
-    sizeLarge: "Large",
-    sizeXLarge: "Extra large",
-    fontSample: "The quick brown fox jumps over the lazy dog. 0123456789",
-    language: "Language",
-    langAuto: "Auto",
-    langAutoDesc: "Follows your device language",
+    languageTitle: "Language",
+    languageDesc: "Language used across the extension",
     langEn: "English",
     langVi: "Tiếng Việt",
-
-    // Backup
-    backupTitle: "Backup & restore",
-    backupDesc: "Save your configuration to a file, or load one on another computer.",
-    exportSettings: "Export",
-    importSettings: "Import",
-    resetTitle: "Reset",
-    resetDesc: "Restore every option to its default value.",
-    resetSettings: "Reset settings",
+    groupShortcut: "Keyboard shortcut",
+    shortcutTitle: "Toggle columns",
+    shortcutDesc: "Turns custom columns on or off on any YouTube tab",
+    manageShortcuts: "Manage shortcuts",
+    manageShortcutsDesc: "Change the keys in your browser's extension settings",
+    groupData: "Backup and reset",
+    exportTitle: "Export settings",
+    exportDesc: "Save your configuration to a JSON file",
+    importTitle: "Import settings",
+    importDesc: "Load a configuration from a JSON file",
+    resetTitle: "Reset settings",
+    resetDesc: "Restore every option to its default value",
+    exportBtn: "Export",
+    importBtn: "Import",
+    resetBtn: "Reset",
     resetDialogTitle: "Reset all settings?",
     resetDialogBody: "Every option returns to its default value. This can't be undone.",
     cancel: "Cancel",
@@ -94,14 +87,18 @@ const I18N = {
 
     // About
     version: "Version",
-    developedBy: "Developed by",
-    aiCredit: "Built with the help of Claude (AI)",
-    shortcutTitle: "Keyboard shortcut",
-    shortcutDesc: "Toggle custom columns on any tab",
-    manageShortcuts: "Manage shortcuts",
-    sourceCode: "Source code",
-    licenseLine: "Free and open source · MIT License",
-    privacyLine: "No accounts, no analytics, no network requests. Settings stay on your device.",
+    groupCredits: "Credits",
+    authorTitle: "Author",
+    authorDesc: "Designed and developed by",
+    aiTitle: "AI assistant",
+    aiDesc: "Built with the help of Claude, an AI assistant by Anthropic",
+    groupMore: "More",
+    sourceTitle: "Source code",
+    sourceDesc: "View the project on GitHub",
+    privacyTitle: "Privacy",
+    privacyDesc: "No accounts, no analytics, no network requests. Settings stay on your device.",
+    licenseTitle: "License",
+    licenseDesc: "Free and open source",
 
     // Toasts
     toastEnabled: "Extension enabled",
@@ -126,9 +123,8 @@ const I18N = {
     perPageActiveHint: "Tinh chỉnh từng trang trong Cài đặt",
     openSettings: "Mở cài đặt",
     openFull: "Mở trong tab mới",
-    landingPage: "Trang giới thiệu",
     back: "Quay lại",
-    changeTheme: "Đổi chế độ giao diện",
+    changeTheme: "Đổi giao diện",
     gridColumns: "Số cột lưới",
 
     declutter: "Dọn giao diện",
@@ -144,8 +140,7 @@ const I18N = {
     focusModeDesc: "Ẩn cột video đề xuất ở trang xem video",
 
     navLayout: "Bố cục",
-    navAppearance: "Giao diện",
-    navBackup: "Sao lưu",
+    navGeneral: "Chung",
     navAbout: "Giới thiệu",
 
     perPageColumns: "Số cột riêng cho từng trang",
@@ -155,48 +150,49 @@ const I18N = {
     columnsChannel: "Trang kênh",
     showPreview: "Hiện xem trước lưới",
 
-    themeSection: "Chủ đề",
-    mode: "Chế độ",
+    groupAppearance: "Giao diện",
+    themeTitle: "Chế độ giao diện",
+    themeDesc: "Chọn sáng, tối hoặc theo hệ thống",
     modeSystem: "Hệ thống",
     modeLight: "Sáng",
     modeDark: "Tối",
-    themeColor: "Màu chủ đề",
-    typography: "Chữ viết",
-    font: "Phông chữ",
-    fontSystem: "Mặc định hệ thống",
-    fontSize: "Cỡ chữ",
-    sizeSmall: "Nhỏ",
-    sizeMedium: "Vừa",
-    sizeLarge: "Lớn",
-    sizeXLarge: "Rất lớn",
-    fontSample: "Thử phông chữ: Tiếng Việt có dấu, ABC xyz 0123456789",
-    language: "Ngôn ngữ",
-    langAuto: "Tự động",
-    langAutoDesc: "Theo ngôn ngữ của thiết bị",
+    languageTitle: "Ngôn ngữ",
+    languageDesc: "Ngôn ngữ hiển thị của tiện ích",
     langEn: "English",
     langVi: "Tiếng Việt",
-
-    backupTitle: "Sao lưu & khôi phục",
-    backupDesc: "Lưu cấu hình ra tệp, hoặc nạp lại trên máy tính khác.",
-    exportSettings: "Xuất tệp",
-    importSettings: "Nhập tệp",
-    resetTitle: "Đặt lại",
-    resetDesc: "Đưa mọi tuỳ chọn về giá trị mặc định.",
-    resetSettings: "Đặt lại cài đặt",
+    groupShortcut: "Phím tắt",
+    shortcutTitle: "Bật/tắt số cột",
+    shortcutDesc: "Bật hoặc tắt số cột tuỳ chỉnh trên mọi tab YouTube",
+    manageShortcuts: "Quản lý phím tắt",
+    manageShortcutsDesc: "Đổi phím trong cài đặt tiện ích của trình duyệt",
+    groupData: "Sao lưu và đặt lại",
+    exportTitle: "Xuất cài đặt",
+    exportDesc: "Lưu cấu hình ra tệp JSON",
+    importTitle: "Nhập cài đặt",
+    importDesc: "Nạp cấu hình từ tệp JSON",
+    resetTitle: "Đặt lại cài đặt",
+    resetDesc: "Đưa mọi tuỳ chọn về giá trị mặc định",
+    exportBtn: "Xuất",
+    importBtn: "Nhập",
+    resetBtn: "Đặt lại",
     resetDialogTitle: "Đặt lại toàn bộ cài đặt?",
     resetDialogBody: "Mọi tuỳ chọn sẽ trở về mặc định. Không thể hoàn tác.",
     cancel: "Huỷ",
     confirmReset: "Đặt lại",
 
     version: "Phiên bản",
-    developedBy: "Phát triển bởi",
-    aiCredit: "Được xây dựng với sự hỗ trợ của Claude (AI)",
-    shortcutTitle: "Phím tắt",
-    shortcutDesc: "Bật/tắt số cột tuỳ chỉnh trên mọi tab",
-    manageShortcuts: "Quản lý phím tắt",
-    sourceCode: "Mã nguồn",
-    licenseLine: "Miễn phí và mã nguồn mở · Giấy phép MIT",
-    privacyLine: "Không tài khoản, không theo dõi, không gửi dữ liệu. Cài đặt chỉ nằm trên máy bạn.",
+    groupCredits: "Thông tin",
+    authorTitle: "Tác giả",
+    authorDesc: "Thiết kế và phát triển bởi",
+    aiTitle: "AI hỗ trợ",
+    aiDesc: "Xây dựng với sự hỗ trợ của Claude, trợ lý AI của Anthropic",
+    groupMore: "Khác",
+    sourceTitle: "Mã nguồn",
+    sourceDesc: "Xem dự án trên GitHub",
+    privacyTitle: "Quyền riêng tư",
+    privacyDesc: "Không tài khoản, không theo dõi, không gửi dữ liệu. Cài đặt chỉ nằm trên máy bạn.",
+    licenseTitle: "Giấy phép",
+    licenseDesc: "Miễn phí và mã nguồn mở",
 
     toastEnabled: "Đã bật tiện ích",
     toastDisabled: "Đã tạm dừng tiện ích",
@@ -204,22 +200,6 @@ const I18N = {
     toastImported: "Đã nhập cài đặt",
     toastImportFailed: "Tệp này không phải bản sao lưu YouTube Grid hợp lệ",
     toastReset: "Đã đặt lại cài đặt mặc định"
-  }
-};
-
-/** Names of the Material colour swatches, per language. */
-const COLOR_NAMES = {
-  en: {
-    red: "Red", pink: "Pink", purple: "Purple", deepPurple: "Deep purple", indigo: "Indigo",
-    blue: "Blue", lightBlue: "Light blue", cyan: "Cyan", teal: "Teal", green: "Green",
-    lightGreen: "Light green", lime: "Lime", yellow: "Yellow", amber: "Amber",
-    orange: "Orange", deepOrange: "Deep orange", brown: "Brown", blueGrey: "Blue grey"
-  },
-  vi: {
-    red: "Đỏ", pink: "Hồng", purple: "Tím", deepPurple: "Tím đậm", indigo: "Chàm",
-    blue: "Xanh dương", lightBlue: "Xanh da trời", cyan: "Xanh lơ", teal: "Xanh mòng két",
-    green: "Xanh lá", lightGreen: "Xanh lá nhạt", lime: "Vàng chanh", yellow: "Vàng",
-    amber: "Hổ phách", orange: "Cam", deepOrange: "Cam đậm", brown: "Nâu", blueGrey: "Xám xanh"
   }
 };
 
@@ -248,10 +228,6 @@ const i18n = {
 
   t(key) {
     return (I18N[this.lang] && I18N[this.lang][key]) || I18N.en[key] || key;
-  },
-
-  colorName(id) {
-    return (COLOR_NAMES[this.lang] && COLOR_NAMES[this.lang][id]) || COLOR_NAMES.en[id] || id;
   },
 
   /** Translate every [data-i18n], [data-i18n-title] and [data-i18n-aria] under root. */

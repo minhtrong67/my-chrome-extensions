@@ -1,30 +1,54 @@
-const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-let lang = (navigator.language || '').startsWith('vi') ? 'vi' : 'en', cmds = {};
-const L = { en: ['Search settings pages…', 'Manage shortcuts'], vi: ['Tìm trang cài đặt…', 'Quản lý phím tắt'] };
+let cmds = {}, active = 0;
 
-function theme(m) {
-  const dark = m === 'dark' || (m !== 'light' && matchMedia('(prefers-color-scheme:dark)').matches);
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-}
-function render() {
+function items() {
   const q = $('#q').value.trim().toLowerCase();
-  $('#list').innerHTML = PRESETS.filter((p) => !q || (p.en + p.vi + p.url).toLowerCase().includes(q)).map((p) => {
-    const sc = cmds['open_' + p.id];
-    const keys = sc ? (sc.includes('+') ? sc.split('+') : [...sc]).map((k) => `<kbd>${esc(k)}</kbd>`).join('') : '';
-    return `<article class="card" data-url="${esc(p.url)}"><div class="shape">${p.emoji}</div><div class="info"><h3>${esc(p[lang])}</h3><code>${esc(p.url)}</code><div class="keys">${keys}</div></div></article>`;
-  }).join('');
+  const built = PRESETS.filter((p) => matches(q, p.en, p.vi, p.url))
+    .map((p) => ({ title: p[S.lang], url: p.url, icon: p.icon, keys: cmds['open_' + p.id] }));
+  const custom = S.customs.filter((c) => matches(q, c.label, c.url))
+    .map((c) => ({ title: c.label, url: c.url, icon: 'star', keys: c.combo }));
+  return { built, custom };
 }
-$('#list').addEventListener('click', (e) => {
-  const c = e.target.closest('.card'); if (!c) return;
-  chrome.runtime.sendMessage({ type: 'open', url: c.dataset.url }); window.close();
+function rowHtml(it, idx) {
+  return `<button class="row" role="option" data-i="${idx}" data-url="${esc(it.url)}">
+    <div class="tile">${icon(it.icon, 18)}</div>
+    <div class="info"><b>${esc(it.title)}</b><small>${esc(it.url)}</small></div>
+    <div class="keys">${it.keys ? kbds(it.keys) : ''}</div></button>`;
+}
+let flat = [];
+function render() {
+  const { built, custom } = items();
+  flat = [...built, ...custom];
+  let i = 0, html = '';
+  if (built.length) html += `<div class="pop-sec">${esc(t('tabPresets'))}</div>` + built.map((it) => rowHtml(it, i++)).join('');
+  if (custom.length) html += `<div class="pop-sec">${esc(t('tabCustom'))}</div>` + custom.map((it) => rowHtml(it, i++)).join('');
+  if (!flat.length) html = `<div class="empty"><div class="tile">${icon('search-x', 24)}</div><b>${esc(t('noResults'))}</b><span>${esc(t('noResultsHint'))}</span></div>`;
+  $('#list').innerHTML = html;
+  active = Math.min(active, Math.max(flat.length - 1, 0));
+  mark(false);
+}
+function mark(scroll = true) {
+  $$('.row').forEach((r) => r.classList.toggle('active', +r.dataset.i === active));
+  const a = $('.row.active'); if (a && scroll) a.scrollIntoView({ block: 'nearest' });
+}
+const go = (url) => { openUrl(url); window.close(); };
+
+$('#list').addEventListener('click', (e) => { const r = e.target.closest('.row'); if (r) go(r.dataset.url); });
+$('#list').addEventListener('mousemove', (e) => { const r = e.target.closest('.row'); if (r && +r.dataset.i !== active) { active = +r.dataset.i; mark(false); } });
+$('#q').addEventListener('input', () => { active = 0; render(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); active = Math.min(active + 1, flat.length - 1); mark(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); active = Math.max(active - 1, 0); mark(); }
+  else if (e.key === 'Enter' && flat[active]) { e.preventDefault(); go(flat[active].url); }
 });
-$('#q').addEventListener('input', render);
-$('#manage').onclick = () => { chrome.runtime.openOptionsPage(); window.close(); };
+$('#manage').onclick = () => { chrome.tabs.create({ url: optionsUrl('#shortcuts') }); window.close(); };
+$('#gear').onclick = () => { chrome.tabs.create({ url: optionsUrl('#settings') }); window.close(); };
+watchSettings(() => { applyI18n(); render(); });
+
 (async () => {
-  const s = await chrome.storage.sync.get({ lang, theme: 'auto' });
-  lang = s.lang; theme(s.theme);
-  $('#q').placeholder = L[lang][0]; $('#manage').textContent = L[lang][1];
+  hydrateIcons();
+  await loadSettings();
+  applyI18n();
   cmds = Object.fromEntries((await chrome.commands.getAll()).map((c) => [c.name, c.shortcut]));
   render();
+  $('#q').focus();
 })();

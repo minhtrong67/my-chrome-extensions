@@ -1,10 +1,19 @@
 {
   "extName": {
-    "message": "SmartShot - Chụp & Chú Thích Màn Hình",
+    "message": "SmartShot - Chụp Màn Hình",
     "description": "Tên tiện ích"
   },
   "extDescription": {
-    "message": "Chụp vùng hiển thị, toàn trang hoặc vùng chọn rồi chú thích bằng bút, mũi tên, chữ và che điểm ảnh. Xử lý 100% trên máy.",
+    "message": "Chụp vùng hiển thị, toàn trang hoặc vùng chọn và lưu thành ảnh PNG. Thiết kế Fluent, xử lý 100% trên máy.",
     "description": "Mô tả tiện ích"
+  },
+  "cmdVisible": {
+    "message": "Chụp vùng hiển thị"
+  },
+  "cmdFullPage": {
+    "message": "Chụp toàn trang"
+  },
+  "cmdArea": {
+    "message": "Chụp vùng chọn"
   }
 }

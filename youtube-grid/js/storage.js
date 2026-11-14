@@ -1,69 +1,32 @@
 /**
- * storage.js — single source of truth for persisted settings.
+ * storage.js — single source of truth for saved settings.
+ * Loaded as a classic script by the content script, popup, options page and
+ * service worker.
  *
- * Loaded (as a classic script, no bundler) by the content script, the popup,
- * the options page and the background service worker.
- *
- * Design notes
- *  - Everything lives under ONE chrome.storage.local key, so live-sync via
- *    chrome.storage.onChanged and import/export stay trivial.
- *  - Every write goes through `store.patch()`, which re-reads the latest saved
- *    value and merges only the changed keys. The old code let the popup and
- *    the options page each keep a full private copy and overwrite the whole
- *    blob, so a stale page could silently undo a change made in the other.
- *  - Every value is validated (`sanitize`) on load, patch and import, so a
- *    hand-edited or corrupted backup can never break the UI or the injected CSS.
+ * - Everything lives under one chrome.storage.local key.
+ * - Writes go through `store.patch()`, which merges into the latest saved
+ *   value, so the popup, options page and shortcut never overwrite each other.
+ * - Every value is validated by `sanitize()` on load, patch and import.
  */
 
 const SETTINGS_KEY = "yg_settings";
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 const COLUMN_MIN = 2;
 const COLUMN_MAX = 8;
 
-/** Material Design 500 swatches. `hex` is only used for the picker dots. */
-const THEME_COLORS = [
-  { id: "red", hex: "#F44336" }, { id: "pink", hex: "#E91E63" },
-  { id: "purple", hex: "#9C27B0" }, { id: "deepPurple", hex: "#673AB7" },
-  { id: "indigo", hex: "#3F51B5" }, { id: "blue", hex: "#2196F3" },
-  { id: "lightBlue", hex: "#03A9F4" }, { id: "cyan", hex: "#00BCD4" },
-  { id: "teal", hex: "#009688" }, { id: "green", hex: "#4CAF50" },
-  { id: "lightGreen", hex: "#8BC34A" }, { id: "lime", hex: "#CDDC39" },
-  { id: "yellow", hex: "#FFEB3B" }, { id: "amber", hex: "#FFC107" },
-  { id: "orange", hex: "#FF9800" }, { id: "deepOrange", hex: "#FF5722" },
-  { id: "brown", hex: "#795548" }, { id: "blueGrey", hex: "#607D8B" }
-];
-
-/** Selectable UI fonts. "system" is the default and downloads nothing. */
-const FONTS = [
-  { id: "system", label: null }, // label comes from i18n
-  { id: "roboto", label: "Roboto" },
-  { id: "inter", label: "Inter" },
-  { id: "open-sans", label: "Open Sans" },
-  { id: "noto-sans", label: "Noto Sans" },
-  { id: "be-vietnam-pro", label: "Be Vietnam Pro" },
-  { id: "montserrat", label: "Montserrat" },
-  { id: "nunito", label: "Nunito" }
-];
-
-const FONT_SIZES = ["small", "medium", "large", "xlarge"];
 const THEME_MODES = ["system", "light", "dark"];
+// "auto" = not chosen yet: follow the browser language until the user picks one.
 const LANGUAGES = ["auto", "en", "vi"];
 
 /** @type {Record<string, any>} */
 const DEFAULT_SETTINGS = {
-  // Master switch: pauses every effect without losing the configuration.
-  enabled: true,
+  enabled: true, // master switch: pauses every effect, keeps the configuration
 
-  // Interface preferences
-  language: "auto", // "auto" follows the browser / device language
-  theme: "system", // "system" | "light" | "dark"
-  themeColor: "red",
-  font: "system",
-  fontSize: "medium",
+  language: "auto",
+  theme: "system",
   showPreview: true,
 
-  // Grid columns
   useCustomColumns: false,
   columns: 5,
   perPageColumns: false,
@@ -71,7 +34,6 @@ const DEFAULT_SETTINGS = {
   columnsSubscriptions: 4,
   columnsChannel: 4,
 
-  // Declutter toggles
   hideShorts: false,
   compactCards: false,
   hideComments: false,
@@ -85,7 +47,7 @@ const BOOLEAN_KEYS = [
 ];
 const COLUMN_KEYS = ["columns", "columnsHome", "columnsSubscriptions", "columnsChannel"];
 
-/** Return a fully valid settings object; invalid or unknown values fall back to defaults. */
+/** Return fully valid settings; unknown or invalid values fall back to defaults. */
 function sanitize(raw) {
   const src = raw && typeof raw === "object" ? raw : {};
   const out = { ...DEFAULT_SETTINGS };
@@ -99,9 +61,6 @@ function sanitize(raw) {
   }
   if (THEME_MODES.includes(src.theme)) out.theme = src.theme;
   if (LANGUAGES.includes(src.language)) out.language = src.language;
-  if (FONT_SIZES.includes(src.fontSize)) out.fontSize = src.fontSize;
-  if (THEME_COLORS.some((c) => c.id === src.themeColor)) out.themeColor = src.themeColor;
-  if (FONTS.some((f) => f.id === src.font)) out.font = src.font;
   return out;
 }
 
@@ -146,7 +105,7 @@ const store = {
     return writeQueue;
   },
 
-  /** Portable JSON document the user can back up or share. */
+  /** Portable JSON document for backup or sharing. */
   async exportAll() {
     return {
       app: "YouTube Grid",

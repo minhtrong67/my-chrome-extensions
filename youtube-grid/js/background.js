@@ -6,7 +6,7 @@
  */
 importScripts("storage.js"); // shares sanitize()/store with every other surface
 
-const BADGE_COLOR = "#F44336";
+const BADGE_COLOR = "#C42B1C";
 
 async function refreshBadge() {
   const s = await store.load();

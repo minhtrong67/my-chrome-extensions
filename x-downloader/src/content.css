@@ -1,0 +1,16 @@
+/* Nút tải trong thanh hành động của bài đăng */
+.xd-wrap{display:flex;align-items:center;justify-content:center}
+.xd-btn{all:unset;box-sizing:border-box;position:relative;width:34.75px;height:34.75px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgb(113,118,123);transition:background-color .15s,color .15s,transform .15s cubic-bezier(.33,0,0,1)}
+.xd-btn:hover,.xd-btn:focus-visible{color:var(--xd-accent,#0f6cbd);background:color-mix(in srgb,var(--xd-accent,#0f6cbd) 14%,transparent)}
+.xd-btn:active{transform:scale(.9)}
+.xd-btn:focus-visible{outline:2px solid var(--xd-accent,#0f6cbd);outline-offset:1px}
+.xd-btn svg{width:18.75px;height:18.75px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+/* vòng tiến độ */
+.xd-btn::before{content:"";position:absolute;inset:0;border-radius:50%;opacity:0;pointer-events:none;background:conic-gradient(var(--xd-accent,#0f6cbd) calc(var(--p,0)*1%),color-mix(in srgb,var(--xd-accent,#0f6cbd) 22%,transparent) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));transition:opacity .2s}
+.xd-btn.xd-prog::before{opacity:1}
+.xd-btn.xd-prog,.xd-btn.xd-busy{pointer-events:none;color:var(--xd-accent,#0f6cbd)}
+.xd-btn.xd-prog svg{animation:xd-bob .9s ease-in-out infinite}
+.xd-btn.xd-busy svg{animation:xd-bob .7s ease-in-out infinite}
+.xd-btn.xd-ok{color:var(--xd-ok,#107c10)}
+@keyframes xd-bob{50%{transform:translateY(2px)}}
+@media (prefers-reduced-motion:reduce){.xd-btn{transition:none}.xd-btn.xd-busy svg,.xd-btn.xd-prog svg{animation:none}}

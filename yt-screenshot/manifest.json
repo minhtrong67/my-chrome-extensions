@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "YT Screenshot",
+  "short_name": "YT Screenshot",
+  "description": "__MSG_extDescription__",
+  "version": "2.0.0",
+  "author": "minhtrong67",
+  "default_locale": "en",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "YT Screenshot",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
+      "js": ["js/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "downloads", "scripting"],
+  "host_permissions": ["*://www.youtube.com/*", "*://m.youtube.com/*"]
+}

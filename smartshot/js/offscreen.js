@@ -34,7 +34,7 @@ function makeThumbnail(source, w, h) {
   return c.toDataURL("image/jpeg", 0.72);
 }
 
-// Captures are always stored as lossless PNG; the editor offers PNG / JPEG when exporting.
+// Captures are always stored as lossless PNG.
 async function finalize(canvas) {
   const blob = await canvasToBlob(canvas);
   const id = `cap-${Date.now()}`;

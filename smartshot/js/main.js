@@ -9,22 +9,28 @@ const $ = (id) => document.getElementById(id);
 const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
 
 const TYPE_KEY = { visible: "typeVisible", fullpage: "typeFullPage", area: "typeArea" };
-const META_KEY = { editor: "metaEditor", download: "metaDownload", clipboard: "metaClipboard" };
-
-const ACCENT_NAMES = {
-  en: { red: "Red", pink: "Pink", purple: "Purple", deepPurple: "Deep Purple", indigo: "Indigo", blue: "Blue", lightBlue: "Light Blue", cyan: "Cyan", teal: "Teal", green: "Green", lightGreen: "Light Green", lime: "Lime", yellow: "Yellow", amber: "Amber", orange: "Orange", deepOrange: "Deep Orange", brown: "Brown", grey: "Grey", blueGrey: "Blue Grey" },
-  vi: { red: "Đỏ", pink: "Hồng", purple: "Tím", deepPurple: "Tím đậm", indigo: "Chàm", blue: "Xanh dương", lightBlue: "Xanh da trời", cyan: "Xanh lơ", teal: "Xanh mòng két", green: "Xanh lá", lightGreen: "Xanh lá nhạt", lime: "Vàng chanh", yellow: "Vàng", amber: "Hổ phách", orange: "Cam", deepOrange: "Cam đậm", brown: "Nâu", grey: "Xám", blueGrey: "Xám xanh" }
-};
 
 /* ---------- helpers ---------- */
 
 let toastTimer = null;
-function showToast(key) {
+/** Fluent toast; pass { label, onClick } to show an action button (e.g. Undo). */
+function showToast(key, action) {
   const t = $("toast");
-  t.textContent = i18n.t(key);
+  const btn = $("toastAction");
+  $("toastText").textContent = i18n.t(key);
+  btn.hidden = !action;
+  btn.onclick = null;
+  if (action) {
+    btn.textContent = i18n.t(action.labelKey);
+    btn.onclick = () => { hideToast(); action.onClick(); };
+  }
   t.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  toastTimer = setTimeout(hideToast, action ? 6000 : 2400);
+}
+
+function hideToast() {
+  $("toast").classList.remove("show");
 }
 
 let saveTimer = null;
@@ -51,7 +57,39 @@ function triggerCapture(captureType) {
   });
 }
 
+/** Show each command's real shortcut (the user may have changed it) on its card. */
+async function loadShortcuts() {
+  if (!chrome.commands || !chrome.commands.getAll) return;
+  try {
+    const commands = await chrome.commands.getAll();
+    commands.forEach((c) => {
+      const chip = document.querySelector(`[data-cmd="${c.name}"]`);
+      if (!chip) return;
+      chip.textContent = c.shortcut || "";
+      chip.hidden = !c.shortcut;
+    });
+  } catch (e) { /* ignore */ }
+}
+
 /* ---------- history ---------- */
+
+function formatWhen(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  const sameDay = d.toDateString() === new Date().toDateString();
+  const time = d.toLocaleTimeString(i18n.current, { hour: "2-digit", minute: "2-digit" });
+  return sameDay ? time : `${d.toLocaleDateString(i18n.current, { day: "numeric", month: "short" })}, ${time}`;
+}
+
+async function revealInFolder(item) {
+  try {
+    const [d] = item.downloadId ? await chrome.downloads.search({ id: item.downloadId }) : [];
+    if (!d || !d.exists) return showToast("toastFileMissing");
+    chrome.downloads.show(d.id);
+  } catch (e) {
+    showToast("toastFileMissing");
+  }
+}
 
 function renderHistory(history) {
   const list = $("historyList");
@@ -61,15 +99,19 @@ function renderHistory(history) {
   if (!history.length) {
     const li = document.createElement("li");
     li.className = "history-empty";
-    li.innerHTML = lucide.svg("image", 32) + '<p class="t-label-lg"></p><p class="t-body-sm"></p>';
+    li.innerHTML = lucide.svg("image", 28) + '<p class="body-strong"></p><p class="caption"></p>';
     li.children[1].textContent = i18n.t("historyEmpty");
     li.children[2].textContent = i18n.t("historyEmptySub");
     frag.appendChild(li);
   }
 
-  history.forEach((item, i) => {
+  history.forEach((item) => {
     const li = document.createElement("li");
-    li.style.animationDelay = Math.min(i, 8) * 30 + "ms";
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "history-item";
+    row.title = `${item.filename}\n${i18n.t("showInFolder")}`;
+    row.setAttribute("aria-label", `${item.filename} — ${i18n.t("showInFolder")}`);
 
     const img = document.createElement("img");
     img.className = "history-thumb";
@@ -77,18 +119,20 @@ function renderHistory(history) {
     img.decoding = "async";
     if (item.thumbnail) img.src = item.thumbnail;
 
-    const info = document.createElement("div");
+    const info = document.createElement("span");
     info.className = "history-info";
     const name = document.createElement("span");
     name.className = "history-name";
-    name.textContent = item.filename || i18n.t(TYPE_KEY[item.captureType] || "typeVisible");
+    name.textContent = i18n.t(TYPE_KEY[item.captureType] || "typeVisible");
     const meta = document.createElement("span");
     meta.className = "history-meta";
-    const when = item.ts ? new Date(item.ts).toLocaleTimeString(i18n.current, { hour: "2-digit", minute: "2-digit" }) : "";
-    meta.textContent = [i18n.t(TYPE_KEY[item.captureType] || "typeVisible"), i18n.t(META_KEY[item.action] || "metaEditor"), when].filter(Boolean).join(" · ");
-
+    meta.textContent = formatWhen(item.ts);
     info.append(name, meta);
-    li.append(img, info);
+
+    row.append(img, info);
+    row.insertAdjacentHTML("beforeend", lucide.svg("folder-open", 18));
+    row.addEventListener("click", () => revealInFolder(item));
+    li.appendChild(row);
     frag.appendChild(li);
   });
 
@@ -101,67 +145,13 @@ function setRadio(name, value) {
   $$(`input[name="${name}"]`).forEach((r) => (r.checked = r.value === String(value)));
 }
 
-function accentName(key) {
-  return (ACCENT_NAMES[i18n.current] || ACCENT_NAMES.en)[key];
-}
-
-function buildSwatches() {
-  const box = $("swatches");
-  const frag = document.createDocumentFragment();
-  Object.entries(ACCENT_COLORS).forEach(([key, hex]) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "swatch sl";
-    b.dataset.accent = key;
-    b.style.setProperty("--c", hex);
-    b.setAttribute("role", "radio");
-    // light swatches (lime, yellow, amber…) need dark ink for the check mark
-    const [r, g, bl] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-    if ((r * 299 + g * 587 + bl * 114) / 1000 > 160) b.classList.add("dark-ink");
-    b.innerHTML = lucide.svg("check", 16);
-    frag.appendChild(b);
-  });
-  box.appendChild(frag);
-
-  // One delegated listener instead of 19.
-  box.addEventListener("click", (e) => {
-    const b = e.target.closest(".swatch");
-    if (!b) return;
-    settings.accent = b.dataset.accent;
-    themeManager.applyAccent(settings.accent);
-    themeManager.mirror(settings);
-    refreshSwatches();
-    persist();
-  });
-}
-
-function refreshSwatches() {
-  $$(".swatch").forEach((b) => {
-    const on = b.dataset.accent === settings.accent;
-    b.setAttribute("aria-checked", String(on));
-    const name = accentName(b.dataset.accent);
-    b.title = name;
-    b.setAttribute("aria-label", name);
-  });
-}
-
 function applySettingsToUI() {
   setRadio("theme", settings.theme);
-  setRadio("language", settings.language);
-  $("langHint").hidden = settings.language !== "auto";
-  $("openEditorToggle").checked = settings.openEditor;
-  updateOpenEditorHint();
-  refreshSwatches();
-}
-
-function updateOpenEditorHint() {
-  $("openEditorHint").textContent = i18n.t(settings.openEditor ? "openEditorOn" : "openEditorOff");
+  $("languageSelect").value = settings.language;
 }
 
 function relocalize() {
   i18n.setLang(settings.language);
-  updateOpenEditorHint();
-  refreshSwatches();
   renderHistory(historyCache);
 }
 
@@ -175,14 +165,6 @@ function openSettings(open) {
   (open ? $("backBtn") : $("settingsBtn")).focus({ preventScroll: true });
 }
 
-/** Open the bundled landing page in a new tab (local file — no deployed URL needed).
- *  The current theme and language are passed in the hash so the page matches the extension. */
-function openLanding() {
-  const url = chrome.runtime.getURL("index.html") + `#theme=${settings.theme}&lang=${i18n.current}`;
-  chrome.tabs.create({ url });
-  window.close();
-}
-
 /* ---------- wiring ---------- */
 
 function wire() {
@@ -192,7 +174,10 @@ function wire() {
 
   $("settingsBtn").addEventListener("click", () => openSettings(true));
   $("backBtn").addEventListener("click", () => openSettings(false));
-  $("landingBtn").addEventListener("click", openLanding);
+  $("shortcutsBtn").addEventListener("click", () => {
+    chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
+    window.close();
+  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !$("viewSettings").classList.contains("is-hidden")) {
       e.preventDefault();
@@ -201,10 +186,18 @@ function wire() {
   });
 
   $("clearHistoryBtn").addEventListener("click", async () => {
+    const snapshot = historyCache;
     await store.clearHistory();
     historyCache = [];
     renderHistory([]);
-    showToast("toastCleared");
+    showToast("toastCleared", {
+      labelKey: "undo",
+      onClick: async () => {
+        await store.saveHistory(snapshot);
+        historyCache = snapshot;
+        renderHistory(snapshot);
+      }
+    });
   });
 
   $$('input[name="theme"]').forEach((r) => r.addEventListener("change", () => {
@@ -214,20 +207,13 @@ function wire() {
     persist();
   }));
 
-  $("openEditorToggle").addEventListener("change", (e) => {
-    settings.openEditor = e.target.checked;
-    updateOpenEditorHint();
+  $("languageSelect").addEventListener("change", (e) => {
+    settings.language = e.target.value;
+    relocalize();
     persist();
   });
 
-  $$('input[name="language"]').forEach((r) => r.addEventListener("change", () => {
-    settings.language = r.value;
-    $("langHint").hidden = settings.language !== "auto";
-    relocalize();
-    persist();
-  }));
-
-  // Keep the popup in sync when settings change elsewhere (e.g. the editor tab).
+  // Keep the popup in sync when settings or history change elsewhere.
   if (chrome.storage && chrome.storage.onChanged) {
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== "local") return;
@@ -241,7 +227,8 @@ function wire() {
         }
       }
       if (changes[HISTORY_KEY]) {
-        historyCache = Array.isArray(changes[HISTORY_KEY].newValue) ? changes[HISTORY_KEY].newValue : [];
+        const raw = changes[HISTORY_KEY].newValue;
+        historyCache = Array.isArray(raw) ? raw.filter((h) => h && h.filename && Number.isInteger(h.downloadId)) : [];
         renderHistory(historyCache);
       }
     });
@@ -252,7 +239,6 @@ function wire() {
 
 (async function init() {
   lucide.render();
-  buildSwatches();
   wire();
   $("viewSettings").inert = true;
 
@@ -263,6 +249,7 @@ function wire() {
   applySettingsToUI();
   relocalize();
   $("versionChip").textContent = "v" + chrome.runtime.getManifest().version;
+  loadShortcuts();
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   currentTab = tab || null;

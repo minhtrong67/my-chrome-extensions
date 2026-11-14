@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YT Screenshot</title>
+<link rel="stylesheet" href="css/popup.css" />
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ===== Capture view ===== -->
+  <section class="view" id="view-capture" aria-labelledby="appTitle">
+    <header class="title-bar" id="barCapture">
+      <img src="icons/icon48.png" alt="" class="brand-mark" width="28" height="28" />
+      <div class="title-text">
+        <h1 id="appTitle">YT Screenshot</h1>
+        <p data-i18n="tagline">Clean YouTube frames</p>
+      </div>
+      <button class="btn btn-subtle btn-icon" id="settingsBtn" data-i18n-title="settings" title="Settings"><span class="icon" data-icon="settings"></span></button>
+    </header>
+
+    <main class="content" id="contentCapture">
+
+      <!-- Empty state -->
+      <div class="empty hidden" id="emptyState">
+        <div class="empty-icon"><span class="icon" data-icon="clapperboard"></span></div>
+        <h2 id="emptyTitle" data-i18n="noVideoTitle">No video on this tab</h2>
+        <p id="emptySub" data-i18n="noVideoSub">Open a YouTube video and YT Screenshot finds it automatically.</p>
+        <button class="btn btn-secondary" id="openYoutubeBtn"><span class="icon" data-icon="external-link"></span><span data-i18n="openYoutube">Open YouTube</span></button>
+      </div>
+
+      <!-- Video present -->
+      <div class="stack" id="videoPane">
+        <section class="card video-card">
+          <p class="video-title" id="videoTitle">-</p>
+          <p class="video-channel" id="videoChannel"></p>
+          <div class="scrub">
+            <span class="time" id="timeNow">0:00</span>
+            <input type="range" class="slider" id="timeSlider" min="0" max="1000" value="0" step="1" data-i18n-aria="seekBar" />
+            <span class="time" id="timeTotal">0:00</span>
+          </div>
+          <div class="transport" role="group">
+            <button class="btn btn-subtle btn-icon txt" id="back10Btn" data-i18n-title="back10">-10s</button>
+            <button class="btn btn-subtle btn-icon txt" id="back1Btn" data-i18n-title="back1">-1s</button>
+            <button class="btn btn-subtle btn-icon" id="backFrameBtn" data-i18n-title="backFrame"><span class="icon" data-icon="step-back"></span></button>
+            <button class="btn btn-accent btn-icon play" id="playBtn" data-i18n-title="play"><span class="icon" id="playIcon" data-icon="play"></span></button>
+            <button class="btn btn-subtle btn-icon" id="fwdFrameBtn" data-i18n-title="fwdFrame"><span class="icon" data-icon="step-forward"></span></button>
+            <button class="btn btn-subtle btn-icon txt" id="fwd1Btn" data-i18n-title="fwd1">+1s</button>
+            <button class="btn btn-subtle btn-icon txt" id="fwd10Btn" data-i18n-title="fwd10">+10s</button>
+          </div>
+        </section>
+
+        <div class="seek-row">
+          <label class="field">
+            <span class="field-label" data-i18n="goToTime">Go to time</span>
+            <input type="text" id="seekInput" inputmode="numeric" autocomplete="off" placeholder="mm:ss" />
+          </label>
+          <button class="btn btn-secondary" id="seekGoBtn" data-i18n="go">Go</button>
+        </div>
+
+        <section class="card options">
+          <div class="option-grid">
+            <div class="option">
+              <span class="option-label" data-i18n="format">Format</span>
+              <div class="seg" role="radiogroup" data-i18n-aria="format">
+                <label class="seg-btn"><input type="radio" name="format" value="png" /><span>PNG</span></label>
+                <label class="seg-btn"><input type="radio" name="format" value="jpeg" /><span>JPEG</span></label>
+              </div>
+            </div>
+            <div class="option">
+              <span class="option-label" data-i18n="scale">Size</span>
+              <div class="seg" role="radiogroup" data-i18n-aria="scale">
+                <label class="seg-btn"><input type="radio" name="scale" value="100" /><span>100%</span></label>
+                <label class="seg-btn"><input type="radio" name="scale" value="75" /><span>75%</span></label>
+                <label class="seg-btn"><input type="radio" name="scale" value="50" /><span>50%</span></label>
+                <label class="seg-btn"><input type="radio" name="scale" value="25" /><span>25%</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="collapse" id="qualityCollapse">
+            <div class="collapse-inner">
+              <div class="slider-row">
+                <span class="option-label" data-i18n="quality">JPEG quality</span>
+                <input type="range" class="slider" id="qualitySlider" min="10" max="100" step="1" value="90" data-i18n-aria="quality" />
+                <span class="slider-value" id="qualityValue">90%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <label class="switch-row">
+            <span class="switch-text" data-i18n="watermarkTimestamp">Timestamp badge</span>
+            <input type="checkbox" class="switch" id="optTimestamp" role="switch" />
+          </label>
+          <label class="switch-row">
+            <span class="switch-text" data-i18n="captionInfo">Title &amp; channel caption</span>
+            <input type="checkbox" class="switch" id="optCaption" role="switch" />
+          </label>
+        </section>
+
+        <div class="capture-row">
+          <button class="btn btn-accent btn-lg" id="captureBtn"><span class="icon" data-icon="camera"></span><span data-i18n="captureFrame">Capture frame</span></button>
+          <button class="btn btn-secondary btn-lg" id="copyBtn" data-i18n-title="captureCopy"><span class="icon" data-icon="copy"></span><span data-i18n="copy">Copy</span></button>
+        </div>
+      </div>
+
+      <!-- History -->
+      <section class="history" id="historyCard">
+        <div class="history-head">
+          <h2 data-i18n="history">Recent captures</h2>
+          <div class="history-actions">
+            <button class="btn btn-subtle btn-sm" id="exportHistoryBtn"><span class="icon" data-icon="file-text"></span><span data-i18n="exportTxt">Export .txt</span></button>
+            <button class="btn btn-subtle btn-sm danger" id="clearHistoryBtn"><span class="icon" data-icon="trash-2"></span><span data-i18n="clear">Clear</span></button>
+          </div>
+        </div>
+        <ul class="history-list" id="historyList"></ul>
+      </section>
+    </main>
+  </section>
+
+  <!-- ===== Settings view ===== -->
+  <section class="view hidden" id="view-settings" aria-labelledby="settingsTitle" inert>
+    <header class="title-bar" id="barSettings">
+      <button class="btn btn-subtle btn-icon" id="backBtn" data-i18n-title="back" title="Back"><span class="icon" data-icon="arrow-left"></span></button>
+      <div class="title-text"><h1 id="settingsTitle" data-i18n="settings">Settings</h1></div>
+    </header>
+
+    <main class="content" id="contentSettings">
+
+      <h2 class="group-title" data-i18n="appearance">Appearance &amp; language</h2>
+      <section class="card list">
+        <div class="row">
+          <span class="row-icon"><span class="icon" data-icon="sun-moon"></span></span>
+          <div class="row-text">
+            <label class="row-title" for="themeSelect" data-i18n="theme">Theme</label>
+            <p class="row-desc" data-i18n="themeDesc">Light, dark or follow your system</p>
+          </div>
+          <div class="select">
+            <select id="themeSelect">
+              <option value="light" data-i18n="themeLight">Light</option>
+              <option value="dark" data-i18n="themeDark">Dark</option>
+              <option value="system" data-i18n="themeSystem">System</option>
+            </select>
+            <span class="icon" data-icon="chevron-down"></span>
+          </div>
+        </div>
+        <div class="row">
+          <span class="row-icon"><span class="icon" data-icon="languages"></span></span>
+          <div class="row-text">
+            <label class="row-title" for="languageSelect" data-i18n="language">Language</label>
+            <p class="row-desc" data-i18n="languageDesc">Display language</p>
+          </div>
+          <div class="select">
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+            <span class="icon" data-icon="chevron-down"></span>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="group-title" data-i18n="about">About</h2>
+      <section class="card list">
+        <div class="about-head">
+          <img src="icons/icon128.png" alt="" width="48" height="48" />
+          <div>
+            <p class="about-name">YT Screenshot</p>
+            <p class="about-meta"><span data-i18n="version">Version</span> <span id="versionLabel">2.0.0</span></p>
+          </div>
+        </div>
+        <div class="row compact">
+          <span class="row-icon"><span class="icon" data-icon="code-xml"></span></span>
+          <div class="row-text"><p class="row-title" data-i18n="developedBy">Developed by</p></div>
+          <span class="row-value">minhtrong67</span>
+        </div>
+        <div class="row compact">
+          <span class="row-icon"><span class="icon" data-icon="sparkles"></span></span>
+          <div class="row-text"><p class="row-title" data-i18n="aiSupport">AI assistance</p></div>
+          <span class="row-value">Claude</span>
+        </div>
+      </section>
+
+      <h2 class="group-title" data-i18n="shortcuts">Keyboard shortcuts</h2>
+      <section class="card list">
+        <div class="row slim">
+          <div class="row-text"><p class="row-title" data-i18n="scPlay">Play / pause</p></div>
+          <span class="keys"><kbd>Space</kbd></span>
+        </div>
+        <div class="row slim">
+          <div class="row-text"><p class="row-title" data-i18n="scSeek">Seek 1 s / 10 s</p></div>
+          <span class="keys"><kbd>←</kbd><kbd>→</kbd><span class="plus">/</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd><kbd>→</kbd></span>
+        </div>
+        <div class="row slim">
+          <div class="row-text"><p class="row-title" data-i18n="scFrame">Previous / next frame</p></div>
+          <span class="keys"><kbd>,</kbd><kbd>.</kbd></span>
+        </div>
+        <div class="row slim">
+          <div class="row-text"><p class="row-title" data-i18n="scCapture">Capture frame</p></div>
+          <span class="keys"><kbd>S</kbd></span>
+        </div>
+        <div class="row slim">
+          <div class="row-text"><p class="row-title" data-i18n="scCopy">Copy frame</p></div>
+          <span class="keys"><kbd>C</kbd></span>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="icon" id="toastIcon" data-icon="circle-check"></span><span id="toastText"></span></div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>X Downloader</title>
+  <link rel="stylesheet" href="src/overlay.css">
+  <link rel="stylesheet" href="fluent.css">
+</head>
+<body class="popup">
+  <header class="pop-head">
+    <img src="icons/logo.svg" alt="" width="36" height="36">
+    <div><strong>X Downloader</strong><small id="ver"></small></div>
+  </header>
+
+  <div class="stack">
+    <div class="infobar danger" id="errBar" hidden>
+      <i data-icon="circle-alert"></i>
+      <div class="grow"><strong id="errText"></strong></div>
+      <button type="button" class="btn" id="errView" data-i18n="popup.view"></button>
+    </div>
+
+    <div class="infobar info" id="tipBar" hidden>
+      <i data-icon="lightbulb"></i>
+      <div class="grow"><strong data-i18n="tip.title"></strong><span id="tipText"></span>
+        <div class="actions mt"><button type="button" class="btn primary" id="tipOk" data-i18n="tip.ok"></button></div>
+      </div>
+    </div>
+
+    <div class="cards">
+      <label class="row">
+        <i class="row-ic" data-icon="power"></i>
+        <span class="row-text"><span class="row-title" data-i18n="popup.enable"></span></span>
+        <span class="switch"><input type="checkbox" id="enabled"><span class="sw-track"></span></span>
+      </label>
+      <label class="row" data-dep>
+        <i class="row-ic" data-icon="eye"></i>
+        <span class="row-text"><span class="row-title" data-i18n="reveal.title"></span></span>
+        <span class="switch"><input type="checkbox" id="autoReveal"><span class="sw-track"></span></span>
+      </label>
+      <label class="row" data-dep>
+        <i class="row-ic" data-icon="image"></i>
+        <span class="row-text"><span class="row-title" data-i18n="thumb.title"></span></span>
+        <span class="switch"><input type="checkbox" id="downloadThumbnail"><span class="sw-track"></span></span>
+      </label>
+      <label class="row" data-dep>
+        <i class="row-ic" data-icon="keyboard"></i>
+        <span class="row-text"><span class="row-title" data-i18n="sc.title"></span><span class="row-desc" id="scDesc"></span></span>
+        <span class="switch"><input type="checkbox" id="shortcutEnabled"><span class="sw-track"></span></span>
+      </label>
+    </div>
+
+    <div class="cards">
+      <div class="row nav-row" id="openSettings" role="button" tabindex="0">
+        <i class="row-ic" data-icon="settings"></i>
+        <span class="row-text"><span class="row-title" data-i18n="popup.settings"></span><span class="row-desc" data-i18n="popup.settingsDesc"></span></span>
+        <i data-icon="chevron-right"></i>
+      </div>
+    </div>
+  </div>
+
+  <script src="src/shared.js"></script>
+  <script src="src/icons.js"></script>
+  <script src="src/ui.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

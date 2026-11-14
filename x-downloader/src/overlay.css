@@ -1,0 +1,65 @@
+/* Toast, tooltip, menu và hộp thoại kiểu Fluent — dùng chung cho trang X và trang cài đặt */
+.xd-toast,.xd-tip,.xd-menu,.xd-scrim{
+  --o-acrylic:rgba(251,251,251,.88);--o-solid:#fff;--o-fg:#1a1a1a;--o-fg2:#5d5d5d;
+  --o-line:rgba(0,0,0,.1);--o-hover:rgba(0,0,0,.05);--o-press:rgba(0,0,0,.08);
+  --o-accent:#0f6cbd;--o-accent-hover:#115ea3;--o-on-accent:#fff;--o-accent-soft:#ebf3fc;--o-footer:#f3f3f3;--o-dim:rgba(0,0,0,.32);
+  --o-shadow:0 8px 16px rgba(0,0,0,.14),0 0 2px rgba(0,0,0,.12);
+  --o-shadow-lg:0 32px 64px rgba(0,0,0,.24),0 0 8px rgba(0,0,0,.12);
+  font:400 14px/20px system-ui,-apple-system,"Segoe UI Variable Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  letter-spacing:0;text-transform:none;box-sizing:border-box
+}
+.xd-toast *,.xd-tip *,.xd-menu *,.xd-scrim *{box-sizing:border-box}
+.xd-toast[data-theme=dark],.xd-tip[data-theme=dark],.xd-menu[data-theme=dark],.xd-scrim[data-theme=dark]{
+  --o-acrylic:rgba(44,44,44,.88);--o-solid:#2b2b2b;--o-fg:#fff;--o-fg2:#d1d1d1;
+  --o-line:rgba(255,255,255,.12);--o-hover:rgba(255,255,255,.07);--o-press:rgba(255,255,255,.1);
+  --o-accent:#479ef5;--o-accent-hover:#62abf5;--o-on-accent:#0a1f33;--o-accent-soft:#0c3b5e;--o-footer:#202020;--o-dim:rgba(0,0,0,.55);
+  --o-shadow:0 8px 16px rgba(0,0,0,.4),0 0 2px rgba(0,0,0,.4);--o-shadow-lg:0 32px 64px rgba(0,0,0,.6),0 0 8px rgba(0,0,0,.4)
+}
+.xd-i{width:1em;height:1em;flex:none}
+
+/* ---------- toast (InfoBar) ---------- */
+.xd-toast{position:fixed;left:50%;bottom:28px;z-index:2147483646;display:flex;align-items:center;gap:12px;min-width:260px;max-width:min(92vw,440px);padding:12px 16px;border-radius:8px;background:var(--tb);color:var(--o-fg);border:1px solid var(--o-line);box-shadow:var(--o-shadow);font-weight:600;opacity:0;transform:translate(-50%,16px);transition:transform .25s cubic-bezier(.33,0,0,1),opacity .2s;pointer-events:none}
+.xd-toast.show{opacity:1;transform:translate(-50%,0)}
+.xd-toast .xd-ico{flex:none;width:20px;height:20px;font-size:20px;color:var(--ti);display:grid;place-items:center}
+.xd-toast[data-variant=info]{--tb:#ebf3fc;--ti:#0f6cbd}
+.xd-toast[data-variant=success]{--tb:#dff6dd;--ti:#107c10}
+.xd-toast[data-variant=warning]{--tb:#fff4ce;--ti:#9d5d00}
+.xd-toast[data-variant=error]{--tb:#fdf3f4;--ti:#c42b1c}
+.xd-toast[data-theme=dark][data-variant=info]{--tb:#0c3b5e;--ti:#6cb8ff}
+.xd-toast[data-theme=dark][data-variant=success]{--tb:#1b3a24;--ti:#6ccb5f}
+.xd-toast[data-theme=dark][data-variant=warning]{--tb:#433519;--ti:#f7c948}
+.xd-toast[data-theme=dark][data-variant=error]{--tb:#442726;--ti:#ff99a4}
+
+/* ---------- tooltip ---------- */
+.xd-tip{position:fixed;z-index:2147483647;left:0;top:0;max-width:280px;padding:5px 10px;border-radius:4px;background:var(--o-solid);color:var(--o-fg);border:1px solid var(--o-line);font-size:12px;line-height:16px;text-align:center;white-space:pre-line;box-shadow:var(--o-shadow);pointer-events:none;opacity:0;transform:translateY(3px);transition:opacity .12s,transform .18s cubic-bezier(.33,0,0,1)}
+.xd-tip[data-pos=below]{transform:translateY(-3px)}
+.xd-tip.show{opacity:1;transform:none}
+
+/* ---------- menu (flyout acrylic) ---------- */
+.xd-menu{position:fixed;z-index:2147483647;left:0;top:0;min-width:220px;max-width:300px;padding:4px;border-radius:8px;background:var(--o-acrylic);-webkit-backdrop-filter:blur(30px) saturate(1.5);backdrop-filter:blur(30px) saturate(1.5);color:var(--o-fg);border:1px solid var(--o-line);box-shadow:var(--o-shadow);opacity:0;transform:translateY(-6px) scale(.98);transition:opacity .12s,transform .2s cubic-bezier(.33,0,0,1)}
+.xd-menu.up{transform:translateY(6px) scale(.98)}
+.xd-menu.show{opacity:1;transform:none}
+.xd-mi{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:6px 10px 6px 6px;border-radius:4px;cursor:pointer;color:var(--o-fg);font:500 14px/20px system-ui,-apple-system,"Segoe UI Variable Text","Segoe UI",Roboto,Arial,sans-serif;transition:background-color .1s}
+.xd-mi:hover{background:var(--o-hover)}
+.xd-mi:active{background:var(--o-press)}
+.xd-mi:focus-visible{background:var(--o-hover);box-shadow:inset 0 0 0 2px var(--o-accent)}
+.xd-mi img,.xd-mi-ic{flex:none;width:32px;height:32px;border-radius:4px;object-fit:cover;background:var(--o-accent-soft);color:var(--o-accent);display:grid;place-items:center;font-size:18px}
+.xd-mi-tx{display:flex;flex-direction:column;min-width:0}
+.xd-mi-tx small{font-size:12px;line-height:16px;font-weight:400;color:var(--o-fg2)}
+.xd-sep{height:1px;margin:4px 6px;background:var(--o-line)}
+
+/* ---------- hộp thoại xác nhận (ContentDialog) ---------- */
+.xd-scrim{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:20px;background:var(--o-dim);opacity:0;transition:opacity .2s}
+.xd-scrim.show{opacity:1}
+.xd-dialog{width:min(100%,400px);border-radius:8px;overflow:hidden;background:var(--o-solid);color:var(--o-fg);border:1px solid var(--o-line);box-shadow:var(--o-shadow-lg);transform:translateY(16px) scale(.98);transition:transform .3s cubic-bezier(.33,0,0,1)}
+.xd-scrim.show .xd-dialog{transform:none}
+.xd-dlg-body{padding:24px 24px 20px}
+.xd-dialog h2{margin:0;font-size:20px;line-height:28px;font-weight:600}
+.xd-dialog p{margin:8px 0 0;color:var(--o-fg2)}
+.xd-dlg-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:20px 24px;background:var(--o-footer);border-top:1px solid var(--o-line)}
+.xd-dlg-btn{all:unset;box-sizing:border-box;cursor:pointer;height:32px;padding:0 16px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font:600 14px/20px system-ui,-apple-system,"Segoe UI Variable Text","Segoe UI",Roboto,Arial,sans-serif;border:1px solid var(--o-line);background:var(--o-solid);color:var(--o-fg);transition:background-color .1s}
+.xd-dlg-btn:hover{background:var(--o-hover)}
+.xd-dlg-btn.primary{background:var(--o-accent);border-color:transparent;color:var(--o-on-accent)}
+.xd-dlg-btn.primary:hover{background:var(--o-accent-hover)}
+.xd-dlg-btn:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.xd-toast,.xd-tip,.xd-menu,.xd-dialog,.xd-scrim{transition:opacity .1s;transform:none}.xd-toast{transform:translateX(-50%)}}

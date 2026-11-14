@@ -1,14 +1,12 @@
 // SmartShot — storage module
 // Settings + history live in chrome.storage.local. Captured images (large blobs)
-// are handed between the offscreen page, the service worker and the editor via
-// IndexedDB — chrome.storage.session has a tiny quota and can't hold real screenshots.
-// Loaded by popup.html / editor.html via <script> and by background.js via importScripts.
+// are handed between the offscreen page and the service worker via IndexedDB —
+// chrome.storage.session has a tiny quota and can't hold real screenshots.
+// Loaded by popup.html via <script> and by background.js via importScripts.
 
 const DEFAULT_SETTINGS = {
   language: "auto",        // "auto" (follow device) | "en" | "vi"
-  theme: "system",         // "system" | "light" | "dark"
-  accent: "lightBlue",     // key of ACCENT_COLORS
-  openEditor: true         // true: open the editor after each capture | false: download the PNG straight away
+  theme: "system"          // "system" | "light" | "dark"
 };
 
 const HISTORY_LIMIT = 10;
@@ -63,9 +61,7 @@ function sanitizeSettings(raw) {
   const pick = (v, allowed, fb) => (allowed.includes(v) ? v : fb);
   return {
     language: pick(r.language, ["auto", ...SUPPORTED_LANGS], DEFAULT_SETTINGS.language),
-    theme: pick(r.theme, ["system", "light", "dark"], DEFAULT_SETTINGS.theme),
-    accent: typeof ACCENT_COLORS !== "undefined" && ACCENT_COLORS[r.accent] ? r.accent : DEFAULT_SETTINGS.accent,
-    openEditor: typeof r.openEditor === "boolean" ? r.openEditor : DEFAULT_SETTINGS.openEditor
+    theme: pick(r.theme, ["system", "light", "dark"], DEFAULT_SETTINGS.theme)
   };
 }
 
@@ -137,7 +133,8 @@ const store = {
 
   async loadHistory() {
     const result = await storageGet([HISTORY_KEY]);
-    return Array.isArray(result[HISTORY_KEY]) ? result[HISTORY_KEY] : [];
+    // Entries from older versions (editor flow) have no download id, so they can't be revealed — drop them.
+    return Array.isArray(result[HISTORY_KEY]) ? result[HISTORY_KEY].filter((h) => h && h.filename && Number.isInteger(h.downloadId)) : [];
   },
 
   async saveHistory(history) {

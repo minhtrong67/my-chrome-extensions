@@ -2,16 +2,16 @@
 
 <img src="icons/icon128.png" alt="SmartShot" width="96" height="96" />
 
-# SmartShot — Chụp & Chú Thích Màn Hình
+# SmartShot — Chụp Màn Hình
 
-**Chụp vùng hiển thị, toàn trang hoặc vùng chọn — rồi chú thích và che thông tin nhạy cảm trong trình chỉnh sửa Material Design 3.**
+**Chụp vùng hiển thị, toàn trang hoặc vùng chọn và lưu thành ảnh PNG — với giao diện Microsoft Fluent gọn gàng.**
 Miễn phí, mã nguồn mở, xử lý 100% trên máy.
 
-![Version](https://img.shields.io/badge/version-1.3.0-03A9F4)
-![Manifest](https://img.shields.io/badge/Manifest-V3-03A9F4)
-![License](https://img.shields.io/badge/license-MIT-03A9F4)
+![Version](https://img.shields.io/badge/version-1.4.0-0F6CBD)
+![Manifest](https://img.shields.io/badge/Manifest-V3-0F6CBD)
+![License](https://img.shields.io/badge/license-MIT-0F6CBD)
 
-[English](README.md) · [Tiếng Việt](README.vi.md) · [Trang giới thiệu](index.html)
+[English](README.md) · [Tiếng Việt](README.vi.md)
 
 </div>
 
@@ -19,19 +19,17 @@ Miễn phí, mã nguồn mở, xử lý 100% trên máy.
 
 ## Ảnh minh hoạ
 
-| Trình chú thích | Cửa sổ chụp | Cài đặt |
-|---|---|---|
-| ![Editor](screenshots/image01.png) | ![Popup](screenshots/image02.png) | ![Settings](screenshots/image03.png) |
-
-| Tối · Tiếng Việt | Editor tối · màu xanh mòng két | Landing page |
-|---|---|---|
-| ![Dark](screenshots/image04.png) | ![Dark editor](screenshots/image05.png) | ![Landing](screenshots/image06.png) |
+| Chụp · Sáng | Cài đặt · Sáng | Chụp · Tối · Tiếng Việt | Cài đặt · Tối · Tiếng Việt |
+|---|---|---|---|
+| ![Popup](screenshots/popup-light.png) | ![Settings](screenshots/settings-light.png) | ![Popup dark](screenshots/popup-dark-vi.png) | ![Settings dark](screenshots/settings-dark-vi.png) |
 
 ## Tính năng
 
-- **Chụp**: vùng hiển thị, toàn trang (tự cuộn và ghép liền mạch), vùng chọn có hiển thị kích thước. Mặc định ảnh chụp mở ngay trong trình chỉnh sửa; có thể tắt trong Cài đặt (**Sau khi chụp**) để tải thẳng ảnh PNG vào thư mục Downloads mặc định.
-- **Chỉnh sửa**: bút, mũi tên, hình chữ nhật, elip, chữ, bút nhấn, làm mờ/che thông tin, cắt ảnh; chọn/di chuyển/đổi cỡ/đổi màu từng chú thích; hoàn tác 60 bước; phóng to thu nhỏ; dán hoặc kéo thả ảnh để chỉnh; xuất PNG/JPEG, tải xuống hoặc sao chép.
-- **Cài đặt** (ngay trong popup): màu chủ đề (19 màu Material), giao diện Sáng/Tối/Hệ thống, ngôn ngữ English/Tiếng Việt/Tự động. Có thẻ tác giả và nút mở trang giới thiệu trong tab mới.
+- **Chụp**: vùng hiển thị, toàn trang (tự cuộn và ghép liền mạch), vùng chọn có hiển thị kích thước. Ảnh PNG được lưu thẳng vào thư mục Downloads mặc định.
+- **Phím tắt**: `Alt+Shift+V` vùng hiển thị, `Alt+Shift+F` toàn trang, `Alt+Shift+S` vùng chọn (đổi tại `chrome://extensions/shortcuts`; popup luôn hiển thị phím hiện tại).
+- **Ảnh chụp gần đây**: 10 ảnh mới nhất kèm ảnh thu nhỏ; bấm vào để **hiện tệp trong thư mục**. Nút **Xoá** có thông báo **Hoàn tác**.
+- **Cài đặt** (ngay trong popup): chủ đề Sáng/Tối/Hệ thống, ngôn ngữ Tự động/English/Tiếng Việt, lối tắt tới trang phím tắt, mục Giới thiệu gồm phiên bản, tác giả **minhtrong67** và AI hỗ trợ **Claude** (Anthropic).
+- **Thiết kế**: Microsoft Fluent 2, dùng font hệ thống, icon Lucide.
 - **Riêng tư**: không theo dõi, không gọi mạng, quyền tối thiểu.
 
 ## Cài đặt
@@ -47,7 +45,7 @@ Miễn phí, mã nguồn mở, xử lý 100% trên máy.
 
 ```bash
 npm install
-npm run build:assets   # themes, icon Lucide, icon extension
+npm run build:assets   # icon Lucide, icon extension
 npm run pack           # đóng gói zip
 ```
 

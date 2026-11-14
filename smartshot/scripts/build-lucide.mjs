@@ -4,12 +4,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const USED = [
-  // popup
   "settings", "sun", "moon", "monitor", "arrow-left", "scan", "scroll-text", "crop", "image",
-  "palette", "languages", "heart", "check", "triangle-alert", "external-link",
-  // editor
-  "x", "mouse-pointer-2", "pencil", "move-up-right", "square", "circle", "type", "highlighter",
-  "grid-3x3", "undo-2", "redo-2", "trash-2", "eraser", "zoom-in", "zoom-out", "copy", "download"
+  "palette", "languages", "check", "triangle-alert", "folder-open", "trash-2", "info",
+  "user-round", "sparkles", "chevron-down", "keyboard", "external-link", "shield-check"
 ];
 const dir = "node_modules/lucide-static/icons/";
 const out = {};

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>X Downloader</title>
+  <link rel="stylesheet" href="src/overlay.css">
+  <link rel="stylesheet" href="fluent.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="nav">
+    <div class="brand"><img src="icons/logo.svg" alt="" width="28" height="28"><strong>X Downloader</strong></div>
+    <nav class="nav-list" role="tablist" aria-orientation="vertical">
+      <button class="nav-item" role="tab" id="tab-download" aria-controls="pane-download" data-pane="download"><i data-icon="download"></i><span data-i18n="nav.download"></span></button>
+      <button class="nav-item" role="tab" id="tab-appearance" aria-controls="pane-appearance" data-pane="appearance"><i data-icon="palette"></i><span data-i18n="nav.appearance"></span></button>
+      <button class="nav-item" role="tab" id="tab-activity" aria-controls="pane-activity" data-pane="activity"><i data-icon="activity"></i><span data-i18n="nav.activity"></span></button>
+      <button class="nav-item" role="tab" id="tab-about" aria-controls="pane-about" data-pane="about"><i data-icon="info"></i><span data-i18n="nav.about"></span></button>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="page">
+
+      <!-- TẢI XUỐNG -->
+      <section class="pane" id="pane-download" role="tabpanel" aria-labelledby="tab-download">
+        <header class="page-head">
+          <h1 data-i18n="nav.download"></h1>
+          <div class="autosave" id="autosave" aria-live="polite"><i data-icon="check"></i><span data-i18n="autosave"></span></div>
+        </header>
+
+        <h2 class="group-title" data-i18n="grp.save"></h2>
+        <div class="cards">
+          <div class="row">
+            <i class="row-ic" data-icon="folder"></i>
+            <div class="row-text">
+              <label class="row-title" for="saveFolder" data-i18n="path.title"></label>
+              <span class="row-desc" id="pathHint"></span>
+              <span><code class="code" id="fullPath"></code></span>
+            </div>
+            <div class="row-ctl">
+              <input class="input" id="saveFolder" type="text" spellcheck="false" autocomplete="off" placeholder="X Downloader/{username}">
+              <button type="button" class="btn icon subtle" id="openChromeDl" data-xd-tip="" aria-label=""><i data-icon="external-link"></i></button>
+            </div>
+          </div>
+
+          <details class="expander" id="nameExp">
+            <summary class="row">
+              <i class="row-ic" data-icon="file-pen-line"></i>
+              <span class="row-text"><span class="row-title" data-i18n="file.title"></span><span class="row-desc" id="nameDesc"></span></span>
+              <i class="chev" data-icon="chevron-down"></i>
+            </summary>
+            <div class="expander-body">
+              <label class="field"><span class="field-label" data-i18n="file.template"></span>
+                <input class="input" id="filenameTemplate" type="text" spellcheck="false" autocomplete="off"></label>
+              <p class="help" data-i18n="file.help"></p>
+              <div class="field"><span class="field-label" data-i18n="file.tokens"></span><div class="chips" id="tokenChips"></div></div>
+              <div class="actions"><button type="button" class="btn" id="resetTemplate"><i data-icon="rotate-ccw"></i><span data-i18n="file.reset"></span></button></div>
+            </div>
+          </details>
+
+          <label class="row">
+            <i class="row-ic" data-icon="save"></i>
+            <span class="row-text"><span class="row-title" data-i18n="ask.title"></span><span class="row-desc" data-i18n="ask.desc"></span></span>
+            <span class="switch"><input type="checkbox" id="askWhere"><span class="sw-track"></span></span>
+          </label>
+        </div>
+
+        <h2 class="group-title" data-i18n="grp.behavior"></h2>
+        <div class="cards">
+          <label class="row">
+            <i class="row-ic" data-icon="image"></i>
+            <span class="row-text"><span class="row-title" data-i18n="thumb.title"></span><span class="row-desc" data-i18n="thumb.desc"></span></span>
+            <span class="switch"><input type="checkbox" id="downloadThumbnail"><span class="sw-track"></span></span>
+          </label>
+          <div class="row">
+            <i class="row-ic" data-icon="layers"></i>
+            <span class="row-text"><span class="row-title" data-i18n="multi.title"></span><span class="row-desc" data-i18n="multi.desc"></span></span>
+            <div class="row-ctl"><div class="seg" id="multiMode" role="radiogroup">
+              <button type="button" role="radio" data-value="all" data-i18n="multi.all"></button>
+              <button type="button" role="radio" data-value="menu" data-i18n="multi.menu"></button>
+            </div></div>
+          </div>
+          <label class="row">
+            <i class="row-ic" data-icon="eye"></i>
+            <span class="row-text"><span class="row-title" data-i18n="reveal.title"></span><span class="row-desc" data-i18n="reveal.desc"></span></span>
+            <span class="switch"><input type="checkbox" id="autoReveal"><span class="sw-track"></span></span>
+          </label>
+        </div>
+
+        <h2 class="group-title" data-i18n="grp.shortcut"></h2>
+        <div class="cards">
+          <label class="row">
+            <i class="row-ic" data-icon="keyboard"></i>
+            <span class="row-text"><span class="row-title" data-i18n="sc.title"></span><span class="row-desc" data-i18n="sc.desc"></span></span>
+            <span class="switch"><input type="checkbox" id="shortcutEnabled"><span class="sw-track"></span></span>
+          </label>
+          <div class="row" id="keyRow">
+            <span class="row-text"><span class="row-title" data-i18n="sc.key"></span></span>
+            <div class="row-ctl"><span class="keys" id="keys"></span><button type="button" class="btn" id="recordKey" data-i18n="sc.change"></button></div>
+          </div>
+          <div class="row">
+            <span class="row-text"><span class="row-title" data-i18n="sc.browser"></span><span class="row-desc" data-i18n="sc.browserDesc"></span></span>
+            <div class="row-ctl"><button type="button" class="btn" id="openShortcuts"><span data-i18n="sc.open"></span><i data-icon="external-link"></i></button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GIAO DIỆN -->
+      <section class="pane" id="pane-appearance" role="tabpanel" aria-labelledby="tab-appearance">
+        <header class="page-head">
+          <h1 data-i18n="nav.appearance"></h1>
+          <div class="autosave" aria-live="polite"><i data-icon="check"></i><span data-i18n="autosave"></span></div>
+        </header>
+        <div class="cards">
+          <div class="row">
+            <i class="row-ic" data-icon="palette"></i>
+            <span class="row-text"><span class="row-title" id="lblMode" data-i18n="ap.mode"></span><span class="row-desc" data-i18n="ap.modeDesc"></span></span>
+            <div class="row-ctl"><div class="seg" id="themeMode" role="radiogroup" aria-labelledby="lblMode">
+              <button type="button" role="radio" data-value="light"><i data-icon="sun"></i><span data-i18n="mode.light"></span></button>
+              <button type="button" role="radio" data-value="dark"><i data-icon="moon"></i><span data-i18n="mode.dark"></span></button>
+              <button type="button" role="radio" data-value="system"><i data-icon="monitor"></i><span data-i18n="mode.system"></span></button>
+            </div></div>
+          </div>
+          <div class="row">
+            <i class="row-ic" data-icon="languages"></i>
+            <span class="row-text"><span class="row-title" id="lblLang" data-i18n="ap.lang"></span><span class="row-desc" data-i18n="ap.langDesc"></span></span>
+            <div class="row-ctl"><div class="seg" id="language" role="radiogroup" aria-labelledby="lblLang">
+              <button type="button" role="radio" data-value="en">English</button>
+              <button type="button" role="radio" data-value="vi">Tiếng Việt</button>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NHẬT KÝ -->
+      <section class="pane" id="pane-activity" role="tabpanel" aria-labelledby="tab-activity">
+        <header class="page-head"><h1 data-i18n="nav.activity"></h1></header>
+        <div class="toolbar">
+          <button type="button" class="btn" id="copyLog"><i data-icon="copy"></i><span data-i18n="act.copy"></span></button>
+          <button type="button" class="btn" id="clearLog"><i data-icon="trash-2"></i><span data-i18n="act.clear"></span></button>
+        </div>
+        <div class="empty" id="logEmpty"><i data-icon="circle-check-big"></i><strong data-i18n="act.empty"></strong><span data-i18n="act.emptyDesc"></span></div>
+        <ul class="log" id="logList"></ul>
+        <div class="infobar warn"><i data-icon="triangle-alert"></i><div class="grow" data-i18n="act.race"></div></div>
+      </section>
+
+      <!-- GIỚI THIỆU -->
+      <section class="pane" id="pane-about" role="tabpanel" aria-labelledby="tab-about">
+        <header class="page-head"><h1 data-i18n="nav.about"></h1></header>
+        <div class="cards">
+          <div class="hero">
+            <img src="icons/logo.svg" alt="" width="72" height="72">
+            <div>
+              <h2>X Downloader</h2>
+              <p data-i18n="ab.tagline"></p>
+              <span class="badge"><span data-i18n="ab.version"></span> <b id="ver"></b></span>
+            </div>
+          </div>
+          <div class="author">
+            <div class="avatar" aria-hidden="true"><i data-icon="user-round"></i></div>
+            <div class="author-text">
+              <span class="author-label" data-i18n="ab.author"></span>
+              <strong class="author-name">minhtrong67</strong>
+              <div class="ai"><i data-icon="sparkles"></i><span><strong data-i18n="ab.ai"></strong><span data-i18n="ab.aiSub"></span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="group-title" data-i18n="ab.data"></h2>
+        <div class="cards">
+          <div class="row">
+            <i class="row-ic" data-icon="download"></i>
+            <span class="row-text"><span class="row-title" data-i18n="bk.export"></span><span class="row-desc" data-i18n="bk.exportDesc"></span></span>
+            <div class="row-ctl"><button type="button" class="btn" id="exportBtn" data-i18n="bk.exportBtn"></button></div>
+          </div>
+          <div class="row">
+            <i class="row-ic" data-icon="upload"></i>
+            <span class="row-text"><span class="row-title" data-i18n="bk.import"></span><span class="row-desc" data-i18n="bk.importDesc"></span></span>
+            <div class="row-ctl"><button type="button" class="btn" id="importBtn" data-i18n="bk.importBtn"></button><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+          </div>
+          <div class="row">
+            <i class="row-ic" data-icon="rotate-ccw"></i>
+            <span class="row-text"><span class="row-title" data-i18n="ab.reset"></span><span class="row-desc" data-i18n="ab.resetDesc"></span></span>
+            <div class="row-ctl"><button type="button" class="btn" id="resetAll" data-i18n="ab.resetBtn"></button></div>
+          </div>
+        </div>
+        <p class="help" style="margin-top:16px" data-i18n="ab.local"></p>
+      </section>
+
+    </div>
+  </main>
+</div>
+<script src="src/shared.js"></script>
+<script src="src/icons.js"></script>
+<script src="src/ui.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

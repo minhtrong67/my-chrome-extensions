@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A58AF7"/><stop offset=".55" stop-color="#6C4FDB"/><stop offset="1" stop-color="#4330A6"/></linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EEE9FD"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#1E0F5C" flood-opacity=".35"/></filter>
+  </defs>
+  <rect x="2" y="2" width="124" height="124" rx="30" fill="url(#bg)"/>
+  <rect x="2" y="2" width="124" height="62" rx="30" fill="url(#gloss)"/>
+  <g filter="url(#sh)">
+    <rect x="24" y="36" width="80" height="70" rx="18" fill="#C9BBF3"/>
+    <rect x="24" y="24" width="80" height="70" rx="18" fill="url(#cap)"/>
+  </g>
+  <g transform="translate(34.1 31.400000000000002) scale(2.3)"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" fill="#5B3FD0" stroke="#5B3FD0" stroke-width="1" stroke-linejoin="round"/></g>
+</svg>

@@ -1,8 +1,7 @@
 /**
- * options.js — the full settings page (opens in its own tab).
- * Structure: state -> render() -> DOM. Handlers only call update(), which
- * merges a partial change into storage; render() is the single place that
- * paints the UI, so the page can never drift out of sync with saved state.
+ * options.js — the settings page (own tab, or embedded in the popup).
+ * state -> render() -> DOM. Handlers only call update(), which merges a
+ * partial change into storage; render() is the single place that paints.
  */
 const $ = (id) => document.getElementById(id);
 
@@ -28,11 +27,12 @@ const PER_PAGE = [
   { slider: "sliderChannel", value: "valueChannel", key: "columnsChannel" }
 ];
 
-const TABS = ["layout", "appearance", "backup", "about"];
+const TAB_TITLES = { layout: "navLayout", general: "navGeneral", about: "navAbout" };
+const TABS = Object.keys(TAB_TITLES);
 
 /* ---------- Helpers ---------- */
 
-let pendingWrites = 0; // saves in flight; storage echoes of them are ignored
+let pendingWrites = 0; // saves in flight; their storage echoes are ignored
 function update(partial) {
   settings = { ...settings, ...partial };
   pendingWrites++;
@@ -66,29 +66,6 @@ function syncRadioGroup(container, value) {
   });
 }
 
-/* ---------- Static pieces built once ---------- */
-
-function buildSliders() {
-  for (const el of ["columnsSlider", "sliderHome", "sliderSubs", "sliderChannel"]) {
-    $(el).min = COLUMN_MIN;
-    $(el).max = COLUMN_MAX;
-  }
-  $("ticks").innerHTML = Array.from({ length: COLUMN_MAX - COLUMN_MIN + 1 }, (_, i) => `<span>${COLUMN_MIN + i}</span>`).join("");
-}
-
-function buildSwatches() {
-  $("swatches").innerHTML = THEME_COLORS.map(
-    (c) => `<button class="swatch" role="radio" data-value="${c.id}" data-ripple style="--sw:${c.hex}">${Icons.svg("check")}</button>`
-  ).join("");
-}
-
-function buildFontChips() {
-  $("fontChips").innerHTML = FONTS.map((f) => {
-    const family = f.id === "system" ? "var(--yg-system-font)" : `'${f.label}', var(--yg-system-font)`;
-    return `<button class="chip" role="radio" data-value="${f.id}" data-ripple style="font-family:${family}">${Icons.svg("check")}<span>${f.label || ""}</span></button>`;
-  }).join("");
-}
-
 /* ---------- Render ---------- */
 
 function renderColumns() {
@@ -106,14 +83,18 @@ function renderColumns() {
     $(value).textContent = settings[key];
     UI.sliderFill($(slider));
   }
-  const shown = settings.perPageColumns ? settings.columnsHome : settings.columns;
-  UI.renderPreview($("preview"), shown);
+  UI.renderPreview($("preview"), settings.perPageColumns ? settings.columnsHome : settings.columns);
+}
+
+function renderTitle() {
+  $("pageTitle").textContent = i18n.t(TAB_TITLES[currentTab] || "navLayout");
 }
 
 function render() {
   Appearance.apply(settings);
   i18n.setLang(settings.language);
   i18n.apply();
+  renderTitle();
 
   for (const [id, key] of Object.entries(TOGGLES)) $(id).checked = settings[key];
 
@@ -123,22 +104,13 @@ function render() {
   $("columnsCollapse").firstElementChild.inert = !settings.useCustomColumns;
   $("simpleBlock").hidden = settings.perPageColumns;
   $("perPageBlock").hidden = !settings.perPageColumns;
-  $("preview").hidden = !settings.showPreview;
+  $("previewWrap").hidden = !settings.showPreview;
   if (!dragging) renderColumns();
   $("content").classList.toggle("is-off", !settings.enabled);
 
-  // Appearance
+  // General: "auto" shows the language actually in use
   syncRadioGroup($("modeGroup"), settings.theme);
-  syncRadioGroup($("sizeGroup"), settings.fontSize);
-  syncRadioGroup($("langGroup"), settings.language);
-  syncRadioGroup($("swatches"), settings.themeColor);
-  syncRadioGroup($("fontChips"), settings.font);
-  $("swatches").querySelectorAll(".swatch").forEach((b) => {
-    b.title = i18n.colorName(b.dataset.value);
-    b.setAttribute("aria-label", i18n.colorName(b.dataset.value));
-  });
-  $("colorName").textContent = i18n.colorName(settings.themeColor);
-  $("fontChips").querySelector('[data-value="system"] span').textContent = i18n.t("fontSystem");
+  syncRadioGroup($("langGroup"), i18n.lang);
 }
 
 /* ---------- Navigation ---------- */
@@ -156,11 +128,12 @@ function showTab(name, { focus = false, replay = true } = {}) {
   document.querySelectorAll(".panel").forEach((p) => {
     const on = p.dataset.panel === name;
     p.hidden = !on;
-    if (on && replay) { p.classList.remove("replay"); void p.offsetWidth; p.classList.add("replay"); } // entrance on user navigation only
+    if (on && replay) { p.classList.remove("replay"); void p.offsetWidth; p.classList.add("replay"); }
   });
+  renderTitle();
   try {
     if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
-  } catch (e) { /* history unavailable: tab simply isn't remembered */ }
+  } catch (e) { /* history unavailable: the tab just isn't remembered */ }
   window.scrollTo({ top: 0 });
 }
 
@@ -169,13 +142,16 @@ $("nav").addEventListener("click", (e) => {
   if (btn) showTab(btn.dataset.tab);
 });
 $("nav").addEventListener("keydown", (e) => {
-  const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+  const horizontal = document.documentElement.classList.contains("compact");
+  const keys = horizontal
+    ? { ArrowRight: 1, ArrowLeft: -1 }
+    : { ArrowDown: 1, ArrowUp: -1 };
+  const step = keys[e.key];
   if (!step) return;
   e.preventDefault();
   showTab(TABS[(TABS.indexOf(currentTab) + step + TABS.length) % TABS.length], { focus: true });
 });
 window.addEventListener("hashchange", () => showTab(location.hash.slice(1)));
-window.addEventListener("scroll", () => document.querySelector(".topbar").classList.toggle("scrolled", window.scrollY > 4), { passive: true });
 
 /* ---------- Events ---------- */
 
@@ -205,10 +181,7 @@ wireSlider("columnsSlider", "columns");
 PER_PAGE.forEach(({ slider, key }) => wireSlider(slider, key));
 
 radioGroup($("modeGroup"), () => settings.theme, (v) => { update({ theme: v }); render(); });
-radioGroup($("swatches"), () => settings.themeColor, (v) => { update({ themeColor: v }); render(); });
-radioGroup($("fontChips"), () => settings.font, (v) => { update({ font: v }); render(); });
-radioGroup($("sizeGroup"), () => settings.fontSize, (v) => { update({ fontSize: v }); render(); });
-radioGroup($("langGroup"), () => settings.language, (v) => { update({ language: v }); render(); });
+radioGroup($("langGroup"), () => i18n.lang, (v) => { update({ language: v }); render(); });
 
 /* Backup */
 $("exportBtn").addEventListener("click", async () => {
@@ -227,9 +200,9 @@ $("exportBtn").addEventListener("click", async () => {
 
 const EMBEDDED = document.documentElement.classList.contains("embed");
 $("importBtn").addEventListener("click", () => {
-  // Chrome closes a popup the moment a file picker opens, which would lose the
+  // Chrome closes a popup when a file picker opens, which would lose the
   // import. Inside the popup, hand off to the full settings tab instead.
-  if (EMBEDDED) chrome.tabs.create({ url: chrome.runtime.getURL("options.html#backup") });
+  if (EMBEDDED) chrome.tabs.create({ url: chrome.runtime.getURL("options.html#general") });
   else $("importFile").click();
 });
 $("importFile").addEventListener("change", async (e) => {
@@ -260,7 +233,6 @@ $("resetBtn").addEventListener("click", async () => {
   UI.toast(i18n.t("toastReset"));
 });
 
-$("landingBtn").addEventListener("click", () => chrome.tabs.create({ url: chrome.runtime.getURL("index.html") }));
 $("shortcutsBtn").addEventListener("click", () => chrome.tabs.create({ url: "chrome://extensions/shortcuts" }));
 
 /* Stay in sync with the popup / keyboard shortcut. */
@@ -272,9 +244,11 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 /* ---------- Init ---------- */
 (async function init() {
-  buildSliders();
-  buildSwatches();
-  buildFontChips();
+  for (const el of ["columnsSlider", "sliderHome", "sliderSubs", "sliderChannel"]) {
+    $(el).min = COLUMN_MIN;
+    $(el).max = COLUMN_MAX;
+  }
+  $("ticks").innerHTML = Array.from({ length: COLUMN_MAX - COLUMN_MIN + 1 }, (_, i) => `<span>${COLUMN_MIN + i}</span>`).join("");
   $("versionLabel").textContent = chrome.runtime.getManifest().version;
   Appearance.watchSystem();
   Icons.hydrate();

@@ -1,56 +1,126 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Settings Shortcuts</title><link rel="stylesheet" href="style.css"></head>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings Shortcuts</title>
+<script src="theme-init.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
-<main class="page">
-  <header class="hero">
-    <div class="hero-top">
-      <div class="logo-shape">⌨️</div>
-      <div class="actions"><button class="icon-btn" id="langBtn">VI</button><button class="icon-btn" id="themeBtn">◐</button></div>
-    </div>
-    <h1 data-i18n="title"></h1>
-    <p data-i18n="subtitle"></p>
-  </header>
+<div class="app">
+  <nav class="nav" aria-label="Main">
+    <div class="brand"><img src="icons/logo.svg" alt=""><b data-i18n="appName"></b></div>
+    <button class="nav-item" data-nav="shortcuts"><i data-icon="keyboard"></i><span data-i18n="navShortcuts"></span></button>
+    <button class="nav-item" data-nav="settings"><i data-icon="settings"></i><span data-i18n="navSettings"></span></button>
+  </nav>
 
-  <section class="toolbar">
-    <div class="seg" id="tabs">
-      <button data-tab="presets" class="on" data-i18n="tabPresets"></button>
-      <button data-tab="custom" data-i18n="tabCustom"></button>
-    </div>
-    <label class="search"><span>🔍</span><input id="q" data-i18n-ph="search" autocomplete="off"></label>
-  </section>
+  <main class="content">
+    <!-- ===== Shortcuts ===== -->
+    <section class="view" id="viewShortcuts">
+      <header class="page-head"><h1 data-i18n="title"></h1><p data-i18n="subtitle"></p></header>
 
-  <section id="viewPresets"><div class="grid" id="presetGrid"></div></section>
-  <section id="viewCustom" hidden>
-    <div class="grid" id="customGrid"></div>
-    <div class="empty" id="customEmpty" data-i18n="customEmpty"></div>
-    <p class="note" data-i18n="customNote"></p>
-  </section>
+      <div class="msg" role="note">
+        <i data-icon="info"></i>
+        <div><b data-i18n="howTitle"></b><p data-i18n="howBody"></p></div>
+        <button class="btn" id="openShortcuts"><i data-icon="external-link" data-size="16"></i><span data-i18n="manage"></span></button>
+      </div>
 
-  <section class="panel">
-    <h2 data-i18n="behavior"></h2>
-    <div class="seg" id="openIn">
-      <button data-v="new" data-i18n="newTab"></button>
-      <button data-v="current" data-i18n="curTab"></button>
-    </div>
-  </section>
+      <div class="toolbar">
+        <div class="tabs" role="tablist" id="tabs">
+          <button class="tab" role="tab" data-tab="presets"><i data-icon="layout-grid" data-size="16"></i><span data-i18n="tabPresets"></span></button>
+          <button class="tab" role="tab" data-tab="custom"><i data-icon="star" data-size="16"></i><span data-i18n="tabCustom"></span></button>
+        </div>
+        <div class="toolbar-right">
+          <label class="search"><i data-icon="search" data-size="16"></i><input id="q" data-i18n-ph="search" data-i18n-title="searchHint" autocomplete="off" spellcheck="false"></label>
+          <button class="btn primary" id="addBtn" hidden><i data-icon="plus" data-size="16"></i><span data-i18n="add"></span></button>
+        </div>
+      </div>
 
-  <section class="panel tonal">
-    <h2 data-i18n="howTitle"></h2>
-    <p data-i18n="howBody"></p>
-    <button class="btn filled" id="openShortcuts" data-i18n="manageKeys"></button>
-  </section>
-</main>
+      <div id="panelPresets" role="tabpanel"><div class="grid" id="presetGrid"></div></div>
+      <div id="panelCustom" role="tabpanel" hidden>
+        <div class="msg warn" role="note"><i data-icon="triangle-alert"></i><p data-i18n="customNote"></p></div>
+        <div class="grid" id="customGrid"></div>
+      </div>
+      <div class="empty" id="empty" hidden></div>
+    </section>
 
-<button class="fab" id="fab" hidden>＋ <span data-i18n="add"></span></button>
+    <!-- ===== Settings ===== -->
+    <section class="view" id="viewSettings" hidden>
+      <header class="page-head"><h1 data-i18n="setTitle"></h1><p data-i18n="setSubtitle"></p></header>
 
-<dialog id="dlg">
+      <h2 class="section-title" data-i18n="secGeneral"></h2>
+      <div class="group">
+        <div class="setting">
+          <i data-icon="languages"></i>
+          <div class="txt"><b data-i18n="langTitle"></b><span data-i18n="langDesc"></span></div>
+          <div class="select"><select id="langSel" data-i18n-title="langTitle"><option value="en">English</option><option value="vi">Tiếng Việt</option></select><i data-icon="chevron-down" data-size="16"></i></div>
+        </div>
+      </div>
+
+      <h2 class="section-title" data-i18n="secAppearance"></h2>
+      <div class="group">
+        <div class="setting col">
+          <i data-icon="palette"></i>
+          <div class="txt"><b data-i18n="themeTitle"></b><span data-i18n="themeDesc"></span></div>
+          <div class="themes" role="radiogroup" id="themes">
+            <button class="theme-opt" role="radio" data-theme-v="light"><div class="pv light"></div><span class="lbl" data-i18n="themeLight"></span><span class="chk"><i data-icon="check" data-size="12"></i></span></button>
+            <button class="theme-opt" role="radio" data-theme-v="dark"><div class="pv dark"></div><span class="lbl" data-i18n="themeDark"></span><span class="chk"><i data-icon="check" data-size="12"></i></span></button>
+            <button class="theme-opt" role="radio" data-theme-v="auto"><div class="pv auto"></div><span class="lbl" data-i18n="themeAuto"></span><span class="chk"><i data-icon="check" data-size="12"></i></span></button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title" data-i18n="secBehavior"></h2>
+      <div class="group">
+        <div class="setting">
+          <i data-icon="app-window"></i>
+          <div class="txt"><b data-i18n="behavior"></b><span data-i18n="behaviorDesc"></span></div>
+          <div class="select"><select id="openInSel" data-i18n-title="behavior"><option value="new" data-i18n="newTab"></option><option value="current" data-i18n="curTab"></option></select><i data-icon="chevron-down" data-size="16"></i></div>
+        </div>
+        <div class="setting">
+          <i data-icon="keyboard"></i>
+          <div class="txt"><b data-i18n="chromeKeysTitle"></b><span data-i18n="chromeKeysDesc"></span></div>
+          <button class="btn" id="openShortcuts2"><i data-icon="external-link" data-size="16"></i><span data-i18n="manage"></span></button>
+        </div>
+      </div>
+
+      <h2 class="section-title" data-i18n="secAbout"></h2>
+      <div class="group">
+        <div class="about-hero">
+          <img src="icons/logo.svg" alt="">
+          <div><b data-i18n="appName"></b><span><span data-i18n="version"></span> <span id="ver"></span></span></div>
+        </div>
+        <div class="setting">
+          <i data-icon="user-round"></i>
+          <div class="txt"><b data-i18n="authorTitle"></b></div>
+          <span class="val">minhtrong67</span>
+        </div>
+        <div class="setting">
+          <i data-icon="sparkles"></i>
+          <div class="txt"><b data-i18n="aiTitle"></b><span data-i18n="aiDesc"></span></div>
+          <span class="val" data-i18n="aiValue"></span>
+        </div>
+        <div class="setting">
+          <i data-icon="shapes"></i>
+          <div class="txt"><b data-i18n="iconsTitle"></b></div>
+          <span class="val" data-i18n="iconsDesc"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
   <h2 id="dlgTitle"></h2>
-  <label class="field"><span data-i18n="fName"></span><input id="fLabel" maxlength="40"></label>
-  <label class="field"><span data-i18n="fUrl"></span><input id="fUrl" placeholder="chrome://settings/downloads"></label>
+  <div class="field"><label for="fLabel" data-i18n="fName"></label><div class="input"><input id="fLabel" maxlength="40" autocomplete="off"></div></div>
+  <div class="field"><label for="fUrl" data-i18n="fUrl"></label><div class="input"><input id="fUrl" placeholder="chrome://settings/downloads" autocomplete="off" spellcheck="false"></div></div>
   <div class="field"><span data-i18n="fKeys"></span><button class="rec" id="rec" type="button"></button></div>
-  <div class="err" id="err"></div>
-  <div class="dlg-actions"><button class="btn text" id="cancel" data-i18n="cancel"></button><button class="btn filled" id="save" data-i18n="save"></button></div>
+  <div class="err" id="err" role="alert"></div>
+  <div class="dlg-actions"><button class="btn" id="cancel" data-i18n="cancel"></button><button class="btn primary" id="save" data-i18n="save"></button></div>
 </dialog>
-<script src="presets.js"></script><script src="options.js"></script>
-</body></html>
+
+<div id="toastHost" aria-live="polite"></div>
+<script src="icons.js"></script><script src="i18n.js"></script><script src="presets.js"></script><script src="common.js"></script><script src="options.js"></script>
+</body>
+</html>

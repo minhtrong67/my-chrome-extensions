@@ -1,8 +1,20 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings Shortcuts</title>
+<script src="theme-init.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
 <body class="popup">
-  <div class="pop-head"><label class="search" style="width:100%"><span>🔍</span><input id="q" autocomplete="off" autofocus></label></div>
-  <div class="pop-list" id="list"></div>
-  <div class="pop-foot"><button class="btn filled" id="manage" style="height:46px"></button></div>
-<script src="presets.js"></script><script src="popup.js"></script>
-</body></html>
+  <div class="pop-head">
+    <img src="icons/logo.svg" alt="">
+    <b data-i18n="appName"></b>
+    <button class="btn subtle sq" id="gear" data-i18n-title="popupSettings"><i data-icon="settings" data-size="18"></i></button>
+  </div>
+  <div class="pop-search"><label class="search"><i data-icon="search" data-size="16"></i><input id="q" data-i18n-ph="search" autocomplete="off" spellcheck="false" autofocus></label></div>
+  <div class="pop-list" id="list" role="listbox"></div>
+  <div class="pop-foot"><button class="btn primary" id="manage"><i data-icon="keyboard" data-size="16"></i><span data-i18n="popupManage"></span></button></div>
+<script src="icons.js"></script><script src="i18n.js"></script><script src="presets.js"></script><script src="common.js"></script><script src="popup.js"></script>
+</body>
+</html>

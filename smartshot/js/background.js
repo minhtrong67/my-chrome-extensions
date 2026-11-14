@@ -1,17 +1,18 @@
 // SmartShot — background service worker (Manifest V3)
 // Author: minhtrong67 (with AI support from Claude)
 
-importScripts("accents.js", "storage.js", "i18n.js");
+importScripts("storage.js", "i18n.js");
 
 const OFFSCREEN_URL = "offscreen.html";
 const CAPTURE_MIN_DELAY = 600; // chrome.tabs.captureVisibleTab allows ~2 calls/second
 const CAPTURE_TTL = 6 * 60 * 60 * 1000;
-const BADGE_OK = "#2E7D32";
-const BADGE_ERROR = "#B3261E";
+// Fluent brand / success / danger colors
+const BADGE_BRAND = "#0F6CBD";
+const BADGE_OK = "#107C10";
+const BADGE_ERROR = "#C50F1F";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 let busy = false;
-let accentHex = ACCENT_COLORS[DEFAULT_SETTINGS.accent];
 
 /* ============ Offscreen document lifecycle ============ */
 
@@ -78,8 +79,7 @@ async function captureArea(tab) {
   await ensureContentScript(tab.id);
   const selection = await sendToContent(tab.id, {
     type: "start-area-selection",
-    hint: i18n.t("selectHint"),
-    accent: accentHex
+    hint: i18n.t("selectHint")
   });
   if (!selection || !selection.ok) return { cancelled: true };
 
@@ -110,7 +110,7 @@ async function captureFullPage(tab) {
       if (index > 0 && actualY <= lastY + 1) break;   // the page can't scroll any further
       if (index === 1) await sendToContent(tab.id, { type: "hide-fixed" });
       await sleep(CAPTURE_MIN_DELAY);
-      setBadge(`${index + 1}/${stepCount}`, accentHex);
+      setBadge(`${index + 1}/${stepCount}`, BADGE_BRAND);
 
       const dataUrl = await grab(tab);
       const res = await offscreen("stitch-add", { dataUrl, y: actualY, viewportWidth: m.viewportWidth });
@@ -136,7 +136,7 @@ async function captureFullPage(tab) {
   return { ...result, truncated };
 }
 
-/* ============ Direct download (editor turned off in settings) ============ */
+/* ============ Save to the default Downloads folder ============ */
 
 const pendingDownloads = new Map(); // downloadId -> { url, cid }
 
@@ -148,11 +148,11 @@ async function downloadCapture(result, captureType) {
     // A relative filename lands in the user's default Downloads folder, no prompt.
     const downloadId = await chrome.downloads.download({ url, filename, saveAs: false, conflictAction: "uniquify" });
     pendingDownloads.set(downloadId, { url, cid: result.id });
+    return { filename, downloadId };
   } catch (err) {
     offscreen("revoke-url", { url }).catch(() => {});
     throw err;
   }
-  return filename;
 }
 
 // Free the blob URL and the stored capture once the file is on disk (or the download failed).
@@ -199,7 +199,6 @@ async function performCapture(captureType, hintedTabId) {
   try {
     const settings = await store.loadSettings();
     i18n.current = resolveLanguage(settings.language);
-    accentHex = ACCENT_COLORS[settings.accent] || accentHex;
 
     let tab;
     if (hintedTabId) tab = await chrome.tabs.get(hintedTabId);
@@ -207,7 +206,7 @@ async function performCapture(captureType, hintedTabId) {
     if (!tab || !tab.id) return;
 
     capturesDb.purgeOld(CAPTURE_TTL).catch(() => {});
-    setBadge("…", accentHex);
+    setBadge("…", BADGE_BRAND);
 
     let result;
     if (captureType === "visible") result = await captureVisible(tab);
@@ -217,23 +216,24 @@ async function performCapture(captureType, hintedTabId) {
 
     if (result.cancelled) { chrome.action.setBadgeText({ text: "" }); return; }
 
-    if (settings.openEditor) {
-      await store.upsertHistory({ cid: result.id, captureType, filename: null, format: "png", action: "editor", thumbnail: result.thumbnail });
-      await chrome.tabs.create({
-        url: chrome.runtime.getURL(`editor.html?id=${encodeURIComponent(result.id)}&type=${captureType}`)
-      });
-      flashBadge("✓", BADGE_OK, result.truncated ? i18n.t("errTooTall") : "");
-    } else {
-      const filename = await downloadCapture(result, captureType);
-      await store.upsertHistory({ cid: result.id, captureType, filename, format: "png", action: "download", thumbnail: result.thumbnail });
-      flashBadge("✓", BADGE_OK, result.truncated ? i18n.t("errTooTall") : i18n.t("toastSavedToDownloads"));
-    }
+    const { filename, downloadId } = await downloadCapture(result, captureType);
+    await store.upsertHistory({ cid: result.id, captureType, filename, downloadId, format: "png", thumbnail: result.thumbnail });
+    flashBadge("✓", BADGE_OK, result.truncated ? i18n.t("errTooTall") : i18n.t("toastSavedToDownloads"));
   } catch (err) {
     flashBadge("!", BADGE_ERROR, friendlyError(err));
   } finally {
     busy = false;
   }
 }
+
+/* ============ Keyboard shortcuts ============ */
+
+const COMMAND_TYPES = { "capture-visible": "visible", "capture-fullpage": "fullpage", "capture-area": "area" };
+
+chrome.commands.onCommand.addListener((command, tab) => {
+  const type = COMMAND_TYPES[command];
+  if (type) performCapture(type, tab && tab.id);
+});
 
 /* ============ Messages from popup ============ */
 
