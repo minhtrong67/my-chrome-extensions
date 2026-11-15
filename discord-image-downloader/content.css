@@ -1,0 +1,31 @@
+:root { --dla-accent: #60cdff; --dla-on-accent: #003a5c; }
+.theme-light { --dla-accent: #0067c0; --dla-on-accent: #ffffff; }
+
+.dla-item { position: relative; cursor: pointer; }
+.dla-item:hover { background: var(--background-modifier-hover, rgba(255, 255, 255, 0.07)) !important; }
+.dla-item svg { color: var(--dla-accent) !important; }
+
+/* Fluent selection indicator */
+.dla-item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 3px; height: 0;
+  border-radius: 2px;
+  background: var(--dla-accent);
+  transform: translateY(-50%);
+  transition: height 167ms cubic-bezier(0, 0, 0, 1);
+}
+.dla-item:hover::before { height: 16px; }
+
+/* Fluent info badge */
+.dla-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  box-sizing: border-box;
+  min-width: 18px; height: 18px; padding: 0 6px; margin-left: 8px;
+  border-radius: 9px;
+  font-size: 11px; font-weight: 600; line-height: 1;
+  background: var(--dla-accent); color: var(--dla-on-accent);
+  vertical-align: middle;
+}
+@media (prefers-reduced-motion: reduce) { .dla-item::before { transition: none; } }

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Save Image As Type</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="titlebar">
+      <img src="icon48.png" alt="" class="app-icon" width="32" height="32" />
+      <div class="titles">
+        <h1>Save Image As Type</h1>
+        <p>Lưu ảnh theo định dạng bạn chọn</p>
+      </div>
+    </header>
+
+    <section class="card reveal">
+      <div class="card-head">
+        <h2>Định dạng mặc định</h2>
+        <p>Được đánh dấu trong menu chuột phải</p>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="Định dạng mặc định" id="formatGroup">
+        <label><input type="radio" name="format" value="png" /><span>PNG</span></label>
+        <label><input type="radio" name="format" value="jpg" /><span>JPG</span></label>
+        <label><input type="radio" name="format" value="webp" /><span>WebP</span></label>
+        <label><input type="radio" name="format" value="bmp" /><span>BMP</span></label>
+      </div>
+    </section>
+
+    <section class="card reveal">
+      <div class="card-head">
+        <h2>Kiểu menu chuột phải</h2>
+        <p>Một chạm: bấm là lưu ngay định dạng mặc định</p>
+      </div>
+      <div class="segmented cols-2" role="radiogroup" aria-label="Kiểu menu chuột phải">
+        <label><input type="radio" name="menuMode" value="quick" /><span>Một chạm</span></label>
+        <label><input type="radio" name="menuMode" value="choose" /><span>Chọn định dạng</span></label>
+      </div>
+    </section>
+
+    <section class="card reveal">
+      <div class="card-head row">
+        <div>
+          <h2>Chất lượng</h2>
+          <p>Áp dụng cho JPG và WebP</p>
+        </div>
+        <output id="qualityValue" class="value-pill">92%</output>
+      </div>
+      <input type="range" id="quality" min="50" max="100" step="1" aria-label="Chất lượng" />
+    </section>
+
+    <section class="card reveal">
+      <div class="card-head row">
+        <div>
+          <h2>Màu nền</h2>
+          <p>Thay cho vùng trong suốt khi lưu JPG / BMP</p>
+        </div>
+        <label class="swatch" title="Chọn màu nền">
+          <input type="color" id="background" aria-label="Màu nền" />
+          <span id="swatchChip"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="card reveal">
+      <div class="card-head row">
+        <div>
+          <h2>Hỏi nơi lưu</h2>
+          <p>Hiện hộp thoại lưu cho mỗi ảnh</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="saveAs" role="switch" aria-label="Hỏi nơi lưu" />
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+    </section>
+
+    <footer>
+      Nhấp chuột phải vào ảnh → <strong>Lưu ảnh dưới dạng…</strong>
+      <span id="saved" class="saved" aria-live="polite">Đã lưu</span>
+    </footer>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

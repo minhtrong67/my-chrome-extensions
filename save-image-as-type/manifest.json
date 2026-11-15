@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Save Image As Type",
+  "version": "1.0.0",
+  "description": "Lưu ảnh theo định dạng tuỳ chọn (PNG, JPG, WebP, BMP) ngay từ menu chuột phải. Mặc định là PNG.",
+  "permissions": ["contextMenus", "downloads", "storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Save Image As Type",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

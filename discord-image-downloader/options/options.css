@@ -1,0 +1,128 @@
+:root {
+  color-scheme: dark;
+  --page: #202020; --card: rgba(255,255,255,.0605); --card-hover: rgba(255,255,255,.0837);
+  --stroke: rgba(255,255,255,.0578); --stroke-ctl: rgba(255,255,255,.0698);
+  --ctl: rgba(255,255,255,.0605); --ctl-hover: rgba(255,255,255,.0837);
+  --fg: #fff; --fg2: rgba(255,255,255,.786); --fg3: rgba(255,255,255,.5442);
+  --accent: #60cdff; --on-accent: #000; --ctl-bottom: rgba(255,255,255,.54);
+  --info-bg: rgba(255,255,255,.0605);
+  --font: "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  --ease: cubic-bezier(0,0,0,1);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #f3f3f3; --card: rgba(255,255,255,.7); --card-hover: rgba(249,249,249,.5);
+  --stroke: rgba(0,0,0,.0578); --stroke-ctl: rgba(0,0,0,.0578);
+  --ctl: rgba(255,255,255,.7); --ctl-hover: rgba(249,249,249,.5);
+  --fg: #1a1a1a; --fg2: rgba(0,0,0,.6063); --fg3: rgba(0,0,0,.4458);
+  --accent: #0067c0; --on-accent: #fff; --ctl-bottom: rgba(0,0,0,.45);
+  --info-bg: rgba(0,0,0,.035);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh; font: 400 14px/20px var(--font); color: var(--fg); background: var(--page);
+}
+.muted { color: var(--fg2); }
+.page { max-width: 720px; margin: 0 auto; padding: 32px 24px 48px; }
+
+.head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.head h1 { margin: 0; font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -.01em; }
+.head p { margin: 0; }
+.saved { margin-left: auto; font-size: 12px; color: var(--fg2); opacity: 0; transition: opacity 167ms var(--ease); }
+.saved.on { opacity: 1; }
+
+.ico { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.ico.lead { color: var(--fg); margin-right: 4px; }
+
+.infobar {
+  display: flex; gap: 12px; align-items: center; padding: 12px 16px; margin-bottom: 28px;
+  background: var(--info-bg); border: 1px solid var(--stroke); border-radius: 4px; position: relative;
+}
+.infobar::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: var(--accent); }
+.infobar .ico { color: var(--accent); }
+
+section { margin-bottom: 28px; }
+h2 { margin: 0 0 8px 2px; font-size: 14px; line-height: 20px; font-weight: 600; }
+
+.card {
+  display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 14px 16px; margin-bottom: 2px;
+  background: var(--card); border: 1px solid var(--stroke); border-radius: 4px;
+}
+section > .card:first-of-type { border-radius: 6px 6px 4px 4px; }
+section > .card:last-of-type { border-radius: 4px 4px 6px 6px; }
+section > .card:only-of-type { border-radius: 6px; }
+.card .text { flex: 1; min-width: 0; }
+.card .name { font-weight: 400; }
+.card .desc { font-size: 12px; line-height: 16px; }
+.card .value { color: var(--fg2); }
+.card.column { flex-direction: column; align-items: stretch; gap: 12px; }
+.card .row { display: flex; align-items: center; gap: 12px; }
+
+/* Combo box */
+.combo {
+  appearance: none; -webkit-appearance: none; min-width: 160px; height: 32px; padding: 0 32px 0 12px;
+  font: inherit; color: var(--fg); background-color: var(--ctl);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  border: 1px solid var(--stroke-ctl); border-bottom-color: var(--ctl-bottom); border-radius: 4px; cursor: pointer;
+}
+.combo:hover { background-color: var(--ctl-hover); }
+.combo:focus { outline: none; border-bottom: 2px solid var(--accent); padding-bottom: 1px; }
+.combo option { color: #1a1a1a; background: #fff; }
+
+/* Text input */
+.input {
+  width: 100%; height: 32px; padding: 0 11px; font: inherit; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 13px;
+  color: var(--fg); background: var(--ctl); border: 1px solid var(--stroke-ctl); border-bottom-color: var(--ctl-bottom); border-radius: 4px;
+}
+.input.short { width: 220px; flex: none; font-family: inherit; font-size: 14px; }
+.input:hover { background: var(--ctl-hover); }
+.input:focus { outline: none; border-bottom: 2px solid var(--accent); padding-bottom: 1px; }
+
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chip {
+  height: 24px; padding: 0 10px; font: inherit; font-size: 12px; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  color: var(--fg); background: var(--ctl); border: 1px solid var(--stroke-ctl); border-radius: 12px; cursor: pointer;
+  transition: background 83ms linear;
+}
+.chip:hover { background: var(--ctl-hover); }
+.chip:active { opacity: .8; }
+.preview { display: flex; align-items: baseline; gap: 8px; font-size: 12px; min-width: 0; }
+.preview code { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; color: var(--fg); overflow-wrap: anywhere; }
+
+/* Switch */
+.switch { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
+.switch .state { min-width: 28px; text-align: right; color: var(--fg); }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.switch .track {
+  position: relative; width: 40px; height: 20px; border-radius: 10px; border: 1px solid var(--fg3); background: transparent;
+  transition: background 167ms var(--ease), border-color 167ms var(--ease);
+}
+.switch .track::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 6px; background: var(--fg2);
+  transition: transform 167ms var(--ease), width 167ms var(--ease), background 167ms var(--ease);
+}
+.switch:hover .track::after { width: 14px; }
+.switch input:checked + .track { background: var(--accent); border-color: var(--accent); }
+.switch input:checked + .track::after { transform: translateX(20px); background: var(--on-accent); }
+.switch:hover input:checked + .track::after { transform: translateX(18px); }
+.switch input:focus-visible + .track { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* Standard button */
+.foot { display: flex; justify-content: flex-end; }
+.button {
+  min-height: 32px; padding: 5px 16px; font: inherit; color: var(--fg); background: var(--ctl);
+  border: 1px solid var(--stroke-ctl); border-bottom-color: var(--stroke-ctl); border-radius: 4px; cursor: pointer;
+}
+.button:hover { background: var(--ctl-hover); }
+.button:active { opacity: .75; }
+.button:focus-visible, .chip:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+@media (max-width: 560px) {
+  .card:not(.column) { flex-wrap: wrap; }
+  .combo, .input.short { min-width: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .switch .track, .switch .track::after, .saved { transition: none; }
+}
